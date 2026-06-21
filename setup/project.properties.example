@@ -1,0 +1,7 @@
+# Copy this file to workspace/project.properties and replace the example values.
+project_repository_url=https://github.com/mahghuuuls/example-mod.git
+project_directory_name=example-mod
+
+# Optional per-project overrides:
+# license=MIT
+# template_repository_ref=master
