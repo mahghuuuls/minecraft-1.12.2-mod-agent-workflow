@@ -1,0 +1,6 @@
+- Treat the template submodule as read-only unless specifically instructed otherwise.
+- Write generated stage documents only under workspace/documentation/.
+- Make code changes only under workspace/project/.
+- Work on only one development stage at a time.
+- Read the defaults and all approved outputs from previous stages.
+- Do not silently modify documents belonging to completed stages.

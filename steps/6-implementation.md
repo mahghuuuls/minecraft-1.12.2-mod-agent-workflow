@@ -1,0 +1,320 @@
+# Implementation
+
+## Purpose
+
+Implement the approved plan one issue at a time while continuously verifying that each increment satisfies its requirements and follows the approved architecture.
+
+Implementation includes coding, testing, in-game verification, defect correction, and independent review.
+
+## Main Question
+
+> Does each planned increment work correctly?
+
+## Required Input
+
+- `mod-project-defaults.md`
+- `concept-and-scope.md`
+- `feasibility-research.md`
+- `requirements.md`
+- `architecture.md`
+- `implementation-plan.md`
+- The relevant issue file under `issues/`
+- The current project source code
+
+Read and follow all relevant input documents before beginning an issue.
+
+## Objectives
+
+For each implementation issue:
+
+- Implement the defined behavior
+- Follow the approved architecture
+- Satisfy the acceptance criteria
+- Run appropriate automated checks
+- Verify behavior inside Minecraft where necessary
+- Check client and dedicated-server behavior where relevant
+- Validate technical uncertainties assigned to the issue
+- Record completion evidence
+- Obtain an independent review
+- Correct legitimate review findings
+
+## In Scope
+
+- Production code
+- Resources and configuration files
+- Automated tests where practical
+- Build and compilation checks
+- Development-client verification
+- Dedicated-server verification
+- Multiplayer verification
+- Compatibility verification
+- Performance measurements
+- Logging and diagnostic improvements
+- Defect correction
+- Refactoring directly related to the issue
+- Independent code review
+- Updating issue status and completion evidence
+- Explicitly approved architecture updates
+
+## Out of Scope
+
+Do not:
+
+- Add unapproved features
+- Expand the issue beyond its defined scope
+- Silently reinterpret requirements
+- Silently change the architecture
+- Perform unrelated refactoring
+- Add speculative abstractions for hypothetical future needs
+- Prepare the final README, changelog, icon, or CurseForge page
+- Publish or release the mod
+- Perform maintenance work outside the current project scope
+
+If implementation reveals a problem in an earlier document, return to the relevant stage instead of silently compensating in the code.
+
+## Desired AI Behavior
+
+Act as a focused implementation agent.
+
+- Work on one Ready issue at a time.
+- Confirm that all blocking issues are Done before starting.
+- Read the issue and its referenced requirements and architecture sections.
+- Inspect the existing codebase before making changes.
+- Preserve existing project conventions unless an approved decision requires otherwise.
+- Implement the smallest coherent change that satisfies the issue.
+- Keep the change limited to the issue's scope.
+- Use existing libraries and architectural components as documented.
+- Avoid duplicating functionality already present in the project or its dependencies.
+- Run fast feedback checks throughout implementation.
+- Use test-first development for isolated logic when it provides clear value.
+- Do not force TDD onto behavior that can only be meaningfully verified inside Minecraft.
+- Perform the verification defined by the issue.
+- Treat compilation as necessary but not sufficient evidence that behavior works.
+- Check dedicated-server safety whenever client-only code is involved.
+- Record failures honestly rather than declaring completion based on assumptions.
+- Stop and report when requirements, architecture, or feasibility assumptions are invalidated.
+- Do not make product or architectural decisions without approval.
+- Record completion evidence in the issue file.
+- Move the issue to Review only after implementation verification succeeds.
+- Do not mark the issue Done until independent review is complete.
+
+The agent may make ordinary method-level implementation decisions that remain within the approved architecture. Decisions that alter component responsibilities, dependency directions, public behavior, or project scope require explicit approval.
+
+## Feedback Strategy
+
+Use the fastest meaningful feedback available for the behavior being implemented.
+
+Possible feedback mechanisms include:
+
+- Compilation
+- Static analysis
+- Unit tests
+- Integration tests
+- Development-client launch
+- Test-world verification
+- Dedicated-server launch
+- Multiplayer testing
+- Log inspection
+- Compatibility testing
+- Profiling and performance measurements
+
+Verification must match the risk. A successful build does not verify gameplay behavior, networking, rendering, entity AI, persistence, or mod compatibility.
+
+## Testing Approach
+
+Strict TDD is not required.
+
+Use automated tests when behavior can be isolated meaningfully, such as:
+
+- Calculations
+- Selection rules
+- State transitions
+- Configuration validation
+- Data transformations
+- Algorithms independent of Minecraft runtime behavior
+
+Use in-game verification when behavior depends on:
+
+- Forge lifecycle events
+- Rendering
+- Entity AI
+- World state
+- Networking
+- Client/server interaction
+- Mixins
+- Other installed mods
+- Minecraft registries
+- Performance under realistic conditions
+
+Define expected results before performing any verification.
+
+## Issue Execution Process
+
+1. Select a Ready issue whose blockers are Done.
+2. Read the issue and all referenced documents.
+3. Inspect the relevant existing code.
+4. Confirm that the issue remains implementable as written.
+5. Change the issue status to **In Progress**.
+6. Review its acceptance criteria and verification procedure.
+7. Implement the smallest coherent change.
+8. Run compilation and fast automated checks.
+9. Correct failures before expanding the implementation.
+10. Perform the required in-game, server, compatibility, or performance verification.
+11. Refactor only where it improves the implemented behavior without expanding scope.
+12. Run all relevant checks again after refactoring.
+13. Record completion evidence in the issue.
+14. Perform a final implementation self-review.
+15. Change the issue status to **Review**.
+16. Submit the change to an independent review agent.
+17. Address legitimate review findings.
+18. Repeat verification for affected behavior.
+19. Mark the issue **Done** only when the Definition of Done is satisfied.
+20. Select the next Ready issue.
+
+## Handling Discoveries
+
+### Requirement Problem
+
+If expected behavior is missing, ambiguous, or contradictory:
+
+1. Stop the affected implementation.
+2. Record the problem.
+3. Return to Requirements Definition.
+4. Resume only after the requirement is approved.
+
+### Feasibility Problem
+
+If an assumed capability, library, or integration is not viable:
+
+1. Stop the affected implementation.
+2. Record the evidence.
+3. Return to Feasibility Research.
+4. Update dependent documents after the finding is resolved.
+
+### Architecture Problem
+
+If the approved structure cannot reasonably support the implementation:
+
+1. Stop before creating an unofficial workaround.
+2. Explain the architectural conflict.
+3. Return to Architecture Definition.
+4. Update the architecture explicitly after approval.
+
+### Planning Problem
+
+If an issue is too large, incorrectly ordered, or missing dependencies:
+
+1. Stop the issue.
+2. Update the Implementation Plan.
+3. Split or reorder issues as necessary.
+4. Resume with an approved Ready issue.
+
+Minor implementation details that do not alter approved behavior or architectural boundaries do not require returning to an earlier stage.
+
+## Independent Review
+
+Implementation and review must use separate agent contexts.
+
+The review agent must receive:
+
+- `mod-project-defaults.md`
+- The relevant requirements
+- The relevant architecture sections
+- The implementation issue
+- The code changes
+- Verification evidence
+
+The review agent should examine:
+
+- Requirement compliance
+- Acceptance criteria coverage
+- Architectural compliance
+- Correctness and regressions
+- Client/server separation
+- Error handling
+- Compatibility concerns
+- Performance risks
+- Unnecessary complexity
+- Missing or inadequate verification
+- Unrelated changes
+
+The reviewer should report findings before proposing broad improvements. The reviewer must not expand the issue scope or judge the implementation according to undocumented preferences.
+
+A clean review context improves independence, but does not make the review automatically correct. Review findings must be evaluated against the approved requirements, architecture, and evidence.
+
+## Completion Evidence
+
+Record evidence directly in the issue file:
+
+```markdown
+## Completion Evidence
+
+### Automated Checks
+
+- Command:
+- Result:
+
+### In-Game Verification
+
+- Environment:
+- Procedure:
+- Expected result:
+- Observed result:
+
+### Dedicated Server
+
+- Procedure:
+- Result:
+
+### Compatibility or Performance
+
+- Procedure:
+- Result:
+
+### Independent Review
+
+- Reviewer:
+- Findings:
+- Resolutions:
+
+### Remaining Limitations
+
+- None
+```
+
+Omit verification categories that genuinely do not apply.
+
+## Issue Completion Criteria
+
+An issue is complete when:
+
+- Its implementation satisfies the acceptance criteria.
+- Relevant automated checks pass.
+- Required in-game verification passes.
+- Client and dedicated-server behavior have been checked where relevant.
+- Required compatibility or performance validation passes.
+- The implementation follows the approved architecture.
+- No unrelated behavior was introduced.
+- Completion evidence is recorded.
+- Independent review is complete.
+- Legitimate review findings are resolved.
+- Any remaining limitations are explicit and approved.
+- The issue status is **Done**.
+
+## Stage Completion Criteria
+
+The Implementation stage is complete when:
+
+- Every issue required for the release is Done.
+- Every MUST requirement is implemented.
+- Included SHOULD and MAY requirements are implemented as planned.
+- All required automated checks pass.
+- Required client, server, multiplayer, compatibility, and performance verification is complete.
+- All implementation validation questions are resolved.
+- No release-blocking defects remain.
+- The code matches the approved architecture.
+- Approved documents reflect any accepted changes made during implementation.
+- No required issue remains Backlog, Ready, In Progress, Review, or Blocked.
+- The project owner approves the implemented mod for Packaging and Release.
+
+Completion does not include preparing user-facing documentation, creating release assets, building the final distributable release, or publishing to CurseForge.

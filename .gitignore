@@ -1,0 +1,5 @@
+/workspace/documentation/*
+!/workspace/documentation/.gitkeep
+
+/workspace/project/*
+!/workspace/project/.gitkeep
