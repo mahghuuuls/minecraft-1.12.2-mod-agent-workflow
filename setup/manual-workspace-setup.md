@@ -18,7 +18,7 @@ Do not clone a mod template into the process repository manually.
 Determine which description applies:
 
 - **New mod:** no implementation or approved baseline exists.
-- **Existing mod adoption:** a repository already contains implementation or release history but has no approved process baseline.
+- **Existing mod assessment:** a repository already contains implementation or release history but has not yet been documented by this workflow.
 - **Change cycle:** the mod already has an approved baseline produced by this process.
 
 The agent will confirm this classification during Project Setup.
@@ -56,7 +56,7 @@ template_repository_ref=branch-tag-or-commit
 
 For a new mod, the GitHub repository must be empty before Project Initialization. You may defer creating it while working through Concept, Feasibility, Requirements, and Architecture.
 
-For adoption or a change cycle, identify the existing repository. Do not replace or discard its Git history.
+For an existing-mod assessment or a change cycle, identify the existing repository. Do not replace or discard its Git history.
 
 Do not leave example URLs or invented placeholder values in the real properties file.
 
@@ -78,7 +78,7 @@ Existing-project workflows preserve the repository's current build system unless
 
 ## 6. Do Not Prepare Runtime Clones Manually
 
-Project Initialization or Existing Project Adoption will create or identify runtime repositories under:
+Project Initialization or Existing Mod Assessment will create or identify runtime repositories under:
 
 ```text
 workspace/template/
@@ -95,6 +95,6 @@ Open the process-repository root with a coding agent and send:
 Read AGENTS.md and guide me through Project Setup.
 ```
 
-Tell it whether you are creating a new mod, adopting an existing mod, or continuing an approved mod when known.
+Tell it whether you are creating a new mod, assessing an existing mod, or continuing an approved mod when known.
 
 The agent will inspect this manual configuration, identify missing prerequisites, and ask for approval before beginning a workflow.

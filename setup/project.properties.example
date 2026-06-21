@@ -1,6 +1,6 @@
 # Copy this file to workspace/project.properties only after replacing required values.
 # For Initial Development, this file may be deferred until repository identity is known.
-# Existing Project Adoption and Change Cycle identify the existing repository.
+# Existing Mod Assessment and Change Cycle identify the existing repository.
 project_repository_url=
 project_directory_name=
 

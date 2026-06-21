@@ -56,7 +56,7 @@ Select exactly one workflow:
 | --- | --- |
 | An active workflow is recorded | Resume that workflow |
 | No implementation or approved baseline exists | `workflows/initial-development.md` |
-| An existing implementation has no approved process baseline | `workflows/existing-project-adoption.md` |
+| An existing implementation has no approved process baseline | `workflows/existing-mod-assessment.md` |
 | An approved baseline exists and a change is requested | `workflows/change-cycle.md` |
 
 Present the selection and evidence before starting a new workflow. Do not classify an existing repository as empty initialization input or treat unapproved documents as a baseline. Ask when the state is ambiguous.

@@ -14,7 +14,7 @@ Project Setup establishes the scenario, operational configuration, deferred prer
 
 An approved setup may be carried forward across later workflows. Mark it **Needs Revision** and revisit Stage 0 when the active repository, template candidate, required environment, scenario, or operational configuration materially changes.
 
-A new mod may defer its final repository URL and directory name until Project Initialization. Adoption and Change Cycle require the existing repository identity before their first repository-dependent work.
+A new mod may defer its final repository URL and directory name until Project Initialization. Existing Mod Assessment and Change Cycle require the existing repository identity before their first repository-dependent work.
 
 ## Workflow Control
 
@@ -23,7 +23,7 @@ Every mod-development session belongs to one workflow:
 | Workflow | Definition | Use |
 | --- | --- | --- |
 | Initial Development | `workflows/initial-development.md` | Create and deliver a new mod |
-| Existing Project Adoption | `workflows/existing-project-adoption.md` | Establish an approved baseline for an existing mod |
+| Existing Mod Assessment | `workflows/existing-mod-assessment.md` | Establish an approved baseline for an existing mod |
 | Change Cycle | `workflows/change-cycle.md` | Modify a mod that already has an approved baseline |
 
 Only one workflow may be active. Workflow selection follows `AGENTS.md` and requires project-owner approval when starting a new workflow.
@@ -130,7 +130,7 @@ They describe the current approved project state and include project setup, conc
 The selected workflow defines `<artifact-root>`:
 
 - Initial Development: `workspace/documentation/`
-- Existing Project Adoption: `workspace/documentation/`
+- Existing Mod Assessment: `workspace/documentation/`
 - Change Cycle: `workspace/documentation/cycles/<cycle-id>/`
 
 Cycle directories contain only change-specific intake, plans, issues, evidence, summaries, release presentation, and release handoff. They must not contain full copies of canonical project documents.

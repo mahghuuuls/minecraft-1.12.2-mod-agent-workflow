@@ -16,6 +16,7 @@ This stage is interactive onboarding. It does not define mod behavior, prove tec
 - `guidelines/project-defaults.md`
 - `setup/template-defaults.properties`
 - `setup/project.properties.example`
+- `references/template-candidates.md`
 - Existing `workspace/project.properties`, when present
 - Existing workspace documents and repositories, when present
 
@@ -23,7 +24,7 @@ This stage is interactive onboarding. It does not define mod behavior, prove tec
 
 Establish:
 
-- Whether the user is creating, adopting, or changing a mod
+- Whether the user is creating, assessing, or changing a mod
 - The proposed workflow
 - The current tool and workspace state
 - The project repository state or the stage by which it must exist
@@ -90,12 +91,12 @@ Use when no implementation or approved baseline exists.
 - Collect repository URL and directory name now only when the owner already has them.
 - Otherwise record them as deferred prerequisites due before Project Initialization.
 
-### Existing Mod Adoption
+### Existing Mod Assessment
 
 Use when implementation or release history exists without an approved process baseline.
 
-- Propose Existing Project Adoption.
-- Require the existing repository identity before adoption begins.
+- Propose Existing Mod Assessment.
+- Require the existing repository identity before assessment begins.
 - Preserve its history and never apply the empty-repository rule.
 
 ### Change to an Approved Mod
@@ -129,18 +130,30 @@ Do not install software without explicit authorization.
 
 For Initial Development:
 
-1. Read the shared Minecraft, Java, license, branch, and distribution preferences.
-2. Ask whether the owner already requires a particular loader or compatible runtime.
-3. When unresolved, explain relevant Minecraft 1.12.2 loader options and research current candidates using authoritative, version-specific evidence.
-4. Ask whether CurseForge should be the primary destination and whether other platforms must also be supported.
-5. Research templates compatible with the provisional loader and runtime choices.
-6. Compare Minecraft 1.12.2 support, loader/runtime compatibility, development and target Java versions, build tooling, license, reuse conditions, maintenance state, and selected distribution requirements.
-7. Recommend provisional loader, runtime, template, and distribution choices with trade-offs.
+1. Read `references/template-candidates.md`.
+2. Ask whether the artifact must run on standard Forge, Cleanroom, or both.
+3. Ask whether Java, Kotlin, or Scala is intended.
+4. Identify required build capabilities such as Mixins, coremods, access transformers, tests, shadowing, or advanced automation.
+5. Inspect the current candidate repositories and primary documentation.
+6. Present a concise comparison and recommendation.
+7. Record the provisional repository, ref, compatibility target, trade-offs, and evidence.
 8. Store approved project-specific values in `workspace/project.properties`.
 
-These choices remain provisional until Feasibility Research validates them against the approved concept and technical constraints. Do not clone or prototype templates during this stage.
+Use this recommendation order unless inspected evidence or project constraints justify another choice:
 
-Existing Project Adoption and Change Cycle begin from the existing loader and build system, but Stage 0 must still record supported runtimes and intended distribution platforms.
+1. **ForgeDevEnv:** recommended default for broad Forge and Cleanroom compatibility.
+2. **CleanroomModTemplate:** specialized choice for Cleanroom-exclusive development.
+3. **GregTechCEu Buildscripts:** advanced choice for projects that need its managed build and automation.
+4. **TemplateDevEnvKt:** language-specific alternative for Kotlin.
+5. **Another researched candidate:** only when the maintained shortlist does not fit.
+
+Do not select CleanroomModTemplate merely because Cleanroom compatibility is desired. A conventional Forge artifact is normally the broader compatibility target; CleanroomModTemplate is appropriate when Cleanroom-native or Java 25-only behavior is intentional.
+
+Do not recommend archived, unlicensed, experimental, or multiversion templates without explaining their risk and proving that they support the approved Minecraft 1.12.2 target.
+
+Template choice remains provisional until Feasibility Research validates it. Do not clone or prototype templates during this stage.
+
+Existing Mod Assessment and Change Cycle begin from the existing loader and build system, but Stage 0 must still record supported runtimes and intended distribution platforms.
 
 ## Project Configuration
 

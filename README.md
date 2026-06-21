@@ -13,22 +13,27 @@ git clone https://github.com/mahghuuuls/minecraft-1.12.2-mod-agent-workflow.git
 cd minecraft-1.12.2-mod-agent-workflow
 ```
 
-Open the cloned directory with your coding agent and send:
+Open the cloned directory with your coding agent and use the prompt matching your situation.
+
+For a new mod:
 
 ```text
 Read AGENTS.md and guide me through Project Setup for a new Minecraft 1.12.2 mod.
 ```
 
-For an existing mod, replace the last phrase with either:
+For an existing mod that has never used this workflow:
 
 ```text
-I want to adopt an existing Minecraft 1.12.2 mod.
+Read AGENTS.md and guide me through Project Setup. I have an existing
+Minecraft 1.12.2 mod, and I want you to assess and document its current
+state before we make changes.
 ```
 
-or:
+For a mod already managed through this workflow:
 
 ```text
-I want to make a change to an already adopted mod.
+Read AGENTS.md and guide me through Project Setup. This mod already uses
+this workflow, and I want to plan a new change.
 ```
 
 That is enough to begin. The agent should inspect the workspace, explain what is needed, configure known values, and guide you through unresolved prerequisites one question at a time.
@@ -38,7 +43,7 @@ That is enough to begin. The agent should inspect the workspace, explain what is
 The agent will:
 
 1. Run Project Setup.
-2. Determine and propose the appropriate workflow.
+2. Determine whether to start Initial Development, Existing Mod Assessment, or a Change Cycle.
 3. Guide you through focused stages with explicit boundaries.
 4. Produce project-specific documents outside the final mod repository.
 5. Initialize or preserve the independent mod repository at the correct time.
@@ -71,7 +76,7 @@ For manual instructions, see [Manual Workspace Setup](setup/manual-workspace-set
 ## Supported Workflows
 
 - **Initial Development:** create and prepare the first release of a new mod.
-- **Existing Project Adoption:** document and approve an existing mod without changing its behavior.
+- **Existing Mod Assessment:** inspect and document the current state of an existing mod before changing its behavior.
 - **Change Cycle:** deliver a feature, fix, compatibility update, or refactor against an approved baseline.
 
 ## Repository Structure

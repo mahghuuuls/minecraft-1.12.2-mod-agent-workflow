@@ -8,8 +8,16 @@ Prefer version-specific and primary sources. These links are starting points for
 
 ## Template Candidates
 
+See [Minecraft 1.12.2 Template Candidates](template-candidates.md) for selection guidance.
+
 - [CleanroomMC ForgeDevEnv](https://github.com/CleanroomMC/ForgeDevEnv)  
-  Forge/Cleanroom-oriented template candidate for new mod projects.
+  Recommended general Forge/Cleanroom-compatible candidate.
+- [CleanroomMC CleanroomModTemplate](https://github.com/CleanroomMC/CleanroomModTemplate)  
+  Cleanroom-exclusive template candidate.
+- [GregTechCEu Buildscripts](https://github.com/GregTechCEu/Buildscripts)  
+  Advanced Forge buildsystem and starter candidate.
+- [CleanroomMC TemplateDevEnvKt](https://github.com/CleanroomMC/TemplateDevEnvKt)  
+  Kotlin-oriented Forge template candidate.
 
 ## Cleanroom
 

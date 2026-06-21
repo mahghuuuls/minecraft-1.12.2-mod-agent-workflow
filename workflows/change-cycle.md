@@ -19,7 +19,7 @@ Use one cycle per coherent release objective. Do not combine unrelated requests 
 - No other workflow or change cycle is active.
 - The project owner provides an initial change request.
 
-If the repository has no approved baseline, use Existing Project Adoption first.
+If the repository has no approved baseline, use Existing Mod Assessment first.
 
 ## Required Inputs
 

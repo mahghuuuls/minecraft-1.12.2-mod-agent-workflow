@@ -8,7 +8,7 @@ Create a new mod from an initial idea, establish its approved project documents 
 
 Use this workflow when no existing implementation or approved project baseline exists and the configured final repository is intended to be empty.
 
-Do not use it to adopt or update a repository that already contains mod history.
+Do not use it to assess or update a repository that already contains mod history.
 
 ## Entry Conditions
 

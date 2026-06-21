@@ -1,4 +1,4 @@
-# Existing Project Adoption Workflow
+# Existing Mod Assessment Workflow
 
 ## Purpose
 
@@ -8,12 +8,12 @@ Establish an approved process baseline for an existing mod without redesigning i
 
 Use this workflow when a mod repository already contains implementation or release history but does not have approved canonical documents produced by this process.
 
-Adoption must finish before feature work, bug fixes, compatibility updates, or refactoring begin.
+Assessment must finish before feature work, bug fixes, compatibility updates, or refactoring begin.
 
 ## Entry Conditions
 
 - `workspace/documentation/project-setup.md` is approved.
-- Project Setup classifies the scenario as Existing Project Adoption.
+- Project Setup classifies the scenario as Existing Mod Assessment.
 - The project owner approves this workflow.
 - The project owner identifies the existing repository.
 - No approved project baseline exists.
@@ -39,7 +39,7 @@ Act as a baseline investigator.
 - Build and run the existing project when its documented environment permits.
 - Distinguish observed behavior, documented intent, owner confirmation, inference, and unknowns.
 - Do not present accidental behavior as intended without owner confirmation.
-- Do not modernize, migrate, refactor, fix, or reformat production files during adoption.
+- Do not modernize, migrate, refactor, fix, or reformat production files during assessment.
 - Build outputs and local IDE files may be generated when required for inspection but must not be committed.
 - Record technical debt and defects without correcting them.
 - Ask one focused question at a time where evidence cannot establish intent.
@@ -47,17 +47,17 @@ Act as a baseline investigator.
 
 ## Stage Routing
 
-| Reusable Stage | Disposition | Adoption Behavior |
+| Reusable Stage | Disposition | Assessment Behavior |
 | --- | --- | --- |
 | Concept and Scope | Required | Document confirmed current purpose and boundaries |
 | Feasibility Research | Required | Assess the current toolchain, dependencies, and constraints |
 | Requirements Definition | Required | Establish behavior that must be preserved |
 | Architecture Definition | Required | Document the structure that actually exists |
 | Project Initialization | Not Applicable | Preserve the existing repository and history |
-| Implementation Plan | Not Applicable | Adoption does not plan changes |
-| Implementation | Not Applicable | Adoption does not change production behavior |
-| Release Presentation | Not Applicable | Adoption does not prepare a new release |
-| Packaging and Release Validation | Not Applicable | Adoption does not build a release handoff |
+| Implementation Plan | Not Applicable | Assessment does not plan changes |
+| Implementation | Not Applicable | Assessment does not change production behavior |
+| Release Presentation | Not Applicable | Assessment does not prepare a new release |
+| Packaging and Release Validation | Not Applicable | Assessment does not build a release handoff |
 
 Record this route in `project-status.md`.
 
@@ -75,7 +75,7 @@ Record this route in `project-status.md`.
 10. Execute Requirements Definition in baseline mode.
 11. Execute Architecture Definition in baseline mode.
 12. Reconcile `project-baseline.md` with the approved canonical documents.
-13. Present the completed adoption workflow for approval.
+13. Present the completed assessment workflow for approval.
 
 For baseline mode:
 
@@ -107,7 +107,7 @@ It should contain:
 9. Observed behavior
 10. Known defects, debt, and limitations
 11. Unresolved intent or compatibility questions
-12. Canonical documents established during adoption
+12. Canonical documents established during assessment
 
 ## Completion Criteria
 
