@@ -89,18 +89,38 @@ Record the disposition of each reusable stage for the active workflow. Dispositi
 
 Implementation issue statuses are defined by the Implementation Plan stage.
 
+## Stage Transition Briefing
+
+Before starting Project Setup, any reusable stage, or any workflow-specific approval checkpoint, present a short transition briefing and ask the project owner whether to continue.
+
+The briefing must explain:
+
+- **Stage:** the stage or checkpoint name in plain language, not only its number.
+- **Purpose:** what this stage is for.
+- **User focus:** what the owner should think about, decide, review, or provide now.
+- **Not yet:** what the owner should not worry about during this stage because a later stage owns it.
+- **Output:** the artifact or concrete result this stage will produce.
+- **Boundaries:** any relevant owner-managed responsibilities, deferred prerequisites, or approval requirements.
+
+Ask for explicit permission to begin after the briefing. Do not mark the stage **In Progress** or perform stage work until the owner approves.
+
+For resumed work, provide a shorter briefing that states the active stage, current status, next action, expected output, and whether approval is needed before continuing.
+
+Do not assume the owner remembers what a numbered stage means. Use the stage's plain-language name and practical purpose whenever transitioning.
+
 ## Approval Lifecycle
 
 Apply this lifecycle to stages and workflow-specific approval checkpoints:
 
 1. Confirm that required prerequisites are approved.
-2. Mark the active item **In Progress**.
-3. Perform only its defined work.
-4. Create or update its draft artifacts.
-5. Mark it **Awaiting Approval** and present the complete result.
-6. Revise it in response to review.
-7. Mark it **Approved** only after explicit confirmation from the project owner.
-8. Stop unless the project owner separately authorizes the next item.
+2. Present the stage transition briefing and obtain approval to begin.
+3. Mark the active item **In Progress**.
+4. Perform only its defined work.
+5. Create or update its draft artifacts.
+6. Mark it **Awaiting Approval** and present the complete result.
+7. Revise it in response to review.
+8. Mark it **Approved** only after explicit confirmation from the project owner.
+9. Stop unless the project owner separately authorizes the next item.
 
 A generated artifact, successful check, manual publication action, or approval of a different action does not constitute approval.
 
