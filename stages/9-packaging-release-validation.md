@@ -55,6 +55,7 @@ Establish only:
 - Recommended build command
 - Expected normal release artifact name or path pattern
 - Known limitations and validation gaps already discovered earlier
+- Accepted validation waivers
 - Manual publication checklist
 - Explicit owner-managed responsibilities
 
@@ -68,6 +69,7 @@ Establish:
 - Verified JAR contents
 - Clean client and server results only when assigned and applicable
 - Verified compatibility and dependency claims when assigned
+- Accepted validation waivers for skipped owner-managed checks
 - Artifact identity and checksum
 - A complete handoff for manual publication
 
@@ -79,6 +81,7 @@ Establish:
 - Identify the recommended build command from the project/template documentation
 - Identify the expected normal release artifact name or path pattern without building it
 - Record known limitations from approved implementation and presentation evidence
+- Record accepted validation waivers for skipped owner-managed checks
 - Prepare a concise manual publication checklist
 - Produce `<artifact-root>/release-handoff.md`
 
@@ -92,6 +95,7 @@ Establish:
 - Test the exact JAR in assigned clean environments
 - Perform assigned release smoke tests
 - Reconcile technical results with the approved presentation
+- Record accepted validation waivers for skipped owner-managed checks
 - Produce the checksum and handoff record
 
 ## Out of Scope
@@ -131,6 +135,8 @@ Act as a release handoff coordinator.
 - Keep metadata and handoff information consistent.
 - Do not perform full validation work in lightweight mode.
 - Report known limitations and skipped owner-managed checks plainly.
+- Record owner-skipped validation using the validation waiver format in `guidelines/process-control.md`.
+- Do not repeatedly request checks after they are recorded as accepted limitations.
 - Never upload or publish.
 
 ## Owner-Managed Packaging Mode
@@ -144,7 +150,8 @@ The agent should record:
 3. **Recommended build command:** the normal command the owner should run, such as the template's Gradle wrapper command.
 4. **Expected artifact:** the expected normal release artifact name or path pattern, such as `build/libs/<mod-name>-<version>.jar`.
 5. **Known limitations:** limitations, skipped validations, or owner-accepted risks already discovered earlier.
-6. **Manual publication checklist:** concise owner actions for building, selecting the file, uploading, and publishing.
+6. **Accepted validation waivers:** skipped validation checks recorded in the standard waiver format.
+7. **Manual publication checklist:** concise owner actions for building, selecting the file, uploading, and publishing.
 
 The agent may inspect project files to identify the recommended command and expected artifact pattern, but must not run the release build or inspect the final artifact unless the owner explicitly changes the mode.
 
@@ -179,6 +186,12 @@ The inspected artifact must be the same file handed to the project owner.
 
 Perform clean-instance, dedicated-server, Cleanroom, or multiplayer validation only when assigned by the ownership matrix or explicitly requested by the owner. Do not repeatedly push owner-managed validations.
 
+When a check is skipped by owner decision, record it as an accepted limitation. Example:
+
+```text
+Accepted limitation: Clean launcher testing was not performed by owner decision.
+```
+
 ## Defect Routing
 
 - **Implementation defect:** stop and return to Implementation.
@@ -193,14 +206,14 @@ Any source-code change requires relevant implementation verification and review 
 1. Confirm Release Presentation approval.
 2. Read the release ownership matrix and select Owner-Managed Packaging or Agent-Managed Release Validation.
 3. State the selected mode and get owner confirmation before proceeding.
-4. Review unresolved defects and known limitations.
+4. Review unresolved defects, known limitations, and accepted validation waivers.
 5. Confirm the approved version and source revision.
 
 For Owner-Managed Packaging:
 
 6. Identify the recommended build command without running the release build.
 7. Identify the expected normal artifact name or path pattern without inspecting a final JAR.
-8. Record known limitations and owner-managed validation gaps.
+8. Record known limitations and owner-managed validation gaps as accepted validation waivers where applicable.
 9. Produce the lightweight release handoff record.
 10. Present the handoff for approval.
 
@@ -210,12 +223,13 @@ For Agent-Managed Release Validation:
 7. Build the exact release JAR.
 8. Inspect its contents.
 9. Perform assigned clean-instance, server, compatibility, or smoke validation.
-10. Route discovered defects to the owning stage.
-11. Rebuild and repeat affected checks after corrections.
-12. Reconcile final evidence with the approved presentation.
-13. Calculate the artifact checksum.
-14. Produce the full release handoff record.
-15. Present the complete artifact and evidence for approval.
+10. Record accepted validation waivers for skipped owner-managed checks.
+11. Route discovered defects to the owning stage.
+12. Rebuild and repeat affected checks after corrections.
+13. Reconcile final evidence with the approved presentation.
+14. Calculate the artifact checksum.
+15. Produce the full release handoff record.
+16. Present the complete artifact and evidence for approval.
 
 ## Output Artifacts
 
@@ -235,7 +249,7 @@ The handoff record should contain:
 4. Recommended build command
 5. Expected artifact name or path pattern
 6. Approved presentation record
-7. Known limitations and skipped owner-managed validations
+7. Known limitations and accepted validation waivers
 8. Manual publication checklist
 9. Owner approvals
 
@@ -254,11 +268,12 @@ The handoff record should contain:
 7. Artifact inspection
 8. Clean-client validation when assigned
 9. Dedicated-server, Cleanroom, or multiplayer validation when assigned
-10. Dependencies and compatibility claims
-11. Approved presentation record
-12. Known limitations
-13. Manual publication checklist
-14. Owner approvals
+10. Accepted validation waivers
+11. Dependencies and compatibility claims
+12. Approved presentation record
+13. Known limitations
+14. Manual publication checklist
+15. Owner approvals
 
 Do not record a publication result because publication occurs after this stage.
 
@@ -279,7 +294,7 @@ This stage is complete when:
 - Source revision or repository state is recorded.
 - Recommended build command is recorded.
 - Expected artifact name or path pattern is recorded.
-- Known limitations and skipped owner-managed validations are recorded.
+- Known limitations and accepted validation waivers are recorded.
 - Manual publication checklist is recorded.
 - The project owner explicitly approves the lightweight handoff.
 - Nothing was built, inspected, checksummed, uploaded, or published by the agent unless separately requested.
@@ -293,10 +308,10 @@ This stage is complete when:
 - Version and metadata are consistent.
 - The release build succeeds.
 - The exact distributable JAR is inspected.
-- Assigned clean-instance validation passes or has an approved limitation.
-- Assigned dedicated-server, Cleanroom, or multiplayer validation passes or has an approved limitation.
+- Assigned clean-instance validation passes or has an accepted waiver.
+- Assigned dedicated-server, Cleanroom, or multiplayer validation passes or has an accepted waiver.
 - No known release-blocking defect remains.
-- Approved presentation claims match the artifact.
+- Approved presentation claims match the artifact or affected claims are softened/removed.
 - The artifact checksum and handoff are recorded.
 - The project owner explicitly approves the handoff for manual publication.
 - Nothing was uploaded or published by the agent.
