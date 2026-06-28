@@ -18,7 +18,7 @@ Convert the approved concept into precise, observable, and testable behavior wit
 
 Establish:
 
-- A short public-facing mod description for early project identity
+- A short public-facing mod description for early project identity, when enough information is known
 - What triggers each feature
 - What behavior each feature produces
 - Conditions under which the behavior applies
@@ -34,7 +34,7 @@ Establish:
 
 ## In Scope
 
-- Minimal public mod description for repository metadata and initialization
+- Minimal public mod description for repository metadata and initialization, when enough information is known
 - Functional requirements
 - Observable behavior
 - Feature rules and interactions
@@ -76,7 +76,8 @@ Act as a requirements analyst.
 
 - Derive candidate requirements from the approved Concept and Scope.
 - Respect constraints and limitations discovered during Feasibility Research.
-- Create a short public-facing mod description before finalizing requirements.
+- Create a short public-facing mod description before finalizing requirements when the mod identity is stable enough.
+- If the description cannot be responsibly written yet, defer it to Project Initialization instead of blocking this stage.
 - Keep the public description concise, accurate, and suitable for early repository metadata.
 - Do not treat the public description as final release README or platform-page copy.
 - Interview the project owner one focused question at a time.
@@ -100,7 +101,7 @@ Focus questioning on meaningful behavior and risk. Do not exhaustively enumerate
 
 ## Public Mod Description
 
-Define a minimal public-facing description that can be reused during Project Initialization for repository metadata, template placeholders, or early project identity.
+Define a minimal public-facing description when enough identity and behavior information is available. The description can be reused during Project Initialization for repository metadata, template placeholders, or early project identity.
 
 The description should be:
 
@@ -109,6 +110,13 @@ The description should be:
 - Accurate to the approved concept and requirements.
 - Stable enough for initialization, but not treated as final release copy.
 - Free of internal implementation, workflow, testing, or validation details.
+
+If the mod name, mod ID, or core behavior is still too unstable to write this accurately, record:
+
+```text
+Public mod description: Deferred to Project Initialization
+Reason: <why it is not stable enough yet>
+```
 
 Use this description only as early identity text. Release Presentation owns final README, changelog, and platform-facing copy.
 
@@ -162,7 +170,7 @@ Notes should not prescribe implementation unless the detail is an established pr
 
 1. Read all required input documents.
 2. Extract every approved high-level feature.
-3. Draft the minimal public-facing mod description.
+3. Draft the minimal public-facing mod description or record its deferral to Project Initialization.
 4. Identify the actors, triggers, states, and outcomes associated with each feature.
 5. Interview the project owner one question at a time.
 6. Resolve behavioral ambiguities and contradictions.
@@ -182,7 +190,7 @@ Produce a Markdown document named `workspace/documentation/requirements.md` cont
 
 1. **Purpose and Scope**
 2. **Referenced Documents**
-3. **Public Mod Description**
+3. **Public Mod Description** or **Public Mod Description Deferral**
 4. **Actors and Usage Context**
 5. **Terminology**
 6. **Functional Requirements**
@@ -204,7 +212,7 @@ Omit categories that do not apply rather than inventing requirements.
 
 This stage is complete when:
 
-- The public mod description is approved and suitable for early project metadata.
+- The public mod description is approved or explicitly deferred to Project Initialization with a reason.
 - Every approved high-level feature is represented by requirements.
 - Every requirement has a stable identifier and priority.
 - Required behavior is precise and observable.
@@ -219,5 +227,5 @@ This stage is complete when:
 - The project owner explicitly approves the requirements.
 - `workspace/documentation/requirements.md` has been generated and explicitly approved.
 
-Completion does not require deciding how the requirements will be implemented.
+Completion does not require deciding how the requirements will be implemented, and it does not require final repository identity values.
 
