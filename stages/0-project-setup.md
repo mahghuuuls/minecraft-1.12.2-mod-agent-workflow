@@ -34,6 +34,7 @@ Establish:
 - A provisional loader, compatible-runtime, and template choice for Initial Development
 - Approved distribution platforms and known operational overrides
 - Release-related ownership boundaries for the project owner and agent
+- The intended release handoff mode
 - Deferred prerequisites and their deadlines
 - A clear starting point requiring no README knowledge
 
@@ -53,6 +54,7 @@ Establish:
 - Record provisional loader, runtime, and template candidates or defer final validation to Feasibility Research
 - Explain repository requirements for the selected scenario
 - Collect and approve the release ownership matrix
+- Record the intended release handoff mode
 - Propose the applicable workflow
 - Produce `workspace/documentation/project-setup.md`
 
@@ -264,6 +266,8 @@ When asking about the matrix, present the defaults first and ask what the owner 
 
 Record the approved matrix in `workspace/documentation/project-setup.md`. Later stages must follow it. If a later stage needs to perform owner-managed work, stop and ask the owner to revise the matrix or approve a one-time exception.
 
+Record equivalent machine-readable fields in `workspace/project.properties` when configuration is written. Use `release_handoff_mode` to record the intended Stage 9 mode.
+
 ## Project Configuration
 
 Use:
@@ -295,6 +299,17 @@ Relevant values may include:
 - `template_repository_ref`
 - `public_documentation_style`
 - `commit_message_style`
+- `release_handoff_mode`
+- `release_owner_readme`
+- `release_owner_changelog`
+- `release_owner_icon`
+- `release_owner_screenshots`
+- `release_owner_curseforge_upload`
+- `release_owner_release_jar_generation`
+- `release_owner_final_publication_verification`
+- `release_owner_dedicated_server_testing`
+- `release_owner_cleanroom_testing`
+- `release_owner_external_multiplayer_testing`
 - `preferred_development_java_version`
 - `target_java_version`
 - `project_default_branch`
@@ -340,9 +355,10 @@ It should contain:
 7. Configuration written
 8. Provisional loader, runtime, template, and distribution decisions with evidence
 9. Release ownership matrix
-10. Deferred prerequisites and deadlines
-11. Blocking problems
-12. Owner approvals
+10. Release handoff mode
+11. Deferred prerequisites and deadlines
+12. Blocking problems
+13. Owner approvals
 
 Do not include credentials or secrets.
 
@@ -357,6 +373,7 @@ This stage is complete when:
 - Future prerequisites have explicit deadlines.
 - The loader, runtime, template, and distribution decisions are recorded or legitimately deferred/not applicable.
 - The release ownership matrix is recorded and approved.
+- The release handoff mode is recorded or intentionally deferred.
 - No unresolved blocker prevents the selected workflow's first stage.
 - `project-setup.md` is approved.
 - The project owner separately approves the proposed workflow.
