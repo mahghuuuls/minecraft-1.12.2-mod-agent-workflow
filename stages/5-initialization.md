@@ -12,13 +12,14 @@ Create a clean, independent final mod repository from the configured template an
 
 - `setup/initialize-project.md`
 - Every input declared by that procedure
-- `workspace/documentation/requirements.md`, including the approved public mod description
+- Approved prior-stage artifacts, including `workspace/documentation/requirements.md`
 
-The preceding stages must be approved under `guidelines/process-control.md`.
+The preceding stages must be approved under `guidelines/process-control.md`. Missing repository and project identity values may enter this stage as deferred prerequisites.
 
 ## In Scope
 
 - Execute the initialization procedure in `setup/initialize-project.md`
+- Resolve missing repository URL, project directory name, mod ID, display name, public description, root package, and main class values before cloning or editing templates
 - Resolve and record the exact template revision
 - Resolve missing root package and main class values using approved naming defaults when possible
 - Create an independent local project repository
@@ -45,12 +46,14 @@ Act as a careful project initializer.
 - Follow `setup/initialize-project.md` as the authoritative operational procedure.
 - Inspect the fetched template rather than assuming its structure.
 - Use approved artifacts for project-specific values and property files for configured defaults.
+- Ask for missing repository or project identity values at the beginning of this stage.
+- Do not treat missing repository URL, directory name, mod ID, description, root package, or main class as a reason to return to earlier design stages unless the missing value changes approved scope or behavior.
 - Apply the approved naming defaults for root package and main class only after validating the source values.
 - Ask before using non-obvious normalization or ambiguous generated names.
-- Use the approved public mod description from Requirements Definition for early metadata.
+- Use the approved or newly approved public mod description for early metadata.
 - Treat the description as initialization identity text, not as final release README or platform copy.
 - Treat the template as disposable input and preserve repository independence.
-- Stop and report missing values, incompatible inputs, failed checks, or unsafe repository state.
+- Stop and report incompatible inputs, failed checks, or unsafe repository state.
 - Present verification evidence before requesting approval for the first local commit.
 
 ## Output Artifact
@@ -67,6 +70,7 @@ Its required content is defined by `setup/initialize-project.md`.
 
 This stage is complete when:
 
+- Missing repository and project identity values have been resolved, approved, and recorded.
 - The initialization procedure completes without an unresolved failure.
 - The exact template repository, requested ref, and resolved commit are recorded.
 - The final repository has independent Git metadata, the configured branch, and the correct origin.
