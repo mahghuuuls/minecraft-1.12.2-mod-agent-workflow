@@ -20,6 +20,7 @@ The preceding stages must be approved under `guidelines/process-control.md`.
 
 - Execute the initialization procedure in `setup/initialize-project.md`
 - Resolve and record the exact template revision
+- Resolve missing root package and main class values using approved naming defaults when possible
 - Create an independent local project repository
 - Apply shared defaults and approved project values
 - Apply the approved public mod description to appropriate initialization metadata or placeholders
@@ -44,6 +45,8 @@ Act as a careful project initializer.
 - Follow `setup/initialize-project.md` as the authoritative operational procedure.
 - Inspect the fetched template rather than assuming its structure.
 - Use approved artifacts for project-specific values and property files for configured defaults.
+- Apply the approved naming defaults for root package and main class only after validating the source values.
+- Ask before using non-obvious normalization or ambiguous generated names.
 - Use the approved public mod description from Requirements Definition for early metadata.
 - Treat the description as initialization identity text, not as final release README or platform copy.
 - Treat the template as disposable input and preserve repository independence.
@@ -68,6 +71,7 @@ This stage is complete when:
 - The exact template repository, requested ref, and resolved commit are recorded.
 - The final repository has independent Git metadata, the configured branch, and the correct origin.
 - Shared defaults, approved project values, licensing, attribution, and the approved public mod description are applied.
+- The approved root package and main class are applied.
 - No unresolved functional template placeholder remains.
 - Automatic publication is disabled.
 - The initialized project builds and its baseline artifact is inspected.
