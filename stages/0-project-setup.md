@@ -177,12 +177,12 @@ Start from these defaults unless the owner changes them:
 | README | Agent | Prepare player-facing public copy unless another documentation style is approved. |
 | Changelog | Agent | Prepare concise player-facing release notes from approved changes. |
 | Icon | Owner | Do not research, generate, or select an icon unless the owner explicitly assigns icon work to the agent. |
-| Screenshots | Agent | Prepare screenshot guidance, captions, or checklist when useful; owner may still capture final screenshots. |
+| Screenshots | Owner | Do not plan, request, capture, select, or prepare screenshots unless explicitly assigned. |
 | CurseForge upload | Owner | Do not research upload mechanics, publication page setup, or final platform field choices unless explicitly assigned. |
-| Release JAR generation | Agent | Generate or identify the normal release artifact only when later stages keep this agent-managed. |
+| Release JAR generation | Agent | Generate or identify the normal release artifact when later stages require a release handoff. |
 | Final publication verification | Agent | Verify approved local handoff information by default; external publication checks require owner-provided context or explicit approval. |
 | Dedicated server testing | Owner | Do not attempt, research, or repeatedly request dedicated server validation unless explicitly assigned. |
-| Cleanroom testing | Agent | Validate or record limitations when the approved runtime target requires it and the environment supports it. |
+| Cleanroom testing | Owner | Record compatibility expectations or limitations; do not attempt or repeatedly request Cleanroom runtime testing unless explicitly assigned. |
 | External multiplayer testing | Owner | Do not attempt, research, or repeatedly request external multiplayer validation unless explicitly assigned. |
 
 When asking about the matrix, present the defaults first and ask what the owner wants to override. Do not ask every row as a separate question unless the owner wants detailed control.
