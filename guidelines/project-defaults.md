@@ -40,13 +40,40 @@ These defaults apply to every mod unless an approved project-specific decision o
 
 Project Setup or approved project documents must establish:
 
+- GitHub owner or repository owner, when known
+- Repository name, when known
+- Mod ID and display name
 - Root Java package
+- Main mod entry-point class
 - Author metadata
 - Development username when the toolchain uses one
-- Mod ID and display name
-- Description and main entry point
+- Short public mod description before repository initialization
 
-Do not use repository-owner identity as a default for generated mods. Do not leave example values in initialized project files.
+Default recommendations for new mods:
+
+- Root package: `com.<github-owner>.<mod-id>`
+- Main mod class: `<PascalCaseDisplayName>Mod`
+
+These are recommendations, not hard rules. Use owner-approved overrides when provided.
+
+Normalize generated root package segments to valid lowercase Java identifiers. Ask before applying a non-obvious normalization. The main mod class must be a valid Java class identifier; ask when the display name cannot be converted unambiguously.
+
+Do not leave example values in initialized project files.
+
+## Public Documentation
+
+- Default public documentation style is `player-facing`.
+- Public README content should be suitable for a mod page: what the mod does, why a player would want it, main features, high-level configuration, and important player-facing compatibility or multiplayer notes.
+- Keep internal workflow details, implementation evidence, validation logs, bytecode checks, and QA-style test reports out of public README content unless the owner explicitly chooses a technical style or the information affects normal player decisions.
+- Use `technical` only when the owner wants repository-oriented developer documentation.
+- Use `both` only when separate player-facing and technical documentation is useful.
+
+## Commit Messages
+
+- Default commit-message style is `repo-facing-no-workflow-issue-references`.
+- Commit messages should describe the repository change itself.
+- Do not reference workflow issue IDs, internal issue names, stage documents, or process-only context unless the owner explicitly requests that style.
+- Assume a future reader has access to the Git repository but not to the workflow artifacts.
 
 ## Licensing and Attribution
 
@@ -61,8 +88,8 @@ Do not use repository-owner identity as a default for generated mods. Do not lea
 - Treat `preferred_distribution_platform` as the suggested primary destination.
 - Project Setup asks the owner to approve one or more distribution platforms.
 - CurseForge should be offered as the default recommendation, but it is not mandatory or exclusive.
-- Research and follow the current requirements of every selected platform.
-- Agents may prepare artifacts, documentation, metadata, and visual assets for approved platforms.
+- Research and follow the current requirements of every selected platform only for agent-managed publication responsibilities.
+- Agents may prepare artifacts, documentation, metadata, and visual assets for approved platforms when the ownership matrix assigns that work to the agent.
 - The project owner performs every upload and publication action.
 
 ## Versioning
