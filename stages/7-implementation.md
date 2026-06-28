@@ -4,7 +4,7 @@
 
 Implement the approved plan one issue at a time while continuously verifying that each increment satisfies its requirements and follows the approved architecture.
 
-Implementation includes coding, testing, in-game verification, defect correction, and independent review.
+Implementation includes coding, testing, in-game verification, defect correction, independent review, and commit checkpoints after completed increments.
 
 ## Main Question
 
@@ -32,6 +32,7 @@ For each implementation issue:
 - Record completion evidence
 - Obtain an independent review
 - Correct legitimate review findings
+- Ask the project owner to approve a commit checkpoint after the issue is Done
 
 ## In Scope
 
@@ -49,6 +50,7 @@ For each implementation issue:
 - Refactoring directly related to the issue
 - Independent code review
 - Updating issue status and completion evidence
+- Commit checkpoint preparation after completed issues
 - Explicitly approved architecture updates
 
 ## Out of Scope
@@ -92,6 +94,8 @@ Act as a focused implementation agent.
 - Record completion evidence in the issue file.
 - Move the issue to Review only after implementation verification succeeds.
 - Do not mark the issue Done until independent review is complete.
+- After marking an issue Done, prepare a commit checkpoint and ask the project owner whether to commit before moving to the next issue.
+- Do not commit without explicit approval.
 
 The agent may make ordinary method-level implementation decisions that remain within the approved architecture. Decisions that alter component responsibilities, dependency directions, public behavior, or project scope require explicit approval.
 
@@ -143,6 +147,39 @@ Use in-game verification when behavior depends on:
 
 Define expected results before performing any verification.
 
+## Commit Checkpoints
+
+After each implementation issue or approved vertical slice is marked **Done**, pause and ask the project owner whether to create a commit before starting the next issue.
+
+Before requesting commit approval:
+
+- Inspect the active mod repository status.
+- Summarize the completed code change in repository terms.
+- Summarize verification evidence and remaining limitations.
+- Confirm that no unrelated files are included.
+- Propose a repo-facing commit message.
+
+Commit-message guidance:
+
+- Describe the actual code or asset change.
+- Do not reference internal workflow issue IDs, issue filenames, stage documents, or process-only context unless the owner explicitly requests that style.
+- Do not use messages that require the reader to know the workflow documentation.
+- Assume a future reader has access to the Git repository but not the process artifacts.
+
+Good example:
+
+```text
+Add client-side left-click vacation toggle
+```
+
+Bad example:
+
+```text
+Complete issue 3 from implementation-plan.md
+```
+
+If the owner approves the commit, create it in the active mod repository only. If the owner declines or defers, record the decision and continue only if the owner approves moving to the next issue with uncommitted changes.
+
 ## Issue Execution Process
 
 1. Select a Ready issue whose blockers are Done.
@@ -164,7 +201,9 @@ Define expected results before performing any verification.
 17. Address legitimate review findings.
 18. Repeat verification for affected behavior.
 19. Mark the issue **Done** only when the Definition of Done is satisfied.
-20. Select the next Ready issue.
+20. Prepare the commit checkpoint and request owner approval to commit.
+21. Create the commit only if approved, or record the approved deferral.
+22. Select the next Ready issue only after the commit checkpoint is resolved.
 
 ## Handling Discoveries
 
@@ -295,6 +334,7 @@ An issue is complete when:
 - Legitimate review findings are resolved.
 - Any remaining limitations are explicit and approved.
 - The issue status is **Done**.
+- The commit checkpoint has been completed or explicitly deferred by the project owner.
 
 ## Stage Completion Criteria
 
@@ -309,6 +349,7 @@ The Implementation stage is complete when:
 - No release-blocking defects remain.
 - The code matches the approved architecture.
 - Approved documents reflect any accepted changes made during implementation.
+- All commit checkpoints are completed or explicitly deferred.
 - No required issue remains Backlog, Ready, In Progress, Review, or Blocked.
 - The project owner approves the implemented mod for Release Presentation.
 
