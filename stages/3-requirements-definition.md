@@ -12,6 +12,7 @@ Convert the approved concept into precise, observable, and testable behavior wit
 
 - `workspace/documentation/concept-and-scope.md`
 - `workspace/documentation/feasibility-research.md`
+- `workspace/documentation/glossary.md`, when present
 - Any approved decisions produced from feasibility findings
 
 ## Objectives
@@ -31,6 +32,7 @@ Establish:
 - Relevant performance expectations
 - Testable acceptance criteria
 - Explicitly excluded behavior
+- Approved glossary terms that affect behavior, configuration, or user-facing wording
 
 ## In Scope
 
@@ -51,7 +53,7 @@ Establish:
 - Performance requirements
 - Acceptance criteria
 - Requirement priorities
-- Consistent terminology
+- Consistent terminology and glossary updates
 
 ## Out of Scope
 
@@ -76,6 +78,9 @@ Act as a requirements analyst.
 
 - Derive candidate requirements from the approved Concept and Scope.
 - Respect constraints and limitations discovered during Feasibility Research.
+- Read and use approved glossary terms when present.
+- Promote candidate glossary terms to approved terms when they affect requirements and the owner confirms their meaning.
+- Clarify terms before using them in requirements when ambiguity could change behavior, configuration, permissions, multiplayer behavior, persistence, or public wording.
 - Create a short public-facing mod description before finalizing requirements when the mod identity is stable enough.
 - If the description cannot be responsibly written yet, defer it to Project Initialization instead of blocking this stage.
 - Keep the public description concise, accurate, and suitable for early repository metadata.
@@ -119,6 +124,20 @@ Reason: <why it is not stable enough yet>
 ```
 
 Use this description only as early identity text. Release Presentation owns final README, changelog, and platform-facing copy.
+
+## Terminology and Glossary
+
+Use `workspace/documentation/glossary.md` as the source of project-specific vocabulary.
+
+During Requirements Definition:
+
+- Resolve candidate glossary terms that affect required behavior.
+- Add missing terms when a requirement depends on vocabulary with project-specific meaning.
+- Mark terms **Approved** when the owner confirms their meaning or when the approved requirements depend on them.
+- Keep requirement names, requirement text, acceptance criteria, configuration names, and public-description wording consistent with approved terms.
+- Avoid using synonyms casually when the glossary has an approved preferred term.
+
+If a term is still unresolved but does not materially affect behavior, record it as an unresolved non-blocking glossary question. If it affects behavior, do not approve the requirements until it is clarified.
 
 ## Requirement Quality
 
@@ -169,20 +188,23 @@ Notes should not prescribe implementation unless the detail is an established pr
 ## Process
 
 1. Read all required input documents.
-2. Extract every approved high-level feature.
-3. Draft the minimal public-facing mod description or record its deferral to Project Initialization.
-4. Identify the actors, triggers, states, and outcomes associated with each feature.
-5. Interview the project owner one question at a time.
-6. Resolve behavioral ambiguities and contradictions.
-7. Define rules, limits, exceptions, and failure behavior.
-8. Define configuration, multiplayer, persistence, and compatibility behavior where relevant.
-9. Convert agreed behavior into atomic requirements.
-10. Assign stable identifiers and priorities.
-11. Add objective acceptance criteria.
-12. Check every requirement for clarity, consistency, feasibility, and testability.
-13. Trace requirements back to approved features.
-14. Generate `workspace/documentation/requirements.md` as a complete draft.
-15. Present the draft for review and revise it until explicitly approved.
+2. Read `workspace/documentation/glossary.md`, when present.
+3. Extract every approved high-level feature.
+4. Draft the minimal public-facing mod description or record its deferral to Project Initialization.
+5. Identify glossary terms that must be approved before requirements can be approved.
+6. Identify the actors, triggers, states, and outcomes associated with each feature.
+7. Interview the project owner one question at a time.
+8. Resolve behavioral ambiguities, terminology ambiguities, and contradictions.
+9. Define rules, limits, exceptions, and failure behavior.
+10. Define configuration, multiplayer, persistence, and compatibility behavior where relevant.
+11. Convert agreed behavior into atomic requirements.
+12. Assign stable identifiers and priorities.
+13. Add objective acceptance criteria.
+14. Check every requirement for clarity, consistency, feasibility, terminology, and testability.
+15. Update `workspace/documentation/glossary.md` when requirements approve, refine, or deprecate project terms.
+16. Trace requirements back to approved features.
+17. Generate `workspace/documentation/requirements.md` as a complete draft.
+18. Present the draft for review and revise it until explicitly approved.
 
 ## Output Artifact
 
@@ -204,7 +226,8 @@ Produce a Markdown document named `workspace/documentation/requirements.md` cont
 14. **Out-of-Scope Behavior**
 15. **Assumptions and Dependencies**
 16. **Requirement Traceability**
-17. **Unresolved Non-Blocking Questions**
+17. **Glossary Updates**
+18. **Unresolved Non-Blocking Questions**
 
 Omit categories that do not apply rather than inventing requirements.
 
@@ -219,6 +242,8 @@ This stage is complete when:
 - Meaningful boundaries and exceptions are defined.
 - Relevant configuration, multiplayer, persistence, and failure behavior is covered.
 - Every required behavior has objective acceptance criteria.
+- Requirements use approved glossary terms consistently.
+- Glossary terms that materially affect behavior are approved or revised.
 - Requirements do not prescribe internal implementation.
 - Requirements do not contradict each other.
 - Requirements respect project defaults and feasibility findings.
@@ -228,4 +253,3 @@ This stage is complete when:
 - `workspace/documentation/requirements.md` has been generated and explicitly approved.
 
 Completion does not require deciding how the requirements will be implemented, and it does not require final repository identity values.
-
