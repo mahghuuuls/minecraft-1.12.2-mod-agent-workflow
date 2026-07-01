@@ -14,6 +14,7 @@ The architecture should provide a clear map of where responsibilities belong and
 
 - `workspace/documentation/feasibility-research.md`
 - `workspace/documentation/requirements.md`
+- `workspace/documentation/glossary.md`, when present
 - The active mod repository, when architecture must account for existing code
 
 ## Objectives
@@ -33,6 +34,7 @@ Establish:
 - Performance-sensitive areas
 - How the architecture supports verification
 - Major technical decisions and their reasoning
+- Architectural naming that follows approved glossary vocabulary
 
 ## In Scope
 
@@ -55,6 +57,7 @@ Establish:
 - Architectural support for testing and verification
 - Decisions, alternatives, and trade-offs
 - Requirement-to-component traceability
+- Glossary-aligned naming decisions
 
 ## Out of Scope
 
@@ -77,6 +80,10 @@ Architecture should establish structure and boundaries without attempting to wri
 Act as a software architect collaborating with the project owner.
 
 - Begin by identifying the responsibilities implied by the requirements.
+- Read and use approved glossary terms when present.
+- Use approved terminology for components, configuration concepts, public-facing concepts, and important runtime flows.
+- Ask before introducing a new term when it could overlap with an approved glossary term.
+- Update the glossary when architecture introduces or deprecates a project-specific technical term that later documents or code should use consistently.
 - Propose the simplest architecture that satisfies those responsibilities.
 - Prioritize understandability and clear ownership of behavior.
 - Keep related behavior together and unrelated concerns separate.
@@ -109,6 +116,7 @@ The architecture should be:
 - **Changeable:** Likely changes remain localized.
 - **Verifiable:** Important logic can be evaluated without unnecessary environmental coupling.
 - **Explicit:** Dependencies and runtime flows are documented rather than implied.
+- **Terminologically consistent:** Architectural names do not casually rename approved project concepts.
 
 ## Architectural Decisions
 
@@ -143,6 +151,10 @@ Why was this approach selected?
 - REQ-001
 - REQ-002
 
+**Related Glossary Terms:**
+
+- Approved term, when applicable
+
 **Implementation Validation:**  
 What, if anything, must be confirmed during Implementation?
 ```
@@ -152,20 +164,22 @@ Minor and self-evident choices do not require separate decision records.
 ## Process
 
 1. Read all required input documents.
-2. Extract architectural constraints and quality needs.
-3. Group requirements into related responsibilities.
-4. Identify major components and ownership boundaries.
-5. Evaluate relevant libraries and integration approaches.
-6. Define package organization and dependency directions.
-7. Define loader lifecycle and event integration.
-8. Define client, server, and shared-code boundaries.
-9. Define configuration, networking, persistence, and external integrations where applicable.
-10. Describe important runtime and data flows.
-11. Identify performance-sensitive and verification-sensitive areas.
-12. Review the architecture for unnecessary complexity and coupling.
-13. Trace components and decisions to requirements.
-14. Generate `workspace/documentation/architecture.md` as a complete draft.
-15. Present the draft for review and revise it until explicitly approved.
+2. Read `workspace/documentation/glossary.md`, when present.
+3. Extract architectural constraints, quality needs, and approved terminology.
+4. Group requirements into related responsibilities.
+5. Identify major components and ownership boundaries.
+6. Evaluate relevant libraries and integration approaches.
+7. Define package organization and dependency directions.
+8. Define loader lifecycle and event integration.
+9. Define client, server, and shared-code boundaries.
+10. Define configuration, networking, persistence, and external integrations where applicable.
+11. Describe important runtime and data flows.
+12. Identify performance-sensitive and verification-sensitive areas.
+13. Review the architecture for unnecessary complexity, coupling, and terminology drift.
+14. Trace components and decisions to requirements and glossary terms where relevant.
+15. Update `workspace/documentation/glossary.md` when architecture approves, introduces, refines, or deprecates project-specific terms.
+16. Generate `workspace/documentation/architecture.md` as a complete draft.
+17. Present the draft for review and revise it until explicitly approved.
 
 ## Output Artifact
 
@@ -191,7 +205,8 @@ Produce a Markdown document named `workspace/documentation/architecture.md` cont
 18. **Support for Verification**
 19. **Architectural Decisions and Trade-offs**
 20. **Requirement Traceability**
-21. **Questions Requiring Implementation Validation**
+21. **Glossary Traceability**
+22. **Questions Requiring Implementation Validation**
 
 Omit sections that do not apply rather than inventing architectural concerns.
 
@@ -212,6 +227,8 @@ This stage is complete when:
 - Major decisions and trade-offs are recorded.
 - Architecture complexity is proportionate to the mod.
 - Components and decisions are traceable to requirements.
+- Architectural names and concepts are consistent with approved glossary terms.
+- Glossary entries introduced or changed by architecture are recorded.
 - Implementation uncertainties are explicitly recorded.
 - A developer can determine where each major behavior belongs.
 - The project owner explicitly approves the architecture.
