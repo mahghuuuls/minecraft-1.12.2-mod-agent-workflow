@@ -96,13 +96,13 @@ For mod-development work, read in this order:
 
 1. `AGENTS.md`
 2. The core guideline files listed under **Instruction Ownership**
-3. `setup/owner-defaults.md`
-4. `workspace/documentation/project-state.md`, when present
-5. `workspace/documentation/project-status.md`, when present
-6. `workspace/documentation/glossary.md`, when present
-7. `workspace/documentation/dependency-references.md`, when present
-8. `workspace/documentation/workflow-feedback.md`, when present
-9. `stages/0-project-setup.md` and its artifact when setup is required
+3. `workspace/documentation/project-state.md`, when present
+4. `workspace/documentation/project-status.md`, when present
+5. `workspace/documentation/glossary.md`, when present
+6. `workspace/documentation/dependency-references.md`, when present
+7. `workspace/documentation/workflow-feedback.md`, when present
+8. `stages/0-project-setup.md` and its artifact when setup is required
+9. `workspace/documentation/owner-defaults.md`, when present and setup is required or being revised
 10. The selected file under `workflows/`
 11. The active stage under `stages/`, when the workflow invokes one
 12. Any specialized guideline explicitly referenced by the active workflow or stage
@@ -121,7 +121,7 @@ Do not silently resolve contradictions between sources. Follow `guidelines/proce
 - `workflows/*.md`: scenario-specific routing and behavior.
 - `setup/manual-workspace-setup.md`: optional human-operated workspace configuration.
 - `setup/initialize-project.md`: new-repository initialization procedure used later.
-- `setup/owner-defaults.md`: standing owner preferences that reduce repeated questions but do not override project-specific approvals.
+- `setup/owner-defaults-template.md`: template for workspace-specific Project Setup preferences and owner-specific overrides.
 - `setup/artifact-templates/`: reusable starting structures for workflow artifacts.
 - `setup/glossary-template.md`: template for the project-specific glossary.
 - `setup/workflow-feedback-template.md`: template for the project-specific feedback log.

@@ -14,7 +14,8 @@ This stage is interactive onboarding. It does not define mod behavior, prove tec
 
 - The project owner's initial request
 - `guidelines/project-defaults.md`
-- `setup/owner-defaults.md`
+- `workspace/documentation/owner-defaults.md`, when present
+- `setup/owner-defaults-template.md`
 - `setup/template-defaults.properties`
 - `setup/project.properties.example`
 - `references/template-candidates.md`

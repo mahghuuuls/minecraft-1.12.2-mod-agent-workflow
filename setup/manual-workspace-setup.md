@@ -64,11 +64,19 @@ Do not leave example URLs or invented placeholder values in the real properties 
 
 Shared preferences are configured in `setup/template-defaults.properties`, but loader and template selection are project-specific.
 
-Standing owner preferences are documented in:
+Owner setup preferences are workspace-specific. If you have them from a previous mod, place them at:
 
 ```text
-setup/owner-defaults.md
+workspace/documentation/owner-defaults.md
 ```
+
+If not, create the file from:
+
+```text
+setup/owner-defaults-template.md
+```
+
+Use this file for Project Setup defaults and owner-specific overrides. Do not duplicate general workflow rules there.
 
 Project artifacts should start from matching templates under:
 

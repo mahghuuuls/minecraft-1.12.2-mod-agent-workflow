@@ -40,9 +40,9 @@ That is enough to begin. The agent should inspect the workspace, explain what is
 
 ### Returning Users
 
-If you already completed a mod with this workflow, provide your previous `setup/owner-defaults.md` when starting the next mod, or review the one in this repository before Project Setup begins.
+If you already completed a mod with this workflow, provide your previous `workspace/documentation/owner-defaults.md` when starting the next mod, or create one from `setup/owner-defaults-template.md` before Project Setup begins.
 
-That file captures standing preferences such as commit-message style, owner-managed release responsibilities, documentation structure, validation habits, debug-option preferences, and dependency source checkout boundaries. Providing it helps the agent avoid re-asking questions you have already answered in earlier projects.
+That file captures setup-stage preferences and owner-specific overrides, such as preferred loader, runtime target, language, template, distribution platform, license, branch, Java versions, and repeated setup answers. General workflow rules belong in the committed guidelines and stages, not in this workspace-local file.
 
 ## What to Expect
 
@@ -95,7 +95,7 @@ minecraft-1.12.2-mod-agent-workflow/
 |-- stages/
 |-- references/
 |-- setup/
-|   |-- owner-defaults.md
+|   |-- owner-defaults-template.md
 |   `-- artifact-templates/
 `-- workspace/
     |-- documentation/
@@ -110,9 +110,9 @@ minecraft-1.12.2-mod-agent-workflow/
 - `guidelines/` contains core and specialized rules.
 - `workflows/` defines scenario-specific routing.
 - `stages/` defines setup and development stages.
-- `setup/` contains optional manual setup, owner defaults, artifact templates, defaults, and initialization procedures.
+- `setup/` contains optional manual setup, owner-default templates, artifact templates, defaults, and initialization procedures.
 - `references/` contains curated technical links.
-- `workspace/` contains ignored project-specific configuration, documents, artwork, dependency references, templates, and the active mod.
+- `workspace/` contains ignored project-specific configuration, setup owner defaults, documents, artwork, dependency references, templates, and the active mod.
 
 Use a separate clone of this process repository for each mod project.
 

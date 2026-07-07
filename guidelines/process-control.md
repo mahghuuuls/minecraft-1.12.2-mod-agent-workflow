@@ -2,15 +2,21 @@
 
 This file is the authoritative source for workflow and stage status, approvals, artifact locations, project state snapshots, project glossary, workflow feedback, and backward transitions.
 
-## Owner Defaults
+## Owner Setup Defaults
 
-Read standing owner preferences from:
+During Project Setup, read owner-specific setup preferences, when present, from:
 
 ```text
-setup/owner-defaults.md
+workspace/documentation/owner-defaults.md
 ```
 
-Owner defaults reduce repeated questions. They do not override approved project-specific decisions, legal constraints, safety boundaries, or explicit owner instructions in the active conversation.
+Create it from:
+
+```text
+setup/owner-defaults-template.md
+```
+
+Owner defaults reduce repeated setup questions. They are workspace-specific and ignored by Git. They should contain owner-specific setup preferences and overrides, not general workflow rules. They do not override approved project-specific decisions, legal constraints, safety boundaries, or explicit owner instructions in the active conversation.
 
 ## Project Setup
 
