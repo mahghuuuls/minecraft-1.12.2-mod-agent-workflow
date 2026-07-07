@@ -27,9 +27,12 @@ During a mod project, the agent may:
 
 - Read versioned process instructions, setup files, stages, workflows, and references.
 - Use ignored runtime paths under `workspace/` for project configuration, documentation, artwork, templates, and the active mod.
+- Use ignored runtime paths under `workspace/` for approved dependency source references when they are needed for research or implementation context.
 - Follow the shared guidelines, approved setup, selected workflow, active stage, and project glossary when present.
 - Record project-specific vocabulary in `workspace/documentation/glossary.md` when it affects requirements, architecture, code naming, configuration, or public copy.
 - Record workflow friction, corrections, and improvement ideas in `workspace/documentation/workflow-feedback.md` when they arise.
+- Maintain `workspace/documentation/project-state.md` as a compact current-state snapshot at natural checkpoints.
+- Maintain `workspace/documentation/dependency-references.md` when dependency source repositories are used as reference material.
 - Modify mod source only in the active repository under `workspace/project/`.
 - Treat `workspace/template/` as disposable source material.
 
@@ -50,10 +53,11 @@ If the user asks to improve this workflow while a mod project is active, record 
 - **Process material:** versioned instructions, defaults, stages, workflows, and references. Read-only during mod development.
 - **Runtime workspace:** ignored project-specific state under `workspace/`.
 - **Template workspace:** an ignored clone under `workspace/template/`; never the development target.
+- **Dependency reference workspace:** optional ignored dependency source checkouts under `workspace/dependencies/`; never the active development target unless the owner explicitly changes the project.
 - **Project documentation:** ignored artifacts under `workspace/documentation/`.
 - **Mod repository:** exactly one independent Git repository under `workspace/project/<mod-name>/`.
 
-Do not copy template Git metadata into the mod repository. If there is no active mod repository, Project Setup and the selected workflow determine whether one will be initialized or cloned. If more than one exists, ask which one is active.
+Do not copy template or dependency-reference Git metadata into the mod repository. If there is no active mod repository, Project Setup and the selected workflow determine whether one will be initialized or cloned. If more than one project repository exists, ask which one is active. Dependency reference repositories under `workspace/dependencies/` are not active project repositories.
 
 ## Project Setup
 
@@ -92,15 +96,18 @@ For mod-development work, read in this order:
 
 1. `AGENTS.md`
 2. The core guideline files listed under **Instruction Ownership**
-3. `workspace/documentation/project-status.md`, when present
-4. `workspace/documentation/glossary.md`, when present
-5. `workspace/documentation/workflow-feedback.md`, when present
-6. `stages/0-project-setup.md` and its artifact when setup is required
-7. The selected file under `workflows/`
-8. The active stage under `stages/`, when the workflow invokes one
-9. Any specialized guideline explicitly referenced by the active workflow or stage
-10. The approved artifacts referenced by the workflow or stage
-11. The relevant implementation issue and source code, when applicable
+3. `setup/owner-defaults.md`
+4. `workspace/documentation/project-state.md`, when present
+5. `workspace/documentation/project-status.md`, when present
+6. `workspace/documentation/glossary.md`, when present
+7. `workspace/documentation/dependency-references.md`, when present
+8. `workspace/documentation/workflow-feedback.md`, when present
+9. `stages/0-project-setup.md` and its artifact when setup is required
+10. The selected file under `workflows/`
+11. The active stage under `stages/`, when the workflow invokes one
+12. Any specialized guideline explicitly referenced by the active workflow or stage
+13. The approved artifacts referenced by the workflow or stage
+14. The relevant implementation issue and source code, when applicable
 
 Do not silently resolve contradictions between sources. Follow `guidelines/process-control.md`.
 
@@ -114,6 +121,8 @@ Do not silently resolve contradictions between sources. Follow `guidelines/proce
 - `workflows/*.md`: scenario-specific routing and behavior.
 - `setup/manual-workspace-setup.md`: optional human-operated workspace configuration.
 - `setup/initialize-project.md`: new-repository initialization procedure used later.
+- `setup/owner-defaults.md`: standing owner preferences that reduce repeated questions but do not override project-specific approvals.
+- `setup/artifact-templates/`: reusable starting structures for workflow artifacts.
 - `setup/glossary-template.md`: template for the project-specific glossary.
 - `setup/workflow-feedback-template.md`: template for the project-specific feedback log.
 - `stages/*.md`: setup and reusable development-stage responsibilities.
@@ -122,4 +131,4 @@ When instructions overlap, the file that owns the subject is authoritative. Othe
 
 ## Execution
 
-Complete or carry forward Project Setup, then resume or obtain approval for the applicable workflow. Follow one checkpoint or stage at a time, update `project-status.md`, maintain the project glossary when relevant, record workflow feedback when relevant, and stop whenever owner approval is required. Never advance automatically.
+Complete or carry forward Project Setup, then resume or obtain approval for the applicable workflow. Follow one checkpoint or stage at a time, update `project-status.md`, update `project-state.md` at natural checkpoints, maintain the project glossary and dependency reference registry when relevant, record workflow feedback when relevant, and stop whenever owner approval is required. Never advance automatically.

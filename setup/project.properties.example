@@ -30,7 +30,7 @@ template_repository_url=
 template_repository_ref=
 
 # Documentation and collaboration preferences:
-public_documentation_style=player-facing
+public_documentation_style=split-repository-and-player-facing
 commit_message_style=repo-facing-no-workflow-issue-references
 
 # Release handoff mode:
@@ -40,6 +40,7 @@ release_handoff_mode=agent-managed-release-validation
 # Release ownership matrix:
 # Allowed values: agent, owner, shared, deferred
 release_owner_readme=agent
+release_owner_mod_page=agent
 release_owner_changelog=agent
 release_owner_icon=owner
 release_owner_screenshots=owner

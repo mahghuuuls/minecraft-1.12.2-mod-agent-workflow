@@ -16,6 +16,7 @@ The architecture should provide a clear map of where responsibilities belong and
 - `workspace/documentation/requirements.md`
 - `workspace/documentation/glossary.md`, when present
 - The active mod repository, when architecture must account for existing code
+- Approved dependency source reference checkouts under `workspace/dependencies/`, when Feasibility Research created or accepted them
 
 ## Objectives
 
@@ -30,6 +31,7 @@ Establish:
 - Client, server, and shared-code separation
 - Configuration, networking, and persistence approaches
 - External library and mod integrations
+- How dependency source findings affect integration boundaries, if applicable
 - Important runtime and data flows
 - Performance-sensitive areas
 - How the architecture supports verification
@@ -91,6 +93,7 @@ Act as a software architect collaborating with the project owner.
 - Avoid abstractions, interfaces, patterns, or layers without a concrete purpose.
 - Avoid designing for hypothetical future features outside the approved scope.
 - Evaluate candidate libraries identified during Feasibility Research.
+- Use approved dependency source checkouts as read-only evidence for integration decisions.
 - Select dependencies only when they provide meaningful value.
 - Explain important alternatives and their trade-offs.
 - Ask one focused question at a time when a decision requires project-owner input.
@@ -169,17 +172,18 @@ Minor and self-evident choices do not require separate decision records.
 4. Group requirements into related responsibilities.
 5. Identify major components and ownership boundaries.
 6. Evaluate relevant libraries and integration approaches.
-7. Define package organization and dependency directions.
-8. Define loader lifecycle and event integration.
-9. Define client, server, and shared-code boundaries.
-10. Define configuration, networking, persistence, and external integrations where applicable.
-11. Describe important runtime and data flows.
-12. Identify performance-sensitive and verification-sensitive areas.
-13. Review the architecture for unnecessary complexity, coupling, and terminology drift.
-14. Trace components and decisions to requirements and glossary terms where relevant.
-15. Update `workspace/documentation/glossary.md` when architecture approves, introduces, refines, or deprecates project-specific terms.
-16. Generate `workspace/documentation/architecture.md` as a complete draft.
-17. Present the draft for review and revise it until explicitly approved.
+7. Review approved dependency source reference findings when they affect integration design.
+8. Define package organization and dependency directions.
+9. Define loader lifecycle and event integration.
+10. Define client, server, and shared-code boundaries.
+11. Define configuration, networking, persistence, and external integrations where applicable.
+12. Describe important runtime and data flows.
+13. Identify performance-sensitive and verification-sensitive areas.
+14. Review the architecture for unnecessary complexity, coupling, and terminology drift.
+15. Trace components and decisions to requirements and glossary terms where relevant.
+16. Update `workspace/documentation/glossary.md` when architecture approves, introduces, refines, or deprecates project-specific terms.
+17. Generate `workspace/documentation/architecture.md` as a complete draft.
+18. Present the draft for review and revise it until explicitly approved.
 
 ## Output Artifact
 
@@ -199,14 +203,15 @@ Produce a Markdown document named `workspace/documentation/architecture.md` cont
 12. **Networking Architecture**
 13. **State Ownership and Persistence**
 14. **External Mod Integrations**
-15. **Important Runtime Flows**
-16. **Error Handling and Logging**
-17. **Performance Considerations**
-18. **Support for Verification**
-19. **Architectural Decisions and Trade-offs**
-20. **Requirement Traceability**
-21. **Glossary Traceability**
-22. **Questions Requiring Implementation Validation**
+15. **Dependency Source Findings**, when applicable
+16. **Important Runtime Flows**
+17. **Error Handling and Logging**
+18. **Performance Considerations**
+19. **Support for Verification**
+20. **Architectural Decisions and Trade-offs**
+21. **Requirement Traceability**
+22. **Glossary Traceability**
+23. **Questions Requiring Implementation Validation**
 
 Omit sections that do not apply rather than inventing architectural concerns.
 

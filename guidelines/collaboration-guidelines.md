@@ -29,6 +29,7 @@ This file is the authoritative source for collaboration, file-editing discipline
 - Periodically summarize shared understanding during alignment-heavy work.
 - Report mistakes, uncertainty, and failed checks plainly.
 - Do not claim completion while required work or verification remains.
+- Follow the ask-versus-decide rule in `guidelines/process-control.md`; do not turn established defaults into repeated approval questions.
 
 ## Project Vocabulary
 
@@ -96,8 +97,11 @@ Commit messages must be repo-facing by default:
 - Describe the actual repository change.
 - Do not reference workflow issue IDs, internal issue names, stage documents, or process-only context unless explicitly requested.
 - Assume a future reader has access to the Git repository but not the workflow artifacts.
+- Treat this as the standing default. Do not ask the owner to approve repo-facing commit messages unless they explicitly request a different style.
 
 Publication to every approved distribution platform is performed manually by the project owner. Agents may prepare handoffs but may not upload or publish the mod.
+
+When owner-assisted manual validation is useful, provide a concise runnable recipe. Include relevant config state, exact commands or setup steps when available, expected results, and any important scenario that is impractical to validate manually.
 
 ## Completion Reporting
 
@@ -108,3 +112,5 @@ At the end of work:
 - Report verification and its result.
 - Report unresolved questions, limitations, failures, or risks.
 - Stop without beginning another stage or unrelated task.
+
+After a clean committed checkpoint, include a simple continuation cue such as: `Ready to continue when you want.`

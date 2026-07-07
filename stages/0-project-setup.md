@@ -14,6 +14,7 @@ This stage is interactive onboarding. It does not define mod behavior, prove tec
 
 - The project owner's initial request
 - `guidelines/project-defaults.md`
+- `setup/owner-defaults.md`
 - `setup/template-defaults.properties`
 - `setup/project.properties.example`
 - `references/template-candidates.md`
@@ -33,6 +34,7 @@ Establish:
 - Client/server responsibility: client-only, client-first, or server-required
 - A provisional loader, compatible-runtime, and template choice for Initial Development
 - Approved distribution platforms and known operational overrides
+- Known dependency source repositories or owner-provided dependency references, only when already relevant
 - Release-related ownership boundaries for the project owner and agent
 - The intended release handoff mode
 - Deferred prerequisites and their deadlines
@@ -45,6 +47,7 @@ Establish:
 - Check available Git and Java installations
 - Record IntelliJ IDEA availability or installation as a pending prerequisite
 - Create required ignored runtime directories
+- Create or update `workspace/documentation/project-state.md`
 - Create or update `workspace/project.properties` when enough real values are known
 - Collect GitHub username, repository name, mod ID, display name, public description, root package, main class, and side/responsibility classification when known
 - Apply approved default naming conventions instead of asking the owner to invent Java naming patterns from scratch
@@ -52,6 +55,8 @@ Establish:
 - Explain the shared platform preferences and available loader/template choices
 - Research loader and template candidates when requested or unresolved
 - Record provisional loader, runtime, and template candidates or defer final validation to Feasibility Research
+- Record known dependency source repositories as optional references, or defer dependency-source decisions to Feasibility Research
+- Create or update `workspace/documentation/dependency-references.md` when dependency source references are already approved or supplied
 - Explain repository requirements for the selected scenario
 - Collect and approve the release ownership matrix
 - Record the intended release handoff mode
@@ -70,6 +75,7 @@ Do not:
 - Modify existing mod source
 - Create commits or push
 - Create a GitHub repository or modify an external service without separate explicit authorization
+- Clone dependency source repositories unless they are immediately needed and explicitly approved
 - Require a new-mod repository before Concept and Scope begins
 - Block Concept and Scope because the repository name, mod ID, display name, public description, root package, or main class is not final yet
 - Research upload procedures, publication page setup, or external platform mechanics unless the owner explicitly assigns that work to the agent
@@ -89,6 +95,7 @@ Act as an onboarding coordinator.
 - Explain trade-offs when presenting template candidates.
 - Record uncertainty instead of guessing.
 - Preserve existing repositories and unrelated workspace content.
+- Treat dependency source repositories as optional reference material, not as active project repositories.
 - Treat owner-managed responsibilities as hard boundaries unless the owner explicitly changes them.
 - Present the setup result and proposed workflow for explicit approval.
 
@@ -157,7 +164,7 @@ Collect or defer:
 - Preferred main mod class name
 - Public documentation style
 - Client/server responsibility
-- Preferred commit-message style
+- Commit-message style, recorded from the fixed default unless the owner explicitly requests a different style
 
 Use these defaults unless the owner overrides them:
 
@@ -165,7 +172,7 @@ Use these defaults unless the owner overrides them:
 | --- | --- |
 | Root package | `com.<github-owner>.<mod-id>` |
 | Main mod class | `<PascalCaseDisplayName>Mod` |
-| Public documentation style | `player-facing` |
+| Public documentation style | `split-repository-and-player-facing` |
 | Commit-message style | `repo-facing-no-workflow-issue-references` |
 
 Root package rules:
@@ -186,11 +193,11 @@ Main class rules:
 
 Public documentation style rules:
 
-- Default to `player-facing`.
-- For `player-facing`, the public README should read like mod-page information: what the mod does, why a player would want it, main features, high-level configuration, and important player-facing compatibility or multiplayer notes.
-- Do not put internal workflow details, implementation evidence, validation logs, or QA-style test reports in the public README unless the owner explicitly selects a technical style or the detail affects normal player decisions.
-- Use `technical` only when the owner wants repository-oriented developer documentation.
-- Use `both` only when the owner wants separate player-facing and technical sections or files.
+- Default to `split-repository-and-player-facing`.
+- For `split-repository-and-player-facing`, keep `README.md` repository-facing and prepare separate player/download-facing copy such as `MOD-PAGE.md` during Release Presentation.
+- Assume repository README readers have basic repository and Gradle/modding literacy. Avoid obvious repository statements and basic build instructions unless the project has unusual steps.
+- Do not put internal workflow details, implementation evidence, validation logs, or QA-style test reports in public documentation unless the owner explicitly selects a technical style or the detail affects normal player decisions.
+- Use a single combined public document only when the owner explicitly chooses that structure.
 
 Client/server responsibility values:
 
@@ -204,6 +211,7 @@ Commit-message style rules:
 - Commit messages should describe the repository change itself.
 - Do not reference workflow issue IDs, internal issue names, stage documents, or process-only context unless the owner explicitly requests that style.
 - Assume a future reader has access to the Git repository but not to the workflow artifacts.
+- Treat repo-facing messages as the standing default. Do not ask the owner to approve this default unless they explicitly request a different style.
 
 When enough values are approved, write them to `workspace/project.properties`. When repository or identity values are missing, record them as deferred to Project Initialization rather than blocking earlier design stages.
 
@@ -251,7 +259,8 @@ Start from these defaults unless the owner changes them:
 
 | Area | Default Owner | Default Notes |
 | --- | --- | --- |
-| README | Agent | Prepare player-facing public copy unless another documentation style is approved. |
+| README | Agent | Prepare concise repository-facing documentation unless another documentation style is approved. |
+| Mod page or distribution-page copy | Agent | Prepare concise player/download-facing copy such as `MOD-PAGE.md` unless owner-managed or deferred. |
 | Changelog | Agent | Prepare concise player-facing release notes from approved changes. |
 | Icon | Owner | Do not research, generate, or select an icon unless the owner explicitly assigns icon work to the agent. |
 | Screenshots | Owner | Do not plan, request, capture, select, or prepare screenshots unless explicitly assigned. |
@@ -262,7 +271,7 @@ Start from these defaults unless the owner changes them:
 | Cleanroom testing | Owner | Record compatibility expectations or limitations; do not attempt or repeatedly request Cleanroom runtime testing unless explicitly assigned. |
 | External multiplayer testing | Owner | Do not attempt, research, or repeatedly request external multiplayer validation unless explicitly assigned. |
 
-When asking about the matrix, present the defaults first and ask what the owner wants to override. Do not ask every row as a separate question unless the owner wants detailed control.
+When asking about the matrix, present the defaults first and ask what the owner wants to override. Do not ask every row as a separate question unless the owner wants detailed control. Apply owner-managed defaults directly unless the owner requests agent involvement or a one-time exception.
 
 Record the approved matrix in `workspace/documentation/project-setup.md`. Later stages must follow it. If a later stage needs to perform owner-managed work, stop and ask the owner to revise the matrix or approve a one-time exception.
 
@@ -301,6 +310,7 @@ Relevant values may include:
 - `commit_message_style`
 - `release_handoff_mode`
 - `release_owner_readme`
+- `release_owner_mod_page`
 - `release_owner_changelog`
 - `release_owner_icon`
 - `release_owner_screenshots`
@@ -344,6 +354,18 @@ Produce:
 workspace/documentation/project-setup.md
 ```
 
+Also create or update:
+
+```text
+workspace/documentation/project-state.md
+```
+
+When dependency source references are already approved or supplied, create or update:
+
+```text
+workspace/documentation/dependency-references.md
+```
+
 It should contain:
 
 1. Setup date
@@ -354,11 +376,12 @@ It should contain:
 6. Practical project defaults, including known values and deferred values
 7. Configuration written
 8. Provisional loader, runtime, template, and distribution decisions with evidence
-9. Release ownership matrix
-10. Release handoff mode
-11. Deferred prerequisites and deadlines
-12. Blocking problems
-13. Owner approvals
+9. Known dependency source references or deferred dependency-source decisions
+10. Release ownership matrix
+11. Release handoff mode
+12. Deferred prerequisites and deadlines
+13. Blocking problems
+14. Owner approvals
 
 Do not include credentials or secrets.
 
@@ -372,10 +395,12 @@ This stage is complete when:
 - Unknown repository and project identity values are either recorded or deferred to Project Initialization.
 - Future prerequisites have explicit deadlines.
 - The loader, runtime, template, and distribution decisions are recorded or legitimately deferred/not applicable.
+- Known dependency source references are recorded or explicitly deferred when relevant.
 - The release ownership matrix is recorded and approved.
 - The release handoff mode is recorded or intentionally deferred.
 - No unresolved blocker prevents the selected workflow's first stage.
 - `project-setup.md` is approved.
+- `project-state.md` summarizes the approved setup and next required action.
 - The project owner separately approves the proposed workflow.
 
 Completion permits the selected workflow to begin. It does not approve any development stage.

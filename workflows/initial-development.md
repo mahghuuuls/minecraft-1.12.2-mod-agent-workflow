@@ -22,6 +22,7 @@ The final repository URL, directory name, and empty-repository creation may be d
 ## Required Inputs
 
 - `workspace/documentation/project-setup.md`
+- `workspace/documentation/project-state.md`, when present
 - The initial mod idea
 - Shared guidelines and defaults
 - `workspace/project.properties` when repository values have been established
@@ -41,7 +42,7 @@ All nine reusable stages are **Required**. Record that disposition for every sta
 
 ## Sequence
 
-1. Record this workflow as **In Progress** in `project-status.md`.
+1. Record this workflow as **In Progress** in `project-status.md` and update `project-state.md`.
 2. Execute Concept and Scope.
 3. Execute Feasibility Research.
 4. Execute Requirements Definition.
@@ -51,8 +52,8 @@ All nine reusable stages are **Required**. Record that disposition for every sta
 8. Execute Implementation.
 9. Execute Release Presentation.
 10. Execute Packaging and Release Validation.
-11. Keep the workflow **In Progress** and set its manual publication state to **Ready for Publication**.
-12. After the owner reports publication, record the published version and source revision in `project-baseline.md`.
+11. Keep the workflow **In Progress**, set its manual publication state to **Ready for Publication**, and update `project-state.md`.
+12. After the owner reports publication, record the published version and source revision in `project-baseline.md` and update `project-state.md`.
 13. Present the completed workflow record for approval.
 
 Each stage and the final workflow record follow the approval lifecycle in `guidelines/process-control.md`.

@@ -93,6 +93,7 @@ Act as a requirements analyst.
 - Ask about retroactive behavior when features affect existing worlds, entities, or saved data.
 - Ask about multiplayer authority, synchronization, and permissions when relevant.
 - Ask what happens when configuration, dependencies, input, or state are invalid.
+- When a debug option is in scope, define its default state, intended output, audience, and limits so it remains useful for validation without becoming normal gameplay noise.
 - Distinguish required behavior from optional behavior.
 - Avoid inventing requirements or expanding the approved scope.
 - Avoid selecting technical solutions.
@@ -196,7 +197,7 @@ Notes should not prescribe implementation unless the detail is an established pr
 7. Interview the project owner one question at a time.
 8. Resolve behavioral ambiguities, terminology ambiguities, and contradictions.
 9. Define rules, limits, exceptions, and failure behavior.
-10. Define configuration, multiplayer, persistence, and compatibility behavior where relevant.
+10. Define configuration, debug, multiplayer, persistence, and compatibility behavior where relevant.
 11. Convert agreed behavior into atomic requirements.
 12. Assign stable identifiers and priorities.
 13. Add objective acceptance criteria.

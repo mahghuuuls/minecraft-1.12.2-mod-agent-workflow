@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Prepare and approve simple player-facing release materials for the implemented mod before technical packaging begins.
+Prepare and approve repository-facing and player-facing release materials for the implemented mod before technical packaging begins.
 
 This stage is about how the mod is presented to players and modpack authors. It does not build, inspect, checksum, or validate the release JAR, and it does not prepare live platform-submission steps.
 
@@ -28,7 +28,8 @@ Implementation must be approved before this stage begins.
 
 Establish:
 
-- A concise player-facing README or public description suitable for a mod page
+- A concise repository-facing README when agent-managed
+- A separate concise player/download-facing public description suitable for a mod page when agent-managed
 - A concise player-facing changelog
 - A clear feature summary based only on implemented behavior
 - A high-level configuration summary when the mod has user-facing configuration
@@ -39,7 +40,8 @@ Establish:
 
 ## In Scope
 
-- Create or update `README.md` as player-facing mod-page style copy
+- Create or update `README.md` as repository-facing project documentation
+- Create or update separate player/download-facing copy, such as `MOD-PAGE.md` or an owner-approved equivalent
 - Create or update `CHANGELOG.md` as player-facing release notes
 - Prepare a CurseForge-style project description or summary text when public copy is agent-managed
 - Summarize implemented features in player language
@@ -61,7 +63,7 @@ Do not:
 - Inspect bytecode or JAR contents
 - Generate checksums
 - Perform release validation or clean-instance testing
-- Include build evidence, bytecode details, validation logs, QA-style usage steps, or internal test reports in the public README
+- Include build evidence, bytecode details, validation logs, QA-style usage steps, or internal test reports in public documentation
 - Include redundant platform requirements that the distribution platform already displays unless players need the information to decide whether to install
 - Research platform-submission mechanics, live project fields, page setup, or final platform field choices unless explicitly assigned by the owner
 - Prepare screenshots or icon work when those areas are owner-managed
@@ -74,41 +76,75 @@ An implementation defect returns to Implementation. An inaccurate public claim r
 
 ## Desired AI Behavior
 
-Act as a player-facing release editor.
+Act as a release documentation editor.
 
 - Use concise, plain player-facing language.
 - Read and use approved glossary terms when present.
 - Preserve preferred public terminology from the glossary.
 - Ask before changing an approved term in public copy.
 - Record new or changed public-facing terms in the glossary when they affect how players, modpack authors, config users, or later documents should refer to a feature.
-- Assume the public README may be reused as mod-page information.
+- Keep repository README and mod-page copy separate by default unless the owner explicitly chooses a combined document.
 - Describe only implemented and approved behavior.
-- Explain why a player would want the mod before listing technical details.
+- In player/download-facing copy, explain why a player would want the mod before listing technical details.
 - Keep configuration and multiplayer notes high-level unless a player must follow a specific rule.
 - Keep internal engineering evidence out of public files.
 - Keep technical evidence, unresolved validation gaps, and ownership decisions in `release-presentation.md`.
+- Treat mod-page copy as an iterative public-copy artifact; review it for audience fit, repetition, useful links, owner-provided wording, roadmap-risk wording, concise scope, and plain install-side statements.
 - Follow the release ownership matrix strictly.
 - Treat icon and screenshot work as optional publication assets, not as blockers for README, changelog, or packaging unless explicitly agent-managed and required by the owner.
 - Ask one focused question at a time when public wording, limitations, or asset ownership needs owner input.
 - Never submit files to distribution platforms or publish releases.
 
-## Public README Guidance
-
-When the approved public documentation style is `player-facing`, the README should read like a concise mod-page description.
+## Public Documentation Guidance
 
 Use approved glossary terms for feature names, configuration concepts, compatibility notes, and player-facing behavior. Do not introduce synonyms merely for variety when consistency matters.
 
-Include only sections that help normal players or modpack authors, such as:
+### Repository README Guidance
 
-1. Mod name and short summary
+`README.md` is repository-facing by default.
+
+Assume readers have basic source repository and Gradle/modding literacy. Focus on project-specific information, such as:
+
+1. Mod name and short project purpose
+2. Links to player-facing release copy, changelog, license, and third-party notices when present
+3. Mod identity, install-side expectations, and configuration keys when useful
+4. Scope boundaries that matter to maintainers or pack authors
+5. License and attribution
+
+Avoid obvious or generic README content, including:
+
+- Statements that merely say the repository contains the source code
+- Basic build commands unless the project has unusual build steps
+- Workflow history
+- QA test procedures
+- Internal validation gaps
+- Platform-page copy duplicated at length
+
+### Mod Page Copy Guidance
+
+Player/download-facing copy should live in a separate file by default, such as `MOD-PAGE.md` or another owner-approved distribution-page document.
+
+Include only sections that help normal players or modpack authors decide whether and how to use the mod, such as:
+
+1. Short owner-approved introduction
 2. Why use it
 3. Main features
 4. High-level configuration summary, when applicable
 5. Important player-facing multiplayer, client/server, dependency, or compatibility notes
 6. Known limitations only when they affect installation or use
-7. Credits and license when appropriate for the repository
+7. Useful project or companion-mod links
 
-Avoid public README sections that are primarily internal or redundant, including:
+Review mod-page copy for:
+
+- Audience fit: player/download-page readers, not source repository readers
+- Tone: preserve owner-provided introductory wording when supplied
+- Repetition: avoid repeating the mod name or the same compatibility point unnecessarily
+- Link usefulness: include relevant external links when they help players
+- Roadmap risk: avoid phrases such as `first release` unless future support promises are intentional
+- Scope clarity: keep limitations concise without over-explaining implementation details
+- Installation clarity: state required install sides plainly
+
+Avoid player-facing sections that are primarily internal or redundant, including:
 
 - Build verification
 - Bytecode or artifact evidence
@@ -120,7 +156,7 @@ Avoid public README sections that are primarily internal or redundant, including
 - Redundant requirements already shown by the distribution platform
 - Cleanroom or loader caveats that do not affect normal player decisions
 
-If the owner selected `technical` or `both`, keep player-facing copy separate from technical repository documentation where practical.
+If the owner explicitly selects a combined documentation style, keep repository-oriented and player-facing content clearly separated.
 
 ## Changelog Guidance
 
@@ -183,7 +219,7 @@ If screenshots are owner-managed or deferred, do not plan, request, capture, sel
 
 ## Internal Presentation Record
 
-`release-presentation.md` may include technical notes that should not appear in public README copy.
+`release-presentation.md` may include technical notes that should not appear in public README or mod-page copy.
 
 Use it to record:
 
@@ -204,25 +240,27 @@ Do not use the internal record as public copy.
 3. Read `workspace/documentation/glossary.md`, when present.
 4. Review completed issues, approved behavior, and known limitations.
 5. Identify which public materials are agent-managed.
-6. Draft or update player-facing README content when agent-managed.
-7. Draft or update player-facing changelog content when agent-managed.
-8. Prepare a CurseForge-style summary or description only as reusable public copy, not as platform-field research.
-9. Add high-level configuration and player-facing multiplayer/client/server notes when applicable.
-10. Record icon and screenshot paths as owner-provided, agent-managed, or deferred.
-11. Follow icon or screenshot workflows only when those areas are agent-managed or explicitly assigned.
-12. Check every public claim against approved implementation evidence and approved glossary terminology.
-13. Update `workspace/documentation/glossary.md` when release copy approves, refines, or deprecates public-facing project terminology.
-14. Keep technical evidence and internal limitations in `release-presentation.md` rather than public README copy.
-15. Present public materials and the internal presentation record for approval.
-16. Revise until explicitly approved.
+6. Draft or update repository-facing README content when agent-managed.
+7. Draft or update player/download-facing mod-page copy when agent-managed.
+8. Draft or update player-facing changelog content when agent-managed.
+9. Prepare a CurseForge-style summary or description only as reusable public copy, not as platform-field research.
+10. Add high-level configuration and player-facing multiplayer/client/server notes when applicable.
+11. Record icon and screenshot paths as owner-provided, agent-managed, or deferred.
+12. Follow icon or screenshot workflows only when those areas are agent-managed or explicitly assigned.
+13. Check every public claim against approved implementation evidence and approved glossary terminology.
+14. Update `workspace/documentation/glossary.md` when release copy approves, refines, or deprecates public-facing project terminology.
+15. Keep technical evidence and internal limitations in `release-presentation.md` rather than public README or mod-page copy.
+16. Present public materials and the internal presentation record for approval.
+17. Revise until explicitly approved.
 
 ## Output Artifacts
 
 ### Final Project Repository
 
-Prepare only applicable public-facing files and agent-managed assets:
+Prepare only applicable repository/public files and agent-managed assets:
 
 - `README.md`
+- `MOD-PAGE.md` or an owner-approved equivalent when player/download-facing copy is agent-managed
 - `CHANGELOG.md`
 - Approved mod icon, only when agent-managed or explicitly assigned
 - Approved screenshots or description images, only when agent-managed or explicitly assigned
@@ -240,24 +278,26 @@ It should contain:
 1. Public documentation style
 2. Release ownership matrix summary
 3. README status and intended audience
-4. Changelog status
-5. Reusable public description or summary text
-6. Feature summary
-7. Configuration summary, when applicable
-8. Player-facing multiplayer, client/server, dependency, or compatibility notes
-9. Icon path: owner provides, agent helps create, or deferred
-10. Screenshot path: owner provides, agent helps prepare, or deferred
-11. Public-facing known limitations
-12. Internal technical notes and validation gaps excluded from public copy
-13. Claims checked against implementation evidence
-14. Glossary terms used or updated
-15. Owner approvals
+4. Mod-page or distribution-page copy status and intended audience
+5. Changelog status
+6. Reusable public description or summary text
+7. Feature summary
+8. Configuration summary, when applicable
+9. Player-facing multiplayer, client/server, dependency, or compatibility notes
+10. Icon path: owner provides, agent helps create, or deferred
+11. Screenshot path: owner provides, agent helps prepare, or deferred
+12. Public-facing known limitations
+13. Internal technical notes and validation gaps excluded from public copy
+14. Claims checked against implementation evidence
+15. Glossary terms used or updated
+16. Owner approvals
 
 ## Completion Criteria
 
 This stage is complete when:
 
-- Public README or description copy is concise, player-facing, and approved.
+- Repository README copy is concise, repository-facing, and approved when agent-managed.
+- Mod-page or distribution-page copy is concise, player/download-facing, and approved when agent-managed.
 - Changelog is concise, player-facing, and approved.
 - Feature, configuration, and multiplayer/client/server notes match implemented behavior.
 - Public wording uses approved glossary terms consistently when the glossary applies.
@@ -267,7 +307,7 @@ This stage is complete when:
 - Agent-managed icon or screenshot work, if any, is approved or explicitly deferred by the owner.
 - Owner-managed platform submission and publication responsibilities are respected.
 - Public materials do not include build evidence, bytecode details, QA-style usage steps, internal validation findings, redundant platform requirements, platform-submission mechanics, or irrelevant Cleanroom caveats.
-- Technical notes are kept in `release-presentation.md`, not public README copy.
+- Technical notes are kept in `release-presentation.md`, not public README or mod-page copy.
 - Every public claim is supported by approved implementation evidence.
 - `<artifact-root>/release-presentation.md` is generated and approved.
 

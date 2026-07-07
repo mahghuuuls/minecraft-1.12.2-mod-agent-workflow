@@ -54,6 +54,7 @@ These standards apply to implementation work across all mod projects. Project-sp
 - Make restart requirements explicit when runtime objects snapshot configuration.
 - Define allow-list, deny-list, precedence, and conflict behavior consistently.
 - Do not silently repair invalid configuration in ways that conceal user mistakes.
+- For silent, event-driven, or hard-to-observe behavior, prefer an approved disabled-by-default debug option that helps development validation without affecting normal gameplay.
 
 ## Dependencies
 

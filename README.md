@@ -38,6 +38,12 @@ this workflow, and I want to plan a new change.
 
 That is enough to begin. The agent should inspect the workspace, explain what is needed, configure known values, and guide you through unresolved prerequisites one question at a time.
 
+### Returning Users
+
+If you already completed a mod with this workflow, provide your previous `setup/owner-defaults.md` when starting the next mod, or review the one in this repository before Project Setup begins.
+
+That file captures standing preferences such as commit-message style, owner-managed release responsibilities, documentation structure, validation habits, debug-option preferences, and dependency source checkout boundaries. Providing it helps the agent avoid re-asking questions you have already answered in earlier projects.
+
 ## What to Expect
 
 The agent will:
@@ -83,33 +89,36 @@ For manual instructions, see [Manual Workspace Setup](setup/manual-workspace-set
 
 ```text
 minecraft-1.12.2-mod-agent-workflow/
-├── AGENTS.md
-├── guidelines/
-├── workflows/
-├── stages/
-├── references/
-├── setup/
-└── workspace/
-    ├── documentation/
-    ├── artwork/
-    ├── project/
-    ├── project.properties
-    └── template/
+|-- AGENTS.md
+|-- guidelines/
+|-- workflows/
+|-- stages/
+|-- references/
+|-- setup/
+|   |-- owner-defaults.md
+|   `-- artifact-templates/
+`-- workspace/
+    |-- documentation/
+    |-- artwork/
+    |-- dependencies/
+    |-- project/
+    |-- project.properties
+    `-- template/
 ```
 
 - `AGENTS.md` is the agent entry point.
 - `guidelines/` contains core and specialized rules.
 - `workflows/` defines scenario-specific routing.
 - `stages/` defines setup and development stages.
-- `setup/` contains optional manual setup, defaults, and initialization procedures.
+- `setup/` contains optional manual setup, owner defaults, artifact templates, defaults, and initialization procedures.
 - `references/` contains curated technical links.
-- `workspace/` contains ignored project-specific configuration, documents, artwork, templates, and the active mod.
+- `workspace/` contains ignored project-specific configuration, documents, artwork, dependency references, templates, and the active mod.
 
 Use a separate clone of this process repository for each mod project.
 
 ## Git Boundaries
 
-The process repository, temporary template clone, and final mod repository have separate purposes and histories. Before running Git commands, confirm the target:
+The process repository, temporary template clone, dependency reference checkouts, and final mod repository have separate purposes and histories. Before running Git commands, confirm the target:
 
 ```bash
 git status

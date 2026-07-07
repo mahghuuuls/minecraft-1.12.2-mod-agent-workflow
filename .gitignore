@@ -5,6 +5,7 @@
 !/workspace/project/.gitkeep
 
 /workspace/template/
+/workspace/dependencies/
 /workspace/project.properties
 
 /workspace/artwork/

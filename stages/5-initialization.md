@@ -52,6 +52,7 @@ Act as a careful project initializer.
 - Ask before using non-obvious normalization or ambiguous generated names.
 - Use the approved or newly approved public mod description for early metadata.
 - Treat the description as initialization identity text, not as final release README or platform copy.
+- Prefer `THIRD-PARTY-NOTICES.md` for retained template or upstream notices when the root `LICENSE` should identify the new project owner/license.
 - Treat the template as disposable input and preserve repository independence.
 - Stop and report incompatible inputs, failed checks, or unsafe repository state.
 - Present verification evidence before requesting approval for the first local commit.

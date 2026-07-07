@@ -74,6 +74,7 @@ Act as an alignment interviewer.
 - Present alternative interpretations when something is ambiguous.
 - Distinguish essential features from optional ideas.
 - Explore what is explicitly outside the project scope.
+- For silent, event-driven, or hard-to-observe mods, consider whether a disabled-by-default debug mode belongs in scope for development validation.
 - Capture candidate glossary terms when the owner uses project-specific vocabulary.
 - Ask whether similar terms are synonyms or distinct concepts when the distinction could affect scope.
 - Ask whether one term has multiple meanings when that ambiguity could affect scope.

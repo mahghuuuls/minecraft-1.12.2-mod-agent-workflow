@@ -26,6 +26,7 @@ If the repository has no approved baseline, use Existing Mod Assessment first.
 - `workspace/documentation/project-setup.md`
 - `workspace/documentation/project-baseline.md`
 - `workspace/documentation/project-status.md`
+- `workspace/documentation/project-state.md`, when present
 - Approved canonical project documents
 - The active mod repository
 - The initial change request
@@ -108,7 +109,7 @@ Present the complete intake and proposed route for explicit approval before revi
 4. Conduct Change Intake and Impact Analysis.
 5. Mark the intake checkpoint **Awaiting Approval** and present the route.
 6. Revise it until the owner approves it.
-7. Record stage dispositions in `project-status.md`.
+7. Record stage dispositions in `project-status.md` and update `project-state.md`.
 8. Mark affected canonical stages **Needs Revision**.
 9. Execute each **Revisit** stage in normal stage order.
 10. Execute Implementation Plan using the cycle artifact root.
@@ -116,8 +117,8 @@ Present the complete intake and proposed route for explicit approval before revi
 12. Execute Release Presentation using the cycle artifact root.
 13. Execute Packaging and Release Validation using the cycle artifact root.
 14. Produce `<artifact-root>/cycle-summary.md`.
-15. Keep the workflow **In Progress** and set its manual publication state to **Ready for Publication**.
-16. After the owner reports publication, update `project-baseline.md` with the new version and source revision.
+15. Keep the workflow **In Progress**, set its manual publication state to **Ready for Publication**, and update `project-state.md`.
+16. After the owner reports publication, update `project-baseline.md` with the new version and source revision, then update `project-state.md`.
 17. Present the completed cycle for approval.
 
 Do not enter a later selected stage until every selected prerequisite is approved. Discovery of additional impact follows the backward-transition rules in `guidelines/process-control.md`.

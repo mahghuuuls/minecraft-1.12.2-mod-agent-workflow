@@ -20,6 +20,14 @@ These defaults apply to every mod unless an approved project-specific decision o
 - Do not upgrade or replace build components without an approved project-specific reason.
 - Record the exact fetched template commit during Initialization.
 
+## Dependency Source References
+
+- Clone or inspect dependency source repositories only when they are needed to answer a concrete research, compatibility, API, or implementation question.
+- Prefer released artifacts, official documentation, and public source browsing before adding local dependency source checkouts.
+- When a local checkout is justified, place it under `workspace/dependencies/<dependency-name>/` unless the owner provides another approved location.
+- Treat dependency source checkouts as read-only reference material. Do not modify, commit, push, vendor, or copy code from them unless the owner explicitly approves that work and licensing has been checked.
+- Record the dependency repository URL, ref or commit, reason for checkout, and licensing/usage constraints in the relevant project artifact.
+
 ## Development Environment
 
 - Treat `preferred_development_java_version` as a preference, not a guarantee that every template supports it.
@@ -62,11 +70,11 @@ Do not leave example values in initialized project files.
 
 ## Public Documentation
 
-- Default public documentation style is `player-facing`.
-- Public README content should be suitable for a mod page: what the mod does, why a player would want it, main features, high-level configuration, and important player-facing compatibility or multiplayer notes.
-- Keep internal workflow details, implementation evidence, validation logs, bytecode checks, and QA-style test reports out of public README content unless the owner explicitly chooses a technical style or the information affects normal player decisions.
-- Use `technical` only when the owner wants repository-oriented developer documentation.
-- Use `both` only when separate player-facing and technical documentation is useful.
+- Default public documentation style is `split-repository-and-player-facing`.
+- `README.md` should be repository-facing by default. Assume readers have basic source repository and Gradle/modding literacy; focus on project-specific purpose, source/release links, install-side expectations, configuration keys, scope boundaries, license, and attribution.
+- Player/download-facing copy should live in a separate file by default, such as `MOD-PAGE.md` or another owner-approved distribution-page document.
+- Keep internal workflow details, implementation evidence, validation logs, bytecode checks, QA-style test reports, and obvious repository boilerplate out of public documentation unless the owner explicitly asks for them or the information affects normal player decisions.
+- Use a single combined document only when the owner explicitly chooses that structure.
 
 ## Commit Messages
 
@@ -74,12 +82,14 @@ Do not leave example values in initialized project files.
 - Commit messages should describe the repository change itself.
 - Do not reference workflow issue IDs, internal issue names, stage documents, or process-only context unless the owner explicitly requests that style.
 - Assume a future reader has access to the Git repository but not to the workflow artifacts.
+- Treat repo-facing commit messages as an invariant default. Do not ask the owner to approve this default during setup; ask only when the owner explicitly requests a different style.
 
 ## Release Ownership
 
 Project Setup records a release ownership matrix. Defaults are:
 
 - README: agent-managed
+- Mod page or distribution-page copy: agent-managed
 - Changelog: agent-managed
 - Icon: owner-managed
 - Screenshots: owner-managed
@@ -93,6 +103,8 @@ Project Setup records a release ownership matrix. Defaults are:
 Default release handoff mode is `agent-managed-release-validation`. A project may use `owner-managed-packaging` when the owner wants the agent to prepare only a lightweight handoff.
 
 Owner-managed validation checks should be recorded as accepted limitations when skipped. Follow the validation waiver rules in `guidelines/process-control.md`.
+
+Apply owner-managed defaults directly unless the owner explicitly requests agent involvement or a one-time exception.
 
 ## Licensing and Attribution
 

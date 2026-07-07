@@ -25,6 +25,7 @@ The repository does not need to be empty. Project Initialization is not used.
 ## Required Inputs
 
 - `workspace/documentation/project-setup.md`
+- `workspace/documentation/project-state.md`, when present
 - `workspace/project.properties`
 - Existing source code and Git history
 - Existing README, changelog, issue history, releases, and other supplied evidence
@@ -63,7 +64,7 @@ Record this route in `project-status.md`.
 
 ## Sequence
 
-1. Record this workflow as **In Progress** in `project-status.md`.
+1. Record this workflow as **In Progress** in `project-status.md` and update `project-state.md`.
 2. Clone or identify the existing repository without altering its history.
 3. Record its origin, branch, HEAD revision, tags, release evidence, and working-tree state.
 4. Inspect its build, metadata, source structure, resources, dependencies, configuration, and existing documentation.
@@ -75,7 +76,7 @@ Record this route in `project-status.md`.
 10. Execute Requirements Definition in baseline mode.
 11. Execute Architecture Definition in baseline mode.
 12. Reconcile `project-baseline.md` with the approved canonical documents.
-13. Present the completed assessment workflow for approval.
+13. Update `project-state.md` and present the completed assessment workflow for approval.
 
 For baseline mode:
 

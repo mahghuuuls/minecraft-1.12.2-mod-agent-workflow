@@ -79,11 +79,13 @@ Act as a focused implementation agent.
 - Confirm that all blocking issues are Done before starting.
 - Read the issue and its referenced requirements and architecture sections.
 - Inspect the existing codebase before making changes.
+- Inspect approved dependency source references when the issue or architecture depends on them.
 - Preserve existing project conventions unless an approved decision requires otherwise.
 - Implement the smallest coherent change that satisfies the issue.
 - Keep the change limited to the issue's scope.
 - Use existing libraries and architectural components as documented.
 - Avoid duplicating functionality already present in the project or its dependencies.
+- Treat dependency source checkouts under `workspace/dependencies/` as read-only references. Do not modify them or copy code from them unless the owner explicitly approves that work and licensing has been checked.
 - Run fast feedback checks throughout implementation.
 - Use test-first development for isolated logic when it provides clear value.
 - Do not force TDD onto behavior that can only be meaningfully verified inside Minecraft.
@@ -123,6 +125,8 @@ Possible feedback mechanisms include:
 Verification must match the risk. A successful build does not verify gameplay behavior, networking, rendering, entity AI, persistence, or mod compatibility.
 
 If the owner skips a validation check, marks it owner-managed, or accepts that it cannot be run in the current environment, record it using the validation waiver format in `guidelines/process-control.md` and continue. Do not keep asking for the same validation unless new evidence makes it release-blocking.
+
+When manual gameplay validation by the owner is useful, provide a short runnable validation recipe after each runnable vertical slice. Include relevant config state, exact commands or setup steps when available, expected results, and any important scenario that is not practical to validate in normal vanilla gameplay.
 
 ## Testing Approach
 
@@ -184,6 +188,8 @@ Complete issue 3 from implementation-plan.md
 ```
 
 If the owner approves the commit, create it in the active mod repository only. If the owner declines or defers, record the decision and continue only if the owner approves moving to the next issue with uncommitted changes.
+
+After a clean committed checkpoint, confirm the repository is clean when checked and end with a simple pause-state cue such as: `Ready to continue when you want.`
 
 ## Issue Execution Process
 

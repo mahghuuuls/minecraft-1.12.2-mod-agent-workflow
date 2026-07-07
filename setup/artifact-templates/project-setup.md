@@ -1,0 +1,84 @@
+# Project Setup
+
+## Setup Date
+
+-
+
+## Scenario
+
+- Classification:
+- Evidence:
+- Proposed workflow:
+
+## Environment
+
+- Operating system:
+- Git:
+- Java:
+- IntelliJ IDEA:
+- Existing runtime directories:
+- Existing nested repositories:
+
+## Repository State
+
+- Active project repository:
+- Repository URL:
+- Project directory:
+- Deferred repository values:
+
+## Practical Defaults
+
+- GitHub owner:
+- Repository name:
+- Mod ID:
+- Display name:
+- Public description:
+- Root package:
+- Main class:
+- Public documentation style:
+- Commit-message style:
+- Client/server responsibility:
+
+## Loader, Runtime, Template, And Distribution
+
+- Loader:
+- Supported runtimes:
+- Template:
+- Template ref:
+- Distribution platforms:
+- Evidence:
+
+## Dependency Source References
+
+- Known references:
+- Deferred dependency-source decisions:
+
+## Release Ownership
+
+- README:
+- Mod page or distribution-page copy:
+- Changelog:
+- Icon:
+- Screenshots:
+- CurseForge upload:
+- Release JAR generation:
+- Final publication verification:
+- Dedicated server testing:
+- Cleanroom testing:
+- External multiplayer testing:
+
+## Release Handoff
+
+- Mode:
+
+## Deferred Prerequisites
+
+-
+
+## Blocking Problems
+
+-
+
+## Owner Approvals
+
+-

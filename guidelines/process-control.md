@@ -1,6 +1,16 @@
 # Process Control
 
-This file is the authoritative source for workflow and stage status, approvals, artifact locations, project glossary, workflow feedback, and backward transitions.
+This file is the authoritative source for workflow and stage status, approvals, artifact locations, project state snapshots, project glossary, workflow feedback, and backward transitions.
+
+## Owner Defaults
+
+Read standing owner preferences from:
+
+```text
+setup/owner-defaults.md
+```
+
+Owner defaults reduce repeated questions. They do not override approved project-specific decisions, legal constraints, safety boundaries, or explicit owner instructions in the active conversation.
 
 ## Project Setup
 
@@ -89,6 +99,36 @@ Use these workflow and stage statuses:
 Record the disposition of each reusable stage for the active workflow. Dispositions explain routing and do not replace the status of an invoked stage. Each workflow defines its allowed disposition values.
 
 Implementation issue statuses are defined by the Implementation Plan stage.
+
+## Project State Snapshot
+
+Maintain a compact current-state snapshot at:
+
+```text
+workspace/documentation/project-state.md
+```
+
+Create it from:
+
+```text
+setup/artifact-templates/project-state.md
+```
+
+Use this file to reduce context reconstruction after chat forks, context compaction, or handoff between agents. It should summarize only the current working state:
+
+- Active mod repository path
+- Active workflow, stage, or checkpoint
+- Artifact root
+- Approved artifacts
+- Current issue, when applicable
+- Next required approval
+- Blocking questions
+- Deferred prerequisites
+- Owner-managed responsibilities
+- Accepted validation waivers
+- Dependency source references
+
+Update it at natural checkpoints: after setup approval, stage approval, workflow changes, issue completion, accepted validation waivers, release handoff, or a material change to the next required action. Do not treat it as a replacement for canonical artifacts.
 
 ## Project Glossary
 
@@ -224,6 +264,33 @@ Each entry should include:
 
 The mod-development agent only maintains the log. Process-repository changes must be handled separately outside the active mod-development workflow, using the feedback log as input when the owner chooses to do so.
 
+## Dependency Reference Registry
+
+Maintain dependency source references, when any exist, at:
+
+```text
+workspace/documentation/dependency-references.md
+```
+
+Create it from:
+
+```text
+setup/artifact-templates/dependency-references.md
+```
+
+Use this registry only for dependency source repositories or local source references that support research, architecture, implementation, or compatibility decisions. Record:
+
+- Dependency name
+- Repository URL or local path
+- Requested ref and resolved commit when available
+- Version context
+- Reason the reference is needed
+- Stage, requirement, architecture decision, or issue it supports
+- License and usage constraints
+- Read-only boundary
+
+Dependency references are not active project repositories. They must not be modified, committed to, pushed, vendored, or copied from without explicit owner approval and licensing review.
+
 ## Approval Lifecycle
 
 Apply this lifecycle to stages and workflow-specific approval checkpoints:
@@ -232,13 +299,33 @@ Apply this lifecycle to stages and workflow-specific approval checkpoints:
 2. Present the stage transition briefing and obtain approval to begin.
 3. Mark the active item **In Progress**.
 4. Perform only its defined work.
-5. Create or update its draft artifacts.
+5. Create or update its draft artifacts using matching templates under `setup/artifact-templates/` when present.
 6. Mark it **Awaiting Approval** and present the complete result.
 7. Revise it in response to review.
 8. Mark it **Approved** only after explicit confirmation from the project owner.
 9. Stop unless the project owner separately authorizes the next item.
 
 A generated artifact, successful check, manual publication action, or approval of a different action does not constitute approval.
+
+## Ask Versus Decide
+
+Ask the project owner when the answer could materially change:
+
+- Scope, requirements, player-facing behavior, or exclusions
+- Architecture, dependency choices, or compatibility targets
+- Licensing, attribution, publication, or distribution claims
+- Owner-managed responsibilities or external actions
+- Public wording that affects expectations or support promises
+- A previously approved artifact
+
+Decide and record the decision when:
+
+- A workflow default or owner default already applies.
+- The choice is local, reversible, and low-risk.
+- Existing approved artifacts answer the question.
+- The decision is an ordinary implementation detail within the approved architecture.
+
+Do not turn defaults into repeated approval questions. Do not silently decide when a wrong assumption would require reworking approved scope, architecture, licensing, release materials, or owner responsibilities.
 
 ## Backward Transitions
 
@@ -276,6 +363,14 @@ Mod source, repository documentation, release assets, and build outputs belong i
 ## Artifact Rules
 
 All reusable process artifacts are Markdown unless another format is explicitly required.
+
+When a matching template exists under:
+
+```text
+setup/artifact-templates/
+```
+
+use it as the starting structure for new artifacts. Omit nonapplicable sections rather than filling them with placeholders.
 
 Approved canonical artifacts are authoritative for project-specific decisions. Later artifacts should reference stable requirement, architecture, glossary, or issue identifiers rather than copying full content. A cycle updates affected canonical documents and records only the change and traceability evidence in its own directory.
 

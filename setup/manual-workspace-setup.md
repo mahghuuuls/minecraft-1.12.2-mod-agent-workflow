@@ -64,6 +64,18 @@ Do not leave example URLs or invented placeholder values in the real properties 
 
 Shared preferences are configured in `setup/template-defaults.properties`, but loader and template selection are project-specific.
 
+Standing owner preferences are documented in:
+
+```text
+setup/owner-defaults.md
+```
+
+Project artifacts should start from matching templates under:
+
+```text
+setup/artifact-templates/
+```
+
 Record the approved loader and template in `workspace/project.properties`:
 
 ```properties
@@ -76,7 +88,7 @@ Do not edit shared defaults for one mod. Feasibility Research must validate the 
 
 Existing-project workflows preserve the repository's current build system unless an approved change says otherwise.
 
-## 6. Do Not Prepare Runtime Clones Manually
+## 6. Runtime And Dependency Clones
 
 Project Initialization or Existing Mod Assessment will create or identify runtime repositories under:
 
@@ -86,6 +98,16 @@ workspace/project/
 ```
 
 Keep template and final-project Git histories separate.
+
+Do not clone templates or active project repositories manually unless the workflow asks for it.
+
+Dependency source repositories are different: when a project depends on another mod and its source is needed as reference material, the owner may provide a local path or approve a checkout under:
+
+```text
+workspace/dependencies/
+```
+
+Dependency checkouts are read-only reference material unless the owner explicitly approves otherwise.
 
 ## 7. Start the Agent
 

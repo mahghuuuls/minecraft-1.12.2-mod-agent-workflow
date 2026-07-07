@@ -286,6 +286,7 @@ Map applicable shared preferences to the fetched template's actual structure:
 - Main class pattern when a main class must be derived
 - Public documentation style
 - Commit-message style
+- Release ownership defaults
 
 The template may use different filenames or configuration formats. Inspect and edit the appropriate structured files instead of assuming a particular property name exists.
 
@@ -333,6 +334,7 @@ Apply the configured project license while preserving all upstream obligations.
 - Keep notices required by copied dependencies or source.
 - Attribute original project work using the configured author metadata.
 - If the project license differs from the template license, preserve the upstream license separately and document which content it covers.
+- When a template or upstream notice must be preserved but the new project has its own author/license identity, prefer putting upstream notices in `THIRD-PARTY-NOTICES.md` and keeping the root `LICENSE` focused on the approved project license and owner.
 - Never treat a project license override as permission to remove upstream attribution.
 
 Record all retained notices in the initialization artifact.
