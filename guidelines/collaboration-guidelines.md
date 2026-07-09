@@ -61,7 +61,7 @@ Follow the workflow feedback log rules in `guidelines/process-control.md`.
 
 Do not let feedback logging derail the active task. Update the log at a natural checkpoint unless the process issue is blocking the current work.
 
-Do not edit versioned process files during mod development because a feedback entry exists. This workflow does not update itself. Process-repository changes must be handled separately outside the active mod-development workflow.
+Do not edit versioned process files during mod development because a feedback entry exists. This workflow does not update itself during mod development. Process-repository changes must be handled separately from the active mod-development workflow, using Process Maintenance mode when the owner explicitly requests them.
 
 ## File Changes
 
@@ -76,7 +76,9 @@ Do not edit versioned process files during mod development because a feedback en
 
 Before a Git operation, identify the target repository and inspect its working tree. The process repository, runtime template, and mod repository have separate histories.
 
-During mod development, do not commit, push, or otherwise modify the outer process repository. Git changes belong only to the active mod repository unless the user is working in a separate process-improvement session outside this workflow.
+During mod development, do not commit, push, or otherwise modify the outer process repository. Git changes belong only to the active mod repository unless the user is working in explicit Process Maintenance mode.
+
+During Process Maintenance mode, the outer process repository is the active repository. Do not modify, commit, or push nested mod repositories while changing process files.
 
 Explicit authorization is required for each of these actions:
 

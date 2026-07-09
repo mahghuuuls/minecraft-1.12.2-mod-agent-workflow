@@ -4,6 +4,8 @@ This repository provides a reusable process for developing one Minecraft 1.12.2 
 
 Agents using this repository in a mod-development workspace must guide the mod project. They must not update this process repository as part of that work.
 
+Process-maintenance work is a separate mode. It may edit this process repository only when the owner explicitly asks to improve the workflow itself, apply workflow feedback, or update process files. Do not infer process-maintenance approval from ordinary feedback during a mod project.
+
 ## Fixed Scope
 
 This workflow is only for Minecraft 1.12.2 mod development.
@@ -21,7 +23,7 @@ If the owner asks to target a different Minecraft version, explain that it is ou
 
 ## Operating Scope
 
-Use this repository for Minecraft 1.12.2 mod development only.
+Use this repository for Minecraft 1.12.2 mod development, and for explicit maintenance of this workflow repository when the owner switches to Process Maintenance mode.
 
 During a mod project, the agent may:
 
@@ -40,17 +42,48 @@ During a mod project, the agent must not:
 
 - Modify versioned process files such as `AGENTS.md`, `README.md`, `guidelines/`, `stages/`, `workflows/`, `setup/`, or `references/`.
 - Treat `workflow-feedback.md` as approval to change this repository.
-- Switch into a process-maintenance mode inside this workspace.
+- Switch into Process Maintenance mode unless the owner explicitly requests process-repository changes.
 - Commit or push changes to the outer process repository.
 - Modify a nested mod repository while supposedly changing the process repository.
 
-Workflow feedback is only a project artifact. It exists so the project owner can later share concrete feedback with a separate process-improvement session or another agent outside the active mod-development workflow.
+Workflow feedback is only a project artifact during mod development. It exists so the project owner can later apply concrete feedback in Process Maintenance mode or share it with another agent.
 
-If the user asks to improve this workflow while a mod project is active, record the request in `workspace/documentation/workflow-feedback.md` and explain that process-repository changes should be handled separately from the mod project.
+If the user asks to improve this workflow while a mod project is active, record the request in `workspace/documentation/workflow-feedback.md` and explain that process-repository changes should be handled separately from the mod-development workflow. Switch to Process Maintenance mode only after the owner explicitly chooses to pause or finish mod-development work and change the process repository.
+
+## Process Maintenance Mode
+
+Process Maintenance mode is for changing this reusable workflow repository, not for changing a mod.
+
+Enter this mode only when the owner explicitly asks to:
+
+- Apply workflow feedback to the process repository.
+- Improve, clarify, or refactor process instructions.
+- Update `AGENTS.md`, `README.md`, `guidelines/`, `stages/`, `workflows/`, `setup/`, or `references/`.
+
+Before editing process files:
+
+- State that the session is switching out of mod-development work and into Process Maintenance mode.
+- Inspect the outer repository status.
+- Treat `workspace/documentation/workflow-feedback.md` and prior project artifacts as input, not as automatic approval for every suggested change.
+- If active mod work is unfinished, preserve or summarize its current state before changing process files.
+
+During Process Maintenance mode, the agent may:
+
+- Modify versioned process material in the outer repository.
+- Read ignored workspace artifacts, including workflow feedback, as evidence.
+- Update workflow-feedback status when the owner asks for feedback application or when the maintenance result clearly resolves entries.
+- Run consistency checks over process documentation.
+
+During Process Maintenance mode, the agent must not:
+
+- Modify the nested mod repository under `workspace/project/`.
+- Treat process edits as a mod-development stage.
+- Commit or push the outer process repository without explicit authorization.
+- Apply feedback blindly when it conflicts with the workflow's purpose, repository boundaries, or Minecraft 1.12.2 scope.
 
 ## Repository Boundaries
 
-- **Process material:** versioned instructions, defaults, stages, workflows, and references. Read-only during mod development.
+- **Process material:** versioned instructions, defaults, stages, workflows, and references. Read-only during mod development; editable only in explicit Process Maintenance mode.
 - **Runtime workspace:** ignored project-specific state under `workspace/`.
 - **Template workspace:** an ignored clone under `workspace/template/`; never the development target.
 - **Dependency reference workspace:** optional ignored dependency source checkouts under `workspace/dependencies/`; never the active development target unless the owner explicitly changes the project.
@@ -90,6 +123,8 @@ Present the selection and evidence before starting a new workflow. Do not classi
 
 Record the approved workflow in `workspace/documentation/project-status.md`.
 
+Process Maintenance mode does not use this mod-development workflow-selection table. When the owner explicitly requests process-repository changes, use `workflows/process-maintenance.md`.
+
 ## Required Reading
 
 For mod-development work, read in this order:
@@ -109,6 +144,15 @@ For mod-development work, read in this order:
 13. The approved artifacts referenced by the workflow or stage
 14. The relevant implementation issue and source code, when applicable
 
+For Process Maintenance mode, read in this order:
+
+1. `AGENTS.md`
+2. `guidelines/process-control.md`
+3. `guidelines/collaboration-guidelines.md`
+4. `workflows/process-maintenance.md`
+5. `workspace/documentation/workflow-feedback.md`, when used as input
+6. The process files being changed
+
 Do not silently resolve contradictions between sources. Follow `guidelines/process-control.md`.
 
 ## Instruction Ownership
@@ -118,7 +162,7 @@ Do not silently resolve contradictions between sources. Follow `guidelines/proce
 - `guidelines/collaboration-guidelines.md`: communication, editing, Git authorization, workflow feedback behavior, and completion reporting.
 - `guidelines/coding-standards.md`: implementation and verification conventions.
 - Specialized guideline files under `guidelines/`: task-specific instructions read only when referenced.
-- `workflows/*.md`: scenario-specific routing and behavior.
+- `workflows/*.md`: scenario-specific routing and behavior, including explicit process-maintenance routing.
 - `setup/manual-workspace-setup.md`: optional human-operated workspace configuration.
 - `setup/initialize-project.md`: new-repository initialization procedure used later.
 - `setup/owner-defaults-template.md`: template for workspace-specific Project Setup preferences and owner-specific overrides.

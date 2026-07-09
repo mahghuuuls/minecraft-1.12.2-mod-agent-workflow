@@ -8,7 +8,7 @@ It is a project-specific runtime artifact. Keep it under:
 workspace/documentation/workflow-feedback.md
 ```
 
-Do not treat entries as approved process changes. They are input for a later, separate workflow-improvement session outside the active mod-development workflow.
+Do not treat entries as approved process changes. They are input for a later Process Maintenance mode outside the active mod-development workflow.
 
 ## Open Feedback
 
@@ -42,7 +42,7 @@ Optional owner preference or decision.
 
 ## Applied Feedback
 
-Move entries here only after they are reflected in the process repository by a separate workflow-improvement update or intentionally resolved.
+Move entries here only after they are reflected in the process repository by Process Maintenance mode or intentionally resolved.
 
 ## Rejected Or Deferred Feedback
 

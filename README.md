@@ -93,6 +93,7 @@ For manual instructions, see [Manual Workspace Setup](setup/manual-workspace-set
 - **Initial Development:** create and prepare the first release of a new mod.
 - **Existing Mod Assessment:** inspect and document the current state of an existing mod before changing its behavior.
 - **Change Cycle:** deliver a feature, fix, compatibility update, or refactor against an approved baseline.
+- **Process Maintenance:** update this reusable workflow repository when the owner explicitly asks to apply feedback or improve the process.
 
 ## Repository Structure
 
@@ -137,6 +138,16 @@ git -C workspace/project/<mod-name> status
 Agents must follow `guidelines/collaboration-guidelines.md`. Commits, pushes, external changes, uploads, and publication require the appropriate explicit authorization.
 
 ## Update the Process
+
+To apply feedback or improve the reusable workflow after a mod project, start a Process Maintenance session:
+
+```text
+Read AGENTS.md and use Process Maintenance mode to apply the workflow feedback.
+```
+
+The agent should treat the outer process repository as active, keep nested mod repositories out of scope, and report the process-file changes for review. Feedback from `workspace/documentation/workflow-feedback.md` is input for judgment, not automatic approval for every edit.
+
+To update your clone from the remote repository:
 
 ```bash
 git pull --ff-only

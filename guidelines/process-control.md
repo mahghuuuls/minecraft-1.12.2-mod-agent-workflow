@@ -1,6 +1,6 @@
 # Process Control
 
-This file is the authoritative source for workflow and stage status, approvals, artifact locations, project state snapshots, project glossary, workflow feedback, and backward transitions.
+This file is the authoritative source for workflow and stage status, approvals, artifact locations, project state snapshots, project glossary, workflow feedback, process maintenance, and backward transitions.
 
 ## Owner Setup Defaults
 
@@ -36,7 +36,7 @@ A new mod may defer its final repository URL and directory name until Project In
 
 ## Workflow Control
 
-Every mod-development session belongs to one workflow:
+Every mod-development session belongs to one mod-development workflow:
 
 | Workflow | Definition | Use |
 | --- | --- | --- |
@@ -55,6 +55,29 @@ A workflow determines:
 - Completion and allowed transitions
 
 A workflow may skip a reusable stage only when its routing rules allow it and the reason is recorded. It may not change the responsibilities defined by a stage.
+
+## Process Maintenance Control
+
+Process Maintenance mode is separate from mod-development workflows. Use it only when the owner explicitly asks to change this reusable workflow repository, apply workflow feedback, or improve process files.
+
+It is defined by:
+
+```text
+workflows/process-maintenance.md
+```
+
+Process Maintenance mode may edit versioned process files. That permission does not apply during normal mod development, and a feedback entry alone is not approval to edit the process repository.
+
+When entering Process Maintenance mode:
+
+- State the mode switch explicitly.
+- Inspect the outer process repository status before editing.
+- Keep nested mod repositories, dependency references, and template checkouts out of scope unless the owner explicitly changes the task.
+- Use `workspace/documentation/workflow-feedback.md` as input when relevant, but evaluate each change against the workflow's purpose and existing ownership rules.
+- Report which feedback was applied, rejected, deferred, or left untouched when the task is feedback-driven.
+- Do not commit or push without explicit authorization.
+
+Process Maintenance mode ends when the requested process edits and consistency checks are reported, or when the owner asks to return to mod-development work.
 
 ## Reusable Stages
 
@@ -241,7 +264,7 @@ Create it from:
 setup/workflow-feedback-template.md
 ```
 
-Use this log to record friction, corrections, and improvement ideas discovered while using the workflow on a specific mod. The objective is to give the project owner a concise artifact they can later share with a separate workflow-improvement session or another agent outside the active mod project.
+Use this log to record friction, corrections, and improvement ideas discovered while using the workflow on a specific mod. The objective is to give the project owner a concise artifact they can later apply in Process Maintenance mode or share with another agent outside the active mod project.
 
 Record an entry when an interaction suggests that the workflow may need improvement, for example:
 
@@ -255,7 +278,7 @@ Record an entry when an interaction suggests that the workflow may need improvem
 
 Do not interrupt the active stage just to update this log unless the issue is blocking. Prefer updating it at natural checkpoints, such as after a correction, before stage approval, after an issue completes, or at the end of the session.
 
-Entries are observations, not approved process changes. This workflow does not update itself. Do not modify versioned workflow files during mod development because a feedback entry exists.
+Entries are observations, not approved process changes. This workflow does not update itself during mod development. Do not modify versioned workflow files during mod development because a feedback entry exists.
 
 Each entry should include:
 
@@ -272,7 +295,7 @@ Each entry should include:
 - Evidence or example, if useful
 - Owner notes, if any
 
-The mod-development agent only maintains the log. Process-repository changes must be handled separately outside the active mod-development workflow, using the feedback log as input when the owner chooses to do so.
+The mod-development agent only maintains the log. Process-repository changes must be handled separately from the active mod-development workflow, using Process Maintenance mode when the owner chooses to apply feedback.
 
 ## Dependency Reference Registry
 
