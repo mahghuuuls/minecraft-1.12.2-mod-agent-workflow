@@ -49,7 +49,7 @@ For each implementation issue:
 - Logging and diagnostic improvements
 - Defect correction
 - Refactoring directly related to the issue
-- Independent code review
+- Independent implementation and architecture review
 - Updating issue status and completion evidence
 - Commit checkpoint preparation after completed issues
 - Accepted validation waiver recording
@@ -258,7 +258,7 @@ If an issue is too large, incorrectly ordered, or missing dependencies:
 
 Minor implementation details that do not alter approved behavior or architectural boundaries do not require returning to an earlier stage.
 
-## Independent Review
+## Independent Implementation And Architecture Review
 
 Implementation and review must use separate agent contexts.
 
@@ -278,6 +278,10 @@ The review agent should examine:
 - Acceptance criteria coverage
 - Architectural compliance
 - Whether the approved requirements, architecture, or scope still make sense in light of the implementation, tests, Minecraft 1.12.2 constraints, dependency behavior, and maintainability evidence
+- Whether the implementation reveals that the approved architecture has become obsolete, incomplete, too rigid, too vague, or mismatched to the actual problem
+- Design-principle concerns such as cohesion, coupling, separation of responsibilities, dependency direction, lifecycle boundaries, testability, data ownership, API surface, and maintainability
+- Whether the implementation introduces unnecessary indirection, abstraction, state, global behavior, lifecycle coupling, or future-facing structure
+- Whether a simpler structure would satisfy the approved behavior with lower maintenance risk
 - Correctness and regressions
 - Client/server separation
 - Error handling
@@ -288,7 +292,13 @@ The review agent should examine:
 - Whether accepted validation waivers affect public claims or release safety
 - Unrelated changes
 
-The reviewer should report findings before proposing broad improvements. The reviewer must not expand the issue scope or judge the implementation according to undocumented preferences.
+The reviewer should separate:
+
+- **Blocking findings:** defects, requirement failures, unsafe architecture drift, invalid assumptions, missing verification, or changes that would make the issue unsafe to mark Done.
+- **Architecture/process findings:** evidence that an approved requirement, scope boundary, implementation plan, or architecture decision should be revisited before continuing.
+- **Improvement suggestions:** nonblocking design improvements that may reduce complexity or future maintenance cost but are not required for the current issue.
+
+The reviewer should report findings before proposing broad improvements. Architectural suggestions should cite concrete evidence from the implementation, tests, dependency behavior, Minecraft 1.12.2 constraints, or maintainability risk. The reviewer must not expand the issue scope or judge the implementation according to undocumented preferences.
 
 If the reviewer finds that an approved requirement, architecture decision, or scope boundary is flawed, treat that as a process finding rather than forcing code to comply blindly. Evaluate it against the approved evidence and route legitimate artifact problems through the backward-transition process.
 
@@ -327,10 +337,12 @@ Record evidence directly in the issue file:
 
 - Accepted limitation: <Validation name> was not performed by owner decision.
 
-### Independent Review
+### Independent Implementation And Architecture Review
 
 - Reviewer:
-- Findings:
+- Blocking findings:
+- Architecture/process findings:
+- Improvement suggestions:
 - Resolutions:
 
 ### Remaining Limitations
