@@ -73,6 +73,7 @@ Do not leave example values in initialized project files.
 - Default public documentation style is `split-repository-and-player-facing`.
 - `README.md` should be repository-facing by default. Assume readers have basic source repository and Gradle/modding literacy; focus on project-specific purpose, source/release links, install-side expectations, configuration keys, scope boundaries, license, and attribution.
 - Player/download-facing copy should live in a separate file by default, such as `MOD-PAGE.md` or another owner-approved distribution-page document.
+- Player/download-facing copy should include a generic AI usage disclaimer near the top by default. Use yellow inline HTML text when Markdown/hosting allows it. The owner may ask to remove or rewrite the disclaimer for a specific project.
 - Player/download-facing copy should include the project GitHub/source link when the repository URL is known, unless the owner explicitly omits it or the selected platform already provides a sufficiently visible source link.
 - Keep internal workflow details, implementation evidence, validation logs, bytecode checks, QA-style test reports, and obvious repository boilerplate out of public documentation unless the owner explicitly asks for them or the information affects normal player decisions.
 - Avoid internal engineering qualifiers such as "best-effort", "runtime evidence", or "implementation limitation" in public copy unless the user impact is explained plainly.

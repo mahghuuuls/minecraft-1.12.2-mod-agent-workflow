@@ -17,6 +17,7 @@
 
 - Status:
 - Intended audience:
+- AI usage disclaimer status:
 
 ## Changelog
 

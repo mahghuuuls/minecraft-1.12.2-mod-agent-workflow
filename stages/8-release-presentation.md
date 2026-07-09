@@ -30,6 +30,7 @@ Establish:
 
 - A concise repository-facing README when agent-managed
 - A separate concise player/download-facing public description suitable for a mod page when agent-managed
+- A generic AI usage disclaimer near the top of player/download-facing copy by default, unless the owner asks to remove or rewrite it
 - A concise player-facing changelog
 - The approved release version, defaulting to `1.0.0` for a first public release unless the owner chooses otherwise
 - A clear feature summary based only on implemented behavior
@@ -46,6 +47,7 @@ Establish:
 - Create or update separate player/download-facing copy, such as `MOD-PAGE.md` or an owner-approved equivalent
 - Create or update `CHANGELOG.md` as player-facing release notes
 - Prepare a CurseForge-style project description or summary text when public copy is agent-managed
+- Include the default AI usage disclaimer in `MOD-PAGE.md` or equivalent player/download-facing copy unless the owner opts out
 - Summarize implemented features in player language
 - Summarize configuration at a high level when applicable
 - Include player-facing multiplayer or client/server notes when they affect installation or use
@@ -94,6 +96,7 @@ Act as a release documentation editor.
 - Keep technical evidence, unresolved validation gaps, and ownership decisions in `release-presentation.md`.
 - Keep release build, artifact inspection, checksum, and handoff evidence in `release-handoff.md`.
 - Treat mod-page copy as an iterative public-copy artifact; review it for audience fit, repetition, useful links, owner-provided wording, roadmap-risk wording, concise scope, and plain install-side statements.
+- Treat the AI usage disclaimer as a default transparency note, not as internal workflow history. Keep it short, generic, and removable by owner request.
 - Follow the release ownership matrix strictly.
 - Treat icon and screenshot work as optional publication assets, not as blockers for README, changelog, or packaging unless explicitly agent-managed and required by the owner.
 - Ask one focused question at a time when public wording, limitations, or asset ownership needs owner input.
@@ -128,15 +131,24 @@ Avoid obvious or generic README content, including:
 
 Player/download-facing copy should live in a separate file by default, such as `MOD-PAGE.md` or another owner-approved distribution-page document.
 
+Include this generic AI usage disclaimer near the top of player/download-facing copy by default, after the opening description and before feature details:
+
+```html
+<p style="color: #d6a100;"><strong>AI usage disclaimer:</strong> This mod was developed with AI-agent assistance. The project owner reviewed the work during development.</p>
+```
+
+The owner may ask to remove, revise, or expand the disclaimer. Do not add project-specific testing claims, pack-size claims, Cleanroom claims, or compatibility claims to the generic disclaimer unless the owner explicitly approves that wording for the project. If the selected publication platform strips inline styling, keep the disclaimer text unless the owner asks to remove it.
+
 Include only sections that help normal players or modpack authors decide whether and how to use the mod, such as:
 
 1. Short owner-approved introduction
-2. Why use it
-3. Main features
-4. High-level configuration summary, when applicable
-5. Important player-facing multiplayer, client/server, dependency, or compatibility notes
-6. Known limitations only when they affect installation or use
-7. Useful project or companion-mod links
+2. AI usage disclaimer, unless removed or rewritten by owner request
+3. Why use it
+4. Main features
+5. High-level configuration summary, when applicable
+6. Important player-facing multiplayer, client/server, dependency, or compatibility notes
+7. Known limitations only when they affect installation or use
+8. Useful project or companion-mod links
 
 When the repository URL is known, include a GitHub/source link by default unless the owner explicitly omits it or the selected platform already provides a sufficiently visible source link.
 
@@ -250,7 +262,7 @@ Do not use the internal record as public copy.
 4. Review completed issues, approved behavior, and known limitations.
 5. Identify which public materials are agent-managed.
 6. Draft or update repository-facing README content when agent-managed.
-7. Draft or update player/download-facing mod-page copy when agent-managed.
+7. Draft or update player/download-facing mod-page copy when agent-managed, including the default AI usage disclaimer unless the owner opts out.
 8. Draft or update player-facing changelog content when agent-managed.
 9. Prepare a CurseForge-style summary or description only as reusable public copy, not as platform-field research.
 10. Add high-level configuration and player-facing multiplayer/client/server notes when applicable.
@@ -296,18 +308,19 @@ It should contain:
 2. Release ownership matrix summary
 3. README status and intended audience
 4. Mod-page or distribution-page copy status and intended audience
-5. Changelog status
-6. Reusable public description or summary text
-7. Feature summary
-8. Configuration summary, when applicable
-9. Player-facing multiplayer, client/server, dependency, or compatibility notes
-10. Icon path: owner provides, agent helps create, or deferred
-11. Screenshot path: owner provides, agent helps prepare, or deferred
-12. Public-facing known limitations
-13. Internal technical notes and validation gaps excluded from public copy
-14. Claims checked against implementation evidence
-15. Glossary terms used or updated
-16. Owner approvals
+5. AI usage disclaimer status: included, revised, or removed by owner request
+6. Changelog status
+7. Reusable public description or summary text
+8. Feature summary
+9. Configuration summary, when applicable
+10. Player-facing multiplayer, client/server, dependency, or compatibility notes
+11. Icon path: owner provides, agent helps create, or deferred
+12. Screenshot path: owner provides, agent helps prepare, or deferred
+13. Public-facing known limitations
+14. Internal technical notes and validation gaps excluded from public copy
+15. Claims checked against implementation evidence
+16. Glossary terms used or updated
+17. Owner approvals
 
 ### Release Handoff Record
 
@@ -330,6 +343,7 @@ This stage is complete when:
 
 - Repository README copy is concise, repository-facing, and approved when agent-managed.
 - Mod-page or distribution-page copy is concise, player/download-facing, and approved when agent-managed.
+- Mod-page or distribution-page copy includes the default AI usage disclaimer near the top unless the owner approved removing or rewriting it.
 - Changelog is concise, player-facing, and approved.
 - Feature, configuration, and multiplayer/client/server notes match implemented behavior.
 - Public wording uses approved glossary terms consistently when the glossary applies.
