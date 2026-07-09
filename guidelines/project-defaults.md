@@ -73,7 +73,10 @@ Do not leave example values in initialized project files.
 - Default public documentation style is `split-repository-and-player-facing`.
 - `README.md` should be repository-facing by default. Assume readers have basic source repository and Gradle/modding literacy; focus on project-specific purpose, source/release links, install-side expectations, configuration keys, scope boundaries, license, and attribution.
 - Player/download-facing copy should live in a separate file by default, such as `MOD-PAGE.md` or another owner-approved distribution-page document.
+- Player/download-facing copy should include the project GitHub/source link when the repository URL is known, unless the owner explicitly omits it or the selected platform already provides a sufficiently visible source link.
 - Keep internal workflow details, implementation evidence, validation logs, bytecode checks, QA-style test reports, and obvious repository boilerplate out of public documentation unless the owner explicitly asks for them or the information affects normal player decisions.
+- Avoid internal engineering qualifiers such as "best-effort", "runtime evidence", or "implementation limitation" in public copy unless the user impact is explained plainly.
+- Avoid repeating platform-displayed metadata such as Minecraft version, loader, or dependency fields in mod-page prose unless the information affects player understanding, installation, or compatibility decisions.
 - Use a single combined document only when the owner explicitly chooses that structure.
 
 ## Commit Messages
@@ -126,6 +129,7 @@ Apply owner-managed defaults directly unless the owner explicitly requests agent
 ## Versioning
 
 - Use semantic versioning unless an approved decision requires another scheme.
+- For Initial Development, default the first public release version to `1.0.0` unless the owner explicitly chooses a prerelease, experimental, or pre-1.0 version.
 - Version changes belong to release work and must not occur incidentally during feature implementation.
 
 ## Overrides

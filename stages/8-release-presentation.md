@@ -2,13 +2,13 @@
 
 ## Purpose
 
-Prepare and approve repository-facing and player-facing release materials for the implemented mod before technical packaging begins.
+Prepare and approve repository-facing and player-facing release materials for the implemented mod, then prepare the validated release artifact handoff when release validation is agent-managed.
 
-This stage is about how the mod is presented to players and modpack authors. It does not build, inspect, checksum, or validate the release JAR, and it does not prepare live platform-submission steps.
+This stage is about how the mod is presented to players and modpack authors and what handoff the owner needs for manual publication. It does not prepare live platform-submission steps and never uploads or publishes the mod.
 
 ## Main Question
 
-> Do the public materials accurately explain what the mod does and why a player would use it?
+> Do the public materials accurately explain the mod, and is the release handoff ready for owner-managed publication?
 
 ## Required Input
 
@@ -31,12 +31,14 @@ Establish:
 - A concise repository-facing README when agent-managed
 - A separate concise player/download-facing public description suitable for a mod page when agent-managed
 - A concise player-facing changelog
+- The approved release version, defaulting to `1.0.0` for a first public release unless the owner chooses otherwise
 - A clear feature summary based only on implemented behavior
 - A high-level configuration summary when the mod has user-facing configuration
 - Player-facing multiplayer, client/server, dependency, or compatibility notes when normal players need them
 - Optional publication-asset decisions for icon and screenshots without blocking README, changelog, or packaging when owner-managed or deferred
 - Public wording that uses approved glossary terms consistently when the glossary applies
 - An internal presentation record that separates public copy from technical evidence and unresolved limitations
+- A release handoff record when release JAR generation or validation is agent-managed
 
 ## In Scope
 
@@ -52,6 +54,9 @@ Establish:
 - Record icon and screenshot ownership, deferral, or agent-managed work
 - Follow icon or screenshot workflows only when those areas are agent-managed or explicitly assigned
 - Produce `<artifact-root>/release-presentation.md`
+- Confirm the approved release version before packaging or handoff
+- Build, inspect, checksum, and record the release artifact when release JAR generation/validation is agent-managed by Project Setup or explicit owner instruction
+- Produce `<artifact-root>/release-handoff.md` when a release artifact is built or identified
 
 ## Out of Scope
 
@@ -59,10 +64,7 @@ Do not:
 
 - Add or change mod behavior
 - Perform unrelated refactoring
-- Build the final release JAR
-- Inspect bytecode or JAR contents
-- Generate checksums
-- Perform release validation or clean-instance testing
+- Perform clean-instance, dedicated-server, Cleanroom, or multiplayer runtime testing unless assigned by the ownership matrix or explicitly requested by the owner
 - Include build evidence, bytecode details, validation logs, QA-style usage steps, or internal test reports in public documentation
 - Include redundant platform requirements that the distribution platform already displays unless players need the information to decide whether to install
 - Research platform-submission mechanics, live project fields, page setup, or final platform field choices unless explicitly assigned by the owner
@@ -71,6 +73,7 @@ Do not:
 - Include Cleanroom caveats unless they affect normal player installation, compatibility expectations, or usage decisions
 - Send assets or files to a distribution platform
 - Publish a release
+- Keep the workflow open only to wait for manual publication
 
 An implementation defect returns to Implementation. An inaccurate public claim returns to the stage that owns the underlying behavior or decision. A terminology conflict returns to the glossary-owning stage that introduced or approved the term.
 
@@ -89,6 +92,7 @@ Act as a release documentation editor.
 - Keep configuration and multiplayer notes high-level unless a player must follow a specific rule.
 - Keep internal engineering evidence out of public files.
 - Keep technical evidence, unresolved validation gaps, and ownership decisions in `release-presentation.md`.
+- Keep release build, artifact inspection, checksum, and handoff evidence in `release-handoff.md`.
 - Treat mod-page copy as an iterative public-copy artifact; review it for audience fit, repetition, useful links, owner-provided wording, roadmap-risk wording, concise scope, and plain install-side statements.
 - Follow the release ownership matrix strictly.
 - Treat icon and screenshot work as optional publication assets, not as blockers for README, changelog, or packaging unless explicitly agent-managed and required by the owner.
@@ -134,12 +138,16 @@ Include only sections that help normal players or modpack authors decide whether
 6. Known limitations only when they affect installation or use
 7. Useful project or companion-mod links
 
+When the repository URL is known, include a GitHub/source link by default unless the owner explicitly omits it or the selected platform already provides a sufficiently visible source link.
+
 Review mod-page copy for:
 
 - Audience fit: player/download-page readers, not source repository readers
 - Tone: preserve owner-provided introductory wording when supplied
 - Repetition: avoid repeating the mod name or the same compatibility point unnecessarily
 - Link usefulness: include relevant external links when they help players
+- Platform redundancy: remove or justify Minecraft version, loader, dependency, and other metadata when the distribution platform already displays it and the prose does not need it
+- Plain language: replace internal qualifiers such as "best-effort", "runtime evidence", "validation", or "implementation limitation" with user-facing wording, or omit them when the caveat does not affect installation or practical use
 - Roadmap risk: avoid phrases such as `first release` unless future support promises are intentional
 - Scope clarity: keep limitations concise without over-explaining implementation details
 - Installation clarity: state required install sides plainly
@@ -174,7 +182,7 @@ Use approved glossary terms for feature names and player-visible behavior. Exclu
 
 ## Optional Publication Assets
 
-Icon and screenshot work is optional publication-asset work. It must not block README/changelog approval or Packaging and Release Validation when it is owner-managed or deferred.
+Icon and screenshot work is optional publication-asset work. It must not block README/changelog approval, release artifact validation, or handoff approval when it is owner-managed or deferred.
 
 Use the release ownership matrix from Project Setup.
 
@@ -188,12 +196,12 @@ If the owner provides the icon:
 
 - Record `Owner Provides Icon`.
 - Do not research, generate, select, or request icon references.
-- Do not block README, changelog, or packaging on the icon.
+- Do not block README, changelog, release artifact validation, or handoff approval on the icon.
 
 If the icon is deferred:
 
 - Record `Icon Deferred` and the owner-approved reason or follow-up condition.
-- Do not block README, changelog, or packaging on the icon.
+- Do not block README, changelog, release artifact validation, or handoff approval on the icon.
 
 If the agent helps create or revise the icon, record one of these decisions and follow the icon guideline:
 
@@ -229,7 +237,8 @@ Use it to record:
 - Known limitations and whether they are public-facing or internal
 - Deferred owner-managed assets or publication actions
 - Public terminology decisions and glossary updates
-- Questions that Packaging and Release Validation must consider
+- Questions that release handoff or optional standalone Packaging and Release Validation must consider
+- Release artifact identity, checksum, and inspection evidence when handled in this stage
 
 Do not use the internal record as public copy.
 
@@ -250,8 +259,10 @@ Do not use the internal record as public copy.
 13. Check every public claim against approved implementation evidence and approved glossary terminology.
 14. Update `workspace/documentation/glossary.md` when release copy approves, refines, or deprecates public-facing project terminology.
 15. Keep technical evidence and internal limitations in `release-presentation.md` rather than public README or mod-page copy.
-16. Present public materials and the internal presentation record for approval.
-17. Revise until explicitly approved.
+16. If release validation is agent-managed, build the exact release artifact, inspect it, calculate its checksum, and record the handoff.
+17. If release packaging is owner-managed, record the expected command/artifact pattern and owner-managed boundary instead of building.
+18. Present public materials, the internal presentation record, and release handoff for approval.
+19. Revise until explicitly approved.
 
 ## Output Artifacts
 
@@ -273,6 +284,12 @@ Produce:
 <artifact-root>/release-presentation.md
 ```
 
+When a release artifact is built, inspected, identified, or handed off, also produce:
+
+```text
+<artifact-root>/release-handoff.md
+```
+
 It should contain:
 
 1. Public documentation style
@@ -292,6 +309,21 @@ It should contain:
 15. Glossary terms used or updated
 16. Owner approvals
 
+### Release Handoff Record
+
+`release-handoff.md` should contain:
+
+1. Selected handoff mode: agent-managed release validation or owner-managed packaging
+2. Mod and version
+3. Source revision
+4. Artifact filename and path, or expected artifact pattern when owner-managed
+5. Build command and result when agent-managed
+6. Artifact checksum when agent-managed
+7. Artifact inspection summary when agent-managed
+8. Accepted validation waivers
+9. Owner-managed publication checklist
+10. Owner approvals
+
 ## Completion Criteria
 
 This stage is complete when:
@@ -310,5 +342,9 @@ This stage is complete when:
 - Technical notes are kept in `release-presentation.md`, not public README or mod-page copy.
 - Every public claim is supported by approved implementation evidence.
 - `<artifact-root>/release-presentation.md` is generated and approved.
+- `<artifact-root>/release-handoff.md` is generated and approved when a release artifact is built, identified, or handed off.
+- The approved release version is recorded; first public releases default to `1.0.0` unless the owner chose otherwise.
+- Agent-managed release artifacts are built, inspected, and checksummed when assigned by the ownership matrix.
+- Owner-managed publication remains clearly outside the agent workflow.
 
-Completion authorizes Packaging and Release Validation. It does not authorize publication.
+Completion ends agent-managed release work for the stage. Manual publication remains the project owner's responsibility and does not block workflow completion unless the owner explicitly requests publication tracking.

@@ -18,6 +18,8 @@ setup/owner-defaults-template.md
 
 Owner defaults reduce repeated setup questions. They are workspace-specific and ignored by Git. They should contain owner-specific setup preferences and overrides, not general workflow rules. They do not override approved project-specific decisions, legal constraints, safety boundaries, or explicit owner instructions in the active conversation.
 
+Owner defaults may be supplied either as `workspace/documentation/owner-defaults.md` or directly in chat/attachments. Chat-provided owner defaults are valid setup input. When useful, persist them to `workspace/documentation/owner-defaults.md` as an ignored runtime artifact so later agent contexts can reuse them.
+
 ## Project Setup
 
 Before the first workflow, execute:
@@ -65,10 +67,10 @@ A workflow may skip a reusable stage only when its routing rules allow it and th
 | 5. Project Initialization | `stages/5-initialization.md` | `workspace/documentation/project-initialization.md` |
 | 6. Implementation Plan | `stages/6-implementation-plan.md` | `<artifact-root>/implementation-plan.md` and `issues/` |
 | 7. Implementation | `stages/7-implementation.md` | Completed code and issue evidence |
-| 8. Release Presentation | `stages/8-release-presentation.md` | `<artifact-root>/release-presentation.md` |
-| 9. Packaging and Release Validation | `stages/9-packaging-release-validation.md` | `<artifact-root>/release-handoff.md` |
+| 8. Release Presentation And Release Handoff | `stages/8-release-presentation.md` | `<artifact-root>/release-presentation.md` and, when applicable, `<artifact-root>/release-handoff.md` |
+| 9. Standalone Packaging and Release Validation | `stages/9-packaging-release-validation.md` | `<artifact-root>/release-handoff.md` |
 
-When a workflow invokes multiple stages, perform them in this order. Initial Development uses all stages. Other workflows define their approved route.
+When a workflow invokes multiple stages, perform them in this order. Initial Development normally uses stages 1 through 8; Stage 9 exists for workflows or owner requests that explicitly need a separate packaging/validation stage. Other workflows define their approved route.
 
 ## Project Status
 
@@ -186,6 +188,8 @@ The briefing must explain:
 - **Boundaries:** any relevant owner-managed responsibilities, deferred prerequisites, or approval requirements.
 
 Ask for explicit permission to begin after the briefing. Do not mark the stage **In Progress** or perform stage work until the owner approves.
+
+When a workflow approval always leads immediately into the first required stage, the transition briefing may combine workflow start and first-stage start. The combined request must make both approvals explicit, so the owner understands that approving it starts the workflow and the first stage.
 
 For resumed work, provide a shorter briefing that states the active stage, current status, next action, expected output, and whether approval is needed before continuing.
 
@@ -378,7 +382,11 @@ setup/artifact-templates/
 
 use it as the starting structure for new artifacts. Omit nonapplicable sections rather than filling them with placeholders.
 
-Approved canonical artifacts are authoritative for project-specific decisions. Later artifacts should reference stable requirement, architecture, glossary, or issue identifiers rather than copying full content. A cycle updates affected canonical documents and records only the change and traceability evidence in its own directory.
+Approved canonical artifacts are authoritative for project-specific decisions, but they are not immutable. Treat them as the current best approved understanding. Implementation, review, validation, and release work should follow them unless new evidence shows that a requirement, scope boundary, or architectural decision is wrong, harmful, incomplete, or misleading.
+
+When new evidence challenges an approved artifact, use the backward-transition process instead of silently working around the problem. Reviewers may critique the approved requirements, architecture, or scope as well as the code; a valid critique should route to the owning stage for explicit revision.
+
+Later artifacts should reference stable requirement, architecture, glossary, or issue identifiers rather than copying full content. A cycle updates affected canonical documents and records only the change and traceability evidence in its own directory.
 
 Omit nonapplicable sections and identify unresolved decisions explicitly. Never invent information to make an artifact appear complete.
 

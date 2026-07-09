@@ -1,5 +1,11 @@
 # Packaging and Release Validation
 
+## Current Role
+
+This is a standalone/exception stage. Normal Initial Development and Change Cycle release work should use `stages/8-release-presentation.md`, which now owns public release materials, release artifact validation, and handoff.
+
+Use this stage only when a workflow explicitly routes to it or the project owner asks to run packaging and release validation as a separate checkpoint.
+
 ## Purpose
 
 Prepare the release handoff according to the approved release ownership matrix.

@@ -21,6 +21,15 @@ For a new mod:
 Read AGENTS.md and guide me through Project Setup for a new Minecraft 1.12.2 mod.
 ```
 
+If you already have owner defaults, attach or paste them with the request:
+
+```text
+Read AGENTS.md and guide me through Project Setup for a new Minecraft 1.12.2 mod.
+I have an owner-defaults.md and I am providing it here.
+```
+
+The agent should treat chat-provided `owner-defaults.md` content as valid setup input. If useful, it can persist that content to `workspace/documentation/owner-defaults.md` as an ignored workspace artifact. Owner defaults reduce repeated setup questions, but they do not override active project decisions, legal constraints, or explicit instructions in the current conversation.
+
 For an existing mod that has never used this workflow:
 
 ```text
@@ -40,7 +49,7 @@ That is enough to begin. The agent should inspect the workspace, explain what is
 
 ### Returning Users
 
-If you already completed a mod with this workflow, provide your previous `workspace/documentation/owner-defaults.md` when starting the next mod, or create one from `setup/owner-defaults-template.md` before Project Setup begins.
+If you already completed a mod with this workflow, provide your previous `workspace/documentation/owner-defaults.md` when starting the next mod, paste or attach it in chat, or create one from `setup/owner-defaults-template.md` before Project Setup begins.
 
 That file captures setup-stage preferences and owner-specific overrides, such as preferred loader, runtime target, language, template, distribution platform, license, branch, Java versions, and repeated setup answers. General workflow rules belong in the committed guidelines and stages, not in this workspace-local file.
 
@@ -54,7 +63,7 @@ The agent will:
 4. Produce project-specific documents outside the final mod repository.
 5. Initialize or preserve the independent mod repository at the correct time.
 6. Implement approved issues with verification and independent review.
-7. Prepare presentation, artwork, the release artifact, and a manual publication handoff.
+7. Prepare public presentation, release artifact validation, and a manual publication handoff.
 
 The agent stops for approval between stages. It should challenge ambiguity and report failed verification rather than inventing decisions or declaring success prematurely.
 
@@ -69,7 +78,7 @@ Expect to participate in:
 - In-game and multiplayer judgment
 - Review of implementation results
 - Manual creation or management of GitHub and distribution-platform resources
-- Final publication
+- Final publication, unless you explicitly ask the agent to help verify a published page after the fact
 
 The process is intended to make agent-assisted development controlled and understandable, not autonomous at any cost.
 

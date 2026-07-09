@@ -6,14 +6,18 @@
 
 ## Release Identity
 
+- Mod:
 - Version:
 - Commit:
 - Branch:
+- Repository:
 
 ## Artifact
 
 - Path:
 - Filename:
+- Size:
+- SHA-256:
 - Build command:
 - Result:
 

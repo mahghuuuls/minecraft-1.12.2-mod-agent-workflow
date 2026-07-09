@@ -15,6 +15,7 @@ This stage is interactive onboarding. It does not define mod behavior, prove tec
 - The project owner's initial request
 - `guidelines/project-defaults.md`
 - `workspace/documentation/owner-defaults.md`, when present
+- Owner-provided `owner-defaults.md` content supplied in chat, when present
 - `setup/owner-defaults-template.md`
 - `setup/template-defaults.properties`
 - `setup/project.properties.example`
@@ -32,7 +33,7 @@ Establish:
 - The project repository state or the stage by which it must exist
 - Practical project identity defaults, when known
 - Public documentation style and commit-message style
-- Client/server responsibility: client-only, client-first, or server-required
+- Client/server responsibility when the concept is known, or an explicit deferral to Concept and Scope / Feasibility Research when it is premature
 - A provisional loader, compatible-runtime, and template choice for Initial Development
 - Approved distribution platforms and known operational overrides
 - Known dependency source repositories or owner-provided dependency references, only when already relevant
@@ -51,6 +52,7 @@ Establish:
 - Create or update `workspace/documentation/project-state.md`
 - Create or update `workspace/project.properties` when enough real values are known
 - Collect GitHub username, repository name, mod ID, display name, public description, root package, main class, and side/responsibility classification when known
+- Defer side/responsibility classification when the mod concept is not yet clear enough to answer it well
 - Apply approved default naming conventions instead of asking the owner to invent Java naming patterns from scratch
 - Record public documentation style and commit-message style
 - Explain the shared platform preferences and available loader/template choices
@@ -88,6 +90,8 @@ Act as an onboarding coordinator.
 
 - Inspect before asking questions.
 - Do not direct the user back to the README.
+- Treat owner defaults supplied through chat or attachments as first-class setup input, not as a user placement error.
+- When chat-provided owner defaults should persist across sessions, offer to save them to `workspace/documentation/owner-defaults.md`.
 - Explain only the immediate setup decision.
 - Ask one focused question at a time.
 - Distinguish required-now values from prerequisites that may be deferred.
@@ -206,6 +210,8 @@ Client/server responsibility values:
 - `client-first`: primary value is client-side, but compatibility or multiplayer behavior may need documentation or limited checks.
 - `server-required`: the mod must be installed or enforced on a server for core behavior.
 
+For a new mod whose concept is not known yet, do not force this classification during Project Setup. Record it as deferred. Concept and Scope should establish the intended behavior, and Feasibility Research should validate the runtime responsibility once the behavior is concrete enough.
+
 Commit-message style rules:
 
 - Default to repo-facing messages.
@@ -276,7 +282,7 @@ When asking about the matrix, present the defaults first and ask what the owner 
 
 Record the approved matrix in `workspace/documentation/project-setup.md`. Later stages must follow it. If a later stage needs to perform owner-managed work, stop and ask the owner to revise the matrix or approve a one-time exception.
 
-Record equivalent machine-readable fields in `workspace/project.properties` when configuration is written. Use `release_handoff_mode` to record the intended Stage 9 mode.
+Record equivalent machine-readable fields in `workspace/project.properties` when configuration is written. Use `release_handoff_mode` to record the intended release handoff mode used by Release Presentation, or by standalone Packaging and Release Validation when explicitly selected.
 
 ## Project Configuration
 

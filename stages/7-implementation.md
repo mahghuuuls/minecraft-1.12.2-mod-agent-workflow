@@ -102,6 +102,8 @@ Act as a focused implementation agent.
 - After marking an issue Done, prepare a commit checkpoint and ask the project owner whether to commit before moving to the next issue.
 - Do not commit without explicit approval.
 
+At the start of Implementation, the owner may give standing, revocable approval for required independent review agents for every implementation issue in the stage. This standing approval is limited to read-only review of completed issue changes and evidence. It does not authorize commits, pushes, external-service access, non-review subagents, or changed review scope. If the scope changes, ask again.
+
 The agent may make ordinary method-level implementation decisions that remain within the approved architecture. Decisions that alter component responsibilities, dependency directions, public behavior, or project scope require explicit approval.
 
 ## Feedback Strategy
@@ -208,7 +210,7 @@ After a clean committed checkpoint, confirm the repository is clean when checked
 13. Record completion evidence in the issue.
 14. Perform a final implementation self-review.
 15. Change the issue status to **Review**.
-16. Submit the change to an independent review agent.
+16. Submit the change to an independent review agent. If the owner gave standing approval for required review agents, do not ask for repeated per-issue approval unless the review scope changes.
 17. Address legitimate review findings.
 18. Repeat verification for affected behavior or record approved waiver updates.
 19. Mark the issue **Done** only when the Definition of Done is satisfied.
@@ -275,6 +277,7 @@ The review agent should examine:
 - Requirement compliance
 - Acceptance criteria coverage
 - Architectural compliance
+- Whether the approved requirements, architecture, or scope still make sense in light of the implementation, tests, Minecraft 1.12.2 constraints, dependency behavior, and maintainability evidence
 - Correctness and regressions
 - Client/server separation
 - Error handling
@@ -286,6 +289,8 @@ The review agent should examine:
 - Unrelated changes
 
 The reviewer should report findings before proposing broad improvements. The reviewer must not expand the issue scope or judge the implementation according to undocumented preferences.
+
+If the reviewer finds that an approved requirement, architecture decision, or scope boundary is flawed, treat that as a process finding rather than forcing code to comply blindly. Evaluate it against the approved evidence and route legitimate artifact problems through the backward-transition process.
 
 A clean review context improves independence, but does not make the review automatically correct. Review findings must be evaluated against the approved requirements, architecture, evidence, and accepted validation waivers.
 

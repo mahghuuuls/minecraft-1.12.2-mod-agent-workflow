@@ -21,6 +21,7 @@
 ## Changelog
 
 - Status:
+- Version:
 
 ## Reusable Public Description Or Summary
 
@@ -49,6 +50,15 @@
 ## Public-Facing Known Limitations
 
 -
+
+## Release Handoff
+
+- Mode:
+- Version:
+- Commit:
+- Artifact:
+- Checksum:
+- Owner-managed publication state:
 
 ## Internal Technical Notes And Validation Gaps
 

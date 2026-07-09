@@ -5,7 +5,9 @@
 - Mod name:
 - Version:
 - Source revision:
-- Publication date:
+- Manual publication state:
+- Publication date, when reported:
+- Publication URL, when reported:
 - Repository:
 
 ## Supported Environment

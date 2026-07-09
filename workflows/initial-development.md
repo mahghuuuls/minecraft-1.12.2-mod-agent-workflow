@@ -33,28 +33,31 @@ The final repository URL, directory name, and empty-repository creation may be d
 - Execute every reusable stage in order.
 - Do not create the project repository contents before Project Initialization.
 - Use `workspace/documentation/` as `<artifact-root>`.
-- Treat the approved release candidate as provisional until the owner reports the manual publication result.
+- Treat the approved release artifact and handoff as the end of agent-managed release work.
+- Record manual publication as owner-managed and optional follow-up, not as a blocker for workflow completion.
 - Never upload or publish the mod.
 
 ## Stage Routing
 
-All nine reusable stages are **Required**. Record that disposition for every stage in `project-status.md`.
+Reusable stages 1 through 8 are **Required**. Release Presentation includes release artifact validation and handoff for Initial Development.
+
+`stages/9-packaging-release-validation.md` is **Not Applicable** for normal Initial Development unless the owner explicitly requests a separate packaging stage or a future workflow routes to it. Record that disposition in `project-status.md`.
 
 ## Sequence
 
 1. Record this workflow as **In Progress** in `project-status.md` and update `project-state.md`.
-2. Execute Concept and Scope.
+2. Execute Concept and Scope. The workflow-start approval may also approve starting Concept and Scope when the transition briefing clearly covers both.
 3. Execute Feasibility Research.
 4. Execute Requirements Definition.
 5. Execute Architecture Definition.
 6. Execute Project Initialization.
 7. Execute Implementation Plan.
 8. Execute Implementation.
-9. Execute Release Presentation.
-10. Execute Packaging and Release Validation.
-11. Keep the workflow **In Progress**, set its manual publication state to **Ready for Publication**, and update `project-state.md`.
-12. After the owner reports publication, record the published version and source revision in `project-baseline.md` and update `project-state.md`.
-13. Present the completed workflow record for approval.
+9. Execute Release Presentation, including release artifact validation and manual publication handoff when agent-managed by the ownership matrix.
+10. Set the manual publication state to **Ready for Publication**, create `project-baseline.md` as a release-ready baseline, and update `project-state.md`.
+11. Present the completed workflow record for approval.
+
+If the owner later reports a manual publication result, update `project-baseline.md` with the published URL/date/file information as an optional follow-up. Do not keep the Initial Development workflow open merely to wait for external publication.
 
 Each stage and the final workflow record follow the approval lifecycle in `guidelines/process-control.md`.
 
@@ -66,11 +69,11 @@ In addition to stage outputs, produce:
 workspace/documentation/project-baseline.md
 ```
 
-After publication is confirmed, it records:
+When the release-ready baseline is approved, it records:
 
-- Published version
+- Release version
 - Source revision
-- Publication date reported by the owner
+- Manual publication state, and publication date/URL when later reported by the owner
 - Supported Minecraft, loader, runtimes, Java environment, and distribution platforms
 - Canonical approved project documents
 - Known limitations
@@ -84,10 +87,10 @@ Do not claim or independently verify publication unless the project owner provid
 
 This workflow is complete when:
 
-- All nine reusable stages are approved.
-- Release Presentation and Packaging and Release Validation are approved.
-- The project owner reports the manual publication result.
-- `project-baseline.md` records the published baseline.
+- All required reusable stages are approved.
+- Required stages are approved.
+- Release Presentation, including artifact validation and handoff when agent-managed, is approved.
+- `project-baseline.md` records the release-ready baseline.
 - The workflow is explicitly approved as complete.
 
 The next behavioral change must use the Change Cycle workflow.
