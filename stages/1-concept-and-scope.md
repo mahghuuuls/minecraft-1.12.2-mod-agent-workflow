@@ -67,7 +67,7 @@ Act as an alignment interviewer.
 - Before the interview starts, ask the project owner to describe the mod as fully as they can.
 - For complex mods, recommend writing a rough design note first.
 - Treat the owner's first draft as raw input, not as final requirements or approved scope.
-- Ask one focused question at a time after receiving the first draft.
+- Use focused questions for branching scope decisions and compact decision packets for closely related low-risk boundaries or defaults.
 - Begin with the problem and intended experience.
 - Use each answer to determine the next relevant question.
 - Challenge vague language, hidden assumptions, contradictions, and feature creep.
@@ -125,7 +125,7 @@ Do not add ordinary Minecraft, programming, or workflow terms unless this projec
 3. Ask the project owner for a rough first draft of the mod idea.
 4. Receive the initial mod idea, rough design note, examples, or references.
 5. Identify the most important unresolved concept-level question.
-6. Interview the project owner one question at a time.
+6. Interview the project owner using focused questions or compact related decision packets according to `guidelines/collaboration-guidelines.md`.
 7. Record decisions, assumptions, boundaries, open questions, and candidate glossary terms.
 8. Periodically summarize the current shared understanding.
 9. Resolve concept-level contradictions and ambiguities.
@@ -135,23 +135,7 @@ Do not add ordinary Minecraft, programming, or workflow terms unless this projec
 
 ## Output Artifact
 
-Produce a Markdown document named `workspace/documentation/concept-and-scope.md` containing:
-
-1. **Purpose**
-2. **Problem Statement**
-3. **Intended Player Experience**
-4. **Target Users and Usage Context**
-5. **High-Level Features**
-6. **Essential Features**
-7. **Optional Features**
-8. **In Scope**
-9. **Out of Scope**
-10. **Fixed Constraints**
-11. **Assumptions**
-12. **Open Concept Questions**
-13. **Questions for Feasibility Research**
-14. **Glossary Notes**
-15. **Definition of Success**
+Produce `workspace/documentation/concept-and-scope.md` from `setup/artifact-templates/concept-and-scope.md`. The template is the authoritative document structure; this stage's completion criteria are authoritative for content quality.
 
 Omit sections without relevant content instead of inventing information.
 

@@ -1,14 +1,18 @@
 # Implementation Plan
 
-## Overview
+## Implementation Strategy
 
 -
 
-## Inputs
+## Vertical Slice Overview
 
 -
 
-## Issue List
+## Foundation Work
+
+-
+
+## Issue Summary
 
 | Issue | Title | Status | Dependencies |
 | --- | --- | --- | --- |
@@ -18,11 +22,27 @@
 
 -
 
+## Suggested Execution Order
+
+-
+
+## Risk-Driven Priorities
+
+-
+
 ## Verification Strategy
 
 -
 
-## Risks And Early Validation
+## Definition Of Done
+
+-
+
+## Requirement Traceability
+
+-
+
+## Deferred Requirements
 
 -
 
@@ -32,27 +52,61 @@
 # IMP-000: Issue Title
 
 **Status:** Ready
-**Dependencies:** None
+**Type:** Vertical Slice
+**Priority:** High
+**Blocked By:** None
 
-## Purpose
-
-## Scope
+## Objective
 
 ## Requirements
 
 ## Architecture References
 
-## Implementation Notes
+## Expected Outcome
 
-## Verification Procedure
+## In Scope
+
+## Out Of Scope
+
+## Implementation Constraints
+
+## Likely Code Areas
 
 ## Acceptance Criteria
+
+## Verification
+
+## Manual Observability
+
+- Authoritative state or event:
+- Reliably exposed by normal behavior:
+- Diagnostic mechanism, when required:
+- Same-issue work or prerequisite:
+- Default state and authorization boundary:
 
 ## Completion Evidence
 
 ### Automated Checks
 
 ### In-Game Verification
+
+### Diagnostic Support
+
+- Authoritative state or event observed:
+- Mechanism and setup:
+- Default state:
+- Authorization behavior, when applicable:
+- Result:
+
+### Dedicated Server
+
+- Procedure:
+- Result:
+
+### Compatibility Or Performance
+
+- Procedure:
+- Result:
 
 ### Accepted Validation Waivers
 

@@ -72,7 +72,7 @@ Establish with the owner:
 10. Existing branding that must be preserved
 11. Reference images and approved influences
 
-Ask one focused question at a time. Present the complete brief for approval before generation.
+Use a focused question for a branching art-direction decision and a compact packet for related visual details. Present the complete brief for approval before generation.
 
 ## Choose One Art Direction
 

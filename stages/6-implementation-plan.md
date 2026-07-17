@@ -27,6 +27,7 @@ Establish:
 - Which requirements each issue satisfies
 - Which architectural components each issue affects
 - How each issue will be verified
+- What authoritative state or event each manual runtime check must observe, and how it will be observed
 - Which technical risks should be addressed early
 - What constitutes completion for each issue
 - Which optional requirements are deferred
@@ -41,6 +42,7 @@ Establish:
 - Prioritizing risky or uncertain work
 - Defining acceptance criteria for each issue
 - Defining verification procedures
+- Designing the minimum observability needed for reliable manual runtime verification
 - Linking issues to requirements and architecture
 - Identifying likely code areas affected
 - Establishing issue statuses and workflow
@@ -77,6 +79,11 @@ Act as an implementation planner.
 - Ensure the dependency graph contains no cycles.
 - Schedule high-risk assumptions and implementation validations early.
 - Define verification before implementation begins.
+- For every manual runtime check, identify the authoritative state or event being tested and whether normal behavior exposes it reliably.
+- When normal behavior is insufficient, include the minimum diagnostic mechanism in the same vertical slice or add an explicit prerequisite issue that delivers it first.
+- Prefer same-issue diagnostics; use a prerequisite when the mechanism is shared by multiple slices or substantial enough to require separate implementation and review.
+- Do not add diagnostics mechanically when stable external behavior already proves the result.
+- Make noisy or player-visible diagnostics disabled by default unless normal product behavior requires otherwise, and apply approved authorization boundaries to administrative state-changing commands.
 - Select verification appropriate to the behavior instead of requiring strict TDD.
 - Use automated tests for isolated logic where practical.
 - Use Minecraft client, dedicated-server, multiplayer, compatibility, or performance verification where required.
@@ -84,7 +91,7 @@ Act as an implementation planner.
 - Avoid repeating entire project documents inside every issue.
 - Reference requirements and architectural decisions by stable identifiers.
 - Avoid speculative tasks for hypothetical future needs.
-- Ask the project owner one focused question at a time when prioritization or scope decisions are required.
+- Use focused questions for branching prioritization or scope decisions and compact decision packets for related plan defaults or issue-grouping choices.
 - Do not ask questions already answered by approved documents.
 - Identify contradictions or missing information rather than guessing.
 - Generate complete draft artifacts, present them for approval, and revise them as required.
@@ -101,6 +108,7 @@ For example, a slice might include:
 - Client/server handling
 - Persistence or networking
 - Verification
+- Any diagnostic support required to make that verification reliable
 
 A vertical slice should produce something observable and verifiable, even if the feature is not yet complete.
 
@@ -129,6 +137,7 @@ An issue should:
 - Be independently reviewable.
 - Have explicit acceptance criteria.
 - Have a defined verification procedure.
+- Include or depend on the observability required by any manual verification procedure.
 - Avoid combining unrelated requirements.
 
 If an issue has multiple unrelated outcomes or an extensive verification procedure, split it.
@@ -210,10 +219,20 @@ Describe the observable behavior available after completion.
 - Dedicated-server checks
 - Multiplayer, compatibility, or performance checks when relevant
 
+## Manual Observability
+
+- Authoritative state or event that a manual check must observe
+- Whether stable normal behavior exposes it reliably
+- Required logs, inspect commands, controlled-state commands, counters, or other narrow diagnostics when normal behavior is insufficient
+- Same-issue implementation or explicit prerequisite issue
+- Default enabled/disabled state and relevant authorization boundary
+
 ## Completion Evidence
 
 Record the tests, commands, observations, logs, or measurements demonstrating completion.
 ```
+
+Omit **Manual Observability** when the issue has no manual runtime verification. When it applies, complete the section before marking the issue Ready; do not leave the observation path to be invented during Implementation.
 
 Use `Type: Foundation` only when an issue does not directly deliver observable mod behavior but is necessary to unblock identified vertical slices.
 
@@ -261,32 +280,21 @@ An implementation issue is Done only when:
 6. Add only the foundational issues required by identified slices.
 7. Link every issue to requirements and architecture.
 8. Define acceptance criteria and verification for every issue.
-9. Identify dependencies and blockers.
-10. Construct the dependency graph.
-11. Check the graph for cycles.
-12. Schedule risky assumptions and validation work early.
-13. Confirm that every required behavior is covered.
-14. Identify optional requirements that will be deferred.
-15. Generate the implementation-plan artifacts as complete drafts.
-16. Present the drafts for review and revise them until explicitly approved.
+9. For every manual runtime check, define its observability contract and add any required same-issue diagnostic work or prerequisite issue.
+10. Identify dependencies and blockers, including diagnostic prerequisites that must be Done before dependent manual verification begins.
+11. Construct the dependency graph.
+12. Check the graph for cycles.
+13. Schedule risky assumptions and validation work early.
+14. Confirm that every required behavior is covered.
+15. Identify optional requirements that will be deferred.
+16. Generate the implementation-plan artifacts as complete drafts.
+17. Present the drafts for review and revise them until explicitly approved.
 
 ## Output Artifacts
 
 ### `<artifact-root>/implementation-plan.md`
 
-Produce a Markdown document containing:
-
-1. **Implementation Strategy**
-2. **Vertical Slice Overview**
-3. **Foundation Work**
-4. **Issue Summary**
-5. **Dependency Graph**
-6. **Suggested Execution Order**
-7. **Risk-Driven Priorities**
-8. **Verification Strategy**
-9. **Definition of Done**
-10. **Requirement Traceability**
-11. **Deferred Requirements**
+Produce the plan from `setup/artifact-templates/implementation-plan.md`. The template is the authoritative plan structure. The issue format defined by this stage and reproduced in that template is authoritative for issue files.
 
 ### `<artifact-root>/issues/`
 
@@ -310,6 +318,7 @@ This stage is complete when:
 - Issues are organized primarily as vertical slices.
 - Necessary foundational work has a specific identified consumer.
 - Every issue has an objective, scope, acceptance criteria, and verification procedure.
+- Every manual runtime verification procedure identifies what authoritative state or event it observes and has the necessary diagnostic support in the same issue or an explicit completed prerequisite.
 - Every issue references relevant requirements and architecture.
 - All blocking relationships are explicit.
 - The dependency graph is acyclic.

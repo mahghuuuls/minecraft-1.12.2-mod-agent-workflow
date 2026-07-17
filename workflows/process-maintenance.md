@@ -51,6 +51,7 @@ Do not use this mode merely because a feedback entry exists. During mod developm
 4. Apply focused edits to versioned process files.
 5. When the task is feedback-driven, update feedback status or summarize which entries were applied, rejected, deferred, or left untouched.
 6. Run consistency checks over changed process text and cross-references.
+   - Run `powershell -ExecutionPolicy Bypass -File scripts/validate-process.ps1` when PowerShell is available.
 7. Report changed files, verification, unresolved risks, and a suggested commit message when useful.
 
 ## Output

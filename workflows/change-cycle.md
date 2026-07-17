@@ -36,7 +36,7 @@ If the repository has no approved baseline, use Existing Mod Assessment first.
 Act as a change-impact coordinator before acting as an implementer.
 
 - Verify the baseline version and source revision before planning the change.
-- Interview the owner one focused question at a time.
+- Use focused questions for branching impact decisions and compact decision packets for related low-risk route recommendations.
 - Separate the requested outcome from possible implementations.
 - Identify effects on behavior, loader/runtime compatibility, configuration, persisted data, dependencies, architecture, distribution platforms, performance, and release scope.
 - Propose the earliest affected reusable stage and every later stage that must be revisited.
@@ -73,22 +73,7 @@ Produce:
 <artifact-root>/change-intake.md
 ```
 
-It must contain:
-
-1. Cycle ID and requested outcome
-2. Motivation
-3. Baseline version and source revision
-4. Current working-tree state
-5. In-scope and out-of-scope behavior
-6. Compatibility expectations
-7. Configuration and persisted-data impact
-8. Loader, runtime, dependency, integration, and distribution impact
-9. Technical uncertainties
-10. Affected requirement and architecture identifiers
-11. Intended release classification or version, when known
-12. Risks and required validation
-13. Stage impact matrix
-14. Proposed route
+Start from `setup/artifact-templates/change-intake.md`. The template is the authoritative intake structure; this workflow's stage-disposition rules are authoritative for the route.
 
 Use these stage dispositions:
 
@@ -99,7 +84,7 @@ Use these stage dispositions:
 
 Project Initialization is always **Not Applicable**. Implementation Plan, Implementation, and Release Presentation are normally **Revisit** for a releasable code change. Existing branding may be carried forward within Release Presentation.
 
-Packaging and Release Validation is normally **Not Applicable** because Release Presentation owns release artifact validation and handoff. Mark it **Revisit** only when the owner explicitly requests a separate standalone packaging stage or the approved workflow route requires one.
+Release Presentation owns release artifact validation and handoff. A later request to reproduce or recheck the already approved artifact uses `procedures/revalidate-release.md` and does not add a stage disposition.
 
 Present the complete intake and proposed route for explicit approval before revising canonical documents or code.
 
@@ -111,7 +96,7 @@ Present the complete intake and proposed route for explicit approval before revi
 4. Conduct Change Intake and Impact Analysis.
 5. Mark the intake checkpoint **Awaiting Approval** and present the route.
 6. Revise it until the owner approves it.
-7. Record stage dispositions in `project-status.md` and update `project-state.md`.
+7. Record stage dispositions in the authoritative `project-status.md` ledger.
 8. Mark affected canonical stages **Needs Revision**.
 9. Execute each **Revisit** stage in normal stage order.
 10. Execute Implementation Plan using the cycle artifact root.
@@ -127,19 +112,7 @@ Do not enter a later selected stage until every selected prerequisite is approve
 
 ## Cycle Summary
 
-`<artifact-root>/cycle-summary.md` should contain:
-
-- Cycle ID and outcome
-- Baseline version and revision
-- Final source revision
-- Canonical documents and identifiers changed
-- Implemented issues
-- Verification summary
-- Known limitations
-- Release artifact and checksum
-- Manual publication state
-- Resulting release-ready baseline version
-- Publication result, when later reported by the owner
+Create `<artifact-root>/cycle-summary.md` from `setup/artifact-templates/cycle-summary.md`. The template is the authoritative summary structure. Record the baseline and final source revisions, canonical identifiers changed, implemented issues, verification, limitations, artifact/checksum, resulting release-ready baseline, manual publication state, and any later owner-reported publication result in the matching sections.
 
 It records the delta and traceability; it must not duplicate complete canonical documents.
 

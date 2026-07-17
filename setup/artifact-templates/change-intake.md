@@ -63,7 +63,6 @@
 | Implementation Plan |  |  |
 | Implementation |  |  |
 | Release Presentation |  |  |
-| Packaging and Release Validation |  |  |
 
 ## Proposed Route
 

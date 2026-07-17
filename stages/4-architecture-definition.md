@@ -96,7 +96,7 @@ Act as a software architect collaborating with the project owner.
 - Use approved dependency source checkouts as read-only evidence for integration decisions.
 - Select dependencies only when they provide meaningful value.
 - Explain important alternatives and their trade-offs.
-- Ask one focused question at a time when a decision requires project-owner input.
+- Use one focused question for a branching owner decision; group closely related recommended architectural defaults into a compact decision packet when they can be reviewed together safely.
 - Do not ask questions that can be answered from the approved documents or technical research.
 - Trace architectural decisions back to requirements or established constraints.
 - Identify decisions that remain uncertain and require validation during Implementation.
@@ -187,31 +187,7 @@ Minor and self-evident choices do not require separate decision records.
 
 ## Output Artifact
 
-Produce a Markdown document named `workspace/documentation/architecture.md` containing:
-
-1. **Architecture Overview**
-2. **Goals and Quality Attributes**
-3. **Constraints**
-4. **Selected Libraries and Dependencies**
-5. **Package Structure**
-6. **Components and Responsibilities**
-7. **Dependency Rules**
-8. **Important Classes and Interfaces**
-9. **Loader Lifecycle and Event Integration**
-10. **Client, Server, and Shared-Code Boundaries**
-11. **Configuration Architecture**
-12. **Networking Architecture**
-13. **State Ownership and Persistence**
-14. **External Mod Integrations**
-15. **Dependency Source Findings**, when applicable
-16. **Important Runtime Flows**
-17. **Error Handling and Logging**
-18. **Performance Considerations**
-19. **Support for Verification**
-20. **Architectural Decisions and Trade-offs**
-21. **Requirement Traceability**
-22. **Glossary Traceability**
-23. **Questions Requiring Implementation Validation**
+Produce `workspace/documentation/architecture.md` from `setup/artifact-templates/architecture.md`. The template is the authoritative document structure; this stage's architectural-decision format and completion criteria are authoritative for content quality.
 
 Omit sections that do not apply rather than inventing architectural concerns.
 

@@ -14,7 +14,9 @@ This file is the authoritative source for collaboration, file-editing discipline
 
 ## Questioning and Decisions
 
-- Ask one focused question at a time when project-owner input is required.
+- Use one focused question when a single answer materially changes the route.
+- When several related low-risk decisions share the same context, present one compact decision packet with recommendations and ask the owner to approve the packet or identify exceptions. Do not serialize every default into a separate approval.
+- Do not combine unrelated, high-impact, or independently reversible decisions merely to reduce message count.
 - Do not ask questions that approved artifacts, repository inspection, or research can answer.
 - Present materially different interpretations rather than choosing silently.
 - Challenge feature creep and conflicts with approved scope.

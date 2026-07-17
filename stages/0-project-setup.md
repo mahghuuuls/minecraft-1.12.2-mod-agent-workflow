@@ -31,13 +31,13 @@ Establish:
 - The proposed workflow
 - The current tool and workspace state
 - The project repository state or the stage by which it must exist
-- Practical project identity defaults, when known
+- Practical project identity values only when already known or immediately required
 - Public documentation style and commit-message style
 - Client/server responsibility when the concept is known, or an explicit deferral to Concept and Scope / Feasibility Research when it is premature
 - A provisional loader, compatible-runtime, and template choice for Initial Development
-- Approved distribution platforms and known operational overrides
+- Default distribution destination or a known project-specific override, without researching publication mechanics
 - Known dependency source repositories or owner-provided dependency references, only when already relevant
-- Release-related ownership boundaries for the project owner and agent
+- Default release and validation ownership plus any owner-requested overrides
 - The intended release handoff mode
 - Deferred prerequisites and their deadlines
 - A clear starting point requiring no README knowledge
@@ -51,17 +51,18 @@ Establish:
 - Create required ignored runtime directories
 - Create or update `workspace/documentation/project-state.md`
 - Create or update `workspace/project.properties` when enough real values are known
-- Collect GitHub username, repository name, mod ID, display name, public description, root package, main class, and side/responsibility classification when known
+- Record GitHub username, repository name, mod ID, display name, public description, root package, main class, and side/responsibility classification only when already known or required for the selected scenario
+- Defer new-mod identity values that depend on the concept to Requirements Definition or Project Initialization instead of interviewing for them during onboarding
 - Defer side/responsibility classification when the mod concept is not yet clear enough to answer it well
 - Apply approved default naming conventions instead of asking the owner to invent Java naming patterns from scratch
 - Record public documentation style and commit-message style
-- Explain the shared platform preferences and available loader/template choices
-- Research loader and template candidates when requested or unresolved
+- Explain the distinction between mod loader, compatible runtime, distribution platform, and installation side before asking about an override involving those concepts
+- Apply owner and shared defaults for provisional loader/runtime/template/distribution choices; research alternatives during Project Setup only when an already-known hard constraint prevents using the default
 - Record provisional loader, runtime, and template candidates or defer final validation to Feasibility Research
 - Record known dependency source repositories as optional references, or defer dependency-source decisions to Feasibility Research
 - Create or update `workspace/documentation/dependency-references.md` when dependency source references are already approved or supplied
 - Explain repository requirements for the selected scenario
-- Collect and approve the release ownership matrix
+- Record the default release and validation ownership matrix and collect only requested or necessary overrides; approval of the complete Project Setup artifact approves the resulting matrix
 - Record the intended release handoff mode
 - Propose the applicable workflow
 - Produce `workspace/documentation/project-setup.md`
@@ -93,7 +94,7 @@ Act as an onboarding coordinator.
 - Treat owner defaults supplied through chat or attachments as first-class setup input, not as a user placement error.
 - When chat-provided owner defaults should persist across sessions, offer to save them to `workspace/documentation/owner-defaults.md`.
 - Explain only the immediate setup decision.
-- Ask one focused question at a time.
+- Use focused questions for branching setup constraints and compact decision packets for related defaults or overrides.
 - Distinguish required-now values from prerequisites that may be deferred.
 - Offer the configured default before researching alternatives.
 - Propose conventional naming defaults and ask only when required values are missing, ambiguous, or overridden.
@@ -154,9 +155,9 @@ Do not install software without explicit authorization.
 
 ## Practical Project Defaults
 
-Collect practical defaults early when the owner knows them, but do not block the first design stages when a new mod is still unnamed.
+Record practical defaults early when the owner already knows them, but do not turn Project Setup into a product-definition interview or block the first design stages when a new mod is still unnamed.
 
-Collect or defer:
+Record when known; otherwise defer:
 
 - GitHub username or repository owner
 - Repository name, if known
@@ -222,6 +223,8 @@ Commit-message style rules:
 
 When enough values are approved, write them to `workspace/project.properties`. When repository or identity values are missing, record them as deferred to Project Initialization rather than blocking earlier design stages.
 
+Do not ask for a new mod's display name, public description, mod ID, package, or main class merely to complete Project Setup. Requirements Definition owns the stable short description, and Project Initialization must resolve only the identity values required to initialize the repository.
+
 ## Template Guidance
 
 For Initial Development:
@@ -229,11 +232,19 @@ For Initial Development:
 1. Read `references/template-candidates.md`.
 2. Ask whether the artifact must run on standard Forge, Cleanroom, or both.
 3. Ask whether Java, Kotlin, or Scala is intended.
-4. Identify required build capabilities such as Mixins, coremods, access transformers, tests, shadowing, or advanced automation.
-5. Inspect the current candidate repositories and primary documentation.
-6. Present a concise comparison and recommendation.
-7. Record the provisional repository, ref, compatibility target, trade-offs, and evidence.
-8. Store approved project-specific values in `workspace/project.properties`.
+4. For a new mod, default Mixins, coremods, access transformers, shading, and advanced automation to deferred Feasibility Research. Do not ask the owner to predict these mechanisms before Concept and Scope defines the behavior.
+5. Ask about an advanced build capability during Project Setup only when the owner has already supplied a hard technical constraint or inspected existing-project evidence makes the capability unavoidable.
+6. Inspect the current candidate repositories and primary documentation.
+7. Present a concise comparison and recommendation based on required-now constraints; do not make a provisional template depend on speculative advanced capabilities.
+8. Record the provisional repository, ref, compatibility target, deferred capability questions, trade-offs, and evidence.
+9. Store approved project-specific values in `workspace/project.properties`.
+
+Use these terms consistently:
+
+- **Loader:** the mod-loading platform whose APIs and metadata the artifact uses, such as Forge.
+- **Compatible runtime:** an environment expected to run that loader artifact, such as standard Forge or Cleanroom.
+- **Distribution platform:** a place where the owner may publish the artifact, such as CurseForge; it is not a mod loader.
+- **Installation side:** whether the completed behavior requires installation on the client, dedicated server, or both; defer this until the concept is understood when necessary.
 
 Use this recommendation order unless inspected evidence or project constraints justify another choice:
 
@@ -249,11 +260,13 @@ Do not recommend archived, unlicensed, experimental, or multiversion templates w
 
 Template choice remains provisional until Feasibility Research validates it. Do not clone or prototype templates during this stage.
 
+Inspecting whether a candidate supports an advanced capability is not the same as deciding that the project needs it. For a new mod, record those capability decisions as deferred to Feasibility Research unless a known constraint already requires one.
+
 Existing Mod Assessment and Change Cycle begin from the existing loader and build system, but Stage 0 must still record supported runtimes and intended distribution platforms.
 
 ## Release Ownership Matrix
 
-Collect an ownership matrix before approving Project Setup. This matrix defines which release-related responsibilities are agent-managed, owner-managed, shared, or deferred.
+Record an ownership matrix before approving Project Setup. This matrix defines which release-related responsibilities are agent-managed, owner-managed, shared, or deferred.
 
 Use these owner values:
 
@@ -278,11 +291,13 @@ Start from these defaults unless the owner changes them:
 | Cleanroom testing | Owner | Record compatibility expectations or limitations; do not attempt or repeatedly request Cleanroom runtime testing unless explicitly assigned. |
 | External multiplayer testing | Owner | Do not attempt, research, or repeatedly request external multiplayer validation unless explicitly assigned. |
 
-When asking about the matrix, present the defaults first and ask what the owner wants to override. Do not ask every row as a separate question unless the owner wants detailed control. Apply owner-managed defaults directly unless the owner requests agent involvement or a one-time exception.
+Apply the defaults directly and summarize them as one decision packet. Ask only what the owner wants to override or what project evidence makes ambiguous. Do not ask every row separately. Approval of the complete Project Setup artifact approves the recorded defaults and overrides; a separate matrix approval is unnecessary.
+
+Dedicated-server, Cleanroom, and external-multiplayer testing are validation ownership decisions rather than publication assets. Keep them visibly separated from README, mod-page, icon, screenshot, upload, and artifact-generation responsibilities when presenting the matrix.
 
 Record the approved matrix in `workspace/documentation/project-setup.md`. Later stages must follow it. If a later stage needs to perform owner-managed work, stop and ask the owner to revise the matrix or approve a one-time exception.
 
-Record equivalent machine-readable fields in `workspace/project.properties` when configuration is written. Use `release_handoff_mode` to record the intended release handoff mode used by Release Presentation, or by standalone Packaging and Release Validation when explicitly selected.
+Record equivalent machine-readable fields in `workspace/project.properties` when configuration is written. Use `release_handoff_mode` to record the intended handoff mode used by Release Presentation.
 
 ## Project Configuration
 
@@ -345,8 +360,8 @@ If a new mod's repository, directory name, mod ID, display name, public descript
 4. Inspect available environment tools and repositories.
 5. Resolve known repository configuration without requiring a final new-mod repository before Concept and Scope.
 6. Collect or defer practical project defaults.
-7. Resolve or provisionally defer loader, runtime, template, and distribution selections.
-8. Present the release ownership defaults and collect approved overrides.
+7. Apply or provisionally defer loader, runtime, template, and distribution defaults; ask only about known constraints or requested overrides.
+8. Record the release and validation ownership defaults and collect only necessary overrides.
 9. Write only approved known operational values.
 10. Record deferred prerequisites and the stage by which each is required.
 11. Propose the applicable workflow.
@@ -361,6 +376,8 @@ Produce:
 workspace/documentation/project-setup.md
 ```
 
+Start from `setup/artifact-templates/project-setup.md`. The template is the authoritative document structure; omit nonapplicable sections and use this stage's completion criteria to judge content quality.
+
 Also create or update:
 
 ```text
@@ -372,23 +389,6 @@ When dependency source references are already approved or supplied, create or up
 ```text
 workspace/documentation/dependency-references.md
 ```
-
-It should contain:
-
-1. Setup date
-2. Classified scenario and evidence
-3. Proposed workflow
-4. Environment inspection
-5. Repository state
-6. Practical project defaults, including known values and deferred values
-7. Configuration written
-8. Provisional loader, runtime, template, and distribution decisions with evidence
-9. Known dependency source references or deferred dependency-source decisions
-10. Release ownership matrix
-11. Release handoff mode
-12. Deferred prerequisites and deadlines
-13. Blocking problems
-14. Owner approvals
 
 Do not include credentials or secrets.
 

@@ -90,7 +90,9 @@ Do not leave example values in initialized project files.
 
 ## Release Ownership
 
-Project Setup records a release ownership matrix. Defaults are:
+Project Setup records a release and validation ownership matrix. Apply these defaults without asking about each row; approval of the Project Setup artifact approves the matrix unless the owner requests an override.
+
+Release and publication defaults are:
 
 - README: agent-managed
 - Mod page or distribution-page copy: agent-managed
@@ -100,6 +102,9 @@ Project Setup records a release ownership matrix. Defaults are:
 - CurseForge upload: owner-managed
 - Release JAR generation: agent-managed
 - Final publication verification: agent-managed for local handoff information only
+
+Validation ownership defaults are:
+
 - Dedicated server testing: owner-managed
 - Cleanroom testing: owner-managed
 - External multiplayer testing: owner-managed
@@ -121,8 +126,8 @@ Apply owner-managed defaults directly unless the owner explicitly requests agent
 ## Distribution
 
 - Treat `preferred_distribution_platform` as the suggested primary destination.
-- Project Setup asks the owner to approve one or more distribution platforms.
-- CurseForge should be offered as the default recommendation, but it is not mandatory or exclusive.
+- Project Setup applies the configured distribution default and asks only when the owner requests an override or a known project constraint makes the default unsuitable.
+- CurseForge is the default suggested publication destination, but it is not a loader, runtime requirement, mandatory platform, or exclusive platform.
 - Research and follow the current requirements of every selected platform only for agent-managed publication responsibilities.
 - Agents may prepare artifacts, documentation, metadata, and visual assets for approved platforms when the ownership matrix assigns that work to the agent.
 - The project owner performs every upload and publication action.

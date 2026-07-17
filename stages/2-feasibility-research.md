@@ -13,6 +13,7 @@ This stage performs research. It does not write or test implementation code.
 ## Required Input
 
 - `workspace/documentation/concept-and-scope.md`
+- `workspace/documentation/project-setup.md`
 - Any supplied source code, mod files, documentation, or references
 - Any owner-provided dependency source repository URLs, local paths, or version constraints
 - `workspace/documentation/dependency-references.md`, when present
@@ -26,6 +27,8 @@ Establish:
 - Which existing mod libraries could support the implementation
 - Whether required integration points appear accessible
 - Which dependencies would be required or optional
+- Whether advanced implementation or build mechanisms are actually required by the approved behavior
+- Whether the provisional loader and template can support the identified requirements without unnecessary capabilities
 - Whether dependency source repositories need local reference checkouts
 - Known compatibility and platform limitations
 - Client and dedicated-server considerations
@@ -43,7 +46,9 @@ Establish:
 - Inspecting dependency source repositories when documentation, released artifacts, or online source browsing are insufficient
 - Identifying possible technical mechanisms
 - Investigating client and dedicated-server limitations
-- Identifying whether Mixins, access transformers, reflection, or similar mechanisms may be necessary
+- Identifying whether Mixins, coremods, access transformers, reflection, shading, or similar mechanisms may be necessary
+- Evaluating advanced build or automation capabilities only when approved behavior or operational constraints create a concrete need
+- Validating the provisional template against concrete capability findings from this stage
 - Identifying performance and compatibility risks
 - Recording questions that must be validated during Implementation
 - Classifying features as feasible, conditionally feasible, unverified, or infeasible
@@ -72,6 +77,7 @@ When research cannot establish feasibility confidently, record the uncertainty a
 Act as a technical researcher.
 
 - Extract technical assumptions and uncertainties from `workspace/documentation/concept-and-scope.md`.
+- Resolve advanced build-capability questions deferred by Project Setup from the approved behavior and evidence; do not ask the owner to choose an implementation mechanism that research can determine.
 - Prioritize questions that could invalidate the project or materially change its scope.
 - Prefer official repositories, source code, primary documentation, and version-specific evidence.
 - Prefer released artifacts, official documentation, and public source browsing before creating a local dependency source checkout.
@@ -147,7 +153,7 @@ Do not classify a feature as feasible merely because a possible approach can be 
 2. Extract high-level features and technical uncertainties.
 3. Convert uncertainties into explicit research questions.
 4. Prioritize project-invalidating questions.
-5. Research relevant APIs, libraries, mods, dependencies, and technical mechanisms.
+5. Research relevant APIs, libraries, mods, dependencies, and technical mechanisms, including advanced build capabilities deferred by Project Setup when the approved behavior makes them relevant.
 6. Decide whether any dependency source repository needs a local reference checkout.
 7. Request owner approval before cloning dependency source locally unless the owner already provided the local path or repository for this purpose.
 8. Update `workspace/documentation/dependency-references.md` when dependency source references are approved or changed.
@@ -162,24 +168,7 @@ Do not classify a feature as feasible merely because a possible approach can be 
 
 ## Output Artifact
 
-Produce `workspace/documentation/feasibility-research.md` containing:
-
-1. **Executive Conclusion**
-2. **Research Questions**
-3. **Feature Feasibility**
-4. **Relevant Platform Capabilities**
-5. **Candidate Libraries**
-6. **Dependencies and Integrations**
-7. **Dependency Source References**
-8. **Client and Server Considerations**
-9. **Compatibility Findings**
-10. **Performance Considerations**
-11. **Technical Risks**
-12. **Questions Requiring Implementation Validation**
-13. **Limitations and Conditions**
-14. **Required Scope Reconsiderations**
-15. **Constraints for Requirements and Architecture**
-16. **Evidence and References**
+Produce `workspace/documentation/feasibility-research.md` from `setup/artifact-templates/feasibility-research.md`. The template is the authoritative document structure; this stage's completion criteria are authoritative for content quality.
 
 When dependency source references exist, also create or update:
 

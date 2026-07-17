@@ -482,25 +482,7 @@ Create:
 workspace/documentation/project-initialization.md
 ```
 
-Record:
-
-- Final repository URL and directory
-- Final branch
-- Template repository URL
-- Requested template ref
-- Resolved template commit SHA
-- Missing initialization values resolved during this stage
-- Applied defaults and project values
-- Approved public mod description
-- Approved root package and main class
-- Template content removed or preserved
-- License notices
-- Publication safety changes
-- Placeholder validation
-- Build command and result
-- Generated baseline artifact
-- Initial commit SHA
-- Remaining limitations
+Start from `setup/artifact-templates/project-initialization.md`. The template is the authoritative initialization-record structure; omit nonapplicable sections and record enough evidence to satisfy this procedure's checks.
 
 Do not include secrets.
 

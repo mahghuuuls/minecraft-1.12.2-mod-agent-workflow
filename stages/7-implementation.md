@@ -90,6 +90,8 @@ Act as a focused implementation agent.
 - Use test-first development for isolated logic when it provides clear value.
 - Do not force TDD onto behavior that can only be meaningfully verified inside Minecraft.
 - Perform the verification defined by the issue.
+- Before asking the owner to perform a manual check, confirm that the issue's planned observability mechanism is implemented and usable. Do not substitute indirect inference when the plan requires authoritative logs, commands, counters, or equivalent diagnostics.
+- Keep diagnostic work within the approved issue or its declared prerequisite. If required observability is missing from the plan, treat it as a Planning Problem rather than silently expanding the issue or sending an unreliable test recipe.
 - Treat compilation as necessary but not sufficient evidence that behavior works.
 - Check dedicated-server safety whenever client-only code is involved and the check is assigned or practical.
 - Record accepted validation waivers instead of repeatedly pushing owner-managed or declined checks.
@@ -126,9 +128,11 @@ Possible feedback mechanisms include:
 
 Verification must match the risk. A successful build does not verify gameplay behavior, networking, rendering, entity AI, persistence, or mod compatibility.
 
+Manual verification must also have a reliable observation path. Before requesting it, identify the authoritative state or event being checked and confirm that normal behavior exposes it reliably. If it does not, implement and verify the issue's approved diagnostic mechanism first. Suitable mechanisms include structured logs, inspect or controlled-state commands, counters, or another narrow diagnostic surface. Potentially noisy or player-visible diagnostics should remain disabled by default unless normal product behavior requires otherwise, and administrative state-changing commands must enforce the approved authorization boundary.
+
 If the owner skips a validation check, marks it owner-managed, or accepts that it cannot be run in the current environment, record it using the validation waiver format in `guidelines/process-control.md` and continue. Do not keep asking for the same validation unless new evidence makes it release-blocking.
 
-When manual gameplay validation by the owner is useful, provide a short runnable validation recipe after each runnable vertical slice. Include relevant config state, exact commands or setup steps when available, expected results, and any important scenario that is not practical to validate in normal vanilla gameplay.
+When manual gameplay validation by the owner is useful, provide a short runnable validation recipe only after its required observability is available. Include relevant config state, exact diagnostic and setup commands, how to enable and later disable any optional logging, the authoritative values or events to inspect, expected results, and any important scenario that is not practical to validate in normal vanilla gameplay.
 
 ## Testing Approach
 
@@ -200,23 +204,25 @@ After a clean committed checkpoint, confirm the repository is clean when checked
 3. Inspect the relevant existing code.
 4. Confirm that the issue remains implementable as written.
 5. Change the issue status to **In Progress**.
-6. Review its acceptance criteria and verification procedure.
-7. Implement the smallest coherent change.
-8. Run compilation and fast automated checks.
-9. Correct failures before expanding the implementation.
-10. Perform the required in-game, server, compatibility, or performance verification, or record an accepted validation waiver.
-11. Refactor only where it improves the implemented behavior without expanding scope.
-12. Run all relevant checks again after refactoring.
-13. Record completion evidence in the issue.
-14. Perform a final implementation self-review.
-15. Change the issue status to **Review**.
-16. Submit the change to an independent review agent. If the owner gave standing approval for required review agents, do not ask for repeated per-issue approval unless the review scope changes.
-17. Address legitimate review findings.
-18. Repeat verification for affected behavior or record approved waiver updates.
-19. Mark the issue **Done** only when the Definition of Done is satisfied.
-20. Prepare the commit checkpoint and request owner approval to commit.
-21. Create the commit only if approved, or record the approved deferral.
-22. Select the next Ready issue only after the commit checkpoint is resolved.
+6. Review its acceptance criteria, verification procedure, and manual-observability contract.
+7. Confirm that any declared diagnostic prerequisite is Done; if required observability is missing from the approved plan, stop and handle it as a Planning Problem.
+8. Implement the smallest coherent change, including approved same-issue diagnostic support.
+9. Run compilation and fast automated checks.
+10. Correct failures before expanding the implementation.
+11. When diagnostics are required, verify their observation path and default and authorization behavior before giving the owner a manual validation recipe.
+12. Perform the required in-game, server, compatibility, or performance verification, or record an accepted validation waiver.
+13. Refactor only where it improves the implemented behavior without expanding scope.
+14. Run all relevant checks again after refactoring.
+15. Record completion evidence in the issue.
+16. Perform a final implementation self-review.
+17. Change the issue status to **Review**.
+18. Submit the change to an independent review agent. If the owner gave standing approval for required review agents, do not ask for repeated per-issue approval unless the review scope changes.
+19. Address legitimate review findings.
+20. Repeat verification for affected behavior or record approved waiver updates.
+21. Mark the issue **Done** only when the Definition of Done is satisfied.
+22. Prepare the commit checkpoint and request owner approval to commit.
+23. Create the commit only if approved, or record the approved deferral.
+24. Select the next Ready issue only after the commit checkpoint is resolved.
 
 ## Handling Discoveries
 
@@ -323,6 +329,14 @@ Record evidence directly in the issue file:
 - Expected result:
 - Observed result:
 
+### Diagnostic Support
+
+- Authoritative state or event observed:
+- Mechanism and setup:
+- Default state:
+- Authorization behavior, when applicable:
+- Result:
+
 ### Dedicated Server
 
 - Procedure:
@@ -352,6 +366,8 @@ Record evidence directly in the issue file:
 
 Omit verification categories that genuinely do not apply. Include accepted validation waivers whenever a normally relevant check was skipped by owner decision or ownership boundary.
 
+Omit **Diagnostic Support** when stable normal behavior was sufficient for all manual checks. When it applies, record enough evidence to show that the diagnostic exposed the intended authoritative state and did not remain unintentionally enabled or accessible beyond its approved authorization boundary.
+
 ## Issue Completion Criteria
 
 An issue is complete when:
@@ -359,6 +375,7 @@ An issue is complete when:
 - Its implementation satisfies the acceptance criteria.
 - Relevant automated checks pass.
 - Required in-game verification passes or has an accepted waiver.
+- Required manual observability is implemented in the issue or a completed prerequisite, and its default and authorization behavior are verified where applicable.
 - Client, dedicated-server, multiplayer, compatibility, and performance checks pass where assigned or have accepted waivers.
 - The implementation follows the approved architecture.
 - No unrelated behavior was introduced.

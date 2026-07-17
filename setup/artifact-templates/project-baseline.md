@@ -9,6 +9,8 @@
 - Publication date, when reported:
 - Publication URL, when reported:
 - Repository:
+- Branch:
+- Release and tag history, when assessing an existing mod:
 
 ## Supported Environment
 
@@ -26,6 +28,21 @@
 - Requirements:
 - Architecture:
 - Glossary:
+
+## Build And Verification
+
+- Build environment:
+- Build command and result:
+- Verification performed:
+
+## Existing Project Evidence
+
+- Source and resource structure, when assessed:
+- Dependencies and integrations:
+- Configuration and persisted-data concerns:
+- Observed behavior:
+- Known defects or debt:
+- Unresolved intent or compatibility questions:
 
 ## Release Artifact
 

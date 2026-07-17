@@ -45,15 +45,22 @@
 - Supported runtimes:
 - Template:
 - Template ref:
+- Deferred advanced build-capability questions:
 - Distribution platforms:
 - Evidence:
+
+## Configuration Written
+
+- File:
+- Values written:
+- Values deferred:
 
 ## Dependency Source References
 
 - Known references:
 - Deferred dependency-source decisions:
 
-## Release Ownership
+## Release And Publication Ownership
 
 - README:
 - Mod page or distribution-page copy:
@@ -63,6 +70,9 @@
 - CurseForge upload:
 - Release JAR generation:
 - Final publication verification:
+
+## Validation Ownership
+
 - Dedicated server testing:
 - Cleanroom testing:
 - External multiplayer testing:

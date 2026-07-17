@@ -45,7 +45,7 @@ Read AGENTS.md and guide me through Project Setup. This mod already uses
 this workflow, and I want to plan a new change.
 ```
 
-That is enough to begin. The agent should inspect the workspace, explain what is needed, configure known values, and guide you through unresolved prerequisites one question at a time.
+That is enough to begin. The agent should inspect the workspace, explain what is needed, configure known values, and guide you through unresolved prerequisites using focused questions or compact groups of related recommended decisions.
 
 ### Returning Users
 
@@ -65,7 +65,7 @@ The agent will:
 6. Implement approved issues with verification and independent review.
 7. Prepare public presentation, release artifact validation, and a manual publication handoff.
 
-The agent stops for approval between stages. It should challenge ambiguity and report failed verification rather than inventing decisions or declaring success prematurely.
+The agent uses explicit approval checkpoints between stages. To reduce ceremony, a checkpoint may approve the completed stage and authorize the already-briefed next stage in one response. It should challenge ambiguity and report failed verification rather than inventing decisions or declaring success prematurely.
 
 ## Your Role
 
@@ -103,7 +103,9 @@ minecraft-1.12.2-mod-agent-workflow/
 |-- guidelines/
 |-- workflows/
 |-- stages/
+|-- procedures/
 |-- references/
+|-- scripts/
 |-- setup/
 |   |-- owner-defaults-template.md
 |   `-- artifact-templates/
@@ -120,6 +122,8 @@ minecraft-1.12.2-mod-agent-workflow/
 - `guidelines/` contains core and specialized rules.
 - `workflows/` defines scenario-specific routing.
 - `stages/` defines setup and development stages.
+- `procedures/` contains callable operational checks that do not create another stage lifecycle.
+- `scripts/` contains lightweight process-document consistency checks.
 - `setup/` contains optional manual setup, owner-default templates, artifact templates, defaults, and initialization procedures.
 - `references/` contains curated technical links.
 - `workspace/` contains ignored project-specific configuration, setup owner defaults, documents, artwork, dependency references, templates, and the active mod.

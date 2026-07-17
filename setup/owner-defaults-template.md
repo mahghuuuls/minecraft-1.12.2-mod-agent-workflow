@@ -25,7 +25,7 @@ Use these as starting recommendations during Project Setup unless the owner or p
 - Release target Java version:
 - Modern Java syntax:
 
-Project-specific needs may override these defaults. Revisit them when the concept needs Mixins, coremods, access transformers, shaded dependencies, unusual build automation, another distribution platform, or runtime-exclusive behavior.
+Project-specific needs may override these defaults. Do not ask the owner to predict advanced technical needs during Project Setup for a new mod. Revisit Mixins, coremods, access transformers, shaded dependencies, unusual build automation, distribution exceptions, or runtime-exclusive behavior only after the concept or existing-project evidence makes them relevant.
 
 ## Setup Question Defaults
 

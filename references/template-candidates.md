@@ -24,7 +24,7 @@ Use as the provisional default when the mod should:
 - Also remain compatible with Cleanroom where feasible
 - Target Java 8 bytecode for broad compatibility
 - Use a modern Java development environment
-- Need optional Mixins, coremods, access transformers, tests, shadowing, or publishing configuration
+- Want a versatile baseline while any need for Mixins, coremods, access transformers, shadowing, or publishing configuration remains deferred to Feasibility Research
 
 Current characteristics to verify:
 
@@ -99,14 +99,14 @@ Do not normally recommend:
 
 ## Stage 0 Decision Rules
 
-Ask in this order:
+Resolve required-now selection constraints in this order:
 
 1. Must the artifact run on standard Forge?
 2. Must it also run on Cleanroom?
 3. May it be Cleanroom-exclusive?
 4. Is Java, Kotlin, or Scala required?
-5. Are Mixins, coremods, access transformers, shadowing, or advanced automation expected?
-6. Is a minimal or feature-rich build preferred?
+5. Inspect whether the owner has already supplied a hard technical constraint that requires an advanced build capability; ask only for details needed to interpret that existing constraint.
+6. Is a minimal or feature-rich build preferred based on known requirements rather than speculative future mechanisms?
 
 Then:
 
@@ -117,3 +117,5 @@ Then:
 - Research other candidates when none of these satisfy the approved constraints.
 
 The recommendation is provisional until Feasibility Research confirms it.
+
+For a new mod whose behavior has not yet been defined, do not ask the owner whether Mixins, coremods, access transformers, shading, or advanced automation will be needed. Use the default candidate that satisfies the required runtime and language constraints, record advanced capability selection as deferred, and let Feasibility Research evaluate those mechanisms after Concept and Scope is approved. Project Setup may consider an advanced capability only when the owner has already provided a hard constraint or existing-project evidence makes it unavoidable.

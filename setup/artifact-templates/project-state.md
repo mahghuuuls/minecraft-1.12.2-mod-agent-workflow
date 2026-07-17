@@ -1,40 +1,20 @@
 # Project State
 
-## Snapshot
+## Snapshot Metadata
 
 - Last updated:
+- Authoritative status ledger: `workspace/documentation/project-status.md`
+
+## Resume Context
+
 - Mod name:
 - Active repository:
 - Active workflow:
 - Active stage or checkpoint:
 - Artifact root:
-
-## Current Status
-
-- Project setup:
-- Approved baseline:
 - Current implementation issue:
+- Next action:
 - Next required approval:
-
-## Approved Artifacts
-
-- Project setup:
-- Concept and scope:
-- Feasibility research:
-- Requirements:
-- Architecture:
-- Project initialization or baseline:
-- Implementation plan:
-- Release presentation:
-- Release handoff:
-
-## Standing Decisions
-
-- Owner-managed responsibilities:
-- Documentation structure:
-- Commit-message style:
-- Runtime compatibility:
-- Distribution platforms:
 
 ## Open Items
 
@@ -45,5 +25,7 @@
 
 ## Reference Material
 
+- Approved baseline:
+- Most relevant approved artifacts:
 - Dependency source references:
 - External references:

@@ -98,8 +98,9 @@ Act as a release documentation editor.
 - Treat mod-page copy as an iterative public-copy artifact; review it for audience fit, repetition, useful links, owner-provided wording, roadmap-risk wording, concise scope, and plain install-side statements.
 - Treat the AI usage disclaimer as a default transparency note, not as internal workflow history. Keep it short, generic, and removable by owner request.
 - Follow the release ownership matrix strictly.
+- For agent-managed validation, validate the artifact from the exact clean committed revision recorded in the handoff. Do not treat a build from uncommitted release changes as final release evidence.
 - Treat icon and screenshot work as optional publication assets, not as blockers for README, changelog, or packaging unless explicitly agent-managed and required by the owner.
-- Ask one focused question at a time when public wording, limitations, or asset ownership needs owner input.
+- Use a focused question for a branching public claim or ownership decision; group related low-risk copy decisions into a compact review packet.
 - Never submit files to distribution platforms or publish releases.
 
 ## Public Documentation Guidance
@@ -249,7 +250,7 @@ Use it to record:
 - Known limitations and whether they are public-facing or internal
 - Deferred owner-managed assets or publication actions
 - Public terminology decisions and glossary updates
-- Questions that release handoff or optional standalone Packaging and Release Validation must consider
+- Questions that release handoff or a later `procedures/revalidate-release.md` run must consider
 - Release artifact identity, checksum, and inspection evidence when handled in this stage
 
 Do not use the internal record as public copy.
@@ -271,10 +272,13 @@ Do not use the internal record as public copy.
 13. Check every public claim against approved implementation evidence and approved glossary terminology.
 14. Update `workspace/documentation/glossary.md` when release copy approves, refines, or deprecates public-facing project terminology.
 15. Keep technical evidence and internal limitations in `release-presentation.md` rather than public README or mod-page copy.
-16. If release validation is agent-managed, build the exact release artifact, inspect it, calculate its checksum, and record the handoff.
-17. If release packaging is owner-managed, record the expected command/artifact pattern and owner-managed boundary instead of building.
-18. Present public materials, the internal presentation record, and release handoff for approval.
-19. Revise until explicitly approved.
+16. Inspect the mod repository, then present the complete public materials, release version, intended release-file scope, and proposed commit message before final artifact validation. The checkpoint may ask the owner to (a) approve the materials and (b) authorize the focused release-preparation commit in one response, but the two decisions must be labeled separately.
+17. Treat public-material approval and commit authorization as separate authorization boundaries even when requested together. Public-material approval alone does not authorize the commit.
+18. If the materials are approved and the commit is authorized, commit only the approved release/version/public-material changes and verify the repository is clean at the resulting revision.
+19. If release validation is agent-managed, build the exact release artifact from that clean committed revision, inspect it, calculate its checksum, and record the handoff.
+20. If release packaging is owner-managed, record the approved source revision, expected command/artifact pattern, and owner-managed boundary instead of building.
+21. Present the completed internal presentation record and release handoff for stage approval.
+22. Revise until explicitly approved. If a revision changes the committed release source, obtain new commit authorization and repeat artifact validation before final approval.
 
 ## Output Artifacts
 
@@ -296,46 +300,17 @@ Produce:
 <artifact-root>/release-presentation.md
 ```
 
+Start from `setup/artifact-templates/release-presentation.md`. The template is the authoritative presentation-record structure; omit nonapplicable sections and use this stage's completion criteria to judge content quality.
+
 When a release artifact is built, inspected, identified, or handed off, also produce:
 
 ```text
 <artifact-root>/release-handoff.md
 ```
 
-It should contain:
-
-1. Public documentation style
-2. Release ownership matrix summary
-3. README status and intended audience
-4. Mod-page or distribution-page copy status and intended audience
-5. AI usage disclaimer status: included, revised, or removed by owner request
-6. Changelog status
-7. Reusable public description or summary text
-8. Feature summary
-9. Configuration summary, when applicable
-10. Player-facing multiplayer, client/server, dependency, or compatibility notes
-11. Icon path: owner provides, agent helps create, or deferred
-12. Screenshot path: owner provides, agent helps prepare, or deferred
-13. Public-facing known limitations
-14. Internal technical notes and validation gaps excluded from public copy
-15. Claims checked against implementation evidence
-16. Glossary terms used or updated
-17. Owner approvals
-
 ### Release Handoff Record
 
-`release-handoff.md` should contain:
-
-1. Selected handoff mode: agent-managed release validation or owner-managed packaging
-2. Mod and version
-3. Source revision
-4. Artifact filename and path, or expected artifact pattern when owner-managed
-5. Build command and result when agent-managed
-6. Artifact checksum when agent-managed
-7. Artifact inspection summary when agent-managed
-8. Accepted validation waivers
-9. Owner-managed publication checklist
-10. Owner approvals
+Create `release-handoff.md` from `setup/artifact-templates/release-handoff.md`. The template is the authoritative handoff structure; omit artifact-validation fields only when packaging is owner-managed and record that boundary explicitly.
 
 ## Completion Criteria
 
@@ -358,7 +333,8 @@ This stage is complete when:
 - `<artifact-root>/release-presentation.md` is generated and approved.
 - `<artifact-root>/release-handoff.md` is generated and approved when a release artifact is built, identified, or handed off.
 - The approved release version is recorded; first public releases default to `1.0.0` unless the owner chose otherwise.
-- Agent-managed release artifacts are built, inspected, and checksummed when assigned by the ownership matrix.
+- Agent-managed release artifacts are built, inspected, and checksummed from the clean committed source revision recorded in the handoff.
+- No uncommitted release/version/public-material change remains when an agent-managed artifact handoff is finalized.
 - Owner-managed publication remains clearly outside the agent workflow.
 
 Completion ends agent-managed release work for the stage. Manual publication remains the project owner's responsibility and does not block workflow completion unless the owner explicitly requests publication tracking.

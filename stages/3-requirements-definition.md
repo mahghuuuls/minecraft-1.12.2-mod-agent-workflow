@@ -85,7 +85,7 @@ Act as a requirements analyst.
 - If the description cannot be responsibly written yet, defer it to Project Initialization instead of blocking this stage.
 - Keep the public description concise, accurate, and suitable for early repository metadata.
 - Do not treat the public description as final release README or platform-page copy.
-- Interview the project owner one focused question at a time.
+- Use focused questions for behavior that changes the route; present coherent groups of recommended low-risk rules, defaults, or edge-case decisions as reviewable decision packets.
 - Examine each feature through its triggers, conditions, outcomes, boundaries, and exceptions.
 - Challenge vague terms such as "nearby," "fast," "compatible," or "automatically."
 - Present alternative interpretations when behavior is ambiguous.
@@ -194,7 +194,7 @@ Notes should not prescribe implementation unless the detail is an established pr
 4. Draft the minimal public-facing mod description or record its deferral to Project Initialization.
 5. Identify glossary terms that must be approved before requirements can be approved.
 6. Identify the actors, triggers, states, and outcomes associated with each feature.
-7. Interview the project owner one question at a time.
+7. Interview the project owner using focused questions or compact related decision packets according to `guidelines/collaboration-guidelines.md`.
 8. Resolve behavioral ambiguities, terminology ambiguities, and contradictions.
 9. Define rules, limits, exceptions, and failure behavior.
 10. Define configuration, debug, multiplayer, persistence, and compatibility behavior where relevant.
@@ -209,26 +209,7 @@ Notes should not prescribe implementation unless the detail is an established pr
 
 ## Output Artifact
 
-Produce a Markdown document named `workspace/documentation/requirements.md` containing:
-
-1. **Purpose and Scope**
-2. **Referenced Documents**
-3. **Public Mod Description** or **Public Mod Description Deferral**
-4. **Actors and Usage Context**
-5. **Terminology**
-6. **Functional Requirements**
-7. **Configuration Requirements**
-8. **Client and Server Requirements**
-9. **Multiplayer Requirements**
-10. **Persistence Requirements**
-11. **Compatibility Requirements**
-12. **Performance Requirements**
-13. **Failure and Error Requirements**
-14. **Out-of-Scope Behavior**
-15. **Assumptions and Dependencies**
-16. **Requirement Traceability**
-17. **Glossary Updates**
-18. **Unresolved Non-Blocking Questions**
+Produce `workspace/documentation/requirements.md` from `setup/artifact-templates/requirements.md`. The template is the authoritative document structure; this stage's requirement format and completion criteria are authoritative for individual requirement quality.
 
 Omit categories that do not apply rather than inventing requirements.
 

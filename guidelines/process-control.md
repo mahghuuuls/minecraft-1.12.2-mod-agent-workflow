@@ -91,9 +91,8 @@ Process Maintenance mode ends when the requested process edits and consistency c
 | 6. Implementation Plan | `stages/6-implementation-plan.md` | `<artifact-root>/implementation-plan.md` and `issues/` |
 | 7. Implementation | `stages/7-implementation.md` | Completed code and issue evidence |
 | 8. Release Presentation And Release Handoff | `stages/8-release-presentation.md` | `<artifact-root>/release-presentation.md` and, when applicable, `<artifact-root>/release-handoff.md` |
-| 9. Standalone Packaging and Release Validation | `stages/9-packaging-release-validation.md` | `<artifact-root>/release-handoff.md` |
 
-When a workflow invokes multiple stages, perform them in this order. Initial Development normally uses stages 1 through 8; Stage 9 exists for workflows or owner requests that explicitly need a separate packaging/validation stage. Other workflows define their approved route.
+When a workflow invokes multiple stages, perform them in this order. Initial Development normally uses stages 1 through 8. Fresh validation of an already approved release uses `procedures/revalidate-release.md`; it is not a separate stage and does not duplicate Release Presentation. Other workflows define their approved route.
 
 ## Project Status
 
@@ -131,6 +130,8 @@ Record the disposition of each reusable stage for the active workflow. Dispositi
 
 Implementation issue statuses are defined by the Implementation Plan stage.
 
+`project-status.md` is the authoritative ledger for workflow, stage, cycle, issue, baseline, and blocking-decision status. When another project artifact or resume snapshot disagrees with it, stop and reconcile the evidence instead of silently choosing one.
+
 ## Project State Snapshot
 
 Maintain a compact current-state snapshot at:
@@ -145,21 +146,20 @@ Create it from:
 setup/artifact-templates/project-state.md
 ```
 
-Use this file to reduce context reconstruction after chat forks, context compaction, or handoff between agents. It should summarize only the current working state:
+Use this file to reduce context reconstruction after chat forks, context compaction, or handoff between agents. It is a generated convenience snapshot, not a second status ledger. It should reference `project-status.md` and summarize only the context needed to resume:
 
 - Active mod repository path
-- Active workflow, stage, or checkpoint
+- Active workflow, stage, or checkpoint as recorded in `project-status.md`
 - Artifact root
-- Approved artifacts
 - Current issue, when applicable
-- Next required approval
+- Next action and required approval
 - Blocking questions
 - Deferred prerequisites
 - Owner-managed responsibilities
 - Accepted validation waivers
 - Dependency source references
 
-Update it at natural checkpoints: after setup approval, stage approval, workflow changes, issue completion, accepted validation waivers, release handoff, or a material change to the next required action. Do not treat it as a replacement for canonical artifacts.
+Refresh it after Project Setup, at workflow start and completion, before a session handoff or expected context compaction, and when a material blocker or owner-managed follow-up would otherwise be difficult to reconstruct. Do not update it after every stage or issue merely to mirror `project-status.md`. Do not treat it as a replacement for canonical artifacts or copy a complete approval ledger into it.
 
 ## Project Glossary
 
@@ -211,6 +211,10 @@ The briefing must explain:
 - **Boundaries:** any relevant owner-managed responsibilities, deferred prerequisites, or approval requirements.
 
 Ask for explicit permission to begin after the briefing. Do not mark the stage **In Progress** or perform stage work until the owner approves.
+
+When presenting a completed stage and the next routed stage is already known, the agent should normally include the next stage's transition briefing in the same checkpoint. One owner response may explicitly approve the completed stage and authorize the next stage to begin. State both requested approvals plainly; silence, vague continuation, or approval of only one item does not authorize the other.
+
+Keep approvals separate when the next route is unresolved, a backward transition is required, the next action changes external state, or combining them would obscure a material scope, architecture, licensing, compatibility, or ownership decision.
 
 When a workflow approval always leads immediately into the first required stage, the transition briefing may combine workflow start and first-stage start. The combined request must make both approvals explicit, so the owner understands that approving it starts the workflow and the first stage.
 
@@ -333,12 +337,12 @@ Apply this lifecycle to stages and workflow-specific approval checkpoints:
 3. Mark the active item **In Progress**.
 4. Perform only its defined work.
 5. Create or update its draft artifacts using matching templates under `setup/artifact-templates/` when present.
-6. Mark it **Awaiting Approval** and present the complete result.
+6. Mark it **Awaiting Approval** and present the complete result. When the next routed item is known, include its transition briefing and offer a combined current-approval/next-start checkpoint.
 7. Revise it in response to review.
 8. Mark it **Approved** only after explicit confirmation from the project owner.
-9. Stop unless the project owner separately authorizes the next item.
+9. Stop unless the project owner has authorized the next item, either separately or through an explicit combined checkpoint.
 
-A generated artifact, successful check, manual publication action, or approval of a different action does not constitute approval.
+A generated artifact, successful check, manual publication action, or approval of a different action does not constitute approval. Combined checkpoints are valid only when the request and the owner's response clearly cover each combined item.
 
 ## Ask Versus Decide
 

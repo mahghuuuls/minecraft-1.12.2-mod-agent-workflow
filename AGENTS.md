@@ -33,7 +33,7 @@ During a mod project, the agent may:
 - Follow the shared guidelines, approved setup, selected workflow, active stage, and project glossary when present.
 - Record project-specific vocabulary in `workspace/documentation/glossary.md` when it affects requirements, architecture, code naming, configuration, or public copy.
 - Record workflow friction, corrections, and improvement ideas in `workspace/documentation/workflow-feedback.md` when they arise.
-- Maintain `workspace/documentation/project-state.md` as a compact current-state snapshot at natural checkpoints.
+- Treat `workspace/documentation/project-status.md` as the authoritative workflow ledger and maintain `workspace/documentation/project-state.md` only as a compact resume/handoff snapshot.
 - Maintain `workspace/documentation/dependency-references.md` when dependency source repositories are used as reference material.
 - Modify mod source only in the active repository under `workspace/project/`.
 - Treat `workspace/template/` as disposable source material.
@@ -102,7 +102,7 @@ workspace/documentation/project-setup.md
 
 If no approved setup artifact exists, run `stages/0-project-setup.md`.
 
-Do not tell the user to read the README or configure the project alone. Inspect what is already available, explain the immediate decision, ask one focused question at a time, and guide the user through setup.
+Do not tell the user to read the README or configure the project alone. Inspect what is already available, explain the immediate decision, use a focused question or compact related decision packet as appropriate, and guide the user through setup.
 
 An approved setup may be carried forward. Revisit Project Setup when the active repository, scenario, template candidate, required environment, or operational configuration materially changes.
 
@@ -131,8 +131,8 @@ For mod-development work, read in this order:
 
 1. `AGENTS.md`
 2. The core guideline files listed under **Instruction Ownership**
-3. `workspace/documentation/project-state.md`, when present
-4. `workspace/documentation/project-status.md`, when present
+3. `workspace/documentation/project-status.md`, when present
+4. `workspace/documentation/project-state.md`, when present, as a resume/handoff summary subordinate to `project-status.md`
 5. `workspace/documentation/glossary.md`, when present
 6. `workspace/documentation/dependency-references.md`, when present
 7. `workspace/documentation/workflow-feedback.md`, when present
@@ -170,9 +170,11 @@ Do not silently resolve contradictions between sources. Follow `guidelines/proce
 - `setup/glossary-template.md`: template for the project-specific glossary.
 - `setup/workflow-feedback-template.md`: template for the project-specific feedback log.
 - `stages/*.md`: setup and reusable development-stage responsibilities.
+- `procedures/*.md`: callable operational procedures that do not create an additional reusable-stage approval lifecycle.
+- `scripts/validate-process.ps1`: lightweight consistency validation for versioned process files and artifact-template ownership.
 
 When instructions overlap, the file that owns the subject is authoritative. Other files should reference it instead of restating it.
 
 ## Execution
 
-Complete or carry forward Project Setup, then resume or obtain approval for the applicable workflow. Follow one checkpoint or stage at a time, update `project-status.md`, update `project-state.md` at natural checkpoints, maintain the project glossary and dependency reference registry when relevant, record workflow feedback when relevant, and stop whenever owner approval is required. Never advance automatically.
+Complete or carry forward Project Setup, then resume or obtain approval for the applicable workflow. Follow one checkpoint or stage at a time, keep authoritative status in `project-status.md`, refresh `project-state.md` only for resume/handoff needs, maintain the project glossary and dependency reference registry when relevant, record workflow feedback when relevant, and stop whenever owner approval is required. A checkpoint may explicitly combine approval of the current item with authorization to begin the already-briefed next item; never advance without that authorization.

@@ -43,7 +43,7 @@ Act as a baseline investigator.
 - Do not modernize, migrate, refactor, fix, or reformat production files during assessment.
 - Build outputs and local IDE files may be generated when required for inspection but must not be committed.
 - Record technical debt and defects without correcting them.
-- Ask one focused question at a time where evidence cannot establish intent.
+- Use a focused question where one unresolved intent changes the baseline; group closely related low-risk confirmations when the same evidence supports them.
 - Use `workspace/documentation/` as `<artifact-root>`.
 
 ## Stage Routing
@@ -58,7 +58,6 @@ Act as a baseline investigator.
 | Implementation Plan | Not Applicable | Assessment does not plan changes |
 | Implementation | Not Applicable | Assessment does not change production behavior |
 | Release Presentation | Not Applicable | Assessment does not prepare a new release |
-| Packaging and Release Validation | Not Applicable | Assessment does not build a release handoff |
 
 Record this route in `project-status.md`.
 
@@ -95,20 +94,7 @@ Produce:
 workspace/documentation/project-baseline.md
 ```
 
-It should contain:
-
-1. Repository identity, branch, and assessed revision
-2. Release and tag history
-3. Build environment, command, and result
-4. Mod metadata and supported environment
-5. Source and resource structure
-6. Dependencies and integrations
-7. Configuration and persisted-data concerns
-8. Verification performed
-9. Observed behavior
-10. Known defects, debt, and limitations
-11. Unresolved intent or compatibility questions
-12. Canonical documents established during assessment
+Start from `setup/artifact-templates/project-baseline.md`. The template is the authoritative baseline structure; populate the existing-project evidence fields and omit release-handoff fields that genuinely do not apply.
 
 ## Completion Criteria
 
