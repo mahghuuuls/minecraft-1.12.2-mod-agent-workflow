@@ -105,7 +105,7 @@ Commit messages must be repo-facing by default:
 
 Publication to every approved distribution platform is performed manually by the project owner. Agents may prepare handoffs but may not upload or publish the mod.
 
-When owner-assisted manual validation is useful, provide a concise runnable recipe. Include relevant config state, exact commands or setup steps when available, expected results, and any important scenario that is impractical to validate manually.
+When owner-assisted manual validation is useful, provide a concise runnable recipe. Include relevant config state, exact commands or setup steps when available, expected results, and any important scenario that is impractical to validate manually. When several checks share one game or server runtime, give the owner the complete restart-aware matrix and full configuration up front instead of revealing one test at a time. Verify Minecraft 1.12.2 command syntax, registry identifiers, fixture behavior, and cleanup steps before presenting the recipe.
 
 ## Completion Reporting
 

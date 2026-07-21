@@ -132,6 +132,18 @@ Avoid obvious or generic README content, including:
 
 Player/download-facing copy should live in a separate file by default, such as `MOD-PAGE.md` or another owner-approved distribution-page document.
 
+Draft the smallest useful mod page first and expand it only when a normal player needs more information to decide, install, or configure the mod. For a narrow mod, the default shape is:
+
+1. One short opening paragraph explaining the value.
+2. The approved AI usage disclaimer.
+3. A few feature bullets only when the opening does not already communicate the behavior.
+4. One compact configuration example when configuration is central.
+5. One plain installation-side statement.
+6. Only limitations that materially affect normal installation or use.
+7. A useful source or companion-project link when applicable.
+
+Do not turn the mod page into a condensed requirements document. Avoid enumerating every numeric validation rule, parser edge case, excluded source, compatibility qualification, or internal evidence result. Keep those details in generated config comments, the repository README, changelog, or internal presentation record according to their audience. Prefer combining a short explanation with its example over creating a separate section for every topic.
+
 Include this generic AI usage disclaimer near the top of player/download-facing copy by default, after the opening description and before feature details:
 
 ```html

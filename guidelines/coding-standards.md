@@ -55,6 +55,7 @@ These standards apply to implementation work across all mod projects. Project-sp
 - Define allow-list, deny-list, precedence, and conflict behavior consistently.
 - Do not silently repair invalid configuration in ways that conceal user mistakes.
 - For silent, event-driven, or hard-to-observe behavior, prefer an approved disabled-by-default debug option that helps development validation without affecting normal gameplay.
+- Keep generated configuration comments focused on what a user needs to write a valid value: the purpose or format, one useful example, essential value bounds or safety constraints, and restart behavior when applicable. Put duplicate precedence, parser edge cases, diagnostic policy, and other detailed semantics in repository/player documentation or actionable warnings unless users need them at the edit point. Do not make the generated file duplicate the full configuration specification.
 
 ## Dependencies
 

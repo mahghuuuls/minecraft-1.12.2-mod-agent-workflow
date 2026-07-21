@@ -126,6 +126,8 @@ Use these workflow and stage statuses:
 - **Approved**
 - **Needs Revision**
 
+These names are exact. Use **Awaiting Approval** when stage or workflow work is finished but still needs owner approval, and **Approved** after that approval. Do not use implementation-issue statuses such as **Review** or **Done**, or informal synonyms such as **Complete**, for workflow or stage status fields. A completed workflow is recorded as **Approved**; its current checkpoint may separately say that the project is in a release-ready pause state.
+
 Record the disposition of each reusable stage for the active workflow. Dispositions explain routing and do not replace the status of an invoked stage. Each workflow defines its allowed disposition values.
 
 Implementation issue statuses are defined by the Implementation Plan stage.

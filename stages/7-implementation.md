@@ -134,6 +134,18 @@ If the owner skips a validation check, marks it owner-managed, or accepts that i
 
 When manual gameplay validation by the owner is useful, provide a short runnable validation recipe only after its required observability is available. Include relevant config state, exact diagnostic and setup commands, how to enable and later disable any optional logging, the authoritative values or events to inspect, expected results, and any important scenario that is not practical to validate in normal vanilla gameplay.
 
+Before the owner starts a shared game, server, or modpack session, consolidate all currently known checks for that runtime into one validation packet:
+
+- Map every planned check to its acceptance criterion and authoritative observation.
+- Group checks by configuration state and put the full configuration for each state first.
+- Minimize full restarts and state clearly where each unavoidable restart occurs.
+- Verify commands, selectors, registry identifiers, and entity names specifically for Minecraft 1.12.2; do not rely on identifiers from newer versions.
+- Choose fixtures whose actual registry type and attack behavior match the check. Account for spawn-replacement mods, randomized variants, custom AI, and attribute-scaling mods before treating visual health or damage as evidence.
+- Include safety setup, cleanup commands, diagnostic log strings, and the exact evidence the owner should return.
+- Include bounded repeated-event or churn checks when an acceptance criterion requires them; do not discover them only during final independent review.
+
+If a result invalidates a fixture or reveals a new necessary check, revise the packet and explain the change. Do not continue an avoidable sequence of ad hoc restarts merely because testing has already begun.
+
 ## Testing Approach
 
 Strict TDD is not required.
