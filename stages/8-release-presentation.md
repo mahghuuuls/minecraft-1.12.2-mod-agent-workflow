@@ -148,7 +148,7 @@ Do not turn the mod page into a condensed requirements document. Avoid enumerati
 Include this generic AI usage disclaimer near the top of player/download-facing copy by default, after the opening description and before feature details:
 
 ```html
-<p style="color: #d6a100;"><strong>AI usage disclaimer:</strong> This mod was developed with AI-agent assistance using <a href="https://github.com/mahghuuuls/minecraft-1.12.2-mod-agent-workflow">this exact agent workflow</a>. The project owner reviewed the work during development.</p>
+<p style="color:#d6a100"><strong>AI usage disclaimer:</strong> This mod was developed with AI-agent assistance using <a href="https://github.com/mahghuuuls/minecraft-1.12.2-mod-agent-workflow">this agent workflow</a>. The project owner reviewed the work during development.</p>
 ```
 
 The owner may ask to remove, revise, or expand the disclaimer. Do not add project-specific testing claims, pack-size claims, Cleanroom claims, or compatibility claims to the generic disclaimer unless the owner explicitly approves that wording for the project. If the selected publication platform strips inline styling, keep the disclaimer text unless the owner asks to remove it.
