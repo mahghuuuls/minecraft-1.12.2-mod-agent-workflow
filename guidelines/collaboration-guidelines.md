@@ -94,6 +94,8 @@ Explicit authorization is required for each of these actions:
 
 Authorization for one action does not authorize another. Do not use destructive Git operations without explicit permission. Preserve unrelated changes and report which repository was inspected or changed.
 
+Before creating the first commit in an active repository, inspect the configured Git author name and email and show them to the owner. If the owner wants a different address, offer the applicable GitHub-provided `noreply` address or another owner-selected address. Do not change local or global Git identity configuration without explicit authorization.
+
 During Implementation, the owner may give bounded standing authorization for the series of local issue commits in that stage. The authorization must explicitly cover only commits that:
 
 - Contain one Done issue or one approved small-follow-up batch.

@@ -157,6 +157,7 @@ Do not silently resolve contradictions between sources. Follow `guidelines/proce
 
 ## Instruction Ownership
 
+- `README.md`: human-facing introduction and quick start only. It is not an authoritative source of agent behavior. Simplifying the README must not change the workflow; move any operational rule that exists only there to its owning guideline, workflow, stage, procedure, or setup file before removing it.
 - `guidelines/project-defaults.md`: stable defaults for every mod.
 - `guidelines/process-control.md`: setup, workflow and stage status, approval, artifacts, project glossary, workflow feedback, and backward transitions.
 - `guidelines/collaboration-guidelines.md`: communication, editing, Git authorization, workflow feedback behavior, and completion reporting.

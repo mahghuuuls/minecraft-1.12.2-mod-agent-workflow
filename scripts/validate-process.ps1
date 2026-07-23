@@ -82,6 +82,7 @@ $requiredTemplateHeadings = [ordered]@{
 }
 
 $requiredProcessText = [ordered]@{
+    'guidelines/collaboration-guidelines.md' = @('inspect the configured Git author name and email')
     'stages/0-project-setup.md' = @('workspace/documentation/workflow-feedback.md')
     'setup/initialize-project.md' = @('## Freeze Project Identity', '## Verify Owner-Side Git Access')
     'stages/6-implementation-plan.md' = @('## Verification Environment Plan', '**Test now:**', '**Defer:**', '**Waive:**')
@@ -120,6 +121,31 @@ foreach ($directory in $processDirectories) {
     $path = Join-Path $root $directory
     if (Test-Path -LiteralPath $path) {
         Get-ChildItem -LiteralPath $path -Recurse -File -Filter '*.md' | ForEach-Object { $markdownFiles.Add($_) }
+    }
+}
+
+$portabilityFiles = [System.Collections.Generic.List[System.IO.FileInfo]]::new()
+foreach ($file in $markdownFiles) {
+    $portabilityFiles.Add($file)
+}
+Get-ChildItem -LiteralPath (Join-Path $root 'setup') -Recurse -File -Filter '*.properties' | ForEach-Object { $portabilityFiles.Add($_) }
+
+$prohibitedPortabilityPatterns = [ordered]@{
+    'Owner-specific GitHub username used as a project value' = '(?im)^\s*github_username\s*=\s*mahghuuuls\s*$'
+    'Owner-specific Java package used as a project value' = '(?im)^\s*root_package\s*=\s*com\.mahghuuuls(?:\.|$)'
+    'Prior project identity' = '(?i)\b(?:leftclickvacation|periodic[-_ ]mob[-_ ]drops)\b'
+    'Owner local Windows user path' = '(?i)[A-Za-z]:[\\/]+Users[\\/]+(?:arthurcrs|ARTHUR~1)(?:[\\/]|$)'
+    'Codex attachment path' = '(?i)\.codex[\\/]attachments[\\/]'
+    'Personal email address' = '(?i)arthcrs@gmail\.com'
+}
+
+foreach ($file in $portabilityFiles) {
+    $text = Get-Content -Raw -LiteralPath $file.FullName
+    $relative = $file.FullName.Substring($root.Length).TrimStart([char[]]'\/').Replace('\', '/')
+    foreach ($entry in $prohibitedPortabilityPatterns.GetEnumerator()) {
+        if ($text -match $entry.Value) {
+            Add-Error "$($entry.Key) found in versioned process content: $relative"
+        }
     }
 }
 
@@ -169,4 +195,4 @@ if ($errors.Count -gt 0) {
     exit 1
 }
 
-Write-Host "Process validation passed: required files, template ownership, headings, references, retired-stage checks, and numbered lists are consistent." -ForegroundColor Green
+Write-Host "Process validation passed: required files, template ownership, headings, references, portability checks, retired-stage checks, and numbered lists are consistent." -ForegroundColor Green

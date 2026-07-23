@@ -121,11 +121,11 @@ main_class = <PascalCaseDisplayName>Mod
 Example:
 
 ```text
-github_username = mahghuuuls
-mod_id = leftclickvacation
-display_name = Left Click Vacation
-root_package = com.mahghuuuls.leftclickvacation
-main_class = LeftClickVacationMod
+github_username = exampleowner
+mod_id = harvesthelper
+display_name = Harvest Helper
+root_package = com.exampleowner.harvesthelper
+main_class = HarvestHelperMod
 ```
 
 Rules:
@@ -484,6 +484,7 @@ Record the command, environment, output result, and produced artifact.
 Before staging or committing:
 
 - Inspect Git status.
+- Inspect and present the configured Git author name and email, and resolve any owner-requested change before committing.
 - Review the complete diff.
 - Confirm no template Git metadata exists.
 - Confirm no secrets or local paths were copied.
