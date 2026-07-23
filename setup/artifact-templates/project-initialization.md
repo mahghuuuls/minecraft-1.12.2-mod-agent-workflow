@@ -8,6 +8,18 @@
 
 -
 
+## Project Identity Freeze
+
+- Display name:
+- Mod ID:
+- Root package:
+- Main class:
+- Repository owner and slug:
+- Project directory:
+- Configuration filename, when known:
+- Artifact base name:
+- Owner approval:
+
 ## Template Source
 
 - Repository:
@@ -21,6 +33,12 @@
 - Local path:
 - Branch:
 - Origin:
+
+## Owner-Side Git Access Check
+
+- Command:
+- Result:
+- Remediation, when needed:
 
 ## Applied Defaults And Project Values
 

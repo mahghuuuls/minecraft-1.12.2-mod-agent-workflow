@@ -39,6 +39,18 @@
 - Commit-message style:
 - Client/server responsibility:
 
+## Public Copy Preferences
+
+- Player-facing copy length:
+- Punctuation or style restrictions:
+- AI usage disclaimer:
+- Placement of unverified-validation notes:
+
+## Git Workflow Preferences
+
+- Preferred push prompt cadence:
+- Offer bounded standing implementation-commit authorization:
+
 ## Loader, Runtime, Template, And Distribution
 
 - Loader:
@@ -54,6 +66,11 @@
 - File:
 - Values written:
 - Values deferred:
+
+## Workflow Feedback Log
+
+- File:
+- Status:
 
 ## Dependency Source References
 

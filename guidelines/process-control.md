@@ -258,19 +258,19 @@ Do not use a waiver to hide a known defect, contradiction, failed check, or unve
 
 ## Workflow Feedback Log
 
-Maintain a project-specific feedback log at:
+Create and maintain a project-specific feedback log at:
 
 ```text
 workspace/documentation/workflow-feedback.md
 ```
 
-Create it from:
+Create it during Project Setup from:
 
 ```text
 setup/workflow-feedback-template.md
 ```
 
-Use this log to record friction, corrections, and improvement ideas discovered while using the workflow on a specific mod. The objective is to give the project owner a concise artifact they can later apply in Process Maintenance mode or share with another agent outside the active mod project.
+Project Setup must create the file even when it initially contains no project feedback. Use it to record friction, corrections, and improvement ideas discovered while using the workflow on a specific mod. The objective is to give the project owner a concise artifact they can later apply in Process Maintenance mode or share with another agent outside the active mod project.
 
 Record an entry when an interaction suggests that the workflow may need improvement, for example:
 
@@ -283,6 +283,12 @@ Record an entry when an interaction suggests that the workflow may need improvem
 - The agent had to invent an exception that should become explicit workflow guidance.
 
 Do not interrupt the active stage just to update this log unless the issue is blocking. Prefer updating it at natural checkpoints, such as after a correction, before stage approval, after an issue completes, or at the end of the session.
+
+Before presenting a workflow for final approval:
+
+- Review the project for repeated approvals, validation confusion, unnecessary rework, stale artifacts, owner corrections, and defaults that were overridden.
+- Add concise feedback entries for material process lessons that are not already represented.
+- Do not delay workflow completion merely to invent feedback when none occurred.
 
 Entries are observations, not approved process changes. This workflow does not update itself during mod development. Do not modify versioned workflow files during mod development because a feedback entry exists.
 
@@ -345,6 +351,8 @@ Apply this lifecycle to stages and workflow-specific approval checkpoints:
 9. Stop unless the project owner has authorized the next item, either separately or through an explicit combined checkpoint.
 
 A generated artifact, successful check, manual publication action, or approval of a different action does not constitute approval. Combined checkpoints are valid only when the request and the owner's response clearly cover each combined item.
+
+For Initial Development, the release-ready baseline may be prepared as a draft after Release Presentation work and artifact validation are complete but before the final approval response. The final checkpoint may then ask separately labeled approval for both Release Presentation and the Initial Development workflow in one owner response.
 
 ## Ask Versus Decide
 

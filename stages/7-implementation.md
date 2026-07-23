@@ -33,7 +33,7 @@ For each implementation issue:
 - Record accepted validation waivers when the owner skips or owns a check
 - Obtain an independent review
 - Correct legitimate review findings
-- Ask the project owner to approve a commit checkpoint after the issue is Done
+- Resolve the commit checkpoint after the issue is Done, using either specific approval or an applicable standing authorization
 
 ## In Scope
 
@@ -101,7 +101,7 @@ Act as a focused implementation agent.
 - Record completion evidence in the issue file.
 - Move the issue to Review only after implementation verification succeeds or accepted waivers are recorded.
 - Do not mark the issue Done until independent review is complete.
-- After marking an issue Done, prepare a commit checkpoint and ask the project owner whether to commit before moving to the next issue.
+- After marking an issue Done, prepare a commit checkpoint and either ask the project owner whether to commit or apply an applicable standing implementation-commit authorization.
 - Do not commit without explicit approval.
 
 At the start of Implementation, the owner may give standing, revocable approval for required independent review agents for every implementation issue in the stage. This standing approval is limited to read-only review of completed issue changes and evidence. It does not authorize commits, pushes, external-service access, non-review subagents, or changed review scope. If the scope changes, ask again.
@@ -128,9 +128,23 @@ Possible feedback mechanisms include:
 
 Verification must match the risk. A successful build does not verify gameplay behavior, networking, rendering, entity AI, persistence, or mod compatibility.
 
+## Validation Environment Tiers
+
+Use the environment tiers approved in the implementation plan. Record the exact tier used and do not report evidence from one tier as proof of another. In particular:
+
+- `runClient` may prove integrated-server behavior but does not prove a standalone dedicated-server launch.
+- `runServer` does not prove client rendering or a packaged modpack installation.
+- A packaged clean environment does not prove compatibility with the target modpack or alternate runtime.
+- A target modpack check does not by itself prove general compatibility with every modpack.
+- External multiplayer is required only when the approved risk or behavior needs separately operated multiplayer evidence.
+
+Dimension checks are risk-based. For dimension-agnostic code, inspect the relevant code path and use one representative non-Overworld runtime check when runtime confirmation is required. Do not require checks in every dimension unless the implementation or defect is dimension-specific.
+
 Manual verification must also have a reliable observation path. Before requesting it, identify the authoritative state or event being checked and confirm that normal behavior exposes it reliably. If it does not, implement and verify the issue's approved diagnostic mechanism first. Suitable mechanisms include structured logs, inspect or controlled-state commands, counters, or another narrow diagnostic surface. Potentially noisy or player-visible diagnostics should remain disabled by default unless normal product behavior requires otherwise, and administrative state-changing commands must enforce the approved authorization boundary.
 
 If the owner skips a validation check, marks it owner-managed, or accepts that it cannot be run in the current environment, record it using the validation waiver format in `guidelines/process-control.md` and continue. Do not keep asking for the same validation unless new evidence makes it release-blocking.
+
+Use the plan's Test now, Defer, or Waive decisions as the standing disposition for owner-performed checks. Consolidate any newly discovered owner checks into the next relevant validation packet instead of asking about them one at a time.
 
 When manual gameplay validation by the owner is useful, provide a short runnable validation recipe only after its required observability is available. Include relevant config state, exact diagnostic and setup commands, how to enable and later disable any optional logging, the authoritative values or events to inspect, expected results, and any important scenario that is not practical to validate in normal vanilla gameplay.
 
@@ -145,6 +159,22 @@ Before the owner starts a shared game, server, or modpack session, consolidate a
 - Include bounded repeated-event or churn checks when an acceptance criterion requires them; do not discover them only during final independent review.
 
 If a result invalidates a fixture or reveals a new necessary check, revise the packet and explain the change. Do not continue an avoidable sequence of ad hoc restarts merely because testing has already begun.
+
+## Generated Artifact Inspection
+
+When a framework generates or rewrites user-visible files such as configuration files, metadata, manifests, or example output, inspect the actual generated artifact. Source strings alone are not sufficient evidence because the framework may add labels, reorder content, escape characters, or preserve stale values.
+
+Check a fresh generation. When existing users or committed defaults may be affected, also check the relevant existing-file migration or preservation path. Record the generated path and observed content in completion evidence.
+
+## Small Follow-Up Path
+
+After the planned behavioral issues are Done, classify each requested follow-up before editing:
+
+- **Editorial-only:** wording, comments, or examples with no parser, API, behavior, migration, or architecture effect. Batch related edits, use targeted checks while wording stabilizes, run one final clean build after the batch, and perform one independent review of the batch.
+- **Generated-artifact:** a seemingly textual change whose real result is produced or rewritten by a framework. Inspect the actual fresh output and the existing-file path when relevant.
+- **Behavioral or structural:** parser behavior, public API, runtime behavior, data migration, packages/classes, architecture, or compatibility. Use the full issue lifecycle or return to the appropriate earlier stage.
+
+If investigation shows that an editorial request requires framework behavior, API use, migration logic, or structural renaming, stop and explain the expanded scope and cost before proceeding. Do not run a full clean build after every phrasing iteration when targeted checks are adequate; the final stabilized batch still requires a clean verification run.
 
 ## Testing Approach
 
@@ -176,7 +206,7 @@ Define expected results before performing any verification.
 
 ## Commit Checkpoints
 
-After each implementation issue or approved vertical slice is marked **Done**, pause and ask the project owner whether to create a commit before starting the next issue.
+After each implementation issue, approved vertical slice, or approved small-follow-up batch is marked **Done**, resolve a commit checkpoint before starting the next item.
 
 Before requesting commit approval:
 
@@ -205,7 +235,7 @@ Bad example:
 Complete issue 3 from implementation-plan.md
 ```
 
-If the owner approves the commit, create it in the active mod repository only. If the owner declines or defers, record the decision and continue only if the owner approves moving to the next issue with uncommitted changes.
+If the owner specifically approves the commit, or a bounded standing implementation-commit authorization from `guidelines/collaboration-guidelines.md` applies, create it in the active mod repository only. State when standing authorization is being applied. If neither applies, ask. If the owner declines or defers, record the decision and continue only if the owner approves moving to the next issue with uncommitted changes.
 
 After a clean committed checkpoint, confirm the repository is clean when checked and end with a simple pause-state cue such as: `Ready to continue when you want.`
 
@@ -232,8 +262,8 @@ After a clean committed checkpoint, confirm the repository is clean when checked
 19. Address legitimate review findings.
 20. Repeat verification for affected behavior or record approved waiver updates.
 21. Mark the issue **Done** only when the Definition of Done is satisfied.
-22. Prepare the commit checkpoint and request owner approval to commit.
-23. Create the commit only if approved, or record the approved deferral.
+22. Prepare the commit checkpoint and determine whether a specific or standing authorization applies.
+23. Create the commit only under that authorization, otherwise request approval or record the approved deferral.
 24. Select the next Ready issue only after the commit checkpoint is resolved.
 
 ## Handling Discoveries
@@ -278,7 +308,7 @@ Minor implementation details that do not alter approved behavior or architectura
 
 ## Independent Implementation And Architecture Review
 
-Implementation and review must use separate agent contexts.
+Implementation and review must use separate agent contexts for behavioral and structural issues. Closely related editorial-only follow-ups may be independently reviewed as one approved batch.
 
 The review agent must receive:
 

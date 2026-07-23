@@ -47,6 +47,21 @@ Record only overrides or additions that are specific to this owner and not alrea
 - Communication preferences not covered by `guidelines/collaboration-guidelines.md`:
 - Other recurring owner-specific preferences:
 
+## Public Copy Preferences
+
+- Player-facing copy length: Minimal | Expanded
+- Punctuation or style restrictions:
+- AI usage disclaimer wording:
+- AI usage disclaimer link:
+- Placement of unverified-validation notes: Internal only | Repository documentation | Player/download page when installation-relevant
+- Other recurring public-copy preferences:
+
+## Git Workflow Preferences
+
+- Preferred push prompt cadence: Each checkpoint | Stage completion | Release-ready handoff
+- Offer bounded standing implementation-commit authorization: Yes | No
+- Other Git workflow preferences:
+
 ## Notes For Future Mods
 
 -

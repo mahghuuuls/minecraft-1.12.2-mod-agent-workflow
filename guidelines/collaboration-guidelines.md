@@ -94,7 +94,19 @@ Explicit authorization is required for each of these actions:
 
 Authorization for one action does not authorize another. Do not use destructive Git operations without explicit permission. Preserve unrelated changes and report which repository was inspected or changed.
 
-During Implementation, after each completed issue or approved vertical slice, ask the project owner whether to create a commit before moving to the next issue. Follow the commit checkpoint rules in `stages/7-implementation.md`.
+During Implementation, the owner may give bounded standing authorization for the series of local issue commits in that stage. The authorization must explicitly cover only commits that:
+
+- Contain one Done issue or one approved small-follow-up batch.
+- Have completed the required verification and independent review.
+- Include no unrelated file.
+- Use the repo-facing commit-message default.
+- Do not push, tag, publish, or change an external service.
+
+Standing implementation-commit authorization is optional, revocable, and does not carry into Release Presentation or a later workflow. Without it, request commit authorization at each issue checkpoint as usual.
+
+A preferred push cadence records when the agent should offer a push, such as after each stage or only at release. It does not authorize any push. Every push still requires explicit authorization for the exact repository and branch.
+
+During Implementation, after each completed issue, approved vertical slice, or approved small-follow-up batch, resolve the commit checkpoint before moving to the next item. Ask for approval unless an applicable bounded standing authorization already covers that commit. Follow `stages/7-implementation.md`.
 
 Commit messages must be repo-facing by default:
 

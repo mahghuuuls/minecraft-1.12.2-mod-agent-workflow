@@ -141,6 +141,25 @@ Rules:
 
 Do not continue with placeholder packages, ambiguous generated names, invalid Java identifiers, or example template class names.
 
+## Freeze Project Identity
+
+Before cloning the final repository or applying template content, present one compact identity packet:
+
+| Identity | Value |
+| --- | --- |
+| Display name | |
+| Mod ID | |
+| Root package | |
+| Main class | |
+| Repository owner and slug | |
+| Project directory | |
+| Configuration filename, when known | |
+| Artifact base name | |
+
+Explain that changing these values after initialization may require package moves, class/resource renames, configuration or saved-data migration, repository renaming, and compatibility decisions. Obtain approval for the packet as the initialization identity freeze.
+
+The freeze does not forbid a later rename. It makes the rework and migration boundary explicit instead of treating a late rename as ordinary wording.
+
 ## Resolve Public Mod Description
 
 Use the approved public mod description from `workspace/documentation/requirements.md` when available.
@@ -407,6 +426,26 @@ In the final repository, verify:
 - Git status includes only expected initialized files.
 
 Record the results.
+
+## Verify Owner-Side Git Access
+
+Agent-side Git success is not sufficient when the owner will use the repository from another shell, account, or host context.
+
+Ask the owner to run:
+
+```text
+git status
+```
+
+from the final repository once its files and Git metadata exist. If Git reports dubious ownership or another trust/permission failure:
+
+- Record the exact absolute repository path and error.
+- Do not add a broad home, workspace-root, wildcard, or global trust exception.
+- Offer only the exact repository-specific remediation printed or supported by Git.
+- Let the owner execute or approve the trust change because it affects their Git configuration.
+- Recheck `git status` afterward.
+
+Record whether the owner-side check passed, was remediated, or was explicitly deferred. A deferred check remains an initialization limitation and must be surfaced before the owner is expected to commit or push.
 
 ## Build and Inspect
 

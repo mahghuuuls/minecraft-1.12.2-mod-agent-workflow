@@ -4,6 +4,13 @@
 
 -
 
+## Public Copy Preferences
+
+- Brevity:
+- Punctuation restrictions:
+- AI disclaimer:
+- Validation-note placement:
+
 ## Release Ownership Matrix Summary
 
 -
@@ -57,8 +64,7 @@
 - Mode:
 - Version:
 - Commit:
-- Artifact:
-- Checksum:
+- Authoritative handoff record:
 - Owner-managed publication state:
 
 ## Internal Technical Notes And Validation Gaps

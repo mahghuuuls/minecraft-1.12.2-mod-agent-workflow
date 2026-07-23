@@ -51,9 +51,13 @@ Reusable stages 1 through 8 are **Required**. Release Presentation includes rele
 6. Execute Project Initialization.
 7. Execute Implementation Plan.
 8. Execute Implementation.
-9. Execute Release Presentation, including release artifact validation and manual publication handoff when agent-managed by the ownership matrix.
-10. Set the manual publication state to **Ready for Publication**, create `project-baseline.md` as a release-ready baseline, and update `project-state.md`.
-11. Present the completed workflow record for approval.
+9. Execute Release Presentation through its final review state, including release artifact validation and manual publication handoff when agent-managed by the ownership matrix.
+10. Prepare `project-baseline.md` as a release-ready baseline draft, set the manual publication state to **Ready for Publication**, and update `project-state.md`.
+11. Present one final checkpoint that separately labels:
+    - approval of Release Presentation, and
+    - approval of the completed Initial Development workflow and release-ready baseline.
+
+The owner may approve both decisions in one response. Do not treat approval of one as approval of the other.
 
 If the owner later reports a manual publication result, update `project-baseline.md` with the published URL/date/file information as an optional follow-up. Do not keep the Initial Development workflow open merely to wait for external publication.
 

@@ -47,3 +47,14 @@ Move entries here only after they are reflected in the process repository by Pro
 ## Rejected Or Deferred Feedback
 
 Move entries here when the owner decides not to apply them now. Record the reason.
+
+## End Of Workflow Retrospective
+
+- Review date:
+- Workflow:
+- Repeated approval or interruption friction:
+- Validation confusion or unnecessary environment checks:
+- Rework, stale artifacts, or generated-output surprises:
+- Owner corrections or defaults overridden:
+- Feedback entries added:
+- No material feedback found, when applicable:

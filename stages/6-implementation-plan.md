@@ -27,6 +27,8 @@ Establish:
 - Which requirements each issue satisfies
 - Which architectural components each issue affects
 - How each issue will be verified
+- Which validation environment tier each check uses, what it proves, and what it does not prove
+- Whether each owner-performed manual validation is scheduled now, deferred, or waived
 - What authoritative state or event each manual runtime check must observe, and how it will be observed
 - Which technical risks should be addressed early
 - What constitutes completion for each issue
@@ -42,6 +44,8 @@ Establish:
 - Prioritizing risky or uncertain work
 - Defining acceptance criteria for each issue
 - Defining verification procedures
+- Defining a risk-based validation environment plan
+- Consolidating owner-performed manual validation decisions before implementation
 - Designing the minimum observability needed for reliable manual runtime verification
 - Linking issues to requirements and architecture
 - Identifying likely code areas affected
@@ -80,6 +84,7 @@ Act as an implementation planner.
 - Schedule high-risk assumptions and implementation validations early.
 - Define verification before implementation begins.
 - For every manual runtime check, identify the authoritative state or event being tested and whether normal behavior exposes it reliably.
+- Assign every runtime check to the lowest validation tier that supplies meaningful evidence, and state any important limitation of that tier.
 - When normal behavior is insufficient, include the minimum diagnostic mechanism in the same vertical slice or add an explicit prerequisite issue that delivers it first.
 - Prefer same-issue diagnostics; use a prerequisite when the mechanism is shared by multiple slices or substantial enough to require separate implementation and review.
 - Do not add diagnostics mechanically when stable external behavior already proves the result.
@@ -87,6 +92,7 @@ Act as an implementation planner.
 - Select verification appropriate to the behavior instead of requiring strict TDD.
 - Use automated tests for isolated logic where practical.
 - Use Minecraft client, dedicated-server, multiplayer, compatibility, or performance verification where required.
+- Do not require every environment mechanically. Use code paths and project risks to decide whether a representative non-Overworld check, dedicated server, packaged environment, modpack, or multiplayer check is necessary.
 - Ensure each issue is understandable to an agent starting with a fresh context.
 - Avoid repeating entire project documents inside every issue.
 - Reference requirements and architectural decisions by stable identifiers.
@@ -270,6 +276,29 @@ An implementation issue is Done only when:
 - Completion evidence has been recorded.
 - The issue status has been changed to **Done**.
 
+## Verification Environment Plan
+
+Use these evidence tiers consistently:
+
+1. **Automated or static:** compilation, unit tests, static inspection, or artifact inspection.
+2. **Development client:** `runClient`, including its integrated server when applicable.
+3. **Development dedicated server:** `runServer`.
+4. **Packaged clean environment:** the built jar in a clean Forge client or dedicated server.
+5. **Target modpack or alternate runtime:** the built jar in the intended pack, including Cleanroom when selected.
+6. **External multiplayer:** a separately operated multiplayer environment.
+
+Higher numbers are not automatically better or mandatory. Select tiers from the behavior and risk. For every planned check, record the tier, the evidence it supplies, and important evidence it cannot supply.
+
+Dimension coverage is also risk-based. When behavior is dimension-agnostic, source inspection plus one representative non-Overworld runtime check is normally sufficient. Require broader dimension coverage only when the code, dependency, configuration, or reported defect is dimension-specific.
+
+Before Implementation begins, present one compact decision packet for owner-performed manual checks. Record each as:
+
+- **Test now:** required before the affected issue can be Done.
+- **Defer:** postponed to a named later checkpoint.
+- **Waive:** accepted as unperformed for this workflow, with the evidence limitation recorded.
+
+Do not repeatedly ask about a deferred or waived check unless new evidence materially changes its risk.
+
 ## Process
 
 1. Read all required input documents.
@@ -280,15 +309,17 @@ An implementation issue is Done only when:
 6. Add only the foundational issues required by identified slices.
 7. Link every issue to requirements and architecture.
 8. Define acceptance criteria and verification for every issue.
-9. For every manual runtime check, define its observability contract and add any required same-issue diagnostic work or prerequisite issue.
-10. Identify dependencies and blockers, including diagnostic prerequisites that must be Done before dependent manual verification begins.
-11. Construct the dependency graph.
-12. Check the graph for cycles.
-13. Schedule risky assumptions and validation work early.
-14. Confirm that every required behavior is covered.
-15. Identify optional requirements that will be deferred.
-16. Generate the implementation-plan artifacts as complete drafts.
-17. Present the drafts for review and revise them until explicitly approved.
+9. Assign each verification check to an environment tier and state what that evidence proves and does not prove.
+10. For every manual runtime check, define its observability contract and add any required same-issue diagnostic work or prerequisite issue.
+11. Present one decision packet for owner-performed manual validation and record each check as Test now, Defer, or Waive.
+12. Identify dependencies and blockers, including diagnostic prerequisites that must be Done before dependent manual verification begins.
+13. Construct the dependency graph.
+14. Check the graph for cycles.
+15. Schedule risky assumptions and validation work early.
+16. Confirm that every required behavior is covered.
+17. Identify optional requirements that will be deferred.
+18. Generate the implementation-plan artifacts as complete drafts.
+19. Present the drafts for review and revise them until explicitly approved.
 
 ## Output Artifacts
 
@@ -318,6 +349,8 @@ This stage is complete when:
 - Issues are organized primarily as vertical slices.
 - Necessary foundational work has a specific identified consumer.
 - Every issue has an objective, scope, acceptance criteria, and verification procedure.
+- Every verification check identifies its environment tier, evidentiary value, and material limitation.
+- Owner-performed manual checks have one recorded Test now, Defer, or Waive decision.
 - Every manual runtime verification procedure identifies what authoritative state or event it observes and has the necessary diagnostic support in the same issue or an explicit completed prerequisite.
 - Every issue references relevant requirements and architecture.
 - All blocking relationships are explicit.

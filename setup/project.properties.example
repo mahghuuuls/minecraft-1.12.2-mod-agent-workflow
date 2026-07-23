@@ -32,6 +32,8 @@ template_repository_ref=
 # Documentation and collaboration preferences:
 public_documentation_style=split-repository-and-player-facing
 commit_message_style=repo-facing-no-workflow-issue-references
+preferred_push_prompt_cadence=release-ready-handoff
+offer_standing_implementation_commit_authorization=true
 
 # Release handoff mode:
 # Allowed values: owner-managed-packaging, agent-managed-release-validation

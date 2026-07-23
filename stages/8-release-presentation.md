@@ -30,7 +30,7 @@ Establish:
 
 - A concise repository-facing README when agent-managed
 - A separate concise player/download-facing public description suitable for a mod page when agent-managed
-- A generic AI usage disclaimer near the top of player/download-facing copy by default, unless the owner asks to remove or rewrite it
+- A short AI usage disclaimer near the top of player/download-facing copy by default, linking to this exact agent workflow unless the owner asks to remove or rewrite it
 - A concise player-facing changelog
 - The approved release version, defaulting to `1.0.0` for a first public release unless the owner chooses otherwise
 - A clear feature summary based only on implemented behavior
@@ -84,6 +84,7 @@ An implementation defect returns to Implementation. An inaccurate public claim r
 Act as a release documentation editor.
 
 - Use concise, plain player-facing language.
+- Apply the approved public-copy preferences from Project Setup, including brevity, punctuation restrictions, disclosure wording, and placement of validation notes.
 - Read and use approved glossary terms when present.
 - Preserve preferred public terminology from the glossary.
 - Ask before changing an approved term in public copy.
@@ -94,7 +95,7 @@ Act as a release documentation editor.
 - Keep configuration and multiplayer notes high-level unless a player must follow a specific rule.
 - Keep internal engineering evidence out of public files.
 - Keep technical evidence, unresolved validation gaps, and ownership decisions in `release-presentation.md`.
-- Keep release build, artifact inspection, checksum, and handoff evidence in `release-handoff.md`.
+- Keep the authoritative current artifact identity, checksum, source revision, repository state, and handoff evidence in `release-handoff.md`. Reference that record elsewhere instead of copying the checksum.
 - Treat mod-page copy as an iterative public-copy artifact; review it for audience fit, repetition, useful links, owner-provided wording, roadmap-risk wording, concise scope, and plain install-side statements.
 - Treat the AI usage disclaimer as a default transparency note, not as internal workflow history. Keep it short, generic, and removable by owner request.
 - Follow the release ownership matrix strictly.
@@ -132,7 +133,7 @@ Avoid obvious or generic README content, including:
 
 Player/download-facing copy should live in a separate file by default, such as `MOD-PAGE.md` or another owner-approved distribution-page document.
 
-Draft the smallest useful mod page first and expand it only when a normal player needs more information to decide, install, or configure the mod. For a narrow mod, the default shape is:
+Draft the smallest useful mod page first and expand it only when a normal player needs more information to decide, install, or configure the mod. Omit template-shaped sections that add no useful information. As a drafting guardrail for a narrow mod, keep the first draft to roughly 200 prose words or fewer, excluding configuration examples and required legal text. This is not a publication limit. For a narrow mod, the default shape is:
 
 1. One short opening paragraph explaining the value.
 2. The approved AI usage disclaimer.
@@ -147,10 +148,12 @@ Do not turn the mod page into a condensed requirements document. Avoid enumerati
 Include this generic AI usage disclaimer near the top of player/download-facing copy by default, after the opening description and before feature details:
 
 ```html
-<p style="color: #d6a100;"><strong>AI usage disclaimer:</strong> This mod was developed with AI-agent assistance. The project owner reviewed the work during development.</p>
+<p style="color: #d6a100;"><strong>AI usage disclaimer:</strong> This mod was developed with AI-agent assistance using <a href="https://github.com/mahghuuuls/minecraft-1.12.2-mod-agent-workflow">this exact agent workflow</a>. The project owner reviewed the work during development.</p>
 ```
 
 The owner may ask to remove, revise, or expand the disclaimer. Do not add project-specific testing claims, pack-size claims, Cleanroom claims, or compatibility claims to the generic disclaimer unless the owner explicitly approves that wording for the project. If the selected publication platform strips inline styling, keep the disclaimer text unless the owner asks to remove it.
+
+Do not publish a list of tests that were not performed merely because internal validation records contain waivers. Keep those facts in the implementation evidence and release records. Put an unperformed check in public copy only when its absence materially changes an ordinary player's installation or use decision, or when the owner explicitly wants it disclosed there.
 
 Include only sections that help normal players or modpack authors decide whether and how to use the mod, such as:
 
@@ -263,7 +266,9 @@ Use it to record:
 - Deferred owner-managed assets or publication actions
 - Public terminology decisions and glossary updates
 - Questions that release handoff or a later `procedures/revalidate-release.md` run must consider
-- Release artifact identity, checksum, and inspection evidence when handled in this stage
+- A reference to the authoritative release handoff, plus inspection notes that do not duplicate its current checksum
+
+`release-handoff.md` and the approved `project-baseline.md` are the authoritative records for the current release artifact checksum. Issue files and earlier evidence may retain hashes as historical evidence, but they must be labeled with the revision or point in time they describe. Do not update multiple historical files to make them appear to contain the current release hash.
 
 Do not use the internal record as public copy.
 
@@ -287,7 +292,7 @@ Do not use the internal record as public copy.
 16. Inspect the mod repository, then present the complete public materials, release version, intended release-file scope, and proposed commit message before final artifact validation. The checkpoint may ask the owner to (a) approve the materials and (b) authorize the focused release-preparation commit in one response, but the two decisions must be labeled separately.
 17. Treat public-material approval and commit authorization as separate authorization boundaries even when requested together. Public-material approval alone does not authorize the commit.
 18. If the materials are approved and the commit is authorized, commit only the approved release/version/public-material changes and verify the repository is clean at the resulting revision.
-19. If release validation is agent-managed, build the exact release artifact from that clean committed revision, inspect it, calculate its checksum, and record the handoff.
+19. If release validation is agent-managed, build the exact release artifact from that clean committed revision, inspect it, calculate its checksum, and record the authoritative artifact identity and checksum in the handoff.
 20. If release packaging is owner-managed, record the approved source revision, expected command/artifact pattern, and owner-managed boundary instead of building.
 21. Present the completed internal presentation record and release handoff for stage approval.
 22. Revise until explicitly approved. If a revision changes the committed release source, obtain new commit authorization and repeat artifact validation before final approval.
@@ -341,11 +346,13 @@ This stage is complete when:
 - Owner-managed platform submission and publication responsibilities are respected.
 - Public materials do not include build evidence, bytecode details, QA-style usage steps, internal validation findings, redundant platform requirements, platform-submission mechanics, or irrelevant Cleanroom caveats.
 - Technical notes are kept in `release-presentation.md`, not public README or mod-page copy.
+- Unperformed validation is kept out of public copy unless it materially affects normal installation or use or the owner explicitly requests disclosure.
 - Every public claim is supported by approved implementation evidence.
 - `<artifact-root>/release-presentation.md` is generated and approved.
 - `<artifact-root>/release-handoff.md` is generated and approved when a release artifact is built, identified, or handed off.
 - The approved release version is recorded; first public releases default to `1.0.0` unless the owner chose otherwise.
 - Agent-managed release artifacts are built, inspected, and checksummed from the clean committed source revision recorded in the handoff.
+- The current artifact checksum is authoritative in `release-handoff.md` and the approved project baseline rather than duplicated as current state across issue or presentation files.
 - No uncommitted release/version/public-material change remains when an agent-managed artifact handoff is finalized.
 - Owner-managed publication remains clearly outside the agent workflow.
 

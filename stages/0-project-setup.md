@@ -17,6 +17,7 @@ This stage is interactive onboarding. It does not define mod behavior, prove tec
 - `workspace/documentation/owner-defaults.md`, when present
 - Owner-provided `owner-defaults.md` content supplied in chat, when present
 - `setup/owner-defaults-template.md`
+- `setup/workflow-feedback-template.md`
 - `setup/template-defaults.properties`
 - `setup/project.properties.example`
 - `references/template-candidates.md`
@@ -33,6 +34,8 @@ Establish:
 - The project repository state or the stage by which it must exist
 - Practical project identity values only when already known or immediately required
 - Public documentation style and commit-message style
+- Public-copy brevity, punctuation, AI-disclosure, and validation-note placement preferences
+- Preferred time to offer pushes and whether bounded standing implementation-commit authorization should be offered later
 - Client/server responsibility when the concept is known, or an explicit deferral to Concept and Scope / Feasibility Research when it is premature
 - A provisional loader, compatible-runtime, and template choice for Initial Development
 - Default distribution destination or a known project-specific override, without researching publication mechanics
@@ -50,12 +53,14 @@ Establish:
 - Record IntelliJ IDEA availability or installation as a pending prerequisite
 - Create required ignored runtime directories
 - Create or update `workspace/documentation/project-state.md`
+- Create `workspace/documentation/workflow-feedback.md` from its template when it does not exist
 - Create or update `workspace/project.properties` when enough real values are known
 - Record GitHub username, repository name, mod ID, display name, public description, root package, main class, and side/responsibility classification only when already known or required for the selected scenario
 - Defer new-mod identity values that depend on the concept to Requirements Definition or Project Initialization instead of interviewing for them during onboarding
 - Defer side/responsibility classification when the mod concept is not yet clear enough to answer it well
 - Apply approved default naming conventions instead of asking the owner to invent Java naming patterns from scratch
 - Record public documentation style and commit-message style
+- Record recurring owner-specific public-copy preferences and Git checkpoint preferences without treating them as push authorization
 - Explain the distinction between mod loader, compatible runtime, distribution platform, and installation side before asking about an override involving those concepts
 - Apply owner and shared defaults for provisional loader/runtime/template/distribution choices; research alternatives during Project Setup only when an already-known hard constraint prevents using the default
 - Record provisional loader, runtime, and template candidates or defer final validation to Feasibility Research
@@ -204,6 +209,14 @@ Public documentation style rules:
 - Assume repository README readers have basic repository and Gradle/modding literacy. Avoid obvious repository statements and basic build instructions unless the project has unusual steps.
 - Do not put internal workflow details, implementation evidence, validation logs, or QA-style test reports in public documentation unless the owner explicitly selects a technical style or the detail affects normal player decisions.
 - Use a single combined public document only when the owner explicitly chooses that structure.
+- Record whether the owner prefers minimal or expanded player-facing copy, punctuation restrictions, custom AI-disclosure wording, and where unverified-validation notes may appear.
+- Default player-facing copy to minimal. Do not add sections merely because a template offers them.
+
+Git workflow preference rules:
+
+- Record when the owner prefers to be offered pushes: each checkpoint, stage completion, or release-ready handoff.
+- Record whether the owner wants to be offered bounded standing implementation-commit authorization when Implementation begins.
+- A cadence preference is not authorization to commit or push.
 
 Client/server responsibility values:
 
@@ -330,6 +343,8 @@ Relevant values may include:
 - `template_repository_ref`
 - `public_documentation_style`
 - `commit_message_style`
+- `preferred_push_prompt_cadence`
+- `offer_standing_implementation_commit_authorization`
 - `release_handoff_mode`
 - `release_owner_readme`
 - `release_owner_mod_page`
@@ -362,11 +377,13 @@ If a new mod's repository, directory name, mod ID, display name, public descript
 6. Collect or defer practical project defaults.
 7. Apply or provisionally defer loader, runtime, template, and distribution defaults; ask only about known constraints or requested overrides.
 8. Record the release and validation ownership defaults and collect only necessary overrides.
-9. Write only approved known operational values.
-10. Record deferred prerequisites and the stage by which each is required.
-11. Propose the applicable workflow.
-12. Produce the setup artifact.
-13. Present the artifact and workflow selection for separate explicit approval.
+9. Record public-copy and Git workflow preferences.
+10. Create the workflow feedback log when it does not exist.
+11. Write only approved known operational values.
+12. Record deferred prerequisites and the stage by which each is required.
+13. Propose the applicable workflow.
+14. Produce the setup artifact.
+15. Present the artifact and workflow selection for separate explicit approval.
 
 ## Output Artifact
 
@@ -383,6 +400,14 @@ Also create or update:
 ```text
 workspace/documentation/project-state.md
 ```
+
+Create when absent:
+
+```text
+workspace/documentation/workflow-feedback.md
+```
+
+Start it from `setup/workflow-feedback-template.md`.
 
 When dependency source references are already approved or supplied, create or update:
 
@@ -405,6 +430,8 @@ This stage is complete when:
 - Known dependency source references are recorded or explicitly deferred when relevant.
 - The release ownership matrix is recorded and approved.
 - The release handoff mode is recorded or intentionally deferred.
+- Public-copy and Git workflow preferences are recorded or explicitly left at their defaults.
+- `workflow-feedback.md` exists and is ready to receive project-specific feedback.
 - No unresolved blocker prevents the selected workflow's first stage.
 - `project-setup.md` is approved.
 - `project-state.md` summarizes the approved setup and next required action.

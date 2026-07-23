@@ -51,7 +51,7 @@ That is enough to begin. The agent should inspect the workspace, explain what is
 
 If you already completed a mod with this workflow, provide your previous `workspace/documentation/owner-defaults.md` when starting the next mod, paste or attach it in chat, or create one from `setup/owner-defaults-template.md` before Project Setup begins.
 
-That file captures setup-stage preferences and owner-specific overrides, such as preferred loader, runtime target, language, template, distribution platform, license, branch, Java versions, and repeated setup answers. General workflow rules belong in the committed guidelines and stages, not in this workspace-local file.
+That file captures setup-stage preferences and owner-specific overrides, such as preferred loader, runtime target, language, template, distribution platform, license, branch, Java versions, public-copy style, Git prompt cadence, and repeated setup answers. General workflow rules belong in the committed guidelines and stages, not in this workspace-local file.
 
 ## What to Expect
 
@@ -64,8 +64,11 @@ The agent will:
 5. Initialize or preserve the independent mod repository at the correct time.
 6. Implement approved issues with verification and independent review.
 7. Prepare public presentation, release artifact validation, and a manual publication handoff.
+8. Record workflow friction and finish with a short retrospective so the next mod can improve the reusable process.
 
-The agent uses explicit approval checkpoints between stages. To reduce ceremony, a checkpoint may approve the completed stage and authorize the already-briefed next stage in one response. It should challenge ambiguity and report failed verification rather than inventing decisions or declaring success prematurely.
+The agent uses explicit approval checkpoints between stages. To reduce ceremony, a checkpoint may approve the completed stage and authorize the already-briefed next stage in one response. Implementation may also use an optional, bounded standing authorization for local completed-issue commits when the owner enables it; pushes and publication still require specific authorization. The agent should challenge ambiguity and report failed verification rather than inventing decisions or declaring success prematurely.
+
+Validation is planned by evidence tier. A development client, development dedicated server, packaged clean environment, target modpack, and external multiplayer session prove different things, so the workflow selects them from project risk instead of treating every environment as mandatory.
 
 ## Your Role
 

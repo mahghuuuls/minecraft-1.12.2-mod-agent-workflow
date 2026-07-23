@@ -34,6 +34,18 @@
 
 -
 
+## Verification Environment Plan
+
+| Check | Environment Tier | What It Proves | What It Does Not Prove |
+| --- | --- | --- | --- |
+|  |  |  |  |
+
+## Manual Validation Decisions
+
+| Check | Owner Decision | Due Checkpoint | Evidence Limitation |
+| --- | --- | --- | --- |
+|  | Test now / Defer / Waive |  |  |
+
 ## Definition Of Done
 
 -
