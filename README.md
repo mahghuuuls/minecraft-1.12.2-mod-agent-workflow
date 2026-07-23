@@ -4,6 +4,9 @@ A guided workspace for developing Minecraft 1.12.2 mods with a coding agent such
 
 This is not designed for one-prompt, unattended vibe coding. You remain responsible for product direction, important technical decisions, approval checkpoints, gameplay judgment, and manual publication to the approved distribution platforms.
 
+> [!CAUTION]
+> AI agents can be dangerous. Use this workflow with care and review the actions an agent proposes or performs.
+
 > [!WARNING]
 > By default, the workflow adds an AI usage disclaimer near the top of the mod-page Markdown. The disclaimer states that AI-agent assistance was used and links to this exact workflow. Some players are cautious about AI-assisted mods, so keeping this disclosure is recommended. It gives readers relevant information and lets them consider that when deciding to download the mod.
 
