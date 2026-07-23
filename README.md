@@ -1,6 +1,6 @@
 # Minecraft 1.12.2 Mod Agent Workflow
 
-A guided workspace for developing Minecraft 1.12.2 mods with a coding agent such as Codex, Claude Code, Antigravity, or another agent that can inspect files and run development commands. It researches constraints, downloads and inspects an approved mod template such as [CleanroomMC/ForgeDevEnv](https://github.com/CleanroomMC/ForgeDevEnv), plans implementation in reviewable increments, and uses appropriate tests, diagnostic features, in-game checks, and independent review to prepare a release-ready mod.
+A guided workspace for developing Minecraft 1.12.2 mods with a coding agent such as Codex, Claude Code, Antigravity, or another agent that can inspect files and run development commands. It researches constraints, downloads and inspects an approved mod template such as [CleanroomMC/ForgeDevEnv](https://github.com/CleanroomMC/ForgeDevEnv), plans implementation in reviewable increments, and uses appropriate tests, diagnostic features, in-game checks, and independent review to prepare a release-ready mod. See [Development Stages](#development-stages) for the full process.
 
 This is not designed for one-prompt, unattended vibe coding. You remain responsible for product direction, important technical decisions, approval checkpoints, gameplay judgment, and manual publication to the approved distribution platforms.
 
@@ -19,9 +19,12 @@ git clone https://github.com/mahghuuuls/minecraft-1.12.2-mod-agent-workflow.git
 cd minecraft-1.12.2-mod-agent-workflow
 ```
 
-Open the cloned directory with your coding agent and use the prompt matching your situation.
+> [!IMPORTANT]
+> Use a separate clone of this workflow repository for each mod project.
 
-For a new mod:
+Open the cloned directory with your coding agent and choose the prompt matching your situation.
+
+### Option 1: New Mod
 
 ```text
 Read AGENTS.md and guide me through Project Setup for a new Minecraft 1.12.2 mod.
@@ -34,7 +37,7 @@ Read AGENTS.md and guide me through Project Setup for a new Minecraft 1.12.2 mod
 I have an owner-defaults.md and I am providing it here.
 ```
 
-For an existing mod that has never used this workflow:
+### Option 2: Existing Mod New to This Workflow
 
 ```text
 Read AGENTS.md and guide me through Project Setup. I have an existing
@@ -42,7 +45,7 @@ Minecraft 1.12.2 mod, and I want you to assess and document its current
 state before we make changes.
 ```
 
-For a mod already managed through this workflow:
+### Option 3: Mod Already Managed by This Workflow
 
 ```text
 Read AGENTS.md and guide me through Project Setup. This mod already uses
@@ -50,6 +53,24 @@ this workflow, and I want to plan a new change.
 ```
 
 That is enough to begin. The agent will inspect the workspace and guide you through the remaining setup decisions.
+
+## Development Stages
+
+For a new mod, the workflow progresses through these stages:
+
+1. **Project Setup:** establish the workspace, tools, defaults, ownership, and project scenario.
+2. **Concept and Scope:** define what the mod should do and what it will not do.
+3. **Feasibility Research:** verify the technical assumptions, dependencies, and Minecraft 1.12.2 constraints.
+4. **Requirements Definition:** turn the approved concept into precise, testable behavior.
+5. **Architecture Definition:** decide how the mod will be structured and how its components interact.
+6. **Project Initialization:** create the independent mod repository from the approved template.
+7. **Implementation Plan:** divide the work into small, ordered, verifiable issues.
+8. **Implementation:** write, test, validate, and independently review each issue.
+9. **Release Presentation:** prepare public documentation, validate the release artifact, and hand it off for publication.
+
+The stages are ordered, but they are not one-way. You are not locked into the current stage. If your feedback changes the scope, requirements, architecture, or plan, the agent will return to the appropriate stage, update the affected decisions, and then continue from the corrected baseline.
+
+Existing-mod assessments and later change cycles reuse only the stages required by their current state and requested work.
 
 ## Repository Structure
 
@@ -83,8 +104,6 @@ minecraft-1.12.2-mod-agent-workflow/
 - `setup/` contains optional manual setup, owner-default templates, artifact templates, defaults, and initialization procedures.
 - `references/` contains curated technical links.
 - `workspace/` contains ignored project-specific configuration, setup owner defaults, documents, artwork, dependency references, templates, and the active mod.
-
-Use a separate clone of this process repository for each mod project.
 
 Each mod under `workspace/project/` is an independent Git repository with its own commits and remote.
 
