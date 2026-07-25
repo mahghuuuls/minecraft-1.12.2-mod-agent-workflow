@@ -106,6 +106,8 @@ During Implementation, the owner may give bounded standing authorization for the
 
 Standing implementation-commit authorization is optional, revocable, and does not carry into Release Presentation or a later workflow. Without it, request commit authorization at each issue checkpoint as usual.
 
+The proportionate approval bundle defined in `guidelines/process-control.md` is one specific form of bounded standing implementation-commit authorization. It may cover only the named single issue in the active low-risk Change Cycle and only one local commit after that issue satisfies its Definition of Done. When the recorded conditions remain satisfied, apply the authorization without asking again. A changed issue, failed or materially altered verification, expanded review scope, unrelated working-tree changes, or any excluded action requires a new decision.
+
 A preferred push cadence records when the agent should offer a push, such as after each stage or only at release. It does not authorize any push. Every push still requires explicit authorization for the exact repository and branch.
 
 During Implementation, after each completed issue, approved vertical slice, or approved small-follow-up batch, resolve the commit checkpoint before moving to the next item. Ask for approval unless an applicable bounded standing authorization already covers that commit. Follow `stages/7-implementation.md`.

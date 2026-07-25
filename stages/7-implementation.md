@@ -107,6 +107,8 @@ Act as a focused implementation agent.
 
 At the start of Implementation, the owner may give standing, revocable approval for required independent review agents for every implementation issue in the stage. This standing approval is limited to read-only review of completed issue changes and evidence. It does not authorize commits, pushes, external-service access, non-review subagents, or changed review scope. If the scope changes, ask again.
 
+At the start of a Change Cycle Implementation stage, inspect the Implementation Plan and `project-status.md` for a recorded proportionate approval bundle. Honor its covered implementation start, review, and commit actions without repeated approval prompts while every recorded condition remains satisfied. If the records disagree, the issue changes, verification fails or materially changes, unrelated working-tree changes enter the proposed commit, or an excluded action becomes necessary, stop and obtain a revised decision.
+
 The agent may make ordinary method-level implementation decisions that remain within the approved architecture. Decisions that alter component responsibilities, dependency directions, public behavior, or project scope require explicit approval.
 
 ## Feedback Strategy
@@ -263,11 +265,11 @@ After a clean committed checkpoint, confirm the repository is clean when checked
 17. Record completion evidence in the issue.
 18. Perform a final implementation self-review.
 19. Change the issue status to **Review**.
-20. Submit the change to an independent review agent. If the owner gave standing approval for required review agents, do not ask for repeated per-issue approval unless the review scope changes.
+20. Submit the change to an independent review agent. If the owner gave standing approval for required review agents, including a valid recorded proportionate approval bundle, do not ask for repeated per-issue approval unless the review scope changes.
 21. Address legitimate review findings.
 22. Repeat verification for affected behavior or record approved waiver updates.
 23. Mark the issue **Done** only when the Definition of Done is satisfied.
-24. Prepare the commit checkpoint and determine whether a specific or standing authorization applies.
+24. Prepare the commit checkpoint and determine whether a specific authorization, standing implementation-commit authorization, or valid recorded proportionate approval bundle applies.
 25. Create the commit only under that authorization, otherwise request approval or record the approved deferral.
 26. Select the next Ready issue only after the commit checkpoint is resolved.
 

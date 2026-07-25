@@ -304,6 +304,19 @@ Before Implementation begins, present one compact decision packet for owner-perf
 
 Do not repeatedly ask about a deferred or waived check unless new evidence materially changes its risk.
 
+## Approval And Authorization Packet
+
+After the plan and manual-validation decisions are complete, assess the active Change Cycle against the proportionate approval-bundle criteria in `guidelines/process-control.md`.
+
+For an eligible single-issue, low-risk cycle, present one bounded packet that explicitly requests:
+
+- Approval of the completed Implementation Plan.
+- Authorization to begin Implementation of the named Ready issue.
+- Authorization for the required read-only independent review.
+- Authorization for one verified local issue commit after the issue is Done.
+
+Record the eligibility basis, each covered action, explicit exclusions, invalidating conditions, and owner response in the Implementation Plan and `project-status.md`. Do not describe the packet as general permission. If the cycle is ineligible, record the material reason and use normal approval checkpoints.
+
 ## Process
 
 1. Read all required input documents.
@@ -324,7 +337,8 @@ Do not repeatedly ask about a deferred or waived check unless new evidence mater
 16. Confirm that every required behavior is covered.
 17. Identify optional requirements that will be deferred.
 18. Generate the implementation-plan artifacts as complete drafts.
-19. Present the drafts for review and revise them until explicitly approved.
+19. Assess and record proportionate approval-bundle eligibility.
+20. Present the drafts and, when eligible, the bounded approval and authorization packet; revise them until explicitly approved.
 
 ## Output Artifacts
 

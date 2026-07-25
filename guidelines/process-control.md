@@ -220,6 +220,31 @@ Keep approvals separate when the next route is unresolved, a backward transition
 
 When a workflow approval always leads immediately into the first required stage, the transition briefing may combine workflow start and first-stage start. The combined request must make both approvals explicit, so the owner understands that approving it starts the workflow and the first stage.
 
+### Proportionate Approval Bundle For A Small Change Cycle
+
+After a Change Cycle Implementation Plan is complete, assess whether its remaining predictable approvals can be offered as one bounded packet. Eligibility requires all of the following:
+
+- The cycle contains exactly one Ready implementation issue.
+- The issue is local, bounded, and reversible.
+- Requirements, architecture, licensing, compatibility, ownership, and manual-validation decisions are resolved.
+- The planned work has no destructive action or external-state change.
+- Required verification, read-only independent-review scope, and commit conditions are fully briefed.
+
+Do not infer eligibility from labels such as *fix*, *small*, or *pre-release*. Base the decision on actual risk, reversibility, external effects, and resolved decisions.
+
+When eligible, proactively offer one explicitly labeled packet that lets one owner response:
+
+- Approve the Implementation Plan.
+- Authorize Implementation to begin for the named issue.
+- Authorize the required read-only independent review of that issue.
+- Authorize one local commit after the issue is Done, provided required verification and review pass and the commit contains no unrelated changes.
+
+State that the packet does not authorize a push, tag, publication, upload, external-service change, destructive action, scope expansion, or an unbriefed or additional issue. Record the exact authorization and exclusions in both the Implementation Plan and `project-status.md`. A resumed agent must apply a still-valid recorded authorization without asking for it again.
+
+The bundle is invalidated when requirements, architecture, issue scope, review scope, verification outcome, repository condition, or external effects materially differ from the briefing. Stop and request a revised decision instead of stretching the authorization. Owner observations unavailable to the agent, failed or waived verification that changes risk, scope expansion, and final release-artifact approval remain separate checkpoints.
+
+When the eligibility conditions are not satisfied, state the material reason briefly and use the normal approval lifecycle.
+
 For resumed work, provide a shorter briefing that states the active stage, current status, next action, expected output, and whether approval is needed before continuing.
 
 Do not assume the owner remembers what a numbered stage means. Use the stage's plain-language name and practical purpose whenever transitioning.
