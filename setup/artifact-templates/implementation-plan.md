@@ -93,6 +93,10 @@
 - Authoritative state or event:
 - Reliably exposed by normal behavior:
 - Diagnostic mechanism, when required:
+- Evidence source or path:
+- Retention or rotation behavior:
+- Evidence collector (agent or owner):
+- Independent corroborating evidence:
 - Same-issue work or prerequisite:
 - Default state and authorization boundary:
 
@@ -106,6 +110,8 @@
 
 - Authoritative state or event observed:
 - Mechanism and setup:
+- Evidence source or path inspected:
+- Corroborating evidence:
 - Default state:
 - Authorization behavior, when applicable:
 - Result:

@@ -91,6 +91,7 @@ Act as a focused implementation agent.
 - Do not force TDD onto behavior that can only be meaningfully verified inside Minecraft.
 - Perform the verification defined by the issue.
 - Before asking the owner to perform a manual check, confirm that the issue's planned observability mechanism is implemented and usable. Do not substitute indirect inference when the plan requires authoritative logs, commands, counters, or equivalent diagnostics.
+- After the owner performs a manual action, inspect agent-accessible current and rotated logs directly. Ask the owner for log content only when the runtime is external, the files are unavailable, or direct inspection fails.
 - Keep diagnostic work within the approved issue or its declared prerequisite. If required observability is missing from the plan, treat it as a Planning Problem rather than silently expanding the issue or sending an unreliable test recipe.
 - Treat compilation as necessary but not sufficient evidence that behavior works.
 - Check dedicated-server safety whenever client-only code is involved and the check is assigned or practical.
@@ -142,11 +143,13 @@ Dimension checks are risk-based. For dimension-agnostic code, inspect the releva
 
 Manual verification must also have a reliable observation path. Before requesting it, identify the authoritative state or event being checked and confirm that normal behavior exposes it reliably. If it does not, implement and verify the issue's approved diagnostic mechanism first. Suitable mechanisms include structured logs, inspect or controlled-state commands, counters, or another narrow diagnostic surface. Potentially noisy or player-visible diagnostics should remain disabled by default unless normal product behavior requires otherwise, and administrative state-changing commands must enforce the approved authorization boundary.
 
+Assign evidence collection before the check begins. The agent collects files and output it can access, including the relevant current log and rotated logs when the test may cross a restart or rotation boundary. The owner performs the requested gameplay action and reports only evidence the agent cannot observe reliably. Corroborate diagnostics with an independent input, output, automated check, controlled expectation, or visible result when the logged component could otherwise validate its own faulty behavior.
+
 If the owner skips a validation check, marks it owner-managed, or accepts that it cannot be run in the current environment, record it using the validation waiver format in `guidelines/process-control.md` and continue. Do not keep asking for the same validation unless new evidence makes it release-blocking.
 
 Use the plan's Test now, Defer, or Waive decisions as the standing disposition for owner-performed checks. Consolidate any newly discovered owner checks into the next relevant validation packet instead of asking about them one at a time.
 
-When manual gameplay validation by the owner is useful, provide a short runnable validation recipe only after its required observability is available. Include relevant config state, exact diagnostic and setup commands, how to enable and later disable any optional logging, the authoritative values or events to inspect, expected results, and any important scenario that is not practical to validate in normal vanilla gameplay.
+When manual gameplay validation by the owner is useful, provide a short runnable validation recipe only after its required observability is available. Include relevant config state, exact diagnostic and setup commands, how to enable and later disable any optional logging, the authoritative values or events, which evidence the agent will collect directly, which inaccessible observations the owner should report, expected results, and any important scenario that is not practical to validate in normal vanilla gameplay.
 
 Before the owner starts a shared game, server, or modpack session, consolidate all currently known checks for that runtime into one validation packet:
 
@@ -155,7 +158,7 @@ Before the owner starts a shared game, server, or modpack session, consolidate a
 - Minimize full restarts and state clearly where each unavoidable restart occurs.
 - Verify commands, selectors, registry identifiers, and entity names specifically for Minecraft 1.12.2; do not rely on identifiers from newer versions.
 - Choose fixtures whose actual registry type and attack behavior match the check. Account for spawn-replacement mods, randomized variants, custom AI, and attribute-scaling mods before treating visual health or damage as evidence.
-- Include safety setup, cleanup commands, diagnostic log strings, and the exact evidence the owner should return.
+- Include safety setup, cleanup commands, diagnostic log paths and strings the agent will inspect, and only the inaccessible evidence the owner should return.
 - Include bounded repeated-event or churn checks when an acceptance criterion requires them; do not discover them only during final independent review.
 
 If a result invalidates a fixture or reveals a new necessary check, revise the packet and explain the change. Do not continue an avoidable sequence of ad hoc restarts merely because testing has already begun.
@@ -253,18 +256,20 @@ After a clean committed checkpoint, confirm the repository is clean when checked
 10. Correct failures before expanding the implementation.
 11. When diagnostics are required, verify their observation path and default and authorization behavior before giving the owner a manual validation recipe.
 12. Perform the required in-game, server, compatibility, or performance verification, or record an accepted validation waiver.
-13. Refactor only where it improves the implemented behavior without expanding scope.
-14. Run all relevant checks again after refactoring.
-15. Record completion evidence in the issue.
-16. Perform a final implementation self-review.
-17. Change the issue status to **Review**.
-18. Submit the change to an independent review agent. If the owner gave standing approval for required review agents, do not ask for repeated per-issue approval unless the review scope changes.
-19. Address legitimate review findings.
-20. Repeat verification for affected behavior or record approved waiver updates.
-21. Mark the issue **Done** only when the Definition of Done is satisfied.
-22. Prepare the commit checkpoint and determine whether a specific or standing authorization applies.
-23. Create the commit only under that authorization, otherwise request approval or record the approved deferral.
-24. Select the next Ready issue only after the commit checkpoint is resolved.
+13. After owner-performed actions, inspect the planned accessible current and rotated logs directly and collect any other agent-owned evidence.
+14. Corroborate diagnostic claims at the independent boundary defined by the plan.
+15. Refactor only where it improves the implemented behavior without expanding scope.
+16. Run all relevant checks again after refactoring.
+17. Record completion evidence in the issue.
+18. Perform a final implementation self-review.
+19. Change the issue status to **Review**.
+20. Submit the change to an independent review agent. If the owner gave standing approval for required review agents, do not ask for repeated per-issue approval unless the review scope changes.
+21. Address legitimate review findings.
+22. Repeat verification for affected behavior or record approved waiver updates.
+23. Mark the issue **Done** only when the Definition of Done is satisfied.
+24. Prepare the commit checkpoint and determine whether a specific or standing authorization applies.
+25. Create the commit only under that authorization, otherwise request approval or record the approved deferral.
+26. Select the next Ready issue only after the commit checkpoint is resolved.
 
 ## Handling Discoveries
 
@@ -375,6 +380,8 @@ Record evidence directly in the issue file:
 
 - Authoritative state or event observed:
 - Mechanism and setup:
+- Evidence source or path inspected:
+- Corroborating evidence:
 - Default state:
 - Authorization behavior, when applicable:
 - Result:

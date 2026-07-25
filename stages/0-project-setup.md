@@ -31,6 +31,7 @@ Establish:
 - Whether the user is creating, assessing, or changing a mod
 - The proposed workflow
 - The current tool and workspace state
+- Accessible development-runtime log locations, retention or rotation behavior, and any discovery that must wait until the runtime is initialized
 - The project repository state or the stage by which it must exist
 - Practical project identity values only when already known or immediately required
 - Public documentation style and commit-message style
@@ -50,6 +51,7 @@ Establish:
 - Explain the workspace and agent-guided process briefly
 - Inspect existing configuration and repositories
 - Check available Git and Java installations
+- Discover accessible development-runtime logs and how current and rotated files are retained, or record when that discovery becomes possible
 - Record IntelliJ IDEA availability or installation as a pending prerequisite
 - Create required ignored runtime directories
 - Create or update `workspace/documentation/project-state.md`
@@ -153,8 +155,11 @@ Inspect and record:
 - Existing runtime directories
 - Existing nested repositories
 - Existing configuration and setup artifacts
+- Existing development-runtime log locations, agent access, and observed retention or rotation behavior
 
 Project defaults define the intended environment. Missing tools may be installed later when they are not needed by the first stage, but record the stage by which each is required.
+
+Inspect likely log locations directly when a development runtime already exists. Record the current-log path, any rotated or archived logs useful after a manual test, and whether the agent can read them from the shared workspace. If the runtime has not been initialized, record the expected location when known and make direct discovery a prerequisite before the first runtime validation packet. Do not ask the owner to copy logs that the agent can access directly.
 
 Do not install software without explicit authorization.
 
@@ -373,17 +378,18 @@ If a new mod's repository, directory name, mod ID, display name, public descript
 2. Explain that setup can be completed interactively.
 3. Identify the scenario.
 4. Inspect available environment tools and repositories.
-5. Resolve known repository configuration without requiring a final new-mod repository before Concept and Scope.
-6. Collect or defer practical project defaults.
-7. Apply or provisionally defer loader, runtime, template, and distribution defaults; ask only about known constraints or requested overrides.
-8. Record the release and validation ownership defaults and collect only necessary overrides.
-9. Record public-copy and Git workflow preferences.
-10. Create the workflow feedback log when it does not exist.
-11. Write only approved known operational values.
-12. Record deferred prerequisites and the stage by which each is required.
-13. Propose the applicable workflow.
-14. Produce the setup artifact.
-15. Present the artifact and workflow selection for separate explicit approval.
+5. Discover accessible current and rotated development logs, or record when runtime initialization must complete that discovery.
+6. Resolve known repository configuration without requiring a final new-mod repository before Concept and Scope.
+7. Collect or defer practical project defaults.
+8. Apply or provisionally defer loader, runtime, template, and distribution defaults; ask only about known constraints or requested overrides.
+9. Record the release and validation ownership defaults and collect only necessary overrides.
+10. Record public-copy and Git workflow preferences.
+11. Create the workflow feedback log when it does not exist.
+12. Write only approved known operational values.
+13. Record deferred prerequisites and the stage by which each is required.
+14. Propose the applicable workflow.
+15. Produce the setup artifact.
+16. Present the artifact and workflow selection for separate explicit approval.
 
 ## Output Artifact
 
@@ -427,6 +433,7 @@ This stage is complete when:
 - Unknown repository and project identity values are either recorded or deferred to Project Initialization.
 - Future prerequisites have explicit deadlines.
 - The loader, runtime, template, and distribution decisions are recorded or legitimately deferred/not applicable.
+- Accessible development-log paths and retention or rotation behavior are recorded, or discovery is explicitly due after runtime initialization and before the first runtime validation packet.
 - Known dependency source references are recorded or explicitly deferred when relevant.
 - The release ownership matrix is recorded and approved.
 - The release handoff mode is recorded or intentionally deferred.

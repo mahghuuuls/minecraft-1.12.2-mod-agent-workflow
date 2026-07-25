@@ -74,6 +74,10 @@ These standards apply to implementation work across all mod projects. Project-sp
 - Use the project's logging framework rather than standard output.
 - Log information that helps identify the failing feature, input, entity, world, or dependency.
 - Avoid repetitive logging in tick loops or other high-frequency paths.
+- Add detailed diagnostic logging only when it materially improves verification or support without disproportionate complexity, privacy risk, log volume, or performance cost.
+- Keep optional detailed diagnostics disabled by default, bounded or rate-limited, and sanitized of credentials, private chat, or unrelated player data.
+- Emit diagnostics at meaningful lifecycle or state-transition boundaries instead of tick, render-frame, or similarly high-frequency boundaries.
+- Design diagnostic events so they can be corroborated with independent inputs, outputs, tests, or visible behavior; a component reporting its own computed result is not sufficient proof by itself.
 
 ## Performance
 

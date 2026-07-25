@@ -30,6 +30,7 @@ Establish:
 - Which validation environment tier each check uses, what it proves, and what it does not prove
 - Whether each owner-performed manual validation is scheduled now, deferred, or waived
 - What authoritative state or event each manual runtime check must observe, and how it will be observed
+- Who collects each evidence source, including which accessible logs the agent will inspect directly and which observations require the owner
 - Which technical risks should be addressed early
 - What constitutes completion for each issue
 - Which optional requirements are deferred
@@ -84,11 +85,13 @@ Act as an implementation planner.
 - Schedule high-risk assumptions and implementation validations early.
 - Define verification before implementation begins.
 - For every manual runtime check, identify the authoritative state or event being tested and whether normal behavior exposes it reliably.
+- Identify the evidence source, its accessible path or surface, retention or rotation behavior when relevant, and whether the agent or owner collects it.
 - Assign every runtime check to the lowest validation tier that supplies meaningful evidence, and state any important limitation of that tier.
 - When normal behavior is insufficient, include the minimum diagnostic mechanism in the same vertical slice or add an explicit prerequisite issue that delivers it first.
 - Prefer same-issue diagnostics; use a prerequisite when the mechanism is shared by multiple slices or substantial enough to require separate implementation and review.
 - Do not add diagnostics mechanically when stable external behavior already proves the result.
 - Make noisy or player-visible diagnostics disabled by default unless normal product behavior requires otherwise, and apply approved authorization boundaries to administrative state-changing commands.
+- Do not treat a diagnostic as proof merely because it reports its own internal result. Plan corroboration at an independent boundary when a faulty calculation or event path could otherwise validate itself.
 - Select verification appropriate to the behavior instead of requiring strict TDD.
 - Use automated tests for isolated logic where practical.
 - Use Minecraft client, dedicated-server, multiplayer, compatibility, or performance verification where required.
@@ -230,6 +233,8 @@ Describe the observable behavior available after completion.
 - Authoritative state or event that a manual check must observe
 - Whether stable normal behavior exposes it reliably
 - Required logs, inspect commands, controlled-state commands, counters, or other narrow diagnostics when normal behavior is insufficient
+- Evidence source or path, relevant retention or rotation behavior, and collection responsibility
+- Independent input, output, test, or visible behavior that corroborates diagnostic claims when needed
 - Same-issue implementation or explicit prerequisite issue
 - Default enabled/disabled state and relevant authorization boundary
 
@@ -310,7 +315,7 @@ Do not repeatedly ask about a deferred or waived check unless new evidence mater
 7. Link every issue to requirements and architecture.
 8. Define acceptance criteria and verification for every issue.
 9. Assign each verification check to an environment tier and state what that evidence proves and does not prove.
-10. For every manual runtime check, define its observability contract and add any required same-issue diagnostic work or prerequisite issue.
+10. For every manual runtime check, define its observability contract, evidence source, collection responsibility, and necessary corroboration; add any required same-issue diagnostic work or prerequisite issue.
 11. Present one decision packet for owner-performed manual validation and record each check as Test now, Defer, or Waive.
 12. Identify dependencies and blockers, including diagnostic prerequisites that must be Done before dependent manual verification begins.
 13. Construct the dependency graph.
@@ -352,6 +357,7 @@ This stage is complete when:
 - Every verification check identifies its environment tier, evidentiary value, and material limitation.
 - Owner-performed manual checks have one recorded Test now, Defer, or Waive decision.
 - Every manual runtime verification procedure identifies what authoritative state or event it observes and has the necessary diagnostic support in the same issue or an explicit completed prerequisite.
+- Every manual runtime verification procedure assigns evidence collection: the agent directly inspects accessible current and rotated logs, while owner-returned evidence is limited to inaccessible observations or environments.
 - Every issue references relevant requirements and architecture.
 - All blocking relationships are explicit.
 - The dependency graph is acyclic.

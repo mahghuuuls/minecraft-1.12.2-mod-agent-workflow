@@ -121,6 +121,8 @@ Publication to every approved distribution platform is performed manually by the
 
 When owner-assisted manual validation is useful, provide a concise runnable recipe. Include relevant config state, exact commands or setup steps when available, expected results, and any important scenario that is impractical to validate manually. When several checks share one game or server runtime, give the owner the complete restart-aware matrix and full configuration up front instead of revealing one test at a time. Verify Minecraft 1.12.2 command syntax, registry identifiers, fixture behavior, and cleanup steps before presenting the recipe.
 
+Separate performing a manual action from collecting its evidence. After the owner performs an action in a shared or otherwise agent-accessible runtime, the agent must inspect the relevant current and rotated logs directly. Ask the owner to return only observations the agent cannot access or establish reliably, such as visual layout, perceived interaction behavior, audio, real multi-client privacy, or behavior in an external environment. Ask the owner to provide log content only when the runtime is outside the shared environment, the files are unavailable, or direct inspection fails. Treat logs as one evidence source rather than self-validating proof; corroborate diagnostic output with an independent input, automated check, controlled expectation, or owner-visible result when the claim could otherwise validate itself.
+
 ## Completion Reporting
 
 At the end of work:

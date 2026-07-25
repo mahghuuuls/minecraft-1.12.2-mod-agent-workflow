@@ -19,6 +19,15 @@
 - Existing runtime directories:
 - Existing nested repositories:
 
+## Development Logs And Runtime Evidence
+
+- Runtime or development instance:
+- Current log paths:
+- Rotated or archived log paths:
+- Retention or rotation behavior:
+- Agent access:
+- Deferred discovery and due checkpoint:
+
 ## Repository State
 
 - Active project repository:
