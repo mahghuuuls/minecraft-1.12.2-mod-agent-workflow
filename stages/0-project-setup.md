@@ -162,6 +162,12 @@ Project defaults define the intended environment. Missing tools may be installed
 
 A tool being present and the agent being able to run it are different findings. Sandboxing, permissions, or missing operating-system facilities can prevent an agent from invoking an installed build tool. Determine this during setup by attempting one real invocation, and record the result alongside the owner's execution responsibilities. Discovering it during Implementation forces the verification approach to be rebuilt after issues have already been planned around a false assumption.
 
+Attempt a task that compiles or tests, never a version or help command. A build tool typically reports its version from a single process while running real work in a forked one, so a version query can succeed in an environment where every actual build fails. Treat only a compiling or testing task as evidence.
+
+When the attempt fails, capture the underlying error rather than concluding that the tool is unavailable. An environment lacking loopback networking, subprocess creation, or file watching produces a specific and recognizable failure, and recording it prevents the same diagnosis being repeated later in the project. Options such as disabling the build daemon are worth one attempt, but a forked worker process is normally unavoidable for compilation and testing.
+
+Explain the outcome to the owner when the agent cannot run the build, following the environment-limitation rules in `guidelines/collaboration-guidelines.md`. The owner is about to take on every build and test in the project, so they need the cause, the attempted workarounds, and the resulting division of work before planning depends on it.
+
 Inspect likely log locations directly when a development runtime already exists. Record the current-log path, any rotated or archived logs useful after a manual test, and whether the agent can read them from the shared workspace. If the runtime has not been initialized, record the expected location when known and make direct discovery a prerequisite before the first runtime validation packet. Do not ask the owner to copy logs that the agent can access directly.
 
 Do not install software without explicit authorization.

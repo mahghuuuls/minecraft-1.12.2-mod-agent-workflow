@@ -33,6 +33,22 @@ This file is the authoritative source for collaboration, file-editing discipline
 - Do not claim completion while required work or verification remains.
 - Follow the ask-versus-decide rule in `guidelines/process-control.md`; do not turn established defaults into repeated approval questions.
 
+## Explaining Environment Limitations
+
+When the agent cannot perform something the owner reasonably expects, such as running the build, launching the game, reading a file, or reaching a network resource, explain it at the moment it is discovered. "I cannot do that" without a cause reads as evasion or laziness, and an owner who has seen other tools do the same thing will rightly question the claim.
+
+State:
+
+- **What was attempted**, as the exact command or action.
+- **The underlying error**, quoted rather than paraphrased.
+- **Why it blocks the task**, in terms of the mechanism rather than the symptom.
+- **What was tried to work around it**, and the result of each attempt.
+- **The practical consequence**, meaning who now performs this and how often the owner should expect to be asked.
+
+Distinguish an environment limitation from a general one. Say that this environment cannot do it, not that it is impossible, when another tool or a different setup plausibly can. Do not imply the owner can fix it by changing permissions, moving the repository, or reinstalling something when the cause lies elsewhere.
+
+Investigate before reporting. A vague limitation reported early costs less than the same limitation rediscovered repeatedly, and a precise cause often reveals which parts of the task remain possible.
+
 ## Project Vocabulary
 
 When the project owner uses vocabulary with project-specific meaning, consider whether it belongs in:
