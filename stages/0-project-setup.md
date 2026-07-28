@@ -156,8 +156,11 @@ Inspect and record:
 - Existing nested repositories
 - Existing configuration and setup artifacts
 - Existing development-runtime log locations, agent access, and observed retention or rotation behavior
+- Whether the agent can execute the build tool itself, established by attempting it rather than by observing that it is installed
 
 Project defaults define the intended environment. Missing tools may be installed later when they are not needed by the first stage, but record the stage by which each is required.
+
+A tool being present and the agent being able to run it are different findings. Sandboxing, permissions, or missing operating-system facilities can prevent an agent from invoking an installed build tool. Determine this during setup by attempting one real invocation, and record the result alongside the owner's execution responsibilities. Discovering it during Implementation forces the verification approach to be rebuilt after issues have already been planned around a false assumption.
 
 Inspect likely log locations directly when a development runtime already exists. Record the current-log path, any rotated or archived logs useful after a manual test, and whether the agent can read them from the shared workspace. If the runtime has not been initialized, record the expected location when known and make direct discovery a prerequisite before the first runtime validation packet. Do not ask the owner to copy logs that the agent can access directly.
 
@@ -434,6 +437,7 @@ This stage is complete when:
 - Future prerequisites have explicit deadlines.
 - The loader, runtime, template, and distribution decisions are recorded or legitimately deferred/not applicable.
 - Accessible development-log paths and retention or rotation behavior are recorded, or discovery is explicitly due after runtime initialization and before the first runtime validation packet.
+- Whether the agent can execute the build tool is recorded as an attempted result, or explicitly due before the first issue that depends on a build.
 - Known dependency source references are recorded or explicitly deferred when relevant.
 - The release ownership matrix is recorded and approved.
 - The release handoff mode is recorded or intentionally deferred.

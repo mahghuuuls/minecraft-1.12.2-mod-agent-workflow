@@ -91,6 +91,10 @@ These standards apply to implementation work across all mod projects. Project-sp
 
 - Treat compilation as necessary but insufficient evidence of correctness.
 - Use automated tests for isolated logic when they provide useful feedback.
+- A test must be able to fail. Before claiming a test covers a behavior, name the specific change to the implementation that would make it fail. When no such change can be named, the test does not cover that behavior regardless of how it reads.
+- Apply the same standard to manual checks. A check whose passing observation would look identical if the feature were absent proves nothing. Establish the distinguishing condition first, then observe.
+- Treat a fixture too small to reach the rule under test as an unreached test, not a passing one. Verify that the data actually exercises the boundary the assertion describes.
+- Cover shipped defaults explicitly. Values a user never edits are still values the mod depends on, and they are easy to leave untested because no test names them.
 - Do not require strict TDD for behavior that depends on the Minecraft runtime.
 - Verify the selected loader lifecycle, rendering, world state, entity AI, networking, transformations or Mixins, and compatibility in an appropriate Minecraft environment.
 - Check dedicated-server safety whenever shared or client-related code changes.

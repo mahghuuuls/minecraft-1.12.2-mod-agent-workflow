@@ -16,6 +16,7 @@
 - Git:
 - Java:
 - IntelliJ IDEA:
+- Agent can execute the build tool (attempted, not assumed):
 - Existing runtime directories:
 - Existing nested repositories:
 
