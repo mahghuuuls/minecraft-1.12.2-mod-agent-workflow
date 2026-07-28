@@ -51,6 +51,21 @@ Ask for clarification when:
 
 Do not turn the glossary into a dictionary of obvious general terms. Update it at natural checkpoints unless terminology ambiguity is blocking the active work.
 
+## Durable Owner Preferences
+
+Some preferences only become apparent once the owner sees real output. A stated preference is durable when it would apply the same way to a different mod, such as writing style, punctuation, copy length, disclosure wording, commit cadence, or validation ownership.
+
+When the owner states one mid-project:
+
+- Apply it to the active work immediately.
+- Record it in the artifact that governs the current stage, so the decision is traceable where it was made.
+- Also write it to `workspace/documentation/owner-defaults.md`, adding the relevant template section when that file predates it. Without this the next project rediscovers the same preference by making the same mistake.
+- Correct the earlier artifact that now records a stale answer, or note the supersession there, when a setup-stage field such as punctuation restrictions was previously answered differently.
+
+Record the preference at the scope the owner stated, not the scope of the moment it came up. A preference about prose applies to every document unless the owner limits it to one.
+
+Do not promote a durable owner preference into a committed guideline, stage, or workflow file. Those apply to every user of this repository. Personal preference belongs in `owner-defaults.md`.
+
 ## Workflow Feedback
 
 When the project owner corrects the agent, identifies friction, rejects a default, asks why the process is doing something, or points out a better way to run future mods, consider whether the interaction should be recorded in:
