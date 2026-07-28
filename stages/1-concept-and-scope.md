@@ -25,6 +25,7 @@ Establish:
 - The mod's high-level features
 - Which features are essential or optional
 - What is inside and outside the project scope
+- Whether a disabled-by-default diagnostic mode belongs in scope
 - What would make the mod successful
 - Assumptions requiring later confirmation
 - Technical uncertainties requiring Feasibility Research
@@ -74,7 +75,7 @@ Act as an alignment interviewer.
 - Present alternative interpretations when something is ambiguous.
 - Distinguish essential features from optional ideas.
 - Explore what is explicitly outside the project scope.
-- For silent, event-driven, or hard-to-observe mods, consider whether a disabled-by-default debug mode belongs in scope for development validation.
+- For silent, event-driven, or hard-to-observe mods, decide explicitly whether a disabled-by-default diagnostic mode belongs in scope, and record the decision with its reasoning. Weigh both development validation and the ability of a server owner or player to confirm the mod is working after release. A mod whose correct behavior is indistinguishable from the mod being absent or broken is the clearest case for including one.
 - Capture candidate glossary terms when the owner uses project-specific vocabulary.
 - Ask whether similar terms are synonyms or distinct concepts when the distinction could affect scope.
 - Ask whether one term has multiple meanings when that ambiguity could affect scope.
@@ -118,6 +119,25 @@ During this stage, glossary entries may remain **Candidate**. They should captur
 
 Do not add ordinary Minecraft, programming, or workflow terms unless this project uses them in a special way.
 
+## Diagnostic Mode Decision
+
+A **diagnostic mode** is an optional, disabled-by-default capability that lets a human see what the mod decided and why, so that working correctly can be told apart from failing silently. What form it takes is decided in Requirements Definition.
+
+This is a scope question, not a technical one. Decide only:
+
+- **Whether** the mod needs a way to show what it decided and why.
+- **Who** needs it: the server owner, the player, or nobody beyond development.
+
+Ask in the owner's own terms. "If this mod silently stopped working, how would you notice?" is usually more productive than asking about logging.
+
+Weigh in favor when correct behavior and broken behavior look the same to an observer, when the mod acts on events the player does not directly trigger, or when diagnosing a player report would otherwise require guesswork about configuration.
+
+Weigh against when normal, visible behavior already proves the outcome. This is a shipped feature carrying its own configuration surface, documentation, and defect risk. Do not include one mechanically.
+
+Recording "not needed, because normal behavior is directly visible" is a complete answer. Leaving the question unanswered is not.
+
+Do not choose a mechanism, output format, default state, verbosity, or limits here. Those belong to Requirements Definition.
+
 ## Process
 
 1. Read `guidelines/project-defaults.md`.
@@ -127,11 +147,12 @@ Do not add ordinary Minecraft, programming, or workflow terms unless this projec
 5. Identify the most important unresolved concept-level question.
 6. Interview the project owner using focused questions or compact related decision packets according to `guidelines/collaboration-guidelines.md`.
 7. Record decisions, assumptions, boundaries, open questions, and candidate glossary terms.
-8. Periodically summarize the current shared understanding.
-9. Resolve concept-level contradictions and ambiguities.
-10. Create or update `workspace/documentation/glossary.md` when project-specific vocabulary appears.
-11. Generate `workspace/documentation/concept-and-scope.md` as a complete draft.
-12. Present the draft for review and revise it until explicitly approved.
+8. Decide whether a disabled-by-default diagnostic mode belongs in scope, and record the decision with its reasoning.
+9. Periodically summarize the current shared understanding.
+10. Resolve concept-level contradictions and ambiguities.
+11. Create or update `workspace/documentation/glossary.md` when project-specific vocabulary appears.
+12. Generate `workspace/documentation/concept-and-scope.md` as a complete draft.
+13. Present the draft for review and revise it until explicitly approved.
 
 ## Output Artifact
 
@@ -149,6 +170,7 @@ This stage is complete when:
 - Its high-level features are understood.
 - Essential and optional features are distinguished.
 - In-scope and out-of-scope boundaries are explicit.
+- The need for a disabled-by-default diagnostic mode has been explicitly decided, in scope or out, with its reasoning recorded. An unanswered decision does not satisfy this criterion.
 - No unresolved concept-level contradictions remain.
 - Technical uncertainties are recorded for Feasibility Research.
 - Project-specific terms that affect scope are clarified or recorded as glossary candidates.

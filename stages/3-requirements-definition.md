@@ -93,7 +93,7 @@ Act as a requirements analyst.
 - Ask about retroactive behavior when features affect existing worlds, entities, or saved data.
 - Ask about multiplayer authority, synchronization, and permissions when relevant.
 - Ask what happens when configuration, dependencies, input, or state are invalid.
-- When a debug option is in scope, define its default state, intended output, audience, and limits so it remains useful for validation without becoming normal gameplay noise.
+- When the approved concept records a diagnostic mode in scope, define its default state, intended output, audience, and limits so it remains useful for validation without becoming normal gameplay noise. Cover what a manual check would otherwise have to infer, so later verification can rest on evidence rather than inference, and state the output's boundaries where high-frequency paths, privacy, or log volume are a concern.
 - Distinguish required behavior from optional behavior.
 - Avoid inventing requirements or expanding the approved scope.
 - Avoid selecting technical solutions.

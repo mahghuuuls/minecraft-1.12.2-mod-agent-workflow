@@ -36,6 +36,12 @@
 
 -
 
+## Diagnostic Mode Decision
+
+- In scope:
+- Primary audience:
+- Reasoning:
+
 ## Fixed Constraints
 
 -

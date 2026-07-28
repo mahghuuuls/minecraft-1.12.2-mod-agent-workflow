@@ -147,11 +147,12 @@ For mod-development work, read in this order:
 For Process Maintenance mode, read in this order:
 
 1. `AGENTS.md`
-2. `guidelines/process-control.md`
-3. `guidelines/collaboration-guidelines.md`
-4. `workflows/process-maintenance.md`
-5. `workspace/documentation/workflow-feedback.md`, when used as input
-6. The process files being changed
+2. `guidelines/workflow-glossary.md`
+3. `guidelines/process-control.md`
+4. `guidelines/collaboration-guidelines.md`
+5. `workflows/process-maintenance.md`
+6. `workspace/documentation/workflow-feedback.md`, when used as input
+7. The process files being changed
 
 Do not silently resolve contradictions between sources. Follow `guidelines/process-control.md`.
 
@@ -159,6 +160,7 @@ Do not silently resolve contradictions between sources. Follow `guidelines/proce
 
 - `README.md`: human-facing introduction and quick start only. It is not an authoritative source of agent behavior. Simplifying the README must not change the workflow; move any operational rule that exists only there to its owning guideline, workflow, stage, procedure, or setup file before removing it.
 - `guidelines/project-defaults.md`: stable defaults for every mod.
+- `guidelines/workflow-glossary.md`: definitions of workflow vocabulary, read every session. It defines what terms mean and contains no behavioral rules; where it and an owning file disagree, the owning file wins.
 - `guidelines/process-control.md`: setup, workflow and stage status, approval, artifacts, project glossary, workflow feedback, and backward transitions.
 - `guidelines/collaboration-guidelines.md`: communication, editing, Git authorization, workflow feedback behavior, and completion reporting.
 - `guidelines/coding-standards.md`: implementation and verification conventions.

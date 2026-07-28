@@ -199,6 +199,26 @@ When a stage depends on a term, approved glossary wording should be used consist
 
 Change cycles may update the canonical glossary when new behavior introduces new terms or changes approved vocabulary. Cycle folders must not contain full glossary copies; they should reference the canonical glossary and record only change-specific rationale.
 
+## Decision Level
+
+Some concerns legitimately appear in several stages. Observability, configuration, multiplayer behavior, and compatibility are all decided once at concept level, specified at requirements level, structured at architecture level, and verified during implementation.
+
+A stage's **Out of Scope** list excludes a *decision level*, not a *topic*. That a topic reappears later does not mean an earlier stage should have settled it, and that a topic feels technical does not mean the earliest stage should ignore it.
+
+Split a recurring concern like this:
+
+- **Concept and Scope:** whether the capability exists at all, and who it serves. This is a boundary decision the owner makes in their own language.
+- **Requirements Definition:** what it must do, its defaults, its limits, and how its satisfaction is judged.
+- **Architecture Definition:** where it lives and what it may depend on.
+- **Implementation Plan and Implementation:** how it is built and how its behavior is evidenced.
+
+Two failure modes follow from ignoring this:
+
+- **Collapsing:** settling the whole concern in one stage, which pulls that stage past its own boundary and presents the owner with decisions they are not yet equipped to make.
+- **Dropping:** treating a concern as nobody's because no single stage owns it outright, so it never enters scope and cannot be added later without expanding approved scope.
+
+When a concern feels like it belongs to a later stage, carry its earliest decision forward rather than deferring the whole topic. When it feels like it belongs to an earlier one, record the decision and leave the specification where it belongs.
+
 ## Stage Transition Briefing
 
 Before starting Project Setup, any reusable stage, or any workflow-specific approval checkpoint, present a short transition briefing and ask the project owner whether to continue.
