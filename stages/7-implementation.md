@@ -143,6 +143,21 @@ Use the environment tiers approved in the implementation plan. Record the exact 
 
 Dimension checks are risk-based. For dimension-agnostic code, inspect the relevant code path and use one representative non-Overworld runtime check when runtime confirmation is required. Do not require checks in every dimension unless the implementation or defect is dimension-specific.
 
+### Development Dedicated Server Setup
+
+A freshly created `runServer` environment rejects the development client's login and leaves the owner with no way to obtain test items. Prepare `run/server.properties` before requesting a dedicated-server check, or the request fails for reasons that have nothing to do with the mod.
+
+- `online-mode=false`. The development client authenticates with a placeholder session that Mojang cannot verify, so the default setting refuses it as an invalid session.
+- `gamemode=1` with `force-gamemode=true`. Without creative access the owner must obtain every test item by hand, which turns a short check into a scavenger hunt.
+- An entry in `ops.json` when the check needs commands.
+
+These values suit a throwaway local development server only. `online-mode=false` disables account verification entirely. Never recommend it for a server reachable from a network, never carry it into public documentation or a packaged environment, and never apply it to a server the owner actually runs.
+
+The development client and development server share one `run/` directory, including the configuration file and the logs. Two consequences follow:
+
+- Their output interleaves in the same log files. Attribute each line by its thread, such as `[Client thread]` against `[Server thread]`, rather than assuming which side produced it.
+- They read the same configuration file. A check that depends on the two sides holding different configuration requires editing that file after the server has loaded and before the client starts. Edited at any other moment, both sides load identical configuration and the check silently proves nothing while appearing to pass.
+
 Manual verification must also have a reliable observation path. Before requesting it, identify the authoritative state or event being checked and confirm that normal behavior exposes it reliably. If it does not, implement and verify the issue's approved diagnostic mechanism first. Suitable mechanisms include structured logs, inspect or controlled-state commands, counters, or another narrow diagnostic surface. Potentially noisy or player-visible diagnostics should remain disabled by default unless normal product behavior requires otherwise, and administrative state-changing commands must enforce the approved authorization boundary.
 
 Assign evidence collection before the check begins. The agent collects files and output it can access, including the relevant current log and rotated logs when the test may cross a restart or rotation boundary. The owner performs the requested gameplay action and reports only evidence the agent cannot observe reliably. Corroborate diagnostics with an independent input, output, automated check, controlled expectation, or visible result when the logged component could otherwise validate its own faulty behavior.

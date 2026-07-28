@@ -284,7 +284,6 @@ Accepted limitation: <Validation name> was not performed by owner decision.
 Examples:
 
 ```text
-Accepted limitation: Dedicated server testing was not performed by owner decision.
 Accepted limitation: Cleanroom testing was not performed by owner decision.
 Accepted limitation: External multiplayer testing was not performed by owner decision.
 Accepted limitation: Clean launcher testing was not performed by owner decision.
@@ -300,6 +299,8 @@ A validation waiver is valid only when:
 After a waiver is accepted, later stages may reference it but should not repeatedly ask to perform the same check unless new evidence makes it release-blocking or the owner reopens it.
 
 Do not use a waiver to hide a known defect, contradiction, failed check, or unverified claim that the public materials still rely on.
+
+A dedicated-server check is expected by default and is not waivable as a matter of preference. Omit it only when the mod never loads server-side, and record that scope reason rather than an owner decision. See `guidelines/project-defaults.md`.
 
 ## Workflow Feedback Log
 

@@ -305,7 +305,7 @@ Start from these defaults unless the owner changes them:
 | CurseForge upload | Owner | Do not research upload mechanics, publication page setup, or final platform field choices unless explicitly assigned. |
 | Release JAR generation | Agent | Generate or identify the normal release artifact when later stages require a release handoff. |
 | Final publication verification | Agent | Verify approved local handoff information by default; external publication checks require owner-provided context or explicit approval. |
-| Dedicated server testing | Owner | Do not attempt, research, or repeatedly request dedicated server validation unless explicitly assigned. |
+| Dedicated server testing | Owner runs, agent prepares | Expected by default for any mod that loads on a server. The agent prepares the recipe and the server configuration it needs, and reads the logs; the owner runs it. Omit only for a mod that never loads server-side, with the reason recorded. |
 | Cleanroom testing | Owner | Record compatibility expectations or limitations; do not attempt or repeatedly request Cleanroom runtime testing unless explicitly assigned. |
 | External multiplayer testing | Owner | Do not attempt, research, or repeatedly request external multiplayer validation unless explicitly assigned. |
 

@@ -105,9 +105,11 @@ Release and publication defaults are:
 
 Validation ownership defaults are:
 
-- Dedicated server testing: owner-managed
+- Dedicated server testing: owner-executed and expected by default
 - Cleanroom testing: owner-managed
 - External multiplayer testing: owner-managed
+
+A dedicated-server check is a normal part of validating a mod that loads on a server, not an exceptional request. The owner runs it; the agent prepares the recipe, supplies the server configuration it needs, and reads the resulting logs. Omit it only for a mod that never loads server-side, and record the reason.
 
 Default release handoff mode is `agent-managed-release-validation`. A project may use `owner-managed-packaging` when the owner wants the agent to prepare only a lightweight handoff.
 

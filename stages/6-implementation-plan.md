@@ -95,7 +95,8 @@ Act as an implementation planner.
 - Select verification appropriate to the behavior instead of requiring strict TDD.
 - Use automated tests for isolated logic where practical.
 - Use Minecraft client, dedicated-server, multiplayer, compatibility, or performance verification where required.
-- Do not require every environment mechanically. Use code paths and project risks to decide whether a representative non-Overworld check, dedicated server, packaged environment, modpack, or multiplayer check is necessary.
+- Do not require every environment mechanically. Use code paths and project risks to decide whether a representative non-Overworld check, packaged environment, modpack, or multiplayer check is necessary.
+- Plan a dedicated-server check by default for any mod that loads on a server. Side-safety failures, such as a client-only class reaching server code, are invisible in `runClient` and fatal on a server, so this is not a risk-selected extra. Omit it only for a mod that never loads server-side, and record the reason.
 - Ensure each issue is understandable to an agent starting with a fresh context.
 - Avoid repeating entire project documents inside every issue.
 - Reference requirements and architectural decisions by stable identifiers.
@@ -287,7 +288,7 @@ Use these evidence tiers consistently:
 
 1. **Automated or static:** compilation, unit tests, static inspection, or artifact inspection.
 2. **Development client:** `runClient`, including its integrated server when applicable.
-3. **Development dedicated server:** `runServer`.
+3. **Development dedicated server:** `runServer`. Needs the server configuration described under Development Dedicated Server Setup in `stages/7-implementation.md`.
 4. **Packaged clean environment:** the built jar in a clean Forge client or dedicated server.
 5. **Target modpack or alternate runtime:** the built jar in the intended pack, including Cleanroom when selected.
 6. **External multiplayer:** a separately operated multiplayer environment.
