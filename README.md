@@ -6,6 +6,8 @@ This is not designed for one-prompt, unattended vibe coding. You remain responsi
 
 The process draws on established engineering practice rather than being invented from scratch: staged approval, requirements traced to the work that satisfies them, independent review in a separate agent context, and verification evidence labelled by how strongly each claim is actually known. Those ideas come from books including *Modern Software Engineering*, *A Philosophy of Software Design*, and *The Pragmatic Programmer*, and from the agent skills published at [AI Hero](https://www.aihero.dev/). See [Acknowledgements](#acknowledgements) for what came from where.
 
+The workflow is revised as mods are actually built with it. Friction encountered during a real project is recorded as feedback and applied afterwards in a separate maintenance pass, so the guidance addresses problems that occurred rather than problems imagined in advance. Mods produced this way are validated in a Cleanroom modpack of over 300 mods, which is where compatibility and load-order problems tend to surface.
+
 > [!CAUTION]
 > AI agents can be dangerous. Use this workflow with care and review the actions an agent proposes or performs.
 
@@ -111,7 +113,7 @@ Each mod under `workspace/project/` is an independent Git repository with its ow
 
 ## Updating Your Copy
 
-Normal users are not expected to edit or commit changes to this workflow repository. Update a clone with:
+The workflow changes regularly as new projects expose gaps in it, so pulling before starting a new mod is worthwhile. Normal users are not expected to edit or commit changes to this workflow repository. Update a clone with:
 
 ```bash
 git pull --ff-only
