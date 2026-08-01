@@ -36,6 +36,7 @@ If the repository has no approved baseline, use Existing Mod Assessment first.
 Act as a change-impact coordinator before acting as an implementer.
 
 - Verify the baseline version and source revision before planning the change.
+- Treat a reported defect as a claim to confirm, not as an established fact, before proposing any route.
 - Determine whether the baseline records a reported publication, and apply the branching recommendation in `guidelines/collaboration-guidelines.md` before the cycle's first commit.
 - Use focused questions for branching impact decisions and compact decision packets for related low-risk route recommendations.
 - Separate the requested outcome from possible implementations.
@@ -79,6 +80,35 @@ Check `project-baseline.md` for a reported publication date or URL:
 
 Present this with the intake route rather than as a separate interruption. Record the resulting working branch in `change-intake.md` and in `project-status.md`, so a resumed agent commits to the right branch without rediscovering the decision.
 
+## Reported Defect Confirmation
+
+A change request that reports a defect is a claim, not an established fact. Confirm it before proposing a route.
+
+This applies to any report of incorrect behavior, whoever reported it. It does not apply to a feature request, enhancement, or refactor, where there is nothing to reproduce.
+
+Gather what the report needs to be actionable:
+
+- Mod version, and the loader, runtime, or modpack in use
+- Other installed mods, when interaction is plausible
+- The relevant configuration or input file as the reporter actually has it
+- Logs covering the affected launch or action
+- The exact steps taken, the expected result, and the observed result
+
+Investigate before asking the reporter or the owner for more. A log, a configuration file, or the relevant code path frequently settles the question without launching anything; follow Investigate Before Asking in `guidelines/process-control.md`. When confirmation needs a running game, the owner performs the launch and the agent inspects the resulting evidence, as with any other manual check.
+
+Record exactly one outcome:
+
+- **Reproduced:** the reported behavior was observed, or its cause was established directly from evidence. Proceed to intake.
+- **Needs Info:** the report cannot be judged yet. State precisely what is missing and stop. Do not route stages on a guess.
+- **Not This Mod:** the cause is another mod, a configuration or installation error, or the reporter's environment. No cycle is required.
+- **Works As Designed:** the behavior matches an approved requirement. No fix is required.
+
+Record the outcome and its evidence label in `change-intake.md`.
+
+Do not propose a stage route until the outcome is **Reproduced**, unless the owner explicitly accepts proceeding on an unconfirmed report. Record that acceptance and its consequence: the plan may target the wrong cause, and its verification cannot demonstrate that the reported problem is fixed.
+
+**Not This Mod** and **Works As Designed** may still deserve a change when the mod made the mistake easy to make, such as an unclear error message, a confusing config path, or missing documentation. Route that as its own request judged on its own merits, not as a defect fix.
+
 ## Change Intake and Impact Analysis
 
 Produce:
@@ -108,20 +138,21 @@ Present the complete intake and proposed route for explicit approval before revi
 2. Create the cycle ID and artifact root.
 3. Mark the workflow **In Progress**.
 4. Determine the working branch from the baseline's publication record.
-5. Conduct Change Intake and Impact Analysis.
-6. Mark the intake checkpoint **Awaiting Approval** and present the route, including the recommended working branch.
-7. Revise it until the owner approves it.
-8. Create the approved working branch, when one was approved, before the first cycle commit.
-9. Record stage dispositions in the authoritative `project-status.md` ledger.
-10. Mark affected canonical stages **Needs Revision**.
-11. Execute each **Revisit** stage in normal stage order.
-12. Execute Implementation Plan using the cycle artifact root, including the proportionate approval-bundle assessment.
-13. Execute Implementation using the cycle issues.
-14. Execute Release Presentation using the cycle artifact root, including release artifact validation and handoff when agent-managed by the ownership matrix.
-15. Produce `<artifact-root>/cycle-summary.md`.
-16. Offer the merge back into `project_default_branch` when the cycle used a separate working branch, and merge only under explicit authorization.
-17. Set the manual publication state to **Ready for Publication**, update `project-baseline.md` with the release-ready version and source revision, and update `project-state.md`.
-18. Present the completed cycle for approval.
+5. Confirm a reported defect and record its outcome before analyzing impact.
+6. Conduct Change Intake and Impact Analysis.
+7. Mark the intake checkpoint **Awaiting Approval** and present the route, including the recommended working branch.
+8. Revise it until the owner approves it.
+9. Create the approved working branch, when one was approved, before the first cycle commit.
+10. Record stage dispositions in the authoritative `project-status.md` ledger.
+11. Mark affected canonical stages **Needs Revision**.
+12. Execute each **Revisit** stage in normal stage order.
+13. Execute Implementation Plan using the cycle artifact root, including the proportionate approval-bundle assessment.
+14. Execute Implementation using the cycle issues.
+15. Execute Release Presentation using the cycle artifact root, including release artifact validation and handoff when agent-managed by the ownership matrix.
+16. Produce `<artifact-root>/cycle-summary.md`.
+17. Offer the merge back into `project_default_branch` when the cycle used a separate working branch, and merge only under explicit authorization.
+18. Set the manual publication state to **Ready for Publication**, update `project-baseline.md` with the release-ready version and source revision, and update `project-state.md`.
+19. Present the completed cycle for approval.
 
 If the owner later reports a manual publication result, update `project-baseline.md` with the published URL/date/file information as an optional follow-up. Do not keep the Change Cycle open merely to wait for external publication.
 
@@ -137,6 +168,7 @@ It records the delta and traceability; it must not duplicate complete canonical 
 
 The agent-managed work is ready for manual publication when:
 
+- A reported defect has a recorded confirmation outcome, or an owner-accepted decision to proceed without one.
 - Change Intake, the selected route, and the working-branch decision are approved.
 - Every **Revisit** stage is approved.
 - Every required cycle issue is Done.

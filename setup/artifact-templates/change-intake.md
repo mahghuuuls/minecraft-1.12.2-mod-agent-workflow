@@ -13,6 +13,22 @@
 
 -
 
+## Reported Defect Confirmation
+
+Omit this section when the request is a feature, enhancement, or refactor.
+
+- Reporter and report source:
+- Mod version, loader, runtime, or modpack:
+- Other installed mods, when relevant:
+- Reported steps, expected result, observed result:
+- Evidence inspected (logs, config, code path) and who collected it:
+- Outcome: Reproduced / Needs Info / Not This Mod / Works As Designed
+- Evidence label for the outcome (observed | inspected | inferred):
+- Missing information, when Needs Info:
+- Established cause, when Not This Mod:
+- Requirement that the behavior matches, when Works As Designed:
+- Owner acceptance to proceed unconfirmed, when applicable, and its recorded consequence:
+
 ## Baseline
 
 - Version:
