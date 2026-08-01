@@ -102,7 +102,7 @@ Act as an implementation planner.
 - Reference requirements and architectural decisions by stable identifiers.
 - Avoid speculative tasks for hypothetical future needs.
 - Use focused questions for branching prioritization or scope decisions and compact decision packets for related plan defaults or issue-grouping choices.
-- Do not ask questions already answered by approved documents.
+- Do not ask questions that approved documents, code inspection, or dependency research can answer. Follow Investigate Before Asking in `guidelines/process-control.md`.
 - Identify contradictions or missing information rather than guessing.
 - Generate complete draft artifacts, present them for approval, and revise them as required.
 

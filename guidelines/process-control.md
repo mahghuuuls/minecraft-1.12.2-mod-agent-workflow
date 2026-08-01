@@ -416,9 +416,33 @@ Decide and record the decision when:
 - A workflow default or owner default already applies.
 - The choice is local, reversible, and low-risk.
 - Existing approved artifacts answer the question.
+- Inspection or research can answer it, under the limits below.
 - The decision is an ordinary implementation detail within the approved architecture.
 
 Do not turn defaults into repeated approval questions. Do not silently decide when a wrong assumption would require reworking approved scope, architecture, licensing, release materials, or owner responsibilities.
+
+### Investigate Before Asking
+
+Before asking the owner a question of fact, determine whether the answer already exists somewhere the agent can read.
+
+Check, in rough order of cost:
+
+- Approved project artifacts and the project glossary.
+- The active mod's own source, configuration, and generated output.
+- The template, loader, or framework source available in the workspace.
+- Approved dependency source references, and the dependency's shipped assets, metadata, and public source.
+- Logs and build output already produced by an earlier run.
+
+Do not ask the owner to describe behavior the agent can read, to explain code present in the workspace, or to relay a dependency's documented API.
+
+This applies to questions of **fact**. It does not apply to questions of preference, scope, acceptable risk, licensing, public wording, or ownership, which no amount of reading can settle. Investigation never converts an owner decision into an agent decision.
+
+Two limits keep this honest:
+
+- **Proportionate cost.** When investigation would be slow or unreliable relative to the value of the answer, ask instead and say what would have had to be inspected. One question is cheaper than a long unfocused search.
+- **Strength of the answer.** Record how the answer was reached, using the evidence labels in `stages/7-implementation.md`. When investigation yields only an *inferred* answer and a wrong assumption would rework approved scope, architecture, licensing, or release materials, it remains an Ask. Present the finding and its uncertainty instead of acting on it.
+
+When investigation settles the question, record the answer and where it came from rather than presenting it as an assumption.
 
 ## Backward Transitions
 

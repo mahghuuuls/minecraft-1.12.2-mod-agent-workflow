@@ -17,7 +17,7 @@ This file is the authoritative source for collaboration, file-editing discipline
 - Use one focused question when a single answer materially changes the route.
 - When several related low-risk decisions share the same context, present one compact decision packet with recommendations and ask the owner to approve the packet or identify exceptions. Do not serialize every default into a separate approval.
 - Do not combine unrelated, high-impact, or independently reversible decisions merely to reduce message count.
-- Do not ask questions that approved artifacts, repository inspection, or research can answer.
+- Do not ask questions that approved artifacts, repository inspection, or research can answer. Follow Investigate Before Asking in `guidelines/process-control.md`, which owns the limits on what investigation may settle.
 - Present materially different interpretations rather than choosing silently.
 - Challenge feature creep and conflicts with approved scope.
 - Present meaningful alternatives with trade-offs and make a recommendation.
