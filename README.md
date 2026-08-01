@@ -4,6 +4,8 @@ A guided workspace for developing Minecraft 1.12.2 mods with a coding agent such
 
 This is not designed for one-prompt, unattended vibe coding. You remain responsible for product direction, important technical decisions, approval checkpoints, gameplay judgment, and manual publication to the approved distribution platforms.
 
+The process draws on established engineering practice rather than being invented from scratch: staged approval, requirements traced to the work that satisfies them, independent review in a separate agent context, and verification evidence labelled by how strongly each claim is actually known. Those ideas come from books including *Modern Software Engineering*, *A Philosophy of Software Design*, and *The Pragmatic Programmer*, and from the agent skills published at [AI Hero](https://www.aihero.dev/). See [Acknowledgements](#acknowledgements) for what came from where.
+
 > [!CAUTION]
 > AI agents can be dangerous. Use this workflow with care and review the actions an agent proposes or performs.
 
@@ -134,3 +136,25 @@ Recorded source and template revisions keep active mod work traceable when the r
 Manual configuration is optional. The agent can guide you through it.
 
 For manual instructions, see [Manual Workspace Setup](setup/manual-workspace-setup.md).
+
+## Acknowledgements
+
+### Books
+
+The workflow's engineering assumptions were shaped by reading and applying:
+
+- ***Modern Software Engineering***, David Farley — working in small verifiable increments, treating feedback speed as a design concern, and requiring an empirical basis for believing something works rather than an assumed one.
+- ***A Philosophy of Software Design***, John Ousterhout — complexity as the thing actually being managed, and the resulting bias against speculative abstraction, unnecessary indirection, and structure added for hypothetical future needs.
+- ***The Pragmatic Programmer***, Andrew Hunt and David Thomas — vertical slices as tracer bullets, and keeping every decision in exactly one place instead of duplicating it across documents.
+
+These show up concretely in the vertical-slice planning model, the design-principle questions in the independent review checklist, the validation environment tiers and their evidence labels, and the rule that later artifacts reference stable identifiers instead of copying content.
+
+### Agent Skills
+
+Several ideas were adapted from the agent skills published at [AI Hero](https://www.aihero.dev/):
+
+- **Decision issues** — that a tracked work item can represent a question to settle rather than a deliverable to build, from `/wayfinder`.
+- **Reported defect confirmation** — establishing that a reported bug is real, and where its cause actually lies, before planning a fix, from `/triage`.
+- **Investigate before asking** — reading available code, artifacts, and dependency sources to answer what the agent can answer itself, instead of asking the owner, from the interview skills.
+
+Each was adapted to this workflow's stage, approval, and evidence model rather than adopted directly. This repository does not use or ship agent skills; its instructions are plain Markdown so they work with any agent that can read files.
