@@ -14,9 +14,9 @@
 
 ## Issue Summary
 
-| Issue | Title | Status | Dependencies |
-| --- | --- | --- | --- |
-| IMP-001 |  | Ready |  |
+| Issue | Title | Type | Status | Dependencies |
+| --- | --- | --- | --- | --- |
+| IMP-001 |  | Vertical Slice | Ready |  |
 
 ## Dependency Graph
 
@@ -75,7 +75,7 @@
 # IMP-000: Issue Title
 
 **Status:** Ready
-**Type:** Vertical Slice
+**Type:** Vertical Slice / Foundation / Decision
 **Priority:** High
 **Blocked By:** None
 
@@ -94,6 +94,15 @@
 ## Implementation Constraints
 
 ## Likely Code Areas
+
+## Decision
+
+- Question:
+- Resolver: Owner / Agent
+- Options and consequences:
+- Recommendation:
+- Resolution:
+- Recorded in:
 
 ## Acceptance Criteria
 
@@ -114,6 +123,8 @@
 ## Completion Evidence
 
 Every result line ends with one label: (observed), (inspected), or (inferred). See Evidence Labels in `stages/7-implementation.md`.
+
+For a Decision issue, record the resolution and its evidence in the Decision section above and omit the verification categories below.
 
 ### Automated Checks
 

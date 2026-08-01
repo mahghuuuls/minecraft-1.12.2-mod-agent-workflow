@@ -152,6 +152,48 @@ An issue should:
 
 If an issue has multiple unrelated outcomes or an extensive verification procedure, split it.
 
+## Decision Issues
+
+Most issues deliver behavior. Some deliver a settled question.
+
+Use `Type: Decision` for an open question that must be resolved before dependent work can proceed and that the stage normally owning it cannot answer yet. Its deliverable is a recorded decision, not code.
+
+Create one when:
+
+- Implementation evidence is needed before the question can be answered honestly.
+- A discovery invalidates an assumption and dependent slices must wait for its replacement.
+- An owner choice about scope, risk, public wording, or ownership blocks a planned slice.
+
+Do not create one to postpone a decision the current stage already owns. A Decision issue is not a way to leave Requirements Definition or Architecture Definition incomplete and settle it later. If the owning stage can answer the question now, answer it there.
+
+### Resolver
+
+Every Decision issue names who closes it:
+
+- **Owner:** only the project owner can settle it — scope, acceptable risk, licensing, public claims, ownership boundaries, or preference. The agent still prepares the question, presenting the options, what each costs, and a recommendation. It does not choose.
+- **Agent:** the agent can settle it from research, source inspection, an experiment, or a dependency's observed behavior, and records the finding with its evidence label.
+
+An Agent decision that turns out to change approved scope, requirements, architecture, licensing, or public claims stops being an Agent decision. Escalate it and route the artifact change through the backward-transition process.
+
+### Placement In The Graph
+
+A Decision issue is an ordinary node. It has an identifier, a status, and `Blocked By`, and other issues may list it as their blocker. That is the purpose of the type: an unanswered question that blocks work should appear as a blocker rather than as a caveat in a separate list.
+
+List it in the Issue Summary table with every other issue. Do not maintain a parallel decision register that restates it.
+
+### Decision Completion
+
+A Decision issue is Done when:
+
+- The question is answered, or explicitly recorded as unanswerable with its consequence stated.
+- The decision, its rationale, and its evidence are recorded in the issue.
+- Every canonical artifact the decision changes has been updated through its owning stage.
+- Dependent issues are unblocked or re-scoped.
+
+A Decision issue has no commit checkpoint of its own because it produces no repository change. When it causes one, that change belongs to the dependent implementation issue.
+
+An Agent-resolved Decision issue follows the evidence-only review rule in `stages/7-implementation.md`, since its deliverable is evidence. An Owner-resolved one needs no independent review; the owner's answer is the resolution.
+
 ## Issue Statuses
 
 Use these statuses:
@@ -217,6 +259,15 @@ Describe the observable behavior available after completion.
 
 - Packages, components, or resources likely to change
 
+## Decision
+
+- Question:
+- Resolver: Owner / Agent
+- Options and consequences:
+- Recommendation:
+- Resolution:
+- Recorded in:
+
 ## Acceptance Criteria
 
 - Given ..., when ..., then ...
@@ -246,7 +297,13 @@ Record the tests, commands, observations, logs, or measurements demonstrating co
 
 Omit **Manual Observability** when the issue has no manual runtime verification. When it applies, complete the section before marking the issue Ready; do not leave the observation path to be invented during Implementation.
 
-Use `Type: Foundation` only when an issue does not directly deliver observable mod behavior but is necessary to unblock identified vertical slices.
+Omit **Decision** unless the issue's type is Decision. For a Decision issue, omit **Manual Observability** and **Verification** instead, and treat the Decision section as its acceptance criteria.
+
+Use these types:
+
+- `Vertical Slice`: delivers observable mod behavior. The normal case.
+- `Foundation`: delivers no observable behavior directly but is necessary to unblock identified vertical slices. Use only when that consumer is identified.
+- `Decision`: delivers a settled question rather than a change. See Decision Issues.
 
 ## Dependency Graph
 
@@ -268,7 +325,9 @@ The graph describes dependency order, not necessarily a strict sequence. Issues 
 
 ## Definition of Done
 
-An implementation issue is Done only when:
+A Decision issue is Done under the criteria in Decision Completion above.
+
+Any other implementation issue is Done only when:
 
 - Its implementation is complete.
 - Its acceptance criteria are satisfied.
@@ -376,7 +435,7 @@ This stage is complete when:
 - Every SHOULD and MAY requirement is scheduled or explicitly deferred.
 - Issues are organized primarily as vertical slices.
 - Necessary foundational work has a specific identified consumer.
-- Every issue has an objective, scope, acceptance criteria, and verification procedure.
+- Every issue has an objective, scope, acceptance criteria, and verification procedure. A Decision issue instead has a question, a named resolver, and the work it blocks.
 - Every verification check identifies its environment tier, evidentiary value, and material limitation.
 - Owner-performed manual checks have one recorded Test now, Defer, or Waive decision.
 - Every manual runtime verification procedure identifies what authoritative state or event it observes and has the necessary diagnostic support in the same issue or an explicit completed prerequisite.

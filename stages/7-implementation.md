@@ -300,6 +300,21 @@ After a clean committed checkpoint, confirm the repository is clean when checked
 25. Create the commit only under that authorization, otherwise request approval or record the approved deferral.
 26. Select the next Ready issue only after the commit checkpoint is resolved.
 
+### Executing A Decision Issue
+
+A `Type: Decision` issue produces a settled question, not a change. Steps 8 through 16 above do not apply to it. Instead:
+
+1. Confirm the question is still open and still blocking something.
+2. For an **Owner** resolver, present the question with its options, what each costs, and a recommendation. Do not choose.
+3. For an **Agent** resolver, gather the evidence, label each finding observed / inspected / inferred, and state only the conclusion that evidence supports.
+4. Record the decision, its rationale, and its evidence in the issue.
+5. Route any resulting change to an approved artifact through its owning stage before closing.
+6. Mark it Done and state which dependent issues are now Ready.
+
+Escalate to the owner when an Agent-resolved question turns out to affect approved scope, requirements, architecture, licensing, or public claims. The resolver field records who was expected to answer, not authority to close a question that grew.
+
+A Decision issue has no commit checkpoint. Do not invent one; the repository change belongs to the dependent implementation issue.
+
 ## Handling Discoveries
 
 ### Requirement Problem
@@ -339,6 +354,8 @@ If an issue is too large, incorrectly ordered, or missing dependencies:
 4. Resume with an approved Ready issue.
 
 Minor implementation details that do not alter approved behavior or architectural boundaries do not require returning to an earlier stage.
+
+When a discovery leaves an open question that blocks other planned work, add a `Type: Decision` issue for it and list it as the blocker of the affected issues, rather than carrying it as a loose caveat. This does not replace the routes above: a question that invalidates an approved artifact still returns to the owning stage. The Decision issue records what must be settled and who settles it; the owning stage still approves the change.
 
 ## Independent Implementation And Architecture Review
 

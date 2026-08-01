@@ -115,7 +115,7 @@ Create it when the first workflow begins. Record:
 - Status or disposition of every relevant stage
 - Approved output artifacts
 - Current implementation issue, when applicable
-- Blocking questions or decisions
+- Blocking questions or decisions. When a blocking question is tracked as a `Type: Decision` implementation issue, reference that issue instead of restating it here.
 - Manual publication state, when applicable
 
 Use these workflow and stage statuses:
