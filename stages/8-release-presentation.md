@@ -55,6 +55,7 @@ Establish:
 - Record known limitations in public materials only when normal players must know them before installing or using the mod
 - Record icon and screenshot ownership, deferral, or agent-managed work
 - Follow icon or screenshot workflows only when those areas are agent-managed or explicitly assigned
+- Propose a screenshot shot list, and stage the configuration or world state a suggested shot needs, unless screenshots are deferred
 - Produce `<artifact-root>/release-presentation.md`
 - Confirm the approved release version before packaging or handoff
 - Build, inspect, checksum, and record the release artifact when release JAR generation/validation is agent-managed by Project Setup or explicit owner instruction
@@ -70,7 +71,7 @@ Do not:
 - Include build evidence, bytecode details, validation logs, QA-style usage steps, or internal test reports in public documentation
 - Include redundant platform requirements that the distribution platform already displays unless players need the information to decide whether to install
 - Research platform-submission mechanics, live project fields, page setup, or final platform field choices unless explicitly assigned by the owner
-- Prepare screenshots or icon work when those areas are owner-managed
+- Perform icon work when it is owner-managed, or capture, select, crop, or caption screenshots when screenshot work is owner-managed. Proposing a shot list and staging its scenario remain in scope unless screenshots are deferred.
 - Block README, changelog, or packaging approval because an owner-managed icon or screenshot is not ready
 - Include Cleanroom caveats unless they affect normal player installation, compatibility expectations, or usage decisions
 - Send assets or files to a distribution platform
@@ -245,13 +246,42 @@ guidelines/mod-icon-creation.md
 
 When icon work is **Revise** or **Create**, create the artwork workspace and explicitly ask the owner to add reference images there or attach them in chat. Do not assume the owner has read repository documentation.
 
-Screenshot paths are equivalent:
+Screenshot paths:
 
-- **Owner Provides Screenshots**
-- **Agent Helps Prepare Screenshots**
-- **Screenshots Deferred**
+- **Owner Provides Screenshots:** the owner captures and selects them. The agent may still propose a shot list and stage scenarios, as described below.
+- **Agent Helps Prepare Screenshots:** the agent additionally selects, orders, crops, or captions the owner's captures.
+- **Screenshots Deferred:** screenshot work is postponed. Do not propose a shot list until the owner reopens it.
 
-If screenshots are owner-managed or deferred, do not plan, request, capture, select, or prepare screenshots. If screenshots are explicitly assigned to the agent, they must show actual implemented behavior.
+Screenshots must show actual implemented behavior under every path, and must never block README, changelog, release artifact validation, or handoff approval.
+
+### Screenshot Suggestions
+
+The agent cannot capture screenshots because it cannot run the game. The owner always takes them. That makes **Owner Provides Screenshots** the normal path, and it does not mean the agent has nothing to contribute.
+
+Propose a shot list even when capture is owner-managed. The agent knows which behavior was implemented, which of it is visible, and which is invisible without setup. The owner knows what the game actually looks like. Offer the list once as a compact packet and do not chase it if the owner declines or defers.
+
+For each suggested shot, state:
+
+- What it demonstrates, in player terms
+- The implemented behavior or requirement it evidences
+- Where to be and what to open, in concrete in-game terms
+- Any configuration, world state, or inventory needed first
+- Why it reads at the size a distribution platform displays it
+
+Prefer shots that show what the description cannot say as well, and prefer one clear shot to several near-duplicates. A mod whose effect is invisible in a single frame usually needs a before-and-after pair, or a screen where the changed values appear as text.
+
+#### Staging A Scenario
+
+The agent may edit configuration, example files, or test-world state so that a suggested scenario is actually visible. Making a difference large enough to see is legitimate presentation work, not manipulation.
+
+It is not licence to misrepresent the mod:
+
+- Staged values are demonstration values. Do not ship them as defaults, commit them as the example configuration, or leave them in the release artifact.
+- Revert staged state after capture, and confirm the working tree is clean before release packaging.
+- When a shot needs values a normal user would not choose, say so in the suggested caption rather than implying it is typical.
+- Never stage a scenario showing behavior the mod does not have.
+
+Record the suggested shots, any staged configuration, and its reversion in `release-presentation.md`.
 
 ## Internal Presentation Record
 
@@ -286,16 +316,17 @@ Do not use the internal record as public copy.
 10. Add high-level configuration and player-facing multiplayer/client/server notes when applicable.
 11. Record icon and screenshot paths as owner-provided, agent-managed, or deferred.
 12. Follow icon or screenshot workflows only when those areas are agent-managed or explicitly assigned.
-13. Check every public claim against approved implementation evidence and approved glossary terminology.
-14. Update `workspace/documentation/glossary.md` when release copy approves, refines, or deprecates public-facing project terminology.
-15. Keep technical evidence and internal limitations in `release-presentation.md` rather than public README or mod-page copy.
-16. Inspect the mod repository, then present the complete public materials, release version, intended release-file scope, and proposed commit message before final artifact validation. The checkpoint may ask the owner to (a) approve the materials and (b) authorize the focused release-preparation commit in one response, but the two decisions must be labeled separately.
-17. Treat public-material approval and commit authorization as separate authorization boundaries even when requested together. Public-material approval alone does not authorize the commit.
-18. If the materials are approved and the commit is authorized, commit only the approved release/version/public-material changes and verify the repository is clean at the resulting revision.
-19. If release validation is agent-managed, build the exact release artifact from that clean committed revision, inspect it, calculate its checksum, and record the authoritative artifact identity and checksum in the handoff.
-20. If release packaging is owner-managed, record the approved source revision, expected command/artifact pattern, and owner-managed boundary instead of building.
-21. Present the completed internal presentation record and release handoff for stage approval.
-22. Revise until explicitly approved. If a revision changes the committed release source, obtain new commit authorization and repeat artifact validation before final approval.
+13. Offer a screenshot shot list unless screenshots are deferred, stage any scenario the owner accepts, and revert staged state after capture.
+14. Check every public claim against approved implementation evidence and approved glossary terminology.
+15. Update `workspace/documentation/glossary.md` when release copy approves, refines, or deprecates public-facing project terminology.
+16. Keep technical evidence and internal limitations in `release-presentation.md` rather than public README or mod-page copy.
+17. Inspect the mod repository, then present the complete public materials, release version, intended release-file scope, and proposed commit message before final artifact validation. The checkpoint may ask the owner to (a) approve the materials and (b) authorize the focused release-preparation commit in one response, but the two decisions must be labeled separately.
+18. Treat public-material approval and commit authorization as separate authorization boundaries even when requested together. Public-material approval alone does not authorize the commit.
+19. If the materials are approved and the commit is authorized, commit only the approved release/version/public-material changes and verify the repository is clean at the resulting revision.
+20. If release validation is agent-managed, build the exact release artifact from that clean committed revision, inspect it, calculate its checksum, and record the authoritative artifact identity and checksum in the handoff.
+21. If release packaging is owner-managed, record the approved source revision, expected command/artifact pattern, and owner-managed boundary instead of building.
+22. Present the completed internal presentation record and release handoff for stage approval.
+23. Revise until explicitly approved. If a revision changes the committed release source, obtain new commit authorization and repeat artifact validation before final approval.
 
 ## Output Artifacts
 
@@ -341,6 +372,7 @@ This stage is complete when:
 - Public wording uses approved glossary terms consistently when the glossary applies.
 - Public-facing glossary updates introduced by release copy are recorded.
 - Icon and screenshot paths are recorded as owner-provided, agent-managed, or deferred.
+- A screenshot shot list was offered unless screenshots are deferred, and any configuration or world state staged for a shot has been reverted and recorded.
 - Owner-managed or deferred icon and screenshot work does not block README, changelog, or packaging.
 - Agent-managed icon or screenshot work, if any, is approved or explicitly deferred by the owner.
 - Owner-managed platform submission and publication responsibilities are respected.
