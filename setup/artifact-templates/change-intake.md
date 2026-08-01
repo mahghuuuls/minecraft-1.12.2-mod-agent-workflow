@@ -18,6 +18,14 @@
 - Version:
 - Source revision:
 - Current working-tree state:
+- Reported publication (date or URL, or "not yet published"):
+
+## Working Branch
+
+- Recommended branch:
+- Basis: published baseline / not yet published
+- Owner decision:
+- Merge back to default branch at cycle completion: Yes / No / Not applicable
 
 ## Scope
 

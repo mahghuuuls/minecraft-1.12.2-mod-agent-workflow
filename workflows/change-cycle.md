@@ -36,6 +36,7 @@ If the repository has no approved baseline, use Existing Mod Assessment first.
 Act as a change-impact coordinator before acting as an implementer.
 
 - Verify the baseline version and source revision before planning the change.
+- Determine whether the baseline records a reported publication, and apply the branching recommendation in `guidelines/collaboration-guidelines.md` before the cycle's first commit.
 - Use focused questions for branching impact decisions and compact decision packets for related low-risk route recommendations.
 - Separate the requested outcome from possible implementations.
 - Identify effects on behavior, loader/runtime compatibility, configuration, persisted data, dependencies, architecture, distribution platforms, performance, and release scope.
@@ -67,6 +68,17 @@ as `<artifact-root>`.
 
 Record the cycle ID, artifact root, baseline revision, and status in `project-status.md`.
 
+## Working Branch
+
+Determine the cycle's working branch before any code change, using the branching rule in `guidelines/collaboration-guidelines.md`.
+
+Check `project-baseline.md` for a reported publication date or URL:
+
+- **No reported publication.** Work on `project_default_branch`. Record that the mod is not yet published and no branch is needed.
+- **Reported publication.** Recommend a `develop` branch created from the current default-branch tip, and record the owner's decision in the change intake.
+
+Present this with the intake route rather than as a separate interruption. Record the resulting working branch in `change-intake.md` and in `project-status.md`, so a resumed agent commits to the right branch without rediscovering the decision.
+
 ## Change Intake and Impact Analysis
 
 Produce:
@@ -95,18 +107,21 @@ Present the complete intake and proposed route for explicit approval before revi
 1. Confirm the entry conditions and baseline.
 2. Create the cycle ID and artifact root.
 3. Mark the workflow **In Progress**.
-4. Conduct Change Intake and Impact Analysis.
-5. Mark the intake checkpoint **Awaiting Approval** and present the route.
-6. Revise it until the owner approves it.
-7. Record stage dispositions in the authoritative `project-status.md` ledger.
-8. Mark affected canonical stages **Needs Revision**.
-9. Execute each **Revisit** stage in normal stage order.
-10. Execute Implementation Plan using the cycle artifact root, including the proportionate approval-bundle assessment.
-11. Execute Implementation using the cycle issues.
-12. Execute Release Presentation using the cycle artifact root, including release artifact validation and handoff when agent-managed by the ownership matrix.
-13. Produce `<artifact-root>/cycle-summary.md`.
-14. Set the manual publication state to **Ready for Publication**, update `project-baseline.md` with the release-ready version and source revision, and update `project-state.md`.
-15. Present the completed cycle for approval.
+4. Determine the working branch from the baseline's publication record.
+5. Conduct Change Intake and Impact Analysis.
+6. Mark the intake checkpoint **Awaiting Approval** and present the route, including the recommended working branch.
+7. Revise it until the owner approves it.
+8. Create the approved working branch, when one was approved, before the first cycle commit.
+9. Record stage dispositions in the authoritative `project-status.md` ledger.
+10. Mark affected canonical stages **Needs Revision**.
+11. Execute each **Revisit** stage in normal stage order.
+12. Execute Implementation Plan using the cycle artifact root, including the proportionate approval-bundle assessment.
+13. Execute Implementation using the cycle issues.
+14. Execute Release Presentation using the cycle artifact root, including release artifact validation and handoff when agent-managed by the ownership matrix.
+15. Produce `<artifact-root>/cycle-summary.md`.
+16. Offer the merge back into `project_default_branch` when the cycle used a separate working branch, and merge only under explicit authorization.
+17. Set the manual publication state to **Ready for Publication**, update `project-baseline.md` with the release-ready version and source revision, and update `project-state.md`.
+18. Present the completed cycle for approval.
 
 If the owner later reports a manual publication result, update `project-baseline.md` with the published URL/date/file information as an optional follow-up. Do not keep the Change Cycle open merely to wait for external publication.
 
@@ -122,7 +137,7 @@ It records the delta and traceability; it must not duplicate complete canonical 
 
 The agent-managed work is ready for manual publication when:
 
-- Change Intake and the selected route are approved.
+- Change Intake, the selected route, and the working-branch decision are approved.
 - Every **Revisit** stage is approved.
 - Every required cycle issue is Done.
 - Release Presentation, including artifact validation and handoff when agent-managed, is approved.

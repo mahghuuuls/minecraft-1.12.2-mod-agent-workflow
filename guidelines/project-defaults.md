@@ -34,7 +34,7 @@ These defaults apply to every mod unless an approved project-specific decision o
 - Determine the actual development JDK from the approved loader, template, and build tooling.
 - IntelliJ IDEA is the preferred IDE.
 - Use the project's wrapper instead of a separately installed build-tool version.
-- Use `project_default_branch` for a newly initialized mod repository.
+- Use `project_default_branch` for a newly initialized mod repository, and for all work until the mod has actually been published. After a publication is reported, recommend a `develop` branch for each Change Cycle. See Branching Before And After Publication in `guidelines/collaboration-guidelines.md`.
 
 ## Runtime Compatibility
 

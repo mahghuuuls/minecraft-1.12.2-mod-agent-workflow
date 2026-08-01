@@ -141,6 +141,24 @@ The proportionate approval bundle defined in `guidelines/process-control.md` is 
 
 A preferred push cadence records when the agent should offer a push, such as after each stage or only at release. It does not authorize any push. Every push still requires explicit authorization for the exact repository and branch.
 
+### Branching Before And After Publication
+
+Work directly on `project_default_branch`, normally `main`, while the mod has never been published. Initial Development always builds on the default branch, and so does a Change Cycle against a baseline that is still only release-ready. There is nothing for a branch to protect yet.
+
+Once the owner has reported an actual publication — the mod is uploaded and live on a distribution platform, and `project-baseline.md` records the publication date or URL — the default branch represents what players are already running. From that point, recommend a `develop` branch for the cycle's work and a merge back into the default branch when the cycle is complete.
+
+The trigger is a reported publication, not a **Ready for Publication** state. A baseline that is built, validated, and waiting for the owner to upload it has not been published, and does not activate this recommendation.
+
+At the start of a Change Cycle on a published mod:
+
+- State that the mod is published, and cite the publication record that establishes it.
+- Recommend creating `develop` from the current default-branch tip and doing the cycle's commits there.
+- Create the branch only with the owner's approval, like any other Git operation. If the owner prefers to stay on the default branch, record that decision in the change intake and continue without raising it again for that cycle.
+
+At the end of the cycle, once Release Presentation is approved and the release artifact is validated, offer the merge back into the default branch. The merge is a separate authorization from any commit, push, or publication. Do not merge partial work, and do not merge in order to tidy the repository before the cycle's own approvals are complete.
+
+This is a recommendation the owner can decline, not a gate on the work. Its purpose is to keep the branch that matches the published artifact free of half-finished changes, so a released version stays reproducible while the next one is being built.
+
 During Implementation, after each completed issue, approved vertical slice, or approved small-follow-up batch, resolve the commit checkpoint before moving to the next item. Ask for approval unless an applicable bounded standing authorization already covers that commit. Follow `stages/7-implementation.md`.
 
 Commit messages must be repo-facing by default:
