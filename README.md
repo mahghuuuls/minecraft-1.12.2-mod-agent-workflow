@@ -143,9 +143,9 @@ For manual instructions, see [Manual Workspace Setup](setup/manual-workspace-set
 
 The workflow's engineering assumptions were shaped by reading and applying:
 
-- ***Modern Software Engineering***, David Farley — working in small verifiable increments, treating feedback speed as a design concern, and requiring an empirical basis for believing something works rather than an assumed one.
-- ***A Philosophy of Software Design***, John Ousterhout — complexity as the thing actually being managed, and the resulting bias against speculative abstraction, unnecessary indirection, and structure added for hypothetical future needs.
-- ***The Pragmatic Programmer***, Andrew Hunt and David Thomas — vertical slices as tracer bullets, and keeping every decision in exactly one place instead of duplicating it across documents.
+- ***Modern Software Engineering***, David Farley. Working in small verifiable increments, treating feedback speed as a design concern, and requiring an empirical basis for believing something works rather than an assumed one.
+- ***A Philosophy of Software Design***, John Ousterhout. Complexity as the thing actually being managed, and the resulting bias against speculative abstraction, unnecessary indirection, and structure added for hypothetical future needs.
+- ***The Pragmatic Programmer***, Andrew Hunt and David Thomas. Vertical slices as tracer bullets, and keeping every decision in exactly one place instead of duplicating it across documents.
 
 These show up concretely in the vertical-slice planning model, the design-principle questions in the independent review checklist, the validation environment tiers and their evidence labels, and the rule that later artifacts reference stable identifiers instead of copying content.
 
@@ -153,8 +153,8 @@ These show up concretely in the vertical-slice planning model, the design-princi
 
 Several ideas were adapted from the agent skills published at [AI Hero](https://www.aihero.dev/):
 
-- **Decision issues** — that a tracked work item can represent a question to settle rather than a deliverable to build, from `/wayfinder`.
-- **Reported defect confirmation** — establishing that a reported bug is real, and where its cause actually lies, before planning a fix, from `/triage`.
-- **Investigate before asking** — reading available code, artifacts, and dependency sources to answer what the agent can answer itself, instead of asking the owner, from the interview skills.
+- **Decision issues**, from `/wayfinder`. A tracked work item can represent a question to settle rather than a deliverable to build.
+- **Reported defect confirmation**, from `/triage`. Establishing that a reported bug is real, and where its cause actually lies, before planning a fix.
+- **Investigate before asking**, from the interview skills. Reading available code, artifacts, and dependency sources to answer what the agent can answer itself, instead of asking the owner.
 
 Each was adapted to this workflow's stage, approval, and evidence model rather than adopted directly. This repository does not use or ship agent skills; its instructions are plain Markdown so they work with any agent that can read files.
