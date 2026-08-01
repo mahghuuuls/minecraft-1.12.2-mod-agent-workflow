@@ -11,6 +11,7 @@
 /workspace/artwork/
 
 /.claude/
+/.idea/
 
 # Accidental output of a shell redirect to `nul` outside cmd, where it is a
 # reserved device name rather than a filename.
