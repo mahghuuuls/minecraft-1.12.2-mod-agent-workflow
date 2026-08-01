@@ -1,18 +1,36 @@
+# This repository tracks a fixed, curated set of entries. Everything else is
+# ignored by default, so editor directories, agent configuration, and stray
+# files never reach the repository without being named here.
+#
+# Adding a new top-level file or directory requires an entry below. Without
+# one, `git add` refuses the path and reports that it is ignored.
+
+/*
+
+!/.gitignore
+!/AGENTS.md
+!/LICENSE
+!/README.md
+
+!/guidelines/
+!/procedures/
+!/references/
+!/scripts/
+!/setup/
+!/stages/
+!/workflows/
+
+# The workspace holds project-specific runtime state: configuration, documents,
+# artwork, dependency references, the template checkout, and the active mod
+# repository. Only the directory markers are tracked.
+
+!/workspace/
+/workspace/*
+
+!/workspace/documentation/
 /workspace/documentation/*
 !/workspace/documentation/.gitkeep
 
+!/workspace/project/
 /workspace/project/*
 !/workspace/project/.gitkeep
-
-/workspace/template/
-/workspace/dependencies/
-/workspace/project.properties
-
-/workspace/artwork/
-
-/.claude/
-/.idea/
-
-# Accidental output of a shell redirect to `nul` outside cmd, where it is a
-# reserved device name rather than a filename.
-/nul
