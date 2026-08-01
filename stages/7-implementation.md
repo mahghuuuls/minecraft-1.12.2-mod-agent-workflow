@@ -29,7 +29,7 @@ For each implementation issue:
 - Verify behavior inside Minecraft where necessary
 - Check client and dedicated-server behavior where relevant
 - Validate technical uncertainties assigned to the issue
-- Record completion evidence
+- Record completion evidence, labelling each claim observed, inspected, or inferred
 - Record accepted validation waivers when the owner skips or owns a check
 - Obtain an independent review
 - Correct legitimate review findings
@@ -140,6 +140,18 @@ Use the environment tiers approved in the implementation plan. Record the exact 
 - A packaged clean environment does not prove compatibility with the target modpack or alternate runtime.
 - A target modpack check does not by itself prove general compatibility with every modpack.
 - External multiplayer is required only when the approved risk or behavior needs separately operated multiplayer evidence.
+
+### Absence Requirements
+
+An acceptance criterion of the form *works without X*, *works when X is missing*, or *does not require X* cannot be verified in an environment that contains X. Such a check does not merely become harder there; it produces a passing result for the wrong reason. The development environment almost always contains X, because having X installed is what makes it a development environment.
+
+Before recording evidence for a check like this:
+
+- Name the component the criterion says must be absent.
+- Confirm the environment used genuinely lacks it, rather than merely not using it.
+- If it cannot lack it, raise the tier, build a separately configured environment, or record a validation waiver. Do not substitute a same-environment result.
+
+Supporting evidence is still worth recording. Inspecting the built artifact for the attribute that makes the absence case work is legitimate, but it is *inspected* rather than *observed* and does not close the criterion on its own.
 
 Dimension checks are risk-based. For dimension-agnostic code, inspect the relevant code path and use one representative non-Overworld runtime check when runtime confirmation is required. Do not require checks in every dimension unless the implementation or defect is dimension-specific.
 
@@ -332,6 +344,17 @@ Minor implementation details that do not alter approved behavior or architectura
 
 Implementation and review must use separate agent contexts for behavioral and structural issues. Closely related editorial-only follow-ups may be independently reviewed as one approved batch.
 
+Independent review is also required whenever the issue's deliverable is **evidence rather than code**. A compatibility confirmation, an add-on or dependency verification, a lifecycle investigation, or any issue closed largely on inspection produces little or no diff, and that is precisely the case where the implementing agent is most likely to mistake its own reasoning for observation. Do not skip review because there is nothing to read.
+
+For an evidence-only issue the review scope is the evidence chain, not the diff. Give the reviewer:
+
+- The acceptance criterion and what would count as satisfying it.
+- Each recorded evidence item with its observed / inspected / inferred label.
+- The environment tier each item came from, and whether that environment could have produced the result for the wrong reason.
+- The raw material: logs, generated files, command output, artifact inspection.
+
+The reviewer judges whether each label is correct, whether an inferred claim is presented as observed, whether an absence requirement was checked in an environment that could satisfy it at all, and whether the evidence reaches the criterion or merely surrounds it. Downgrading a label is a blocking finding.
+
 The review agent must receive:
 
 - `guidelines/project-defaults.md`
@@ -360,6 +383,7 @@ The review agent should examine:
 - Unnecessary complexity
 - Missing or inadequate verification
 - Whether accepted validation waivers affect public claims or release safety
+- Whether each completion-evidence label is accurate, and whether any acceptance criterion rests on an inferred claim without an accepted waiver
 - Unrelated changes
 
 The reviewer should separate:
@@ -376,22 +400,47 @@ A clean review context improves independence, but does not make the review autom
 
 ## Completion Evidence
 
+### Evidence Labels
+
+Every recorded evidence claim carries exactly one label, written in the line itself:
+
+- **observed:** the behavior was seen happening in a running environment. A log line produced by the run, a value read in-game, a command's actual output.
+- **inspected:** a concrete artifact was read directly and shows the state, but the behavior was not exercised. A generated config file, a jar's contents, bytecode, a test report, source of a dependency.
+- **inferred:** the conclusion follows from reasoning about code, documentation, or dependency behavior, without either seeing the behavior or reading an artifact that records it.
+
+Rules:
+
+- Label each claim, not each section. One section commonly mixes labels.
+- When a claim rests on several steps, use the weakest label among them. An observation that only becomes relevant through a reasoning step is *inferred*.
+- An **inferred** claim never satisfies an acceptance criterion by itself. Either upgrade it to observed or inspected, or record a validation waiver and have the owner accept the limitation explicitly.
+- Never restate an inferred claim in later artifacts, summaries, or public copy as though it were observed. This is the specific failure the labels exist to prevent.
+
+Examples:
+
+```text
+- Result (observed): server log shows "Applied 3 spell overrides" at preInit; in-game mana cost read 240.
+- Result (inspected): javap on the shipping jar shows acceptableRemoteVersions = "*" in the @Mod annotation.
+- Result (inferred): Forge installs the always-compatible checker for that value, so a mod-less client would be admitted. Not observed; see WAIVER-001.
+```
+
 Record evidence directly in the issue file:
 
 ```markdown
 ## Completion Evidence
 
+Every result line ends with one label: (observed), (inspected), or (inferred).
+
 ### Automated Checks
 
 - Command:
-- Result:
+- Result (observed | inspected | inferred):
 
 ### In-Game Verification
 
-- Environment:
+- Environment tier:
 - Procedure:
 - Expected result:
-- Observed result:
+- Actual result (observed | inspected | inferred):
 
 ### Diagnostic Support
 
@@ -401,17 +450,17 @@ Record evidence directly in the issue file:
 - Corroborating evidence:
 - Default state:
 - Authorization behavior, when applicable:
-- Result:
+- Result (observed | inspected | inferred):
 
 ### Dedicated Server
 
 - Procedure:
-- Result:
+- Result (observed | inspected | inferred):
 
 ### Compatibility or Performance
 
 - Procedure:
-- Result:
+- Result (observed | inspected | inferred):
 
 ### Accepted Validation Waivers
 
@@ -430,7 +479,7 @@ Record evidence directly in the issue file:
 - None
 ```
 
-Omit verification categories that genuinely do not apply. Include accepted validation waivers whenever a normally relevant check was skipped by owner decision or ownership boundary.
+Omit verification categories that genuinely do not apply. Include accepted validation waivers whenever a normally relevant check was skipped by owner decision or ownership boundary. Do not omit a label because the answer is uncomfortable; an honest *inferred* is useful evidence, a mislabelled *observed* is not.
 
 Omit **Diagnostic Support** when stable normal behavior was sufficient for all manual checks. When it applies, record enough evidence to show that the diagnostic exposed the intended authoritative state and did not remain unintentionally enabled or accessible beyond its approved authorization boundary.
 
@@ -445,8 +494,9 @@ An issue is complete when:
 - Client, dedicated-server, multiplayer, compatibility, and performance checks pass where assigned or have accepted waivers.
 - The implementation follows the approved architecture.
 - No unrelated behavior was introduced.
-- Completion evidence is recorded.
-- Independent review is complete.
+- Completion evidence is recorded, and every evidence claim carries an accurate observed / inspected / inferred label.
+- No acceptance criterion rests on an inferred claim without an accepted validation waiver.
+- Independent review is complete, including for an issue whose deliverable is evidence rather than code.
 - Legitimate review findings are resolved.
 - Any remaining limitations are explicit and approved.
 - The issue status is **Done**.

@@ -113,9 +113,19 @@
 
 ## Completion Evidence
 
+Every result line ends with one label: (observed), (inspected), or (inferred). See Evidence Labels in `stages/7-implementation.md`.
+
 ### Automated Checks
 
+- Command:
+- Result (observed | inspected | inferred):
+
 ### In-Game Verification
+
+- Environment tier:
+- Procedure:
+- Expected result:
+- Actual result (observed | inspected | inferred):
 
 ### Diagnostic Support
 
@@ -125,17 +135,17 @@
 - Corroborating evidence:
 - Default state:
 - Authorization behavior, when applicable:
-- Result:
+- Result (observed | inspected | inferred):
 
 ### Dedicated Server
 
 - Procedure:
-- Result:
+- Result (observed | inspected | inferred):
 
 ### Compatibility Or Performance
 
 - Procedure:
-- Result:
+- Result (observed | inspected | inferred):
 
 ### Accepted Validation Waivers
 

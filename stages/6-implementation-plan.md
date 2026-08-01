@@ -295,6 +295,14 @@ Use these evidence tiers consistently:
 
 Higher numbers are not automatically better or mandatory. Select tiers from the behavior and risk. For every planned check, record the tier, the evidence it supplies, and important evidence it cannot supply.
 
+An **absence requirement** — an acceptance criterion of the form *works without X*, *works when X is missing*, or *does not require X* — cannot be assigned to a tier whose environment contains X. Tiers 2 and 3 share one development installation, so anything present for one side is present for the other. When planning such a check:
+
+- Name the component that must be absent.
+- Confirm the chosen tier can genuinely lack it, rather than merely not exercise it.
+- If no available tier can, say so in the plan and record the check as **Waive** with its evidence limitation.
+
+Scheduling an absence check in an environment that contains the component is worse than not scheduling it, because it will appear to pass. See Absence Requirements in `stages/7-implementation.md`.
+
 Dimension coverage is also risk-based. When behavior is dimension-agnostic, source inspection plus one representative non-Overworld runtime check is normally sufficient. Require broader dimension coverage only when the code, dependency, configuration, or reported defect is dimension-specific.
 
 Before Implementation begins, present one compact decision packet for owner-performed manual checks. Record each as:
