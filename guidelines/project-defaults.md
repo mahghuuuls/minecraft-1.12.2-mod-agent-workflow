@@ -84,6 +84,7 @@ Do not leave example values in initialized project files.
 
 - Default commit-message style is `repo-facing-no-workflow-issue-references`.
 - Commit messages should describe the repository change itself.
+- Keep a commit message to one short subject line. Add a body only when the change has rationale a future reader could not recover from the diff, and never to restate what the diff already shows.
 - Do not reference workflow issue IDs, internal issue names, stage documents, or process-only context unless the owner explicitly requests that style.
 - Assume a future reader has access to the Git repository but not to the workflow artifacts.
 - Treat repo-facing commit messages as an invariant default. Do not ask the owner to approve this default during setup; ask only when the owner explicitly requests a different style.

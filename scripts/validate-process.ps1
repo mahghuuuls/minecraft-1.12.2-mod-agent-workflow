@@ -133,7 +133,7 @@ Get-ChildItem -LiteralPath (Join-Path $root 'setup') -Recurse -File -Filter '*.p
 $prohibitedPortabilityPatterns = [ordered]@{
     'Owner-specific GitHub username used as a project value' = '(?im)^\s*github_username\s*=\s*mahghuuuls\s*$'
     'Owner-specific Java package used as a project value' = '(?im)^\s*root_package\s*=\s*com\.mahghuuuls(?:\.|$)'
-    'Prior project identity' = '(?i)\b(?:leftclickvacation|periodic[-_ ]mob[-_ ]drops)\b'
+    'Prior project identity' = '(?i)\b(?:leftclickvacation|periodic[-_ ]mob[-_ ]drops|damagerecap|wizardry[-_ ]spell[-_ ]tweaker)\b'
     'Owner local Windows user path' = '(?i)[A-Za-z]:[\\/]+Users[\\/]+(?:arthurcrs|ARTHUR~1)(?:[\\/]|$)'
     'Codex attachment path' = '(?i)\.codex[\\/]attachments[\\/]'
     'Personal email address' = '(?i)arthcrs@gmail\.com'
