@@ -145,7 +145,7 @@ A preferred push cadence records when the agent should offer a push, such as aft
 
 Work directly on `project_default_branch`, normally `main`, while the mod has never been published. Initial Development always builds on the default branch, and so does a Change Cycle against a baseline that is still only release-ready. There is nothing for a branch to protect yet.
 
-Once the owner has reported an actual publication — the mod is uploaded and live on a distribution platform, and `project-baseline.md` records the publication date or URL — the default branch represents what players are already running. From that point, recommend a `develop` branch for the cycle's work and a merge back into the default branch when the cycle is complete.
+Once the owner has reported an actual publication, meaning the mod is uploaded and live on a distribution platform and `project-baseline.md` records the publication date or URL, the default branch represents what players are already running. From that point, recommend a `develop` branch for the cycle's work and a merge back into the default branch when the cycle is complete.
 
 The trigger is a reported publication, not a **Ready for Publication** state. A baseline that is built, validated, and waiting for the owner to upload it has not been published, and does not activate this recommendation.
 

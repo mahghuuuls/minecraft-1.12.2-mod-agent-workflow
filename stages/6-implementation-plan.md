@@ -170,7 +170,7 @@ Do not create one to postpone a decision the current stage already owns. A Decis
 
 Every Decision issue names who closes it:
 
-- **Owner:** only the project owner can settle it — scope, acceptable risk, licensing, public claims, ownership boundaries, or preference. The agent still prepares the question, presenting the options, what each costs, and a recommendation. It does not choose.
+- **Owner:** only the project owner can settle it. This covers scope, acceptable risk, licensing, public claims, ownership boundaries, and preference. The agent still prepares the question, presenting the options, what each costs, and a recommendation. It does not choose.
 - **Agent:** the agent can settle it from research, source inspection, an experiment, or a dependency's observed behavior, and records the finding with its evidence label.
 
 An Agent decision that turns out to change approved scope, requirements, architecture, licensing, or public claims stops being an Agent decision. Escalate it and route the artifact change through the backward-transition process.
@@ -354,7 +354,7 @@ Use these evidence tiers consistently:
 
 Higher numbers are not automatically better or mandatory. Select tiers from the behavior and risk. For every planned check, record the tier, the evidence it supplies, and important evidence it cannot supply.
 
-An **absence requirement** — an acceptance criterion of the form *works without X*, *works when X is missing*, or *does not require X* — cannot be assigned to a tier whose environment contains X. Tiers 2 and 3 share one development installation, so anything present for one side is present for the other. When planning such a check:
+An **absence requirement** is an acceptance criterion of the form *works without X*, *works when X is missing*, or *does not require X*. It cannot be assigned to a tier whose environment contains X. Tiers 2 and 3 share one development installation, so anything present for one side is present for the other. When planning such a check:
 
 - Name the component that must be absent.
 - Confirm the chosen tier can genuinely lack it, rather than merely not exercise it.

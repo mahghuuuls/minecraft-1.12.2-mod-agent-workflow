@@ -48,7 +48,7 @@
 
 ## Approval And Authorization Packet
 
-- **Proportionate bundle eligibility:** Eligible / Ineligible — reason
+- **Proportionate bundle eligibility:** Eligible / Ineligible, with reason
 - **Implementation Plan approval:** Requested / Approved / Not Approved
 - **Implementation start:** Named issue and authorization status
 - **Read-only independent review:** Scope and authorization status
