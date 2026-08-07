@@ -17,6 +17,8 @@ The architecture should provide a clear map of where responsibilities belong and
 - `workspace/documentation/glossary.md`, when present
 - The active mod repository, when architecture must account for existing code
 - Approved dependency source reference checkouts under `workspace/dependencies/`, when Feasibility Research created or accepted them
+- `guidelines/coding-standards.md`, whose General Design and Loader Integration sections are what the Architecture Quality criteria below resolve to in code
+- `guidelines/collaboration-guidelines.md`, for how decisions and their alternatives are recorded and approved
 
 ## Objectives
 

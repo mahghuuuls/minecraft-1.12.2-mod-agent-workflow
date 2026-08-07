@@ -17,6 +17,8 @@ This stage performs research. It does not write or test implementation code.
 - Any supplied source code, mod files, documentation, or references
 - Any owner-provided dependency source repository URLs, local paths, or version constraints
 - `workspace/documentation/dependency-references.md`, when present
+- `guidelines/coding-standards.md`, whose Dependencies section governs which libraries may be preferred, bundled, or declared optional
+- `guidelines/collaboration-guidelines.md`, for how findings and blocking questions are raised with the owner
 
 ## Objectives
 

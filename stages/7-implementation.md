@@ -17,6 +17,7 @@ Implementation includes coding, testing, in-game verification, defect correction
 - The selected issue under `<artifact-root>/issues/`
 - The requirements and architecture references named by that issue
 - The active project under `workspace/project/<project_directory_name>/`
+- `guidelines/coding-standards.md`, which governs how the code is written and what counts as verification in this stage
 
 ## Objectives
 
@@ -209,6 +210,10 @@ After the planned behavioral issues are Done, classify each requested follow-up 
 If investigation shows that an editorial request requires framework behavior, API use, migration logic, or structural renaming, stop and explain the expanded scope and cost before proceeding. Do not run a full clean build after every phrasing iteration when targeted checks are adequate; the final stabilized batch still requires a clean verification run.
 
 ## Testing Approach
+
+The verification standards in `guidelines/coding-standards.md` govern every check in this stage, automated and manual alike. Read that section before defining expected results, not after observing them.
+
+The rule most often skipped is that a check whose passing observation would look identical if the feature were absent proves nothing. A check that fails this rule cannot fail at all, so it produces evidence-shaped output that establishes nothing, and it reads as a pass in the completion record. Establish the distinguishing condition first, then observe.
 
 Strict TDD is not required.
 
