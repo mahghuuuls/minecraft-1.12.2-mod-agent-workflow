@@ -251,9 +251,12 @@ Before requesting commit approval:
 Commit-message guidance:
 
 - Describe the actual code or asset change.
+- **Keep the message to one short subject line.** Add a body only when the change carries rationale a future reader could not recover from the diff, and never to restate what the diff already shows. This is the full rule from `guidelines/project-defaults.md`, repeated here because it is needed at the moment the message is written rather than a document away.
 - Do not reference internal workflow issue IDs, issue filenames, stage documents, or process-only context unless the owner explicitly requests that style.
 - Do not use messages that require the reader to know the workflow documentation.
 - Assume a future reader has access to the Git repository but not the process artifacts.
+
+Read these rules rather than recalling them. The two failures below are the ones that actually occur, and a body is what makes the second possible: process context escapes into bodies, not into subject lines.
 
 Good example:
 
@@ -261,11 +264,24 @@ Good example:
 Add client-side left-click vacation toggle
 ```
 
-Bad example:
+Bad, references a process artifact:
 
 ```text
 Complete issue 3 from implementation-plan.md
 ```
+
+Bad, restates the diff at length:
+
+```text
+Add the arena builder
+
+This adds ArenaBuilder with a build method and a clearInterior method.
+The build method places the floor, then the walls, then the ceiling, and
+returns the number of blocks changed. The clearInterior method sets the
+interior to air and returns the count. Both take a world and a record.
+```
+
+The second is a defect even though it references nothing internal. It is the diff written out in prose, and it is the shape a long message takes by default when no one is checking.
 
 If the owner specifically approves the commit, or a bounded standing implementation-commit authorization from `guidelines/collaboration-guidelines.md` applies, create it in the active mod repository only. State when standing authorization is being applied. If neither applies, ask. If the owner declines or defers, record the decision and continue only if the owner approves moving to the next issue with uncommitted changes.
 

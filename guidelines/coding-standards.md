@@ -32,6 +32,7 @@ These standards apply to implementation work across all mod projects. Project-sp
 - Prefer explicit, readable types when inference would obscure domain meaning.
 - Handle nullable Minecraft and mod integration values defensively where absence is valid.
 - Use concise comments only when intent, constraints, or non-obvious behavior cannot be expressed clearly through code.
+- Do not reference workflow issue IDs, internal issue names, stage documents, or process-only context in source comments, and do not cite them as the justification for a decision. Explain the reason itself instead. A comment must stand for a reader who has the repository but not the workflow artifacts, which is the same standard commit messages are held to in `guidelines/project-defaults.md`.
 
 ## Loader Integration and Sidedness
 

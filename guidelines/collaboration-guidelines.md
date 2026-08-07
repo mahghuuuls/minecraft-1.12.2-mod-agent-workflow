@@ -137,6 +137,10 @@ During Implementation, the owner may give bounded standing authorization for the
 
 Standing implementation-commit authorization is optional, revocable, and does not carry into Release Presentation or a later workflow. Without it, request commit authorization at each issue checkpoint as usual.
 
+**The authorization removes the only point at which the owner would otherwise see a commit message before it lands.** Nothing else in the stage inspects message form, so a style rule the agent misremembers will drift silently for as long as the authorization holds, across every commit in the stage. Before each commit made under standing authorization, re-read the commit-message rules in `guidelines/project-defaults.md` rather than relying on recall of them, and confirm the message satisfies the length rule and the no-internal-references rule specifically. State that the check was performed when stating that the authorization is being applied.
+
+This is a known failure, not a hypothetical one. On a completed project the length rule was missed on roughly twenty-five consecutive commits under standing authorization, and the agent's recall of "repo-facing" satisfied the part it remembered while the rest went unchecked.
+
 The proportionate approval bundle defined in `guidelines/process-control.md` is one specific form of bounded standing implementation-commit authorization. It may cover only the named single issue in the active low-risk Change Cycle and only one local commit after that issue satisfies its Definition of Done. When the recorded conditions remain satisfied, apply the authorization without asking again. A changed issue, failed or materially altered verification, expanded review scope, unrelated working-tree changes, or any excluded action requires a new decision.
 
 A preferred push cadence records when the agent should offer a push, such as after each stage or only at release. It does not authorize any push. Every push still requires explicit authorization for the exact repository and branch.
