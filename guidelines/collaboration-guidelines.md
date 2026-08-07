@@ -165,12 +165,7 @@ This is a recommendation the owner can decline, not a gate on the work. Its purp
 
 During Implementation, after each completed issue, approved vertical slice, or approved small-follow-up batch, resolve the commit checkpoint before moving to the next item. Ask for approval unless an applicable bounded standing authorization already covers that commit. Follow `stages/7-implementation.md`.
 
-Commit messages must be repo-facing by default:
-
-- Describe the actual repository change.
-- Do not reference workflow issue IDs, internal issue names, stage documents, or process-only context unless explicitly requested.
-- Assume a future reader has access to the Git repository but not the workflow artifacts.
-- Treat this as the standing default. Do not ask the owner to approve repo-facing commit messages unless they explicitly request a different style.
+Commit messages must be repo-facing by default. The rules are owned by the Commit Messages section of `guidelines/project-defaults.md`. Read them there before writing a message rather than working from recall, and note that they constrain message length as well as content.
 
 Publication to every approved distribution platform is performed manually by the project owner. Agents may prepare handoffs but may not upload or publish the mod.
 

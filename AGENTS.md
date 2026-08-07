@@ -178,6 +178,16 @@ Do not silently resolve contradictions between sources. Follow `guidelines/proce
 
 When instructions overlap, the file that owns the subject is authoritative. Other files should reference it instead of restating it.
 
+An unmarked restatement is a defect, because a partial copy reads as a complete rule and gives the reader no signal that anything is missing. A rule may be repeated inline only where it is needed at the moment of action, and only as a marked copy:
+
+```text
+<!-- canonical-copy: guidelines/project-defaults.md#commit-messages -->
+- The bullets go here, verbatim from the canonical section.
+<!-- end-canonical-copy -->
+```
+
+Every bullet inside a marked block must appear verbatim in the named canonical section. `scripts/validate-process.ps1` enforces this, so a copy that drifts from its source fails validation rather than quietly becoming a second and weaker version of the rule. Add stage-specific commentary and examples outside the marked block, never inside it.
+
 ## Execution
 
 Complete or carry forward Project Setup, then resume or obtain approval for the applicable workflow. Follow one checkpoint or stage at a time, keep authoritative status in `project-status.md`, refresh `project-state.md` only for resume/handoff needs, maintain the project glossary and dependency reference registry when relevant, record workflow feedback when relevant, and stop whenever owner approval is required. A checkpoint may explicitly combine approval of the current item with authorization to begin the already-briefed next item; never advance without that authorization.

@@ -253,13 +253,16 @@ Before requesting commit approval:
 - Confirm that no unrelated files are included.
 - Propose a repo-facing commit message.
 
-Commit-message guidance:
+Commit-message guidance, owned by `guidelines/project-defaults.md` and repeated here because it is needed at the moment the message is written:
 
-- Describe the actual code or asset change.
-- **Keep the message to one short subject line.** Add a body only when the change carries rationale a future reader could not recover from the diff, and never to restate what the diff already shows. This is the full rule from `guidelines/project-defaults.md`, repeated here because it is needed at the moment the message is written rather than a document away.
-- Do not reference internal workflow issue IDs, issue filenames, stage documents, or process-only context unless the owner explicitly requests that style.
-- Do not use messages that require the reader to know the workflow documentation.
-- Assume a future reader has access to the Git repository but not the process artifacts.
+<!-- canonical-copy: guidelines/project-defaults.md#commit-messages -->
+- Default commit-message style is `repo-facing-no-workflow-issue-references`.
+- Commit messages should describe the repository change itself.
+- Keep a commit message to one short subject line. Add a body only when the change has rationale a future reader could not recover from the diff, and never to restate what the diff already shows.
+- Do not reference workflow issue IDs, internal issue names, stage documents, or process-only context unless the owner explicitly requests that style.
+- Assume a future reader has access to the Git repository but not to the workflow artifacts.
+- Treat repo-facing commit messages as an invariant default. Do not ask the owner to approve this default during setup; ask only when the owner explicitly requests a different style.
+<!-- end-canonical-copy -->
 
 Read these rules rather than recalling them. The two failures below are the ones that actually occur, and a body is what makes the second possible: process context escapes into bodies, not into subject lines.
 

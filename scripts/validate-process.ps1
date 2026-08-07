@@ -187,6 +187,104 @@ foreach ($file in $markdownFiles) {
     }
 }
 
+# Every stage must name at least one guideline. A stage that routes nowhere leaves the agent
+# executing it with no path to the rules it is meant to follow, which is how coding-standards.md
+# came to be reachable only from AGENTS.md while governing all of Implementation.
+$stageFiles = Get-ChildItem -LiteralPath (Join-Path $root 'stages') -File -Filter '*.md' | Sort-Object Name
+$referencedGuidelines = [System.Collections.Generic.HashSet[string]]::new()
+foreach ($file in $stageFiles) {
+    $text = Get-Content -Raw -LiteralPath $file.FullName
+    $matched = [regex]::Matches($text, 'guidelines/([a-z0-9-]+\.md)')
+    if ($matched.Count -eq 0) {
+        Add-Error "Stage stages/$($file.Name) references no guideline. Name the guidelines it depends on."
+    }
+    foreach ($match in $matched) {
+        [void]$referencedGuidelines.Add($match.Groups[1].Value)
+    }
+}
+
+foreach ($file in (Get-ChildItem -LiteralPath (Join-Path $root 'workflows') -File -Filter '*.md')) {
+    $text = Get-Content -Raw -LiteralPath $file.FullName
+    foreach ($match in [regex]::Matches($text, 'guidelines/([a-z0-9-]+\.md)')) {
+        [void]$referencedGuidelines.Add($match.Groups[1].Value)
+    }
+}
+
+# Guidelines that are session-level rather than stage-scoped, and so are legitimately reached
+# from AGENTS.md alone. Adding a file here is a deliberate statement that no stage owns it.
+$sessionLevelGuidelines = @('workflow-glossary.md')
+
+foreach ($file in (Get-ChildItem -LiteralPath (Join-Path $root 'guidelines') -File -Filter '*.md')) {
+    if ($sessionLevelGuidelines -contains $file.Name) { continue }
+    if (-not $referencedGuidelines.Contains($file.Name)) {
+        Add-Error "Guideline guidelines/$($file.Name) is referenced by no stage or workflow. Route it, or list it as session-level in validate-process.ps1."
+    }
+}
+
+# A marked canonical copy must still match its source. Without this, a repeated rule silently
+# becomes a second and weaker version of itself, which is the failure this marker exists to catch.
+foreach ($file in $markdownFiles) {
+    $relative = $file.FullName.Substring($root.Length).TrimStart([char[]]'\/').Replace('\', '/')
+    $lines = Get-Content -LiteralPath $file.FullName
+    $canonicalTarget = $null
+    $blockStartLine = 0
+    $lineNumber = 0
+    $inFence = $false
+    foreach ($line in $lines) {
+        $lineNumber++
+        # A fenced block documents the mechanism rather than using it, so markers inside one
+        # are examples and must not be validated as live copies.
+        if ($line -match '^\s*```') {
+            $inFence = -not $inFence
+            continue
+        }
+        if ($inFence) { continue }
+        if ($line -match '^<!--\s*canonical-copy:\s*(\S+?)\s*-->$') {
+            $canonicalTarget = $Matches[1]
+            $blockStartLine = $lineNumber
+            continue
+        }
+        if ($line -match '^<!--\s*end-canonical-copy\s*-->$') {
+            if ($null -eq $canonicalTarget) {
+                Add-Error "Unopened end-canonical-copy in ${relative} at line $lineNumber"
+            }
+            $canonicalTarget = $null
+            continue
+        }
+        if ($null -eq $canonicalTarget) { continue }
+        if ($line -notmatch '^- ') { continue }
+
+        $targetParts = $canonicalTarget.Split('#')
+        $targetPath = Join-Path $root $targetParts[0]
+        if (-not (Test-Path -LiteralPath $targetPath)) {
+            Add-Error "Canonical copy in ${relative} points at a missing file: $($targetParts[0])"
+            continue
+        }
+        $targetText = Get-Content -Raw -LiteralPath $targetPath
+        if (-not $targetText.Contains($line)) {
+            Add-Error "Canonical copy in ${relative} line ${lineNumber} does not match $($targetParts[0]): $line"
+        }
+    }
+    if ($null -ne $canonicalTarget) {
+        Add-Error "Unclosed canonical-copy block in ${relative} opened at line $blockStartLine"
+    }
+}
+
+# House style. Enforced by hand until now, which did not hold.
+# -Encoding UTF8 is required, not cosmetic. Windows PowerShell defaults to the ANSI codepage for
+# a file with no BOM, which decodes the em dash bytes as three separate characters and makes this
+# check silently incapable of failing.
+foreach ($file in $markdownFiles) {
+    $relative = $file.FullName.Substring($root.Length).TrimStart([char[]]'\/').Replace('\', '/')
+    $lineNumber = 0
+    foreach ($line in (Get-Content -LiteralPath $file.FullName -Encoding UTF8)) {
+        $lineNumber++
+        if ($line.Contains([char]0x2014)) {
+            Add-Error "Em dash in versioned process prose: ${relative} line $lineNumber"
+        }
+    }
+}
+
 if ($errors.Count -gt 0) {
     Write-Host "Process validation failed with $($errors.Count) error(s):" -ForegroundColor Red
     foreach ($errorMessage in $errors) {
@@ -195,4 +293,4 @@ if ($errors.Count -gt 0) {
     exit 1
 }
 
-Write-Host "Process validation passed: required files, template ownership, headings, references, portability checks, retired-stage checks, and numbered lists are consistent." -ForegroundColor Green
+Write-Host "Process validation passed: required files, template ownership, headings, references, portability checks, retired-stage checks, numbered lists, stage routing, guideline coverage, canonical copies, and house style are consistent." -ForegroundColor Green

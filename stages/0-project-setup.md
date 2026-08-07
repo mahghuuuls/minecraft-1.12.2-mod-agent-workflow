@@ -240,13 +240,7 @@ Client/server responsibility values:
 
 For a new mod whose concept is not known yet, do not force this classification during Project Setup. Record it as deferred. Concept and Scope should establish the intended behavior, and Feasibility Research should validate the runtime responsibility once the behavior is concrete enough.
 
-Commit-message style rules:
-
-- Default to repo-facing messages.
-- Commit messages should describe the repository change itself.
-- Do not reference workflow issue IDs, internal issue names, stage documents, or process-only context unless the owner explicitly requests that style.
-- Assume a future reader has access to the Git repository but not to the workflow artifacts.
-- Treat repo-facing messages as the standing default. Do not ask the owner to approve this default unless they explicitly request a different style.
+Commit-message style rules are owned by the Commit Messages section of `guidelines/project-defaults.md`. Read them there rather than from a summary. They are an invariant default, so do not ask the owner to approve them during setup; ask only if the owner requests a different style, and record that request here.
 
 When enough values are approved, write them to `workspace/project.properties`. When repository or identity values are missing, record them as deferred to Project Initialization rather than blocking earlier design stages.
 

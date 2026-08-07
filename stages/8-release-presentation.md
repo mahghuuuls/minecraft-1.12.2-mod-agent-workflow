@@ -107,6 +107,8 @@ Act as a release documentation editor.
 
 ## Public Documentation Guidance
 
+The defaults for public documentation are owned by the Public Documentation section of `guidelines/project-defaults.md`, including which document is repository-facing, which is player-facing, the AI usage disclaimer, and what internal material must stay out of public copy. Read that section first. What follows is the stage-specific detail built on top of it, not a replacement for it.
+
 Use approved glossary terms for feature names, configuration concepts, compatibility notes, and player-facing behavior. Do not introduce synonyms merely for variety when consistency matters.
 
 ### Repository README Guidance
