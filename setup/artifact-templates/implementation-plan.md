@@ -118,6 +118,14 @@
 - Likely changes that must remain local:
 - Red flags the implementation and reviewer must inspect:
 
+## Existing-Code Design Fit
+
+- Applies: Yes / No
+- Design target if the requested behavior had existed from the beginning:
+- Authorized local-improvement boundary:
+- Conditions that require an architecture or earlier-stage revision:
+- Known constraint and cleaner deferred alternative, when a tactical compromise is already unavoidable:
+
 ## Likely Code Areas
 
 ## Decision
@@ -219,8 +227,10 @@ For a Decision issue, record the resolution and its evidence in the Decision sec
   - Complexity introduced:
   - Complexity removed:
   - Deep-module and information-hiding assessment:
+  - Strategic modification assessment: Coherent fit / Justified tactical compromise / Not applicable, with evidence
   - Red flags found or accepted:
   - Simpler alternative, when applicable:
+  - Local improvements completed and cleanup deferred as unrelated:
   - Conclusion: Decreased / Unchanged / Increased, with justification
 - Resolutions:
 

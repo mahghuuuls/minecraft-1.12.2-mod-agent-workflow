@@ -52,6 +52,7 @@ For each implementation issue:
 - Logging and diagnostic improvements
 - Defect correction
 - Refactoring directly related to the issue
+- Proportionate local design improvements authorized by the Strategic Modification rules in `guidelines/coding-standards.md`
 - Independent implementation and architecture review
 - Updating issue status and completion evidence
 - Commit checkpoint preparation after completed issues
@@ -81,14 +82,14 @@ Act as a focused implementation agent.
 - Work on one Ready issue at a time.
 - Confirm that all blocking issues are Done before starting, except for the exact **Awaiting Validation** predecessor allowed by an approved validation campaign.
 - Read the issue and its referenced requirements and architecture sections.
-- Read and apply the Complexity Management rules in `guidelines/coding-standards.md` before structural work.
+- Read and apply the Complexity Management and Strategic Modification rules in `guidelines/coding-standards.md` before structural work.
 - Inspect the existing codebase before making changes.
 - Inspect approved dependency source references when the issue or architecture depends on them.
 - Preserve existing project conventions unless an approved decision requires otherwise.
-- Implement the smallest coherent change that satisfies the issue.
+- Apply the approved Existing-Code Design Fit target when one applies and follow the Strategic Modification rules; do not use diff size as a substitute for design quality.
 - For a complexity-bearing issue, establish the approved interface and authoritative knowledge owner before filling in implementation details.
 - Do not introduce shallow wrappers, duplicated policy, pass-through layers, or caller-managed lifecycle ordering unless the approved issue or architecture names the concrete constraint that requires them.
-- Make small complexity reductions in the touched scope when they preserve approved behavior. Route a broader correction through Architecture Definition or Implementation Planning instead of hiding it in the issue.
+- Use the local-improvement authority and revision boundary in `guidelines/coding-standards.md`. Do not treat prior architecture approval as a reason to preserve a newly exposed design defect.
 - Keep the change limited to the issue's scope.
 - Use existing libraries and architectural components as documented.
 - Avoid duplicating functionality already present in the project or its dependencies.
@@ -120,7 +121,7 @@ At the start of Implementation, the owner may give standing, revocable approval 
 
 At the start of a Change Cycle Implementation stage, inspect the Implementation Plan and `project-status.md` for a recorded proportionate approval bundle. Honor its covered implementation start, review, and commit actions without repeated approval prompts while every recorded condition remains satisfied. If the records disagree, the issue changes, verification fails or materially changes, unrelated working-tree changes enter the proposed commit, or an excluded action becomes necessary, stop and obtain a revised decision.
 
-The agent may make ordinary method-level implementation decisions that remain within the approved architecture. Decisions that alter component responsibilities, dependency directions, public behavior, or project scope require explicit approval.
+The agent may make ordinary implementation decisions that remain within the approved architecture. This includes the proportionate local design improvements authorized by `guidelines/coding-standards.md`, even when they touch multiple related methods or classes inside one approved responsibility. Decisions that alter component responsibilities, dependency directions, public behavior, or project scope require explicit approval.
 
 ## Feedback Strategy
 
@@ -335,21 +336,21 @@ After a clean committed checkpoint, confirm the repository is clean when checked
 1. Select a Ready issue whose blockers are Done, or the next expressly named campaign issue whose only relaxed blocker is an approved **Awaiting Validation** predecessor.
 2. Read the issue and all referenced documents.
 3. Inspect the relevant existing code.
-4. Confirm that the issue remains implementable as written.
+4. Confirm that the issue remains implementable as written and compare the current code with its Existing-Code Design Fit target when one applies.
 5. Change the issue status to **In Progress**.
-6. Review its acceptance criteria, verification procedure, manual-observability contract, and Complexity Management classification and contract.
+6. Review its acceptance criteria, verification procedure, manual-observability contract, Complexity Management contract, and authorized local-improvement boundary.
 7. Confirm that any declared diagnostic prerequisite is Done; if required observability is missing from the approved plan, stop and handle it as a Planning Problem.
-8. For a reproduced defect, establish and record the planned regression check's pre-correction failure or other sensitivity evidence when practical. Then implement the approved ownership boundary and common-use contract followed by the smallest coherent internal change, including approved same-issue diagnostic support.
+8. When correcting a reproduced defect, establish and record the planned regression check's pre-correction failure or other sensitivity evidence when practical. For every issue, implement the approved ownership boundary and common-use contract followed by the smallest coherent internal change, including approved same-issue diagnostic support.
 9. Run compilation and fast automated checks.
 10. Correct failures before expanding the implementation.
 11. When diagnostics are required, verify their observation path and default and authorization behavior before giving the owner a test card under `guidelines/manual-validation.md`.
 12. Perform the required in-game, server, compatibility, or performance verification, or follow an approved validation campaign for its named owner-assisted cards, or record an accepted validation waiver.
 13. After owner-performed actions, inspect the planned accessible current and rotated logs directly and collect any other agent-owned evidence.
 14. Corroborate diagnostic claims at the independent boundary defined by the plan.
-15. Refactor the touched scope to remove complexity introduced or exposed by the change without expanding scope. Route broader structural correction through the owning earlier stage.
+15. Apply proportionate local improvements and route broader structural correction under the Strategic Modification rules in `guidelines/coding-standards.md`.
 16. Run all relevant checks again after refactoring.
 17. Record completion evidence in the issue.
-18. Perform a final implementation self-review.
+18. Perform the final implementation self-review and final-diff maintenance check required by `guidelines/coding-standards.md`.
 19. Change the issue status to **Review**.
 20. Submit the change to an independent review agent. If the owner gave standing approval for required review agents, including a valid recorded proportionate approval bundle, do not ask for repeated per-issue approval unless the review scope changes.
 21. Address legitimate review findings.
@@ -396,7 +397,7 @@ If an assumed capability, library, or integration is not viable:
 
 ### Architecture Problem
 
-If the approved structure cannot reasonably support the implementation:
+If the approved structure cannot support a coherent implementation without avoidable tactical complexity, even though a quick workaround might function:
 
 1. Stop before creating an unofficial workaround.
 2. Explain the architectural conflict.
@@ -434,7 +435,7 @@ The reviewer judges whether each label is correct, whether an inferred claim is 
 The review agent must receive:
 
 - `guidelines/project-defaults.md`
-- `guidelines/coding-standards.md`, especially its Complexity Management rules
+- `guidelines/coding-standards.md`, especially its Complexity Management and Strategic Modification rules
 - The relevant requirements
 - The relevant architecture sections
 - The implementation issue
@@ -452,6 +453,7 @@ The review agent should examine:
 - Design-principle concerns such as cohesion, coupling, separation of responsibilities, dependency direction, lifecycle boundaries, testability, data ownership, API surface, and maintainability
 - Whether the implementation introduces unnecessary indirection, abstraction, state, global behavior, lifecycle coupling, or future-facing structure
 - Whether a simpler structure would satisfy the approved behavior with lower maintenance risk
+- The strategic-modification assessment required by `guidelines/coding-standards.md`, supported by concrete evidence from the changed area
 - Correctness and regressions
 - For a defect correction, whether the retained regression check reaches the original failure boundary, would fail if the defect returned, and remains at the lowest stable meaningful level rather than duplicating implementation details
 - Client/server separation
@@ -467,6 +469,7 @@ The review agent should examine:
 For every behavioral or structural issue, the reviewer must also provide a short evidence-based **Complexity argument**. This is an argument about the actual change, not a design-principle checklist. It must:
 
 - Identify material complexity introduced and removed.
+- Apply the Strategic Modification assessment defined by `guidelines/coding-standards.md` when existing production code changed.
 - Assess whether important modules present a simple common interface while hiding implementation knowledge and special cases.
 - Identify the authoritative owner of rules, formulas, persistence, synchronization, lifecycle ordering, or compatibility policy, and any duplicated or leaked ownership.
 - Examine the knowledge and sequencing required from callers, including temporal coupling.
@@ -600,8 +603,10 @@ Every result line ends with one label: (observed), (inspected), or (inferred).
   - Complexity introduced:
   - Complexity removed:
   - Deep-module and information-hiding assessment:
+  - Strategic modification assessment: Coherent fit / Justified tactical compromise / Not applicable, with evidence
   - Red flags found or accepted:
   - Simpler alternative, when applicable:
+  - Local improvements completed and cleanup deferred as unrelated:
   - Conclusion: Decreased / Unchanged / Increased, with justification
 - Resolutions:
 
@@ -636,6 +641,7 @@ An issue is complete when:
 - Every corrected defect has retained regression protection and sensitivity evidence, or an explicit explanation of why a repeatable runtime scenario is the lowest reliable level.
 - Independent review is complete, including for an issue whose deliverable is evidence rather than code, or an eligible review limitation is explicitly accepted and recorded.
 - Independent review contains an evidence-based complexity argument for every behavioral or structural change.
+- For changed existing production code, independent review records the strategic-modification assessment required by `guidelines/coding-standards.md`.
 - Legitimate review findings are resolved.
 - Any remaining limitations are explicit and approved.
 - The issue status is **Done**.

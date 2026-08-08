@@ -21,7 +21,7 @@ This file is the authoritative source for collaboration, file-editing discipline
 - Present materially different interpretations rather than choosing silently.
 - Challenge feature creep and conflicts with approved scope.
 - Present meaningful alternatives with trade-offs and make a recommendation.
-- Follow `guidelines/process-control.md` when new evidence invalidates an approved decision.
+- Follow `guidelines/process-control.md` when new evidence invalidates or materially challenges an approved decision.
 
 ## Communication
 

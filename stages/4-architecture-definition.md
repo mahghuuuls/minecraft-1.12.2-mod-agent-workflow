@@ -39,6 +39,7 @@ Establish:
 - How the architecture supports verification
 - Major technical decisions and their reasoning
 - Which boundaries carry substantial complexity, what knowledge each owns, and how their interfaces hide it
+- Which responsibilities and contracts are architectural invariants and which internal structures Implementation may refine without revising this artifact
 - Architectural naming that follows approved glossary vocabulary
 
 ## In Scope
@@ -107,6 +108,8 @@ Act as a software architect collaborating with the project owner.
 - Use one focused question for a branching owner decision; group closely related recommended architectural defaults into a compact decision packet when they can be reviewed together safely.
 - Do not ask questions that can be answered from the approved documents or technical research.
 - Trace architectural decisions back to requirements or established constraints.
+- Define architecture at the level of responsibilities, contracts, ownership, and dependency direction. Name a class, method, or package as an architectural constraint only when its specific identity or boundary matters; do not freeze incidental implementation structure.
+- Record the internal design freedom left to Implementation and the evidence that should trigger an architecture revision. Approval of this artifact does not make internal decomposition immutable.
 - Identify decisions that remain uncertain and require validation during Implementation.
 - Flag conflicts with requirements or feasibility findings.
 - Periodically summarize the proposed architecture and request corrections.
@@ -125,6 +128,7 @@ The architecture should be:
 - **Proportionate:** Complexity reflects the actual size and risk of the mod.
 - **Side-safe:** Client-only code cannot accidentally load on a dedicated server.
 - **Changeable:** Likely changes remain localized.
+- **Evolution-aware:** Approved invariants are explicit without freezing internal structures that Implementation should improve as evidence emerges.
 - **Deep:** Important components hide more complexity than their interfaces expose.
 - **Information-hiding:** Each nontrivial rule or representation has one authoritative owner rather than leaking across components.
 - **Layered deliberately:** Adjacent layers provide different abstractions or enforce a named boundary.
@@ -226,6 +230,7 @@ This stage is complete when:
 - Major decisions and trade-offs are recorded.
 - Complexity-bearing decisions compare at least two meaningful alternatives and explain why the selected interface hides knowledge more effectively.
 - Each important formula, representation, policy, precedence rule, synchronization contract, and lifecycle responsibility has an authoritative owner.
+- Architectural invariants and implementation freedoms are distinguished clearly enough that local design improvement does not require unnecessary reapproval.
 - Architecture complexity is proportionate to the mod.
 - Components and decisions are traceable to requirements.
 - Architectural names and concepts are consistent with approved glossary terms.

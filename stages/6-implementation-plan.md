@@ -15,7 +15,7 @@ Convert the approved requirements and architecture into small, ordered, and veri
 - The approved repository baseline identified by the active workflow
 - The active project under `workspace/project/<project_directory_name>/`
 - The active workflow's `<artifact-root>`
-- `guidelines/coding-standards.md`, including its Complexity Management rules
+- `guidelines/coding-standards.md`, including its Complexity Management and Strategic Modification rules
 - `guidelines/manual-validation.md` when owner-assisted runtime checks are planned
 - `guidelines/agent-diagnostics-toolkit.md` when Project Setup selected the toolkit
 
@@ -90,6 +90,7 @@ Act as an implementation planner.
 - Classify whether each non-decision issue changes a complexity-bearing boundary. For a routine issue, one sentence is sufficient; do not force a design exercise.
 - For a complexity-bearing issue, reference the approved alternative analysis and state the knowledge owner, common path, expected change locality, and red flags the implementation and reviewer must inspect.
 - Return to Architecture Definition when a complexity-bearing implementation has no approved boundary or meaningful alternative analysis. Do not let the implementation issue make an architectural decision implicitly.
+- For an issue that modifies existing production code, describe the desired fit of the new behavior, the boundary for proportionate local design improvement under `guidelines/coding-standards.md`, and the conditions that would require an architecture revision. Preserve implementation discretion instead of prescribing a method-by-method patch.
 - Make dependencies explicit.
 - Ensure the dependency graph contains no cycles.
 - Schedule high-risk assumptions and implementation validations early.
@@ -278,6 +279,14 @@ Describe the observable behavior available after completion.
 - Likely changes that must remain local
 - Red flags the implementation and reviewer must inspect
 
+## Existing-Code Design Fit
+
+- Applies: Yes / No
+- Design target if the requested behavior had existed from the beginning
+- Authorized local-improvement boundary
+- Conditions that require an architecture or earlier-stage revision
+- Known constraint and cleaner deferred alternative, when a tactical compromise is already unavoidable
+
 ## Likely Code Areas
 
 - Packages, components, or resources likely to change
@@ -339,6 +348,8 @@ Include **Defect Regression Protection** for every issue that corrects a reprodu
 
 Include **Complexity Management** for every non-decision issue. For a Routine issue, record the classification and why the change does not alter a public API, persistent representation, shared policy, synchronization contract, integration boundary, or lifecycle ownership; omit the remaining fields. A Complexity-bearing issue must complete every field and reference the approved architecture decision rather than designing the boundary in the issue.
 
+Include **Existing-Code Design Fit** when an issue modifies an existing production responsibility. Omit it when the issue creates an isolated new responsibility without changing existing production structure. Keep the design target and local-improvement boundary concise; this section authorizes implementation judgment within approved contracts rather than preplanning internal methods.
+
 Omit **Decision** unless the issue's type is Decision. For a Decision issue, omit **Manual Observability** and **Verification** instead, and treat the Decision section as its acceptance criteria.
 
 Use these types:
@@ -378,6 +389,7 @@ Any other implementation issue is Done only when:
 - Client and dedicated-server behavior have been checked when relevant.
 - No unrelated requirements were introduced.
 - The implementation follows the approved architecture.
+- Existing code changed by the issue fits the requested behavior coherently, including proportionate local improvements permitted by `guidelines/coding-standards.md`, or records the concrete constraint and cleaner deferred alternative.
 - Relevant defects have been resolved or explicitly recorded.
 - A corrected defect has durable regression protection at the lowest stable meaningful level, or records why only a retained runtime scenario is reliable.
 - An independent review has been completed, or an eligible low-risk review limitation has been explicitly accepted under `stages/7-implementation.md`.
@@ -456,7 +468,7 @@ Record the eligibility basis, each covered action, explicit exclusions, invalida
 4. Define the first vertical slice.
 5. Divide remaining behavior into additional vertical slices.
 6. Add only the foundational issues required by identified slices.
-7. Link every issue to requirements and architecture, and classify each non-decision issue as Routine or Complexity-bearing.
+7. Link every issue to requirements and architecture, classify each non-decision issue as Routine or Complexity-bearing, and define Existing-Code Design Fit where applicable.
 8. Define acceptance criteria and verification for every issue.
 9. Assign each verification check to an environment tier and state what that evidence proves and does not prove.
 10. For every manual runtime check, define its observability contract, evidence source, collection responsibility, necessary corroboration, owner-only observations, reset/cleanup state, and validation-packet group; add any required same-issue diagnostic work or prerequisite issue.
@@ -501,6 +513,7 @@ This stage is complete when:
 - Necessary foundational work has a specific identified consumer.
 - Every issue has an objective, scope, acceptance criteria, and verification procedure. A Decision issue instead has a question, a named resolver, and the work it blocks.
 - Every non-decision issue has an accurate complexity classification, and every complexity-bearing issue references an approved ownership boundary and alternative analysis.
+- Every issue modifying existing production code identifies its design target, authorized local-improvement boundary, and architecture-revision conditions without overprescribing internal implementation.
 - Every issue correcting a reproduced defect specifies durable regression protection, its detection boundary, and how sensitivity to the original failure will be demonstrated.
 - Every verification check identifies its environment tier, evidentiary value, and material limitation.
 - Owner-performed manual checks have one recorded Test now, Defer, or Waive decision.

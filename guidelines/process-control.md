@@ -449,10 +449,10 @@ When investigation settles the question, record the answer and where it came fro
 
 ## Backward Transitions
 
-When new evidence invalidates an approved decision:
+When new evidence invalidates or materially challenges an approved decision:
 
 1. Stop affected work.
-2. Identify the conflicting evidence and every affected artifact.
+2. Identify the challenging evidence and every affected artifact.
 3. Mark the earliest affected stage and dependent active work **Needs Revision**.
 4. Ask the project owner to approve returning to that stage.
 5. Revise and reapprove affected artifacts in stage order.
@@ -466,7 +466,7 @@ A small backward transition may use one bounded packet instead of separate retur
 
 The packet is eligible only when all of the following are true:
 
-- The conflicting evidence and earliest affected stage are known.
+- The challenging evidence and earliest affected stage are known.
 - The correction is one coherent, bounded decision rather than a collection of unrelated revisions.
 - Every affected canonical artifact and dependent plan section is identified.
 - The exact proposed changes are shown before approval, as a patch, replacement text, or equally precise revision summary.
@@ -519,7 +519,7 @@ setup/artifact-templates/
 
 use it as the starting structure for new artifacts. Omit nonapplicable sections rather than filling them with placeholders.
 
-Approved canonical artifacts are authoritative for project-specific decisions, but they are not immutable. Treat them as the current best approved understanding. Implementation, review, validation, and release work should follow them unless new evidence shows that a requirement, scope boundary, or architectural decision is wrong, harmful, incomplete, or misleading.
+Approved canonical artifacts are authoritative for project-specific decisions, but they are not immutable. Treat them as the current best approved understanding. Implementation, review, validation, and release work should follow them unless new evidence shows that a requirement, scope boundary, or architectural decision is wrong, harmful, incomplete, misleading, or would force avoidable tactical complexity in the approved change.
 
 When new evidence challenges an approved artifact, use the backward-transition process instead of silently working around the problem. Reviewers may critique the approved requirements, architecture, or scope as well as the code; a valid critique should route to the owning stage for explicit revision.
 

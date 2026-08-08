@@ -85,6 +85,13 @@
 - Accepted Minecraft, loader, or dependency complexity:
 - Red flags requiring implementation validation:
 
+## Evolution And Implementation Freedom
+
+- Architectural responsibilities, contracts, and dependency directions that revisions must preserve or reapprove:
+- Internal organization Implementation may refine without architecture revision:
+- Likely evolution pressure the current boundaries should absorb:
+- Evidence that should trigger an architecture revision:
+
 ## Architectural Decisions And Trade-Offs
 
 ### ARC-001: Decision Name

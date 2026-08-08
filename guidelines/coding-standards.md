@@ -30,11 +30,23 @@ Judge design by the amount of knowledge and coordination required to understand 
 - For a new public API, persistent-state boundary, synchronization contract, cross-mod integration, or other complexity-bearing component, sketch at least two meaningfully different designs before selecting one. Compare interface size, knowledge exposed, common use, likely changes, failure behavior, and Minecraft lifecycle constraints. Trivial private implementation choices do not require this exercise.
 - Use precise, consistent names. Difficulty naming or briefly describing a class, method, state value, or component is evidence that its responsibility or abstraction may be unclear; reconsider the design before compensating with a vague name and a long explanation.
 - Comments should state contracts, invariants, ownership, reasons, and non-obvious constraints. Do not repeat the code or expose implementation details in an interface comment when callers do not need them.
-- Make continual small design improvements within the touched scope. Do not patch around a newly exposed design defect merely to finish the issue; when the proper correction would materially expand scope or change approved architecture, stop and route that decision through the owning stage.
 
 Use these as diagnostic principles, not a scoring system. A Forge or Minecraft constraint may justify a shallow adapter, temporal hook, or exposed option, but the implementation and review must name the constraint and show why the complexity is contained.
 
 Common red flags include shallow modules, duplicated design knowledge, pass-through layers, temporal coupling across components, overexposed interfaces, repeated special-case handling, mixed general and special-purpose policy, methods that must be understood together, vague names, comments that repeat code, and behavior that is difficult to describe succinctly.
+
+## Strategic Modification
+
+Software design continues whenever existing code changes. Optimize for the smallest coherent design, not the smallest diff that can be made to work.
+
+- Before editing an existing responsibility, inspect its current structure and ask how it should look if the requested behavior had been part of its design from the beginning. Use that as the design target; do not assume the current structure remains best merely because it was previously approved or released.
+- Treat a proportionate, behavior-preserving improvement inside the responsibility already being changed as normal implementation work. It may touch multiple related methods or classes when it reduces complexity, preserves approved external behavior and compatibility, remains within approved component ownership and dependency directions, and can be covered by the issue's verification.
+- Treat a cleaner design that changes component responsibilities, dependency directions, public APIs, persistence or synchronization contracts, configuration precedence, compatibility promises, or approved behavior as an architecture or earlier-stage revision. Stop the affected implementation and use the backward-transition process; do not choose a tactical workaround merely because the old structure can technically accommodate one.
+- Treat cleanup outside the touched responsibility, or cleanup whose risk and verification cost are disproportionate to the issue, as separate work. Record it when useful, but do not hide it in the current change.
+- When a deadline, compatibility requirement, dependency limitation, or other concrete constraint forces a tactical compromise, minimize and localize the added complexity and record the constraint and the cleaner deferred alternative. Do not present the compromise as the preferred design.
+- Update comments, contracts, invariants, and nearby developer documentation affected by the change. Put rationale that future maintainers need next to the relevant code or authoritative design note, not only in an issue record or commit message.
+- During final self-review, inspect the complete diff for stale comments, obsolete TODOs, temporary diagnostics, accidental test hooks, and documentation that no longer matches behavior.
+- Independent review must assess whether the changed area incorporates the requested behavior coherently or merely layers on a tactical patch, citing concrete special cases, dependencies, duplication, indirection, or accepted constraints.
 
 ## Existing Projects
 
