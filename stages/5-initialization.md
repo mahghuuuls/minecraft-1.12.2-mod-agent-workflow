@@ -12,6 +12,7 @@ Create a clean, independent final mod repository from the configured template an
 
 - `setup/initialize-project.md`
 - Every input declared by that procedure
+- `guidelines/agent-diagnostics-toolkit.md` when Project Setup selected the toolkit
 - Approved prior-stage artifacts, including `workspace/documentation/requirements.md`
 
 The preceding stages must be approved under `guidelines/process-control.md`. Missing repository and project identity values may enter this stage as deferred prerequisites.
@@ -26,6 +27,7 @@ The preceding stages must be approved under `guidelines/process-control.md`. Mis
 - Create an independent local project repository
 - Apply shared defaults and approved project values
 - Apply the approved public mod description to appropriate initialization metadata or placeholders
+- Configure the pinned Agent Diagnostics Toolkit as development-runtime only when selected and available, or record the exact deferred installation checkpoint
 - Preserve required licensing and attribution
 - Validate the initialized build and baseline artifact
 - Verify that the owner, not only the agent environment, can run `git status` in the final repository or record an exact repository-specific remediation
@@ -83,6 +85,7 @@ This stage is complete when:
 - Owner-side `git status` succeeds, or the initialization record contains the exact repository path, observed ownership error, and owner-approved repository-specific remediation.
 - Shared defaults, approved project values, licensing, attribution, and the approved public mod description are applied.
 - The approved root package and main class are applied.
+- Selected Agent Diagnostics Toolkit configuration is development-only and excluded from the baseline distributable artifact, or its installation is explicitly deferred before the first dependent validation card.
 - No unresolved functional template placeholder remains.
 - Automatic publication is disabled.
 - The initialized project builds and its baseline artifact is inspected.

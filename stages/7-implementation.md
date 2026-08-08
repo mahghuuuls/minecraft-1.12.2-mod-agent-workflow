@@ -19,6 +19,7 @@ Implementation includes coding, testing, in-game verification, defect correction
 - The active project under `workspace/project/<project_directory_name>/`
 - `guidelines/coding-standards.md`, which governs how the code is written and what counts as verification in this stage
 - `guidelines/manual-validation.md` when the issue includes owner-assisted runtime checks
+- `guidelines/agent-diagnostics-toolkit.md` when Project Setup selected the toolkit
 
 ## Objectives
 
@@ -94,6 +95,7 @@ Act as a focused implementation agent.
 - Perform the verification defined by the issue.
 - Before asking the owner to perform a manual check, confirm that the issue's planned observability mechanism is implemented and usable. Do not substitute indirect inference when the plan requires authoritative logs, commands, counters, or equivalent diagnostics.
 - Present owner-assisted checks using the session map and test cards in `guidelines/manual-validation.md`.
+- When the toolkit is selected, verify the pinned artifact and live capabilities, write the approved bundles, and inspect bundle completion and structured records instead of asking the owner to relay setup commands or log text.
 - After the owner performs a manual action, inspect agent-accessible current and rotated logs directly. Ask the owner for log content only when the runtime is external, the files are unavailable, or direct inspection fails.
 - Keep diagnostic work within the approved issue or its declared prerequisite. If required observability is missing from the plan, treat it as a Planning Problem rather than silently expanding the issue or sending an unreliable test recipe.
 - Treat compilation as necessary but not sufficient evidence that behavior works.
@@ -176,6 +178,21 @@ The development client and development server share one `run/` directory, includ
 Manual verification must also have a reliable observation path. Before requesting it, identify the authoritative state or event being checked and confirm that normal behavior exposes it reliably. If it does not, implement and verify the issue's approved diagnostic mechanism first. Suitable mechanisms include structured logs, inspect or controlled-state commands, counters, or another narrow diagnostic surface. Potentially noisy or player-visible diagnostics should remain disabled by default unless normal product behavior requires otherwise, and administrative state-changing commands must enforce the approved authorization boundary.
 
 Presentation, session grouping, reset state, evidence handoff, binary `Done` reporting, failure handling, and cleanup for owner-assisted checks are owned by `guidelines/manual-validation.md`. Use the plan's Test now, Defer, or Waive decisions as their standing disposition. If the owner skips a check or accepts that it cannot be run, record the waiver under `guidelines/process-control.md`; do not keep asking unless new evidence makes it release-blocking.
+
+### Agent Diagnostics Toolkit-Assisted Validation
+
+When Project Setup selected the toolkit, follow `guidelines/agent-diagnostics-toolkit.md` before the first dependent card.
+
+- Verify the exact JAR identity and that it is present only in the intended development runtimes.
+- Read the pinned version's `AGENTS.md` and confirm the live capabilities, environment, and mod list.
+- Keep the shipping mod independent of toolkit classes and inspect release artifacts when the build could leak the dependency.
+- Write scenario setup into a bundle so the owner normally runs only reload, one bundle, and the gameplay action.
+- Confirm the bundle end record, failures, readiness marks, enabled categories, and starting-state inspections before treating later records as evidence.
+- Preserve or hash the bundle and relevant log before a restart rotates or replaces them.
+- Use the mod's own narrow diagnostics for internal decisions the toolkit cannot expose.
+- Record reusable toolkit improvements in the toolkit feedback artifact without changing the external toolkit project.
+
+Toolkit use does not lower evidence standards. A structured record can still be irrelevant, self-confirming, filtered out, produced by the wrong side, or associated with the wrong test state.
 
 ## Generated Artifact Inspection
 

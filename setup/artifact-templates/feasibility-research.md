@@ -60,6 +60,14 @@
 
 -
 
+## Development Diagnostics Feasibility
+
+- Agent Diagnostics Toolkit version and evidence inspected:
+- Loader, runtime, side, and template compatibility:
+- Development-runtime dependency path:
+- Required later load validation:
+- Fallback evidence plan if unavailable:
+
 ## Constraints For Requirements And Architecture
 
 -

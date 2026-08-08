@@ -35,6 +35,15 @@ commit_message_style=repo-facing-no-workflow-issue-references
 preferred_push_prompt_cadence=release-ready-handoff
 offer_standing_implementation_commit_authorization=true
 
+# Optional development-runtime diagnostic tool:
+# Allowed use values: true, false
+agent_diagnostics_toolkit_use=
+agent_diagnostics_toolkit_version=
+agent_diagnostics_toolkit_acquisition=
+agent_diagnostics_toolkit_safe_baseline=
+agent_diagnostics_toolkit_client_defaults=
+agent_diagnostics_toolkit_join_automation=
+
 # Release handoff mode:
 # Allowed values: owner-managed-packaging, agent-managed-release-validation
 release_handoff_mode=agent-managed-release-validation

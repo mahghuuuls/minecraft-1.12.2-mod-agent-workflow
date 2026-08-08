@@ -87,6 +87,20 @@
 - Known references:
 - Deferred dependency-source decisions:
 
+## Agent Diagnostics Toolkit
+
+- Use decision:
+- Decision source:
+- Pinned version and artifact identity:
+- Acquisition and installation method:
+- Runtime placement:
+- Safe disposable-world baseline:
+- Client defaults:
+- Operator join automation:
+- Compatibility limitations:
+- Deferred artifact verification and due checkpoint:
+- Feedback log:
+
 ## Release And Publication Ownership
 
 - README:

@@ -79,6 +79,13 @@
 
 -
 
+## Development Diagnostics Feedback
+
+- Agent Diagnostics Toolkit used:
+- Feedback artifact:
+- Open Candidate, Confirmed, or Reported entries:
+- Effect on release evidence or public claims:
+
 ## Claims Checked Against Implementation Evidence
 
 -

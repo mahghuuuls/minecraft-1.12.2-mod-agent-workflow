@@ -21,6 +21,8 @@ This stage is about how the mod is presented to players and modpack authors and 
 - The completed project under `workspace/project/<project_directory_name>/`
 - Approved implementation evidence and known limitations
 - Existing approved branding and release materials, when present
+- `guidelines/agent-diagnostics-toolkit.md` when Project Setup selected the toolkit
+- `workspace/documentation/agent-diagnostics-toolkit-feedback.md` when the toolkit was used
 
 Implementation must be approved before this stage begins.
 
@@ -59,7 +61,9 @@ Establish:
 - Produce `<artifact-root>/release-presentation.md`
 - Confirm the approved release version before packaging or handoff
 - Build, inspect, checksum, and record the release artifact when release JAR generation/validation is agent-managed by Project Setup or explicit owner instruction
+- When the Agent Diagnostics Toolkit was used, verify that its classes, JAR, metadata relation, and development-only test assets are absent from the shipping artifact and player dependency instructions
 - Produce `<artifact-root>/release-handoff.md` when a release artifact is built or identified
+- Summarize unresolved Agent Diagnostics Toolkit feedback internally without turning it into player-facing mod limitations unless it affected release evidence
 
 ## Out of Scope
 
@@ -339,8 +343,9 @@ Do not use the internal record as public copy.
 20. If the materials are approved and the commit is authorized, commit only the approved release/version/public-material changes and verify the repository is clean at the resulting revision.
 21. If release validation is agent-managed, build the exact release artifact from that clean committed revision, inspect it, calculate its checksum, and record the authoritative artifact identity and checksum in the handoff.
 22. If release packaging is owner-managed, record the approved source revision, expected command/artifact pattern, and owner-managed boundary instead of building.
-23. Present the completed internal presentation record and release handoff for stage approval.
-24. Revise until explicitly approved. If a revision changes the committed release source, obtain new commit authorization and repeat artifact validation before final approval.
+23. When the toolkit was used, review its feedback artifact and record which entries remain Candidate, Confirmed, or Reported; do not modify or report to the external toolkit project without separate authorization.
+24. Present the completed internal presentation record and release handoff for stage approval.
+25. Revise until explicitly approved. If a revision changes the committed release source, obtain new commit authorization and repeat artifact validation before final approval.
 
 ## Output Artifacts
 

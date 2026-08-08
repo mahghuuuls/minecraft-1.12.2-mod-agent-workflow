@@ -41,6 +41,8 @@ Read AGENTS.md and guide me through Project Setup for a new Minecraft 1.12.2 mod
 I have an owner-defaults.md and I am providing it here.
 ```
 
+Project Setup can also offer the optional [Agent Diagnostics Toolkit](https://github.com/mahghuuuls/agent-test-toolkit), released as Agent Test Toolkit v1.0.0, for owner-assisted runtime checks. It is installed only in development test runtimes, can prepare repeatable scenarios from command bundles, and records structured evidence in the Minecraft log. The preference can be saved in `owner-defaults.md`, so later projects either use it by default or stop asking.
+
 ### Option 2: Existing Mod New to This Workflow
 
 ```text

@@ -44,6 +44,15 @@
 
 -
 
+## Development Diagnostic Tooling
+
+- Agent Diagnostics Toolkit decision:
+- Pinned artifact and SHA-256:
+- Development-runtime configuration:
+- Runtime placement:
+- Shipping artifact and metadata exclusion:
+- Deferred installation checkpoint:
+
 ## Template Content Removed Or Preserved
 
 -

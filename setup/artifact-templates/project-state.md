@@ -28,4 +28,6 @@
 - Approved baseline:
 - Most relevant approved artifacts:
 - Dependency source references:
+- Agent Diagnostics Toolkit decision, pinned version, and runtime placement:
+- Agent Diagnostics Toolkit feedback log:
 - External references:

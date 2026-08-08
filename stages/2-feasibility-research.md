@@ -19,6 +19,7 @@ This stage performs research. It does not write or test implementation code.
 - `workspace/documentation/dependency-references.md`, when present
 - `guidelines/coding-standards.md`, whose Dependencies section governs which libraries may be preferred, bundled, or declared optional
 - `guidelines/collaboration-guidelines.md`, for how findings and blocking questions are raised with the owner
+- `guidelines/agent-diagnostics-toolkit.md` when Project Setup selected the toolkit
 
 ## Objectives
 
@@ -33,6 +34,7 @@ Establish:
 - Whether advanced implementation or build mechanisms are actually required by the approved behavior
 - Whether the provisional loader and template can support the identified requirements without unnecessary capabilities
 - Whether dependency source repositories need local reference checkouts
+- Whether the selected Agent Diagnostics Toolkit artifact appears compatible with the loader, runtime, side topology, and development template
 - Known compatibility and platform limitations
 - Client and dedicated-server considerations
 - Performance concerns requiring later validation
@@ -52,6 +54,7 @@ Establish:
 - Identifying whether Mixins, coremods, access transformers, reflection, shading, or similar mechanisms may be necessary
 - Evaluating advanced build or automation capabilities only when approved behavior or operational constraints create a concrete need
 - Validating the provisional template against concrete capability findings from this stage
+- Inspecting the selected toolkit artifact, metadata, guide, or source far enough to identify compatibility risks and the required development-runtime dependency path
 - Identifying performance and compatibility risks
 - Recording questions that must be validated during Implementation
 - Classifying features as feasible, conditionally feasible, unverified, or infeasible
@@ -94,6 +97,7 @@ Act as a technical researcher.
 - Identify required and transitive dependencies.
 - Use `workspace/dependencies/<dependency-name>/` for approved local dependency source checkouts and treat them as read-only reference material.
 - Record the dependency repository URL, requested ref, resolved commit when available, checkout reason, and licensing constraints.
+- Keep Agent Diagnostics Toolkit compatibility separate from product feasibility: an incompatible optional test tool changes the evidence plan, not the approved mod concept.
 - Update `workspace/documentation/dependency-references.md` whenever dependency source references are approved, added, superseded, or removed.
 - Compare possible approaches only far enough to establish feasibility and major trade-offs.
 - Challenge unrealistic assumptions and unsupported expectations.
@@ -188,10 +192,11 @@ Do not classify a feature as feasible merely because a possible approach can be 
 11. Record evidence and confidence for each conclusion.
 12. Classify the feasibility of every high-level feature.
 13. Identify risks and questions requiring later validation.
-14. Present findings that require project-owner decisions.
-15. Return to Concept and Scope if findings require material scope changes.
-16. Generate `workspace/documentation/feasibility-research.md` as a complete draft.
-17. Present the draft for review and revise it until explicitly approved.
+14. When the toolkit was selected, record its inspected compatibility findings, required runtime placement, and any load check deferred to Initialization or Implementation.
+15. Present findings that require project-owner decisions.
+16. Return to Concept and Scope if findings require material scope changes.
+17. Generate `workspace/documentation/feasibility-research.md` as a complete draft.
+18. Present the draft for review and revise it until explicitly approved.
 
 ## Output Artifact
 
@@ -216,6 +221,7 @@ This stage is complete when:
 - Important compatibility and client/server limitations are understood.
 - Major technical and performance risks are recorded.
 - Questions requiring implementation validation are explicit.
+- Selected Agent Diagnostics Toolkit compatibility is inspected or its load validation is explicitly assigned to a later checkpoint with a fallback evidence plan.
 - Required scope reconsiderations have been resolved.
 - Constraints for Requirements and Architecture are documented.
 - The project owner accepts the findings.

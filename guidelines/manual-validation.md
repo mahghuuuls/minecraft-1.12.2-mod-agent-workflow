@@ -22,6 +22,7 @@ Before the owner starts a shared game, server, or modpack session, present the c
 - Every required start, restart, reconnect, or shutdown point.
 - Shared setup, safety preparation, and final cleanup.
 - Which evidence the agent will inspect and which observations only the owner can supply.
+- Whether the Agent Diagnostics Toolkit is active, its pinned version and runtime placement, any approved automatic baseline, and the bundle names used during the session.
 
 Group cards by configuration state and minimize restarts. Do not reveal previously known checks one at a time after the runtime is already open. This overview is a session map, not the detailed procedure for every card.
 
@@ -64,6 +65,7 @@ Keep headings and language stable across cards so the owner does not have to rel
 ## Card-Writing Rules
 
 - Put commands in copyable code blocks and list them in execution order.
+- When an approved Agent Diagnostics Toolkit bundle performs setup, normally ask for only its reload command, its named run command, and the remaining gameplay action. Do not repeat the bundled commands in the owner-facing card.
 - Distinguish commands from mouse, keyboard, inventory, combat, waiting, or observation steps.
 - State the complete starting state. Never rely on the owner remembering an earlier temporary config value, selected hotbar slot, equipped item, game mode, mana value, or diagnostic toggle.
 - When a shared setup applies to several consecutive cards, state it once in the session map and identify the exact state or delta each card requires.
@@ -73,6 +75,7 @@ Keep headings and language stable across cards so the owner does not have to rel
 - Verify Minecraft 1.12.2 command syntax, selectors, registry identifiers, fixture behavior, and cleanup commands before presenting them.
 - State whether the owner should keep the game or server open. Do not leave the runtime lifecycle implicit.
 - Do not ask the owner to repeat authoritative values, diagnostic output, log lines, or file content the agent can inspect directly.
+- Do not advance from a toolkit-assisted card until the agent has checked bundle completion and readiness marks when later evidence depends on them.
 - Ask a specific owner-only question only when `Done` cannot capture a required visual, audio, interaction-quality, real-multiplayer, or external-environment observation.
 
 ## Evidence Handoff

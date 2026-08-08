@@ -6,6 +6,11 @@ Curated references for Minecraft 1.12.2 mod development.
 
 Prefer version-specific and primary sources. These links are starting points for research, not substitutes for verifying behavior against the actual project and dependency versions.
 
+## Development Diagnostics
+
+- [Agent Diagnostics Toolkit](https://github.com/mahghuuuls/agent-test-toolkit)
+  Optional Minecraft 1.12.2 Forge development mod for repeatable command-bundle setup and structured log evidence during owner-assisted tests. Follow `guidelines/agent-diagnostics-toolkit.md`; do not treat it as a shipping dependency.
+
 ## Template Candidates
 
 See [Minecraft 1.12.2 Template Candidates](template-candidates.md) for selection guidance.

@@ -37,6 +37,13 @@ Use this section only for questions the owner repeatedly answers the same way du
 - Preferred repository naming pattern:
 - Other setup answers:
 
+## Agent Diagnostics Toolkit Preference
+
+- Use for owner-assisted runtime testing: Prefer | Ask each project | Do not use
+- Apply safe disposable-world baseline by default: Yes | Ask each project | No
+- Allow operator join automation for that baseline by default: Yes | Ask each project | No
+- Other recurring toolkit preferences:
+
 ## Owner-Specific Overrides
 
 Record only overrides or additions that are specific to this owner and not already part of the general workflow defaults.

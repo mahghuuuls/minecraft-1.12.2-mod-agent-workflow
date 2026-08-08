@@ -328,6 +328,7 @@ Read project-specific values from `workspace/project.properties` and approved do
 - Development username when used
 - Required dependencies
 - Required integrations
+- Approved development diagnostic tooling and its pinned artifact, when selected
 - Client, server, and shared-code constraints
 
 Update the template's actual:
@@ -341,9 +342,11 @@ Update the template's actual:
 - Mixin or coremod configuration when approved
 - Dependency configuration when required for the baseline
 
-Do not enable optional template capabilities unless the approved architecture requires them.
+Do not enable optional product or build capabilities unless the approved architecture requires them. Approved development diagnostic tooling is operational test support and follows its separate setup decision.
 
 Do not add gameplay implementation.
+
+When Project Setup selected the Agent Diagnostics Toolkit, follow `guidelines/agent-diagnostics-toolkit.md`. Prefer the template's verified development-runtime configuration and required deobfuscation path. Do not add the toolkit to compile API, implementation, shading, shipping metadata, or player dependency instructions. If the pinned artifact is not yet available, record installation as deferred before the first dependent validation card rather than inserting an unverified coordinate.
 
 ## Preserve Licensing
 
@@ -476,6 +479,7 @@ Verify:
 - The produced artifact is the expected normal distributable mod artifact for the selected loader.
 - The artifact targets the approved Java runtime version.
 - No development, sources, or Javadoc artifact is mistaken for the release artifact.
+- Selected development diagnostic tooling is absent from the distributable artifact and processed dependency metadata.
 
 Record the command, environment, output result, and produced artifact.
 

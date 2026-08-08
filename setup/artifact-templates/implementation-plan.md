@@ -34,6 +34,16 @@
 
 -
 
+## Agent Diagnostics Toolkit Plan
+
+- Selection and pinned artifact:
+- Runtime placement and release exclusion:
+- Safe baseline and join automation:
+- Bundle storage and naming:
+- Log retention:
+- Planned toolkit-assisted checks:
+- Evidence the toolkit cannot provide:
+
 ## Verification Environment Plan
 
 | Check | Environment Tier | What It Proves | What It Does Not Prove |
@@ -129,6 +139,7 @@
 - Complete starting/reset state:
 - Cleanup and runtime stop/continue condition:
 - Validation packet group and restart boundary:
+- Agent Diagnostics Toolkit bundle, categories, marks, and retained paths:
 
 ## Completion Evidence
 

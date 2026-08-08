@@ -14,6 +14,7 @@ This stage is interactive onboarding. It does not define mod behavior, prove tec
 
 - The project owner's initial request
 - `guidelines/project-defaults.md`
+- `guidelines/agent-diagnostics-toolkit.md`
 - `workspace/documentation/owner-defaults.md`, when present
 - Owner-provided `owner-defaults.md` content supplied in chat, when present
 - `setup/owner-defaults-template.md`
@@ -42,6 +43,7 @@ Establish:
 - Default distribution destination or a known project-specific override, without researching publication mechanics
 - Known dependency source repositories or owner-provided dependency references, only when already relevant
 - Default release and validation ownership plus any owner-requested overrides
+- Whether the optional Agent Diagnostics Toolkit should support owner-assisted development testing
 - The intended release handoff mode
 - Deferred prerequisites and their deadlines
 - A clear starting point requiring no README knowledge
@@ -70,6 +72,7 @@ Establish:
 - Create or update `workspace/documentation/dependency-references.md` when dependency source references are already approved or supplied
 - Explain repository requirements for the selected scenario
 - Record the default release and validation ownership matrix and collect only requested or necessary overrides; approval of the complete Project Setup artifact approves the resulting matrix
+- Apply the saved Agent Diagnostics Toolkit preference or ask once when the preference is `Ask each project`; record artifact acquisition as deferred when necessary
 - Record the intended release handoff mode
 - Propose the applicable workflow
 - Produce `workspace/documentation/project-setup.md`
@@ -110,6 +113,7 @@ Act as an onboarding coordinator.
 - Preserve existing repositories and unrelated workspace content.
 - Treat dependency source repositories as optional reference material, not as active project repositories.
 - Treat owner-managed responsibilities as hard boundaries unless the owner explicitly changes them.
+- Treat the Agent Diagnostics Toolkit as optional development-runtime tooling, not as a compile or shipping dependency.
 - Present the setup result and proposed workflow for explicit approval.
 
 ## Scenario Classification
@@ -246,6 +250,25 @@ When enough values are approved, write them to `workspace/project.properties`. W
 
 Do not ask for a new mod's display name, public description, mod ID, package, or main class merely to complete Project Setup. Requirements Definition owns the stable short description, and Project Initialization must resolve only the identity values required to initialize the repository.
 
+## Agent Diagnostics Toolkit
+
+Follow `guidelines/agent-diagnostics-toolkit.md` when deciding whether the optional development tool will support owner-assisted runtime testing.
+
+Use the saved owner preference when it says **Prefer** or **Do not use**. Ask during Project Setup when no preference exists or it says **Ask each project**. When the owner wants the answer reused across later mods, persist it to `workspace/documentation/owner-defaults.md`.
+
+The reusable owner preference alone does not authorize a source clone, build-script mutation, or installation into an external modpack. During Project Setup, record the intended use and acquisition route. Approval of the complete setup may authorize read-only retrieval of the exact pinned public artifact as normal workspace preparation, but source checkout and external-environment installation keep their existing approval boundaries. Resolve and verify the artifact before the first validation card that depends on it.
+
+Default recommendations:
+
+- Prefer the toolkit for manual client, integrated-server, and dedicated-server checks when it is compatible.
+- Use a pinned released JAR as development-runtime only.
+- Do not clone its repository for every mod.
+- Enable the safe disposable-world baseline only when the owner opts in.
+- Keep operator join automation off in normal worlds, external multiplayer, and modpack instances unless separately authorized for that environment.
+- Create the toolkit feedback artifact when use is selected.
+
+Record a reason when the toolkit is available but deliberately not selected. Do not treat non-use as a validation waiver; the issue still needs another adequate evidence mechanism.
+
 ## Template Guidance
 
 For Initial Development:
@@ -365,6 +388,12 @@ Relevant values may include:
 - `release_owner_dedicated_server_testing`
 - `release_owner_cleanroom_testing`
 - `release_owner_external_multiplayer_testing`
+- `agent_diagnostics_toolkit_use`
+- `agent_diagnostics_toolkit_version`
+- `agent_diagnostics_toolkit_acquisition`
+- `agent_diagnostics_toolkit_safe_baseline`
+- `agent_diagnostics_toolkit_client_defaults`
+- `agent_diagnostics_toolkit_join_automation`
 - `preferred_development_java_version`
 - `target_java_version`
 - `project_default_branch`
@@ -386,13 +415,15 @@ If a new mod's repository, directory name, mod ID, display name, public descript
 7. Collect or defer practical project defaults.
 8. Apply or provisionally defer loader, runtime, template, and distribution defaults; ask only about known constraints or requested overrides.
 9. Record the release and validation ownership defaults and collect only necessary overrides.
-10. Record public-copy and Git workflow preferences.
-11. Create the workflow feedback log when it does not exist.
-12. Write only approved known operational values.
-13. Record deferred prerequisites and the stage by which each is required.
-14. Propose the applicable workflow.
-15. Produce the setup artifact.
-16. Present the artifact and workflow selection for separate explicit approval.
+10. Resolve the Agent Diagnostics Toolkit preference and record any deferred artifact verification.
+11. Record public-copy and Git workflow preferences.
+12. Create the workflow feedback log when it does not exist.
+13. Create the Agent Diagnostics Toolkit feedback log when use is selected.
+14. Write only approved known operational values.
+15. Record deferred prerequisites and the stage by which each is required.
+16. Propose the applicable workflow.
+17. Produce the setup artifact.
+18. Present the artifact and workflow selection for separate explicit approval.
 
 ## Output Artifact
 
@@ -418,6 +449,14 @@ workspace/documentation/workflow-feedback.md
 
 Start it from `setup/workflow-feedback-template.md`.
 
+When Agent Diagnostics Toolkit use is selected, create when absent:
+
+```text
+workspace/documentation/agent-diagnostics-toolkit-feedback.md
+```
+
+Start it from `setup/agent-diagnostics-toolkit-feedback-template.md`.
+
 When dependency source references are already approved or supplied, create or update:
 
 ```text
@@ -439,6 +478,8 @@ This stage is complete when:
 - Accessible development-log paths and retention or rotation behavior are recorded, or discovery is explicitly due after runtime initialization and before the first runtime validation packet.
 - Whether the agent can execute the build tool is recorded as an attempted result, or explicitly due before the first issue that depends on a build.
 - Known dependency source references are recorded or explicitly deferred when relevant.
+- Agent Diagnostics Toolkit use is selected or declined, and any required artifact verification has a due checkpoint.
+- When toolkit use is selected, its feedback artifact exists and development-only dependency boundary is recorded.
 - The release ownership matrix is recorded and approved.
 - The release handoff mode is recorded or intentionally deferred.
 - Public-copy and Git workflow preferences are recorded or explicitly left at their defaults.

@@ -162,6 +162,7 @@ Use this file to reduce context reconstruction after chat forks, context compact
 - Owner-managed responsibilities
 - Accepted validation waivers
 - Dependency source references
+- Selected development diagnostic toolkit, pinned version, runtime placement, and deferred artifact verification
 
 Refresh it after Project Setup, at workflow start and completion, before a session handoff or expected context compaction, and when a material blocker or owner-managed follow-up would otherwise be difficult to reconstruct. Do not update it after every stage or issue merely to mirror `project-status.md`. Do not treat it as a replacement for canonical artifacts or copy a complete approval ledger into it.
 

@@ -16,6 +16,7 @@ Convert the approved requirements and architecture into small, ordered, and veri
 - The active project under `workspace/project/<project_directory_name>/`
 - The active workflow's `<artifact-root>`
 - `guidelines/manual-validation.md` when owner-assisted runtime checks are planned
+- `guidelines/agent-diagnostics-toolkit.md` when Project Setup selected the toolkit
 
 ## Objectives
 
@@ -32,6 +33,7 @@ Establish:
 - Whether each owner-performed manual validation is scheduled now, deferred, or waived
 - What authoritative state or event each manual runtime check must observe, and how it will be observed
 - Who collects each evidence source, including which accessible logs the agent will inspect directly and which observations require the owner
+- Which selected manual checks will use Agent Diagnostics Toolkit bundles, records, or inspections
 - Which technical risks should be addressed early
 - What constitutes completion for each issue
 - Which optional requirements are deferred
@@ -49,6 +51,7 @@ Establish:
 - Defining a risk-based validation environment plan
 - Consolidating owner-performed manual validation decisions before implementation
 - Designing the minimum observability needed for reliable manual runtime verification
+- Planning development-runtime-only toolkit placement and repeatable test bundles when selected
 - Linking issues to requirements and architecture
 - Identifying likely code areas affected
 - Establishing issue statuses and workflow
@@ -87,6 +90,7 @@ Act as an implementation planner.
 - Define verification before implementation begins.
 - For every manual runtime check, identify the authoritative state or event being tested and whether normal behavior exposes it reliably.
 - Identify the evidence source, its accessible path or surface, retention or rotation behavior when relevant, and whether the agent or owner collects it.
+- When the toolkit is selected, plan bundle names, setup and teardown responsibilities, narrow record categories, readiness marks, runtime placement, and retained evidence before asking the owner to test.
 - Assign every runtime check to the lowest validation tier that supplies meaningful evidence, and state any important limitation of that tier.
 - When normal behavior is insufficient, include the minimum diagnostic mechanism in the same vertical slice or add an explicit prerequisite issue that delivers it first.
 - Prefer same-issue diagnostics; use a prerequisite when the mechanism is shared by multiple slices or substantial enough to require separate implementation and review.
@@ -294,6 +298,7 @@ Describe the observable behavior available after completion.
 - Owner-visible observations unavailable to the agent
 - Complete starting/reset state, cleanup, and runtime stop/continue condition
 - Validation packet group and unavoidable restart boundary
+- Agent Diagnostics Toolkit bundle, record categories, and retained bundle/log paths when selected
 
 ## Completion Evidence
 
@@ -376,6 +381,8 @@ Before Implementation begins, present one compact decision packet for owner-perf
 - **Waive:** accepted as unperformed for this workflow, with the evidence limitation recorded.
 
 Do not repeatedly ask about a deferred or waived check unless new evidence materially changes its risk.
+
+When Project Setup selected the Agent Diagnostics Toolkit, add a toolkit plan to the Implementation Plan. Name the pinned artifact, runtime placement, baseline and login-automation choices, bundle storage, log-retention path, and checks that will use it. A toolkit-assisted check must still state what the toolkit cannot prove and which mod-specific diagnostic or owner-visible observation supplies the missing evidence.
 
 ## Owner-Assisted Validation Campaigns
 
