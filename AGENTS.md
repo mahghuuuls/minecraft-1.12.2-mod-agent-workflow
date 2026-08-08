@@ -175,6 +175,7 @@ Do not silently resolve contradictions between sources. Follow `guidelines/proce
 - `stages/*.md`: setup and reusable development-stage responsibilities.
 - `procedures/*.md`: callable operational procedures that do not create an additional reusable-stage approval lifecycle.
 - `scripts/validate-process.ps1`: lightweight consistency validation for versioned process files and artifact-template ownership.
+- `scripts/validate-workspace.ps1`: read-only mechanical consistency validation for the active runtime workspace; it reports but never decides approvals or rewrites project state.
 
 When instructions overlap, the file that owns the subject is authoritative. Other files should reference it instead of restating it.
 

@@ -129,7 +129,7 @@ Before creating the first commit in an active repository, inspect the configured
 
 During Implementation, the owner may give bounded standing authorization for the series of local issue commits in that stage. The authorization must explicitly cover only commits that:
 
-- Contain one Done issue or one approved small-follow-up batch.
+- Contain one Done issue, one completed approved validation campaign, or one approved small-follow-up batch.
 - Have completed the required verification and independent review.
 - Include no unrelated file.
 - Use the repo-facing commit-message default.
@@ -163,15 +163,13 @@ At the end of the cycle, once Release Presentation is approved and the release a
 
 This is a recommendation the owner can decline, not a gate on the work. Its purpose is to keep the branch that matches the published artifact free of half-finished changes, so a released version stays reproducible while the next one is being built.
 
-During Implementation, after each completed issue, approved vertical slice, or approved small-follow-up batch, resolve the commit checkpoint before moving to the next item. Ask for approval unless an applicable bounded standing authorization already covers that commit. Follow `stages/7-implementation.md`.
+During Implementation, after each completed issue, approved vertical slice, approved validation campaign, or approved small-follow-up batch, resolve the commit checkpoint before moving to the next item. Ask for approval unless an applicable bounded standing authorization already covers that exact commit scope. Follow `stages/7-implementation.md`.
 
 Commit messages must be repo-facing by default. The rules are owned by the Commit Messages section of `guidelines/project-defaults.md`. Read them there before writing a message rather than working from recall, and note that they constrain message length as well as content.
 
 Publication to every approved distribution platform is performed manually by the project owner. Agents may prepare handoffs but may not upload or publish the mod.
 
-When owner-assisted manual validation is useful, provide a concise runnable recipe. Include relevant config state, exact commands or setup steps when available, expected results, and any important scenario that is impractical to validate manually. When several checks share one game or server runtime, give the owner the complete restart-aware matrix and full configuration up front instead of revealing one test at a time. Verify Minecraft 1.12.2 command syntax, registry identifiers, fixture behavior, and cleanup steps before presenting the recipe.
-
-Separate performing a manual action from collecting its evidence. After the owner performs an action in a shared or otherwise agent-accessible runtime, the agent must inspect the relevant current and rotated logs directly. Ask the owner to return only observations the agent cannot access or establish reliably, such as visual layout, perceived interaction behavior, audio, real multi-client privacy, or behavior in an external environment. Ask the owner to provide log content only when the runtime is outside the shared environment, the files are unavailable, or direct inspection fails. Treat logs as one evidence source rather than self-validating proof; corroborate diagnostic output with an independent input, automated check, controlled expectation, or owner-visible result when the claim could otherwise validate itself.
+Owner-assisted runtime checks must follow `guidelines/manual-validation.md`, which owns the session map, test-card format, binary success report, evidence handoff, failure handling, and cleanup rules. Verification quality and evidence labels remain owned by `guidelines/coding-standards.md` and `stages/7-implementation.md`.
 
 ## Completion Reporting
 

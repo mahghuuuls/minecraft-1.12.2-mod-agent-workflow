@@ -46,6 +46,12 @@
 | --- | --- | --- | --- |
 |  | Test now / Defer / Waive |  |  |
 
+## Owner-Assisted Validation Campaigns
+
+| Campaign | Included Issues And Cards | Shared Runtime Benefit | Readiness Gate | Evidence Attribution | Failure Route | Batch Commit Policy |
+| --- | --- | --- | --- | --- | --- | --- |
+|  |  |  |  |  |  |  |
+
 ## Approval And Authorization Packet
 
 - **Proportionate bundle eligibility:** Eligible / Ineligible, with reason
@@ -119,6 +125,10 @@
 - Independent corroborating evidence:
 - Same-issue work or prerequisite:
 - Default state and authorization boundary:
+- Owner-visible observations unavailable to the agent:
+- Complete starting/reset state:
+- Cleanup and runtime stop/continue condition:
+- Validation packet group and restart boundary:
 
 ## Completion Evidence
 
@@ -167,6 +177,10 @@ For a Decision issue, record the resolution and its evidence in the Decision sec
 - Architecture/process findings:
 - Improvement suggestions:
 - Resolutions:
+
+### Accepted Review Limitations
+
+- Limitation, eligibility basis, substitute checks, residual risk, and owner acceptance:
 
 ### Remaining Limitations
 ```

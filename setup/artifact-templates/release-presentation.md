@@ -26,6 +26,14 @@
 - Intended audience:
 - AI usage disclaimer status:
 
+## Platform Formatting Compatibility
+
+- Target editor or renderer:
+- Compatibility review performed:
+- Inline HTML or Markdown constraints:
+- Owner preview checklist supplied:
+- Reported rendering discrepancies and resolution:
+
 ## Changelog
 
 - Status:

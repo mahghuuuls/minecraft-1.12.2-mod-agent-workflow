@@ -134,6 +134,8 @@ Implementation issue statuses are defined by the Implementation Plan stage.
 
 `project-status.md` is the authoritative ledger for workflow, stage, cycle, issue, baseline, and blocking-decision status. When another project artifact or resume snapshot disagrees with it, stop and reconcile the evidence instead of silently choosing one.
 
+Run `scripts/validate-workspace.ps1` after material ledger changes, before a session handoff, and when resuming a long project. The script is read-only and checks only mechanical consistency, including exact status values, active-item counts, structured paths, issue-plan agreement, and resume references. A passing script does not prove that an approval occurred or that the recorded decision is correct. Warnings require inspection but do not fail the command; errors must be reconciled against `project-status.md` and the underlying evidence rather than repaired automatically.
+
 ## Project State Snapshot
 
 Maintain a compact current-state snapshot at:
@@ -236,7 +238,7 @@ Ask for explicit permission to begin after the briefing. Do not mark the stage *
 
 When presenting a completed stage and the next routed stage is already known, the agent should normally include the next stage's transition briefing in the same checkpoint. One owner response may explicitly approve the completed stage and authorize the next stage to begin. State both requested approvals plainly; silence, vague continuation, or approval of only one item does not authorize the other.
 
-Keep approvals separate when the next route is unresolved, a backward transition is required, the next action changes external state, or combining them would obscure a material scope, architecture, licensing, compatibility, or ownership decision.
+Keep approvals separate when the next route is unresolved, a backward transition does not satisfy the bounded revision-bundle rules below, the next action changes external state, or combining them would obscure a material scope, architecture, licensing, compatibility, or ownership decision.
 
 When a workflow approval always leads immediately into the first required stage, the transition briefing may combine workflow start and first-stage start. The combined request must make both approvals explicit, so the owner understands that approving it starts the workflow and the first stage.
 
@@ -456,6 +458,33 @@ When new evidence invalidates an approved decision:
 6. Resume later work only when its prerequisites are approved again.
 
 Do not conceal an upstream problem with an implementation workaround or a downstream document change.
+
+### Bounded Backward-Revision Bundle
+
+A small backward transition may use one bounded packet instead of separate return, revision, and reapproval prompts for every affected stage. This is an exception to the normal lifecycle, not a general fast path.
+
+The packet is eligible only when all of the following are true:
+
+- The conflicting evidence and earliest affected stage are known.
+- The correction is one coherent, bounded decision rather than a collection of unrelated revisions.
+- Every affected canonical artifact and dependent plan section is identified.
+- The exact proposed changes are shown before approval, as a patch, replacement text, or equally precise revision summary.
+- No material scope, licensing, compatibility, ownership, public-promise, or unresolved preference decision remains hidden inside the correction.
+- Existing implementation can remain intact while affected implementation remains stopped and outside the bundle.
+- Applying the described artifact changes is reversible and does not change external state.
+
+An eligible packet may ask one owner response to:
+
+- Approve returning to the named earliest stage.
+- Approve applying the exact presented revisions to the named canonical artifacts in stage order.
+- Reapprove those artifacts after the agent verifies that the applied text materially matches the presented revisions.
+- Authorize resuming the specifically named downstream planning checkpoint when its prerequisites become approved again.
+
+State the exact included artifacts and action, and state that the packet excludes production-code changes, commits, pushes, tags, publication, uploads, destructive actions, external-service changes, unrelated artifact edits, and any implementation work not expressly named. Record the packet, owner response, applied artifact revisions, and verification of equivalence in `project-status.md` and the active cycle or plan record when one exists.
+
+The bundle becomes invalid if applying the correction exposes a new material decision, changes more artifacts than presented, changes implementation scope, invalidates completed code, alters compatibility or public claims beyond the presented text, or cannot be applied materially as shown. Stop and use the normal backward-transition lifecycle rather than stretching the approval.
+
+Do not use this bundle merely because several approval prompts would be inconvenient. Use it when the owner can evaluate the complete correction as one decision without losing a meaningful review boundary.
 
 ## Artifact Locations
 

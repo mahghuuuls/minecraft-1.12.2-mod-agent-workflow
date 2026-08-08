@@ -12,12 +12,15 @@ $requiredPaths = @(
     'AGENTS.md',
     'guidelines/process-control.md',
     'guidelines/collaboration-guidelines.md',
+    'guidelines/manual-validation.md',
     'guidelines/project-defaults.md',
     'workflows/initial-development.md',
     'workflows/existing-mod-assessment.md',
     'workflows/change-cycle.md',
     'workflows/process-maintenance.md',
     'procedures/revalidate-release.md',
+    'scripts/validate-workspace.ps1',
+    'scripts/test-validate-workspace.ps1',
     'stages/0-project-setup.md',
     'stages/1-concept-and-scope.md',
     'stages/2-feasibility-research.md',
@@ -75,7 +78,7 @@ $requiredTemplateHeadings = [ordered]@{
     'setup/artifact-templates/project-setup.md' = @('Scenario', 'Public Copy Preferences', 'Git Workflow Preferences', 'Configuration Written', 'Workflow Feedback Log', 'Release And Publication Ownership', 'Validation Ownership', 'Owner Approvals')
     'setup/artifact-templates/requirements.md' = @('Purpose And Scope', 'Referenced Documents', 'Actors And Usage Context', 'Requirement Traceability', 'Glossary Updates', 'Unresolved Non-Blocking Questions')
     'setup/artifact-templates/project-initialization.md' = @('Project Identity Freeze', 'Template Source', 'Final Repository', 'Owner-Side Git Access Check')
-    'setup/artifact-templates/implementation-plan.md' = @('Implementation Strategy', 'Vertical Slice Overview', 'Issue Summary', 'Verification Strategy', 'Verification Environment Plan', 'Manual Validation Decisions', 'Definition Of Done', 'Manual Observability')
+    'setup/artifact-templates/implementation-plan.md' = @('Implementation Strategy', 'Vertical Slice Overview', 'Issue Summary', 'Verification Strategy', 'Verification Environment Plan', 'Manual Validation Decisions', 'Owner-Assisted Validation Campaigns', 'Definition Of Done', 'Manual Observability')
     'setup/artifact-templates/release-handoff.md' = @('Release Identity', 'Source Revision And Repository State', 'Artifact', 'Checks Performed', 'Owner-Managed Publication Steps', 'Owner Approvals')
     'setup/artifact-templates/release-presentation.md' = @('Public Copy Preferences', 'README', 'Mod Page Or Distribution-Page Copy', 'Changelog', 'Release Handoff', 'Owner Approvals')
     'setup/artifact-templates/project-baseline.md' = @('Baseline Identity', 'Supported Environment', 'Canonical Documents', 'Build And Verification', 'Known Limitations', 'Approval')

@@ -148,11 +148,7 @@ Draft the smallest useful mod page first and expand it only when a normal player
 
 Do not turn the mod page into a condensed requirements document. Avoid enumerating every numeric validation rule, parser edge case, excluded source, compatibility qualification, or internal evidence result. Keep those details in generated config comments, the repository README, changelog, or internal presentation record according to their audience. Prefer combining a short explanation with its example over creating a separate section for every topic.
 
-Include this generic AI usage disclaimer near the top of player/download-facing copy by default, after the opening description and before feature details:
-
-```html
-<p style="color:#d6a100"><strong>AI usage disclaimer:</strong> This mod was developed with AI-agent assistance using <a href="https://github.com/mahghuuuls/minecraft-1.12.2-mod-agent-workflow">this agent workflow</a>. The project owner reviewed the work during development.</p>
-```
+Include the generic AI usage disclaimer from the Public Documentation section of `guidelines/project-defaults.md` near the top of player/download-facing copy by default, after the opening description and before feature details. Preserve its exact workflow link, `https://github.com/mahghuuuls/minecraft-1.12.2-mod-agent-workflow`. Use its inline form when the target accepts color styling; do not replace it with a block-level HTML wrapper around Markdown.
 
 The owner may ask to remove, revise, or expand the disclaimer. Do not add project-specific testing claims, pack-size claims, Cleanroom claims, or compatibility claims to the generic disclaimer unless the owner explicitly approves that wording for the project. If the selected publication platform strips inline styling, keep the disclaimer text unless the owner asks to remove it.
 
@@ -196,6 +192,21 @@ Avoid player-facing sections that are primarily internal or redundant, including
 - Cleanroom or loader caveats that do not affect normal player decisions
 
 If the owner explicitly selects a combined documentation style, keep repository-oriented and player-facing content clearly separated.
+
+### CurseForge Markdown Compatibility
+
+When CurseForge is a selected distribution platform and the mod-page source is agent-managed, prepare the copy for CurseForge's Markdown editor rather than assuming a repository preview is equivalent.
+
+- Prefer basic Markdown paragraphs, headings, bold text, lists, links, inline code, fenced code, and horizontal rules.
+- Do not put Markdown emphasis or link notation inside block-level HTML. For an approved colored label or disclaimer, use the smallest inline `<span>` form from `guidelines/project-defaults.md` and leave ordinary prose and links outside the span.
+- Prefer bold bullet definitions over pipe tables unless the owner confirms the actual CurseForge preview renders the table correctly.
+- Do not rely on blockquotes as the only visual separation for an important notice. A bold label and horizontal rule are safer when the distinction matters.
+- Check whether the platform already displays the project title and other metadata before repeating them at the top of the description.
+- Give the owner a short preview checklist: bold labels render without literal `**`, links are clickable rather than displayed as `[label](URL)`, colored inline spans retain their color, code blocks remain readable, and no table or notice syntax is printed literally.
+
+The owner performs the external preview and publication. A rendered-page discrepancy is evidence to revise the source, but owner-managed publication must not be turned into an agent publication action or an indefinite workflow blocker.
+
+Platform rendering constraints are universal process guidance; punctuation and prose-style preferences are not. Record an owner's durable preferences, such as avoiding a punctuation mark, in `workspace/documentation/owner-defaults.md` under `guidelines/collaboration-guidelines.md` rather than imposing them on every project.
 
 ## Changelog Guidance
 
@@ -319,16 +330,17 @@ Do not use the internal record as public copy.
 11. Record icon and screenshot paths as owner-provided, agent-managed, or deferred.
 12. Follow icon or screenshot workflows only when those areas are agent-managed or explicitly assigned.
 13. Offer a screenshot shot list unless screenshots are deferred, stage any scenario the owner accepts, and revert staged state after capture.
-14. Check every public claim against approved implementation evidence and approved glossary terminology.
-15. Update `workspace/documentation/glossary.md` when release copy approves, refines, or deprecates public-facing project terminology.
-16. Keep technical evidence and internal limitations in `release-presentation.md` rather than public README or mod-page copy.
-17. Inspect the mod repository, then present the complete public materials, release version, intended release-file scope, and proposed commit message before final artifact validation. The checkpoint may ask the owner to (a) approve the materials and (b) authorize the focused release-preparation commit in one response, but the two decisions must be labeled separately.
-18. Treat public-material approval and commit authorization as separate authorization boundaries even when requested together. Public-material approval alone does not authorize the commit.
-19. If the materials are approved and the commit is authorized, commit only the approved release/version/public-material changes and verify the repository is clean at the resulting revision.
-20. If release validation is agent-managed, build the exact release artifact from that clean committed revision, inspect it, calculate its checksum, and record the authoritative artifact identity and checksum in the handoff.
-21. If release packaging is owner-managed, record the approved source revision, expected command/artifact pattern, and owner-managed boundary instead of building.
-22. Present the completed internal presentation record and release handoff for stage approval.
-23. Revise until explicitly approved. If a revision changes the committed release source, obtain new commit authorization and repeat artifact validation before final approval.
+14. When CurseForge is selected, perform the CurseForge Markdown compatibility review and give the owner the rendered-preview checklist.
+15. Check every public claim against approved implementation evidence and approved glossary terminology.
+16. Update `workspace/documentation/glossary.md` when release copy approves, refines, or deprecates public-facing project terminology.
+17. Keep technical evidence and internal limitations in `release-presentation.md` rather than public README or mod-page copy.
+18. Inspect the mod repository, then present the complete public materials, release version, intended release-file scope, and proposed commit message before final artifact validation. The checkpoint may ask the owner to (a) approve the materials and (b) authorize the focused release-preparation commit in one response, but the two decisions must be labeled separately.
+19. Treat public-material approval and commit authorization as separate authorization boundaries even when requested together. Public-material approval alone does not authorize the commit.
+20. If the materials are approved and the commit is authorized, commit only the approved release/version/public-material changes and verify the repository is clean at the resulting revision.
+21. If release validation is agent-managed, build the exact release artifact from that clean committed revision, inspect it, calculate its checksum, and record the authoritative artifact identity and checksum in the handoff.
+22. If release packaging is owner-managed, record the approved source revision, expected command/artifact pattern, and owner-managed boundary instead of building.
+23. Present the completed internal presentation record and release handoff for stage approval.
+24. Revise until explicitly approved. If a revision changes the committed release source, obtain new commit authorization and repeat artifact validation before final approval.
 
 ## Output Artifacts
 
@@ -379,6 +391,7 @@ This stage is complete when:
 - Agent-managed icon or screenshot work, if any, is approved or explicitly deferred by the owner.
 - Owner-managed platform submission and publication responsibilities are respected.
 - Public materials do not include build evidence, bytecode details, QA-style usage steps, internal validation findings, redundant platform requirements, platform-submission mechanics, or irrelevant Cleanroom caveats.
+- CurseForge-targeted Markdown has received the compatibility review, and the owner has been given the actual-preview checklist.
 - Technical notes are kept in `release-presentation.md`, not public README or mod-page copy.
 - Unperformed validation is kept out of public copy unless it materially affects normal installation or use or the owner explicitly requests disclosure.
 - Every public claim is supported by approved implementation evidence.

@@ -18,6 +18,7 @@ Implementation includes coding, testing, in-game verification, defect correction
 - The requirements and architecture references named by that issue
 - The active project under `workspace/project/<project_directory_name>/`
 - `guidelines/coding-standards.md`, which governs how the code is written and what counts as verification in this stage
+- `guidelines/manual-validation.md` when the issue includes owner-assisted runtime checks
 
 ## Objectives
 
@@ -77,7 +78,7 @@ If implementation reveals a problem in an earlier document, return to the releva
 Act as a focused implementation agent.
 
 - Work on one Ready issue at a time.
-- Confirm that all blocking issues are Done before starting.
+- Confirm that all blocking issues are Done before starting, except for the exact **Awaiting Validation** predecessor allowed by an approved validation campaign.
 - Read the issue and its referenced requirements and architecture sections.
 - Inspect the existing codebase before making changes.
 - Inspect approved dependency source references when the issue or architecture depends on them.
@@ -92,6 +93,7 @@ Act as a focused implementation agent.
 - Do not force TDD onto behavior that can only be meaningfully verified inside Minecraft.
 - Perform the verification defined by the issue.
 - Before asking the owner to perform a manual check, confirm that the issue's planned observability mechanism is implemented and usable. Do not substitute indirect inference when the plan requires authoritative logs, commands, counters, or equivalent diagnostics.
+- Present owner-assisted checks using the session map and test cards in `guidelines/manual-validation.md`.
 - After the owner performs a manual action, inspect agent-accessible current and rotated logs directly. Ask the owner for log content only when the runtime is external, the files are unavailable, or direct inspection fails.
 - Keep diagnostic work within the approved issue or its declared prerequisite. If required observability is missing from the plan, treat it as a Planning Problem rather than silently expanding the issue or sending an unreliable test recipe.
 - Treat compilation as necessary but not sufficient evidence that behavior works.
@@ -102,8 +104,8 @@ Act as a focused implementation agent.
 - Do not make product or architectural decisions without approval.
 - Record completion evidence in the issue file.
 - Move the issue to Review only after implementation verification succeeds or accepted waivers are recorded.
-- Do not mark the issue Done until independent review is complete.
-- After marking an issue Done, prepare a commit checkpoint and either ask the project owner whether to commit or apply an applicable standing implementation-commit authorization.
+- Do not mark the issue Done until independent review is complete or an eligible review limitation is explicitly accepted.
+- After marking an issue Done, prepare a commit checkpoint and either ask the project owner whether to commit or apply an applicable standing implementation-commit authorization. For an approved validation campaign, wait until every included issue is Done and resolve the campaign's batch checkpoint instead.
 - Do not commit without explicit approval.
 
 At the start of Implementation, the owner may give standing, revocable approval for required independent review agents for every implementation issue in the stage. This standing approval is limited to read-only review of completed issue changes and evidence. It does not authorize commits, pushes, external-service access, non-review subagents, or changed review scope. If the scope changes, ask again.
@@ -173,25 +175,7 @@ The development client and development server share one `run/` directory, includ
 
 Manual verification must also have a reliable observation path. Before requesting it, identify the authoritative state or event being checked and confirm that normal behavior exposes it reliably. If it does not, implement and verify the issue's approved diagnostic mechanism first. Suitable mechanisms include structured logs, inspect or controlled-state commands, counters, or another narrow diagnostic surface. Potentially noisy or player-visible diagnostics should remain disabled by default unless normal product behavior requires otherwise, and administrative state-changing commands must enforce the approved authorization boundary.
 
-Assign evidence collection before the check begins. The agent collects files and output it can access, including the relevant current log and rotated logs when the test may cross a restart or rotation boundary. The owner performs the requested gameplay action and reports only evidence the agent cannot observe reliably. Corroborate diagnostics with an independent input, output, automated check, controlled expectation, or visible result when the logged component could otherwise validate its own faulty behavior.
-
-If the owner skips a validation check, marks it owner-managed, or accepts that it cannot be run in the current environment, record it using the validation waiver format in `guidelines/process-control.md` and continue. Do not keep asking for the same validation unless new evidence makes it release-blocking.
-
-Use the plan's Test now, Defer, or Waive decisions as the standing disposition for owner-performed checks. Consolidate any newly discovered owner checks into the next relevant validation packet instead of asking about them one at a time.
-
-When manual gameplay validation by the owner is useful, provide a short runnable validation recipe only after its required observability is available. Include relevant config state, exact diagnostic and setup commands, how to enable and later disable any optional logging, the authoritative values or events, which evidence the agent will collect directly, which inaccessible observations the owner should report, expected results, and any important scenario that is not practical to validate in normal vanilla gameplay.
-
-Before the owner starts a shared game, server, or modpack session, consolidate all currently known checks for that runtime into one validation packet:
-
-- Map every planned check to its acceptance criterion and authoritative observation.
-- Group checks by configuration state and put the full configuration for each state first.
-- Minimize full restarts and state clearly where each unavoidable restart occurs.
-- Verify commands, selectors, registry identifiers, and entity names specifically for Minecraft 1.12.2; do not rely on identifiers from newer versions.
-- Choose fixtures whose actual registry type and attack behavior match the check. Account for spawn-replacement mods, randomized variants, custom AI, and attribute-scaling mods before treating visual health or damage as evidence.
-- Include safety setup, cleanup commands, diagnostic log paths and strings the agent will inspect, and only the inaccessible evidence the owner should return.
-- Include bounded repeated-event or churn checks when an acceptance criterion requires them; do not discover them only during final independent review.
-
-If a result invalidates a fixture or reveals a new necessary check, revise the packet and explain the change. Do not continue an avoidable sequence of ad hoc restarts merely because testing has already begun.
+Presentation, session grouping, reset state, evidence handoff, binary `Done` reporting, failure handling, and cleanup for owner-assisted checks are owned by `guidelines/manual-validation.md`. Use the plan's Test now, Defer, or Waive decisions as their standing disposition. If the owner skips a check or accepts that it cannot be run, record the waiver under `guidelines/process-control.md`; do not keep asking unless new evidence makes it release-blocking.
 
 ## Generated Artifact Inspection
 
@@ -208,6 +192,34 @@ After the planned behavioral issues are Done, classify each requested follow-up 
 - **Behavioral or structural:** parser behavior, public API, runtime behavior, data migration, packages/classes, architecture, or compatibility. Use the full issue lifecycle or return to the appropriate earlier stage.
 
 If investigation shows that an editorial request requires framework behavior, API use, migration logic, or structural renaming, stop and explain the expanded scope and cost before proceeding. Do not run a full clean build after every phrasing iteration when targeted checks are adequate; the final stabilized batch still requires a clean verification run.
+
+## Owner-Assisted Validation Campaigns
+
+An approved campaign may postpone only the named owner-assisted runtime cards while a small related issue group is implemented. It does not postpone compilation, automated checks, agent-run checks, observability verification, or independent review.
+
+Before moving an issue to **Awaiting Validation**:
+
+- Complete its implementation and every non-campaign verification check.
+- Verify its diagnostics and evidence-retention path.
+- Complete a pre-campaign independent implementation review of the code and available evidence and resolve all findings, or record an eligible accepted review limitation.
+- Retain a read-only per-issue patch or equivalent change-boundary snapshot and its checksum so later cumulative work does not erase source attribution.
+- Record the exact files and behavior attributable to the issue.
+- Confirm that no failed or missing result makes later campaign implementation unsafe.
+
+The next named campaign issue may then start even though its predecessor is **Awaiting Validation**, but only when the approved plan expressly permits that dependency relaxation. The mod worktree must be clean when the campaign begins, and every accumulated change must belong to the campaign and remain traceable through the retained boundaries. Do not start work outside the campaign until its commit checkpoint is resolved.
+
+When every included issue reaches **Awaiting Validation**, present and execute the campaign through `guidelines/manual-validation.md`. Assign every card and evidence item to its owning issue. A passing card moves only its owning issue toward Done; campaign completion is not blanket proof for the group.
+
+After the campaign cards pass, submit the newly collected evidence to a focused independent follow-up review before marking issues Done. One reviewer may inspect the complete campaign evidence in one context, but must report whether each included issue's acceptance criteria are independently supported. Any post-review correction receives its own focused verification and follow-up.
+
+When a card fails:
+
+- Stop dependent cards and inspect retained evidence.
+- Return the affected issue to **In Progress**.
+- Mark later campaign issues **Blocked** when the finding could invalidate their implementation or evidence; otherwise leave their recorded state unchanged.
+- Correct, reverify, and independently review the affected scope before resuming the campaign.
+
+After every included issue satisfies its Definition of Done, resolve one batch commit checkpoint for the exact campaign scope. The batch requires explicit authorization or standing authorization that specifically covers the named campaign; per-issue standing authorization does not silently become batch authorization.
 
 ## Testing Approach
 
@@ -243,7 +255,7 @@ Define expected results before performing any verification.
 
 ## Commit Checkpoints
 
-After each implementation issue, approved vertical slice, or approved small-follow-up batch is marked **Done**, resolve a commit checkpoint before starting the next item.
+After each implementation issue, approved vertical slice, approved validation campaign, or approved small-follow-up batch is marked **Done**, resolve a commit checkpoint before starting the next item. A campaign resolves one checkpoint only after every included issue is Done.
 
 Before requesting commit approval:
 
@@ -297,7 +309,7 @@ After a clean committed checkpoint, confirm the repository is clean when checked
 
 ## Issue Execution Process
 
-1. Select a Ready issue whose blockers are Done.
+1. Select a Ready issue whose blockers are Done, or the next expressly named campaign issue whose only relaxed blocker is an approved **Awaiting Validation** predecessor.
 2. Read the issue and all referenced documents.
 3. Inspect the relevant existing code.
 4. Confirm that the issue remains implementable as written.
@@ -307,8 +319,8 @@ After a clean committed checkpoint, confirm the repository is clean when checked
 8. Implement the smallest coherent change, including approved same-issue diagnostic support.
 9. Run compilation and fast automated checks.
 10. Correct failures before expanding the implementation.
-11. When diagnostics are required, verify their observation path and default and authorization behavior before giving the owner a manual validation recipe.
-12. Perform the required in-game, server, compatibility, or performance verification, or record an accepted validation waiver.
+11. When diagnostics are required, verify their observation path and default and authorization behavior before giving the owner a test card under `guidelines/manual-validation.md`.
+12. Perform the required in-game, server, compatibility, or performance verification, or follow an approved validation campaign for its named owner-assisted cards, or record an accepted validation waiver.
 13. After owner-performed actions, inspect the planned accessible current and rotated logs directly and collect any other agent-owned evidence.
 14. Corroborate diagnostic claims at the independent boundary defined by the plan.
 15. Refactor only where it improves the implemented behavior without expanding scope.
@@ -319,10 +331,10 @@ After a clean committed checkpoint, confirm the repository is clean when checked
 20. Submit the change to an independent review agent. If the owner gave standing approval for required review agents, including a valid recorded proportionate approval bundle, do not ask for repeated per-issue approval unless the review scope changes.
 21. Address legitimate review findings.
 22. Repeat verification for affected behavior or record approved waiver updates.
-23. Mark the issue **Done** only when the Definition of Done is satisfied.
-24. Prepare the commit checkpoint and determine whether a specific authorization, standing implementation-commit authorization, or valid recorded proportionate approval bundle applies.
+23. Mark the issue **Done** only when the Definition of Done is satisfied. When only approved campaign cards remain, mark it **Awaiting Validation** and follow the campaign procedure instead.
+24. Prepare the issue or completed-campaign commit checkpoint and determine whether a specific authorization, standing implementation-commit authorization, or valid recorded proportionate approval bundle applies.
 25. Create the commit only under that authorization, otherwise request approval or record the approved deferral.
-26. Select the next Ready issue only after the commit checkpoint is resolved.
+26. Select the next Ready issue only after the commit checkpoint is resolved, except for the next explicitly named issue in an approved validation campaign.
 
 ### Executing A Decision Issue
 
@@ -439,6 +451,30 @@ If the reviewer finds that an approved requirement, architecture decision, or sc
 
 A clean review context improves independence, but does not make the review automatically correct. Review findings must be evaluated against the approved requirements, architecture, evidence, and accepted validation waivers.
 
+### Independent Review Availability
+
+Do not interpret a busy agent slot or a temporarily delayed reviewer as lack of review capability. Wait or resume later when a separate context is expected to become available.
+
+When the active environment genuinely cannot provide a separate agent context, state that limitation before the issue reaches Review. Self-review, additional tests, and owner observation may reduce risk, but they are not independent review and must not be recorded as one.
+
+The normal response is to leave the issue blocked at its review checkpoint until an independent agent or qualified human reviewer is available. The owner may explicitly accept a review limitation only when the issue is local, low-risk, reversible, has strong automated or direct runtime evidence, and does not deliver evidence as its primary output. Do not offer this exception for changes involving public APIs, persistent data or migration, networking or synchronization, logical-server authority, Mixins or coremods, dependency or licensing conclusions, release packaging, security or permissions, destructive behavior, or another boundary where a second reasoning context materially protects users.
+
+Before requesting an eligible exception, present:
+
+- What prevented independent review and what availability checks were made.
+- The exact issue and diff scope.
+- The substitute self-review, automated checks, runtime evidence, and artifact inspection completed.
+- The residual risk that independence would have addressed.
+- The public claims, later validation, or release decision constrained by the limitation.
+
+Record an accepted exception under **Accepted Review Limitations** using:
+
+```text
+Accepted review limitation: <issue and scope> was not independently reviewed because <environment limitation>; <substitute evidence and residual risk> were explicitly accepted by the owner.
+```
+
+An accepted review limitation satisfies only the review checkpoint for that exact eligible issue. It does not authorize a commit, weaken validation requirements, apply to later issues, or turn self-review into independent evidence. It also invalidates any standing commit authorization whose conditions require completed independent review; that commit needs a separate explicit decision. If later evidence raises the risk or expands the scope, the exception is invalid and independent review becomes blocking again.
+
 ## Completion Evidence
 
 ### Evidence Labels
@@ -515,6 +551,10 @@ Every result line ends with one label: (observed), (inspected), or (inferred).
 - Improvement suggestions:
 - Resolutions:
 
+### Accepted Review Limitations
+
+- Limitation, eligibility basis, substitute checks, residual risk, and owner acceptance:
+
 ### Remaining Limitations
 
 - None
@@ -537,7 +577,7 @@ An issue is complete when:
 - No unrelated behavior was introduced.
 - Completion evidence is recorded, and every evidence claim carries an accurate observed / inspected / inferred label.
 - No acceptance criterion rests on an inferred claim without an accepted validation waiver.
-- Independent review is complete, including for an issue whose deliverable is evidence rather than code.
+- Independent review is complete, including for an issue whose deliverable is evidence rather than code, or an eligible review limitation is explicitly accepted and recorded.
 - Legitimate review findings are resolved.
 - Any remaining limitations are explicit and approved.
 - The issue status is **Done**.

@@ -15,6 +15,7 @@ Convert the approved requirements and architecture into small, ordered, and veri
 - The approved repository baseline identified by the active workflow
 - The active project under `workspace/project/<project_directory_name>/`
 - The active workflow's `<artifact-root>`
+- `guidelines/manual-validation.md` when owner-assisted runtime checks are planned
 
 ## Objectives
 
@@ -201,12 +202,13 @@ Use these statuses:
 - **Backlog:** Identified but not ready to implement.
 - **Ready:** Fully defined and all blockers are resolved.
 - **In Progress:** Currently being implemented.
+- **Awaiting Validation:** Implementation, non-campaign verification, and pre-campaign independent review are complete; only the issue's approved owner-assisted campaign and focused evidence follow-up remain.
 - **Review:** Implementation is complete and awaiting independent review.
 - **Blocked:** Cannot proceed because a dependency or decision is unresolved.
 - **Done:** Acceptance criteria, verification, and review are complete.
 - **Deferred:** Intentionally excluded from the current release.
 
-Only issues with the **Ready** status should be given to an implementation agent.
+Only issues with the **Ready** status should be given to an implementation agent. The sole exception is advancing to the next named Ready issue inside an approved validation campaign after its predecessor reaches **Awaiting Validation** under `stages/7-implementation.md`.
 
 ## Issue Format
 
@@ -289,13 +291,16 @@ Describe the observable behavior available after completion.
 - Independent input, output, test, or visible behavior that corroborates diagnostic claims when needed
 - Same-issue implementation or explicit prerequisite issue
 - Default enabled/disabled state and relevant authorization boundary
+- Owner-visible observations unavailable to the agent
+- Complete starting/reset state, cleanup, and runtime stop/continue condition
+- Validation packet group and unavoidable restart boundary
 
 ## Completion Evidence
 
 Record the tests, commands, observations, logs, or measurements demonstrating completion.
 ```
 
-Omit **Manual Observability** when the issue has no manual runtime verification. When it applies, complete the section before marking the issue Ready; do not leave the observation path to be invented during Implementation.
+Omit **Manual Observability** when the issue has no manual runtime verification. When it applies, complete the section before marking the issue Ready; do not leave the observation path or the inputs required by `guidelines/manual-validation.md` to be invented during Implementation.
 
 Omit **Decision** unless the issue's type is Decision. For a Decision issue, omit **Manual Observability** and **Verification** instead, and treat the Decision section as its acceptance criteria.
 
@@ -337,7 +342,7 @@ Any other implementation issue is Done only when:
 - No unrelated requirements were introduced.
 - The implementation follows the approved architecture.
 - Relevant defects have been resolved or explicitly recorded.
-- An independent review has been completed.
+- An independent review has been completed, or an eligible low-risk review limitation has been explicitly accepted under `stages/7-implementation.md`.
 - Completion evidence has been recorded.
 - The issue status has been changed to **Done**.
 
@@ -372,6 +377,23 @@ Before Implementation begins, present one compact decision packet for owner-perf
 
 Do not repeatedly ask about a deferred or waived check unless new evidence materially changes its risk.
 
+## Owner-Assisted Validation Campaigns
+
+When several small related issues require the same expensive runtime, the plan may group their owner-assisted checks into one validation campaign. Use a campaign only when it reduces launches or configuration churn without making a failure difficult to attribute.
+
+For each campaign, record:
+
+- A stable campaign name and the exact included issues and test cards.
+- Why one shared runtime is materially cheaper than issue-by-issue owner testing.
+- The common environment, configuration groups, restart boundaries, and session order.
+- The automated, static, agent-run runtime, and independent-review gate each issue must pass before the campaign begins.
+- How diagnostics, evidence, and retained per-issue change-boundary snapshots distinguish every included issue.
+- Whether an earlier issue may reach **Awaiting Validation** and allow the next named issue to start despite the normal Done blocker.
+- The failure-isolation and rollback route.
+- The final batch-commit scope and its required authorization.
+
+Do not create a campaign for unrelated issues, high-risk migrations, destructive behavior, or checks whose failure would make later implementation unsafe or likely to target the wrong design. Keep the group as small as practical. A campaign is a testing schedule, not permission to weaken acceptance criteria, independent review, evidence attribution, or commit authorization.
+
 ## Approval And Authorization Packet
 
 After the plan and manual-validation decisions are complete, assess the active Change Cycle against the proportionate approval-bundle criteria in `guidelines/process-control.md`.
@@ -396,17 +418,18 @@ Record the eligibility basis, each covered action, explicit exclusions, invalida
 7. Link every issue to requirements and architecture.
 8. Define acceptance criteria and verification for every issue.
 9. Assign each verification check to an environment tier and state what that evidence proves and does not prove.
-10. For every manual runtime check, define its observability contract, evidence source, collection responsibility, and necessary corroboration; add any required same-issue diagnostic work or prerequisite issue.
+10. For every manual runtime check, define its observability contract, evidence source, collection responsibility, necessary corroboration, owner-only observations, reset/cleanup state, and validation-packet group; add any required same-issue diagnostic work or prerequisite issue.
 11. Present one decision packet for owner-performed manual validation and record each check as Test now, Defer, or Waive.
-12. Identify dependencies and blockers, including diagnostic prerequisites that must be Done before dependent manual verification begins.
-13. Construct the dependency graph.
-14. Check the graph for cycles.
-15. Schedule risky assumptions and validation work early.
-16. Confirm that every required behavior is covered.
-17. Identify optional requirements that will be deferred.
-18. Generate the implementation-plan artifacts as complete drafts.
-19. Assess and record proportionate approval-bundle eligibility.
-20. Present the drafts and, when eligible, the bounded approval and authorization packet; revise them until explicitly approved.
+12. Define any eligible owner-assisted validation campaign, including readiness gates, evidence attribution, failure isolation, and batch-commit policy.
+13. Identify dependencies and blockers, including diagnostic prerequisites that must be Done before dependent manual verification begins.
+14. Construct the dependency graph.
+15. Check the graph for cycles.
+16. Schedule risky assumptions and validation work early.
+17. Confirm that every required behavior is covered.
+18. Identify optional requirements that will be deferred.
+19. Generate the implementation-plan artifacts as complete drafts.
+20. Assess and record proportionate approval-bundle eligibility.
+21. Present the drafts and, when eligible, the bounded approval and authorization packet; revise them until explicitly approved.
 
 ## Output Artifacts
 
@@ -440,6 +463,8 @@ This stage is complete when:
 - Owner-performed manual checks have one recorded Test now, Defer, or Waive decision.
 - Every manual runtime verification procedure identifies what authoritative state or event it observes and has the necessary diagnostic support in the same issue or an explicit completed prerequisite.
 - Every manual runtime verification procedure assigns evidence collection: the agent directly inspects accessible current and rotated logs, while owner-returned evidence is limited to inaccessible observations or environments.
+- Every owner-assisted procedure contains enough planned state, grouping, and lifecycle information to produce the session map and test cards required by `guidelines/manual-validation.md` without inventing test behavior during Implementation.
+- Every validation campaign is small, shares a justified runtime cost, preserves per-issue evidence attribution, and records readiness, failure, and commit boundaries.
 - Every issue references relevant requirements and architecture.
 - All blocking relationships are explicit.
 - The dependency graph is acyclic.
