@@ -38,6 +38,7 @@ Establish:
 - Performance-sensitive areas
 - How the architecture supports verification
 - Major technical decisions and their reasoning
+- Which boundaries carry substantial complexity, what knowledge each owns, and how their interfaces hide it
 - Architectural naming that follows approved glossary vocabulary
 
 ## In Scope
@@ -60,6 +61,7 @@ Establish:
 - Important runtime flows
 - Architectural support for testing and verification
 - Decisions, alternatives, and trade-offs
+- Alternative sketches and complexity analysis for nontrivial public APIs, state ownership, synchronization, lifecycle orchestration, and integration boundaries
 - Requirement-to-component traceability
 - Glossary-aligned naming decisions
 
@@ -98,6 +100,10 @@ Act as a software architect collaborating with the project owner.
 - Use approved dependency source checkouts as read-only evidence for integration decisions.
 - Select dependencies only when they provide meaningful value.
 - Explain important alternatives and their trade-offs.
+- For each complexity-bearing boundary, sketch at least two meaningfully different designs before selecting one. Compare common usage, interface knowledge, likely changes, special cases, dependency leakage, and Minecraft lifecycle constraints.
+- Do not satisfy the alternative-design requirement with cosmetic variations or a post-hoc list of rejected names for the selected structure.
+- Identify the authoritative owner of each formula, precedence rule, persistence shape, synchronization contract, compatibility policy, and other nontrivial design decision.
+- Prefer deep components whose interfaces hide lifecycle, compatibility, and implementation detail. Treat pass-through layers and caller-managed operation sequences as design warnings that require a concrete justification.
 - Use one focused question for a branching owner decision; group closely related recommended architectural defaults into a compact decision packet when they can be reviewed together safely.
 - Do not ask questions that can be answered from the approved documents or technical research.
 - Trace architectural decisions back to requirements or established constraints.
@@ -119,6 +125,9 @@ The architecture should be:
 - **Proportionate:** Complexity reflects the actual size and risk of the mod.
 - **Side-safe:** Client-only code cannot accidentally load on a dedicated server.
 - **Changeable:** Likely changes remain localized.
+- **Deep:** Important components hide more complexity than their interfaces expose.
+- **Information-hiding:** Each nontrivial rule or representation has one authoritative owner rather than leaking across components.
+- **Layered deliberately:** Adjacent layers provide different abstractions or enforce a named boundary.
 - **Verifiable:** Important logic can be evaluated without unnecessary environmental coupling.
 - **Explicit:** Dependencies and runtime flows are documented rather than implied.
 - **Terminologically consistent:** Architectural names do not casually rename approved project concepts.
@@ -146,6 +155,13 @@ What approach was selected?
 **Reasoning:**  
 Why was this approach selected?
 
+**Complexity Analysis:**
+
+- Common operation and required caller knowledge
+- Design knowledge hidden by this boundary
+- Likely changes kept local
+- Complexity or red flags accepted because of a concrete Minecraft, loader, or dependency constraint
+
 **Consequences:**
 
 - Positive consequence
@@ -164,7 +180,7 @@ Why was this approach selected?
 What, if anything, must be confirmed during Implementation?
 ```
 
-Minor and self-evident choices do not require separate decision records.
+Minor and self-evident choices do not require separate decision records or two design sketches. A decision is complexity-bearing when it establishes a public API, persistent representation, synchronization contract, configuration precedence rule, shared formula or policy, cross-mod boundary, or lifecycle sequence that several later changes will depend on.
 
 ## Process
 
@@ -172,7 +188,7 @@ Minor and self-evident choices do not require separate decision records.
 2. Read `workspace/documentation/glossary.md`, when present.
 3. Extract architectural constraints, quality needs, and approved terminology.
 4. Group requirements into related responsibilities.
-5. Identify major components and ownership boundaries.
+5. Identify major components, ownership boundaries, complexity-bearing decisions, and the design knowledge each component owns.
 6. Evaluate relevant libraries and integration approaches.
 7. Review approved dependency source reference findings when they affect integration design.
 8. Define package organization and dependency directions.
@@ -181,7 +197,7 @@ Minor and self-evident choices do not require separate decision records.
 11. Define configuration, networking, persistence, and external integrations where applicable.
 12. Describe important runtime and data flows.
 13. Identify performance-sensitive and verification-sensitive areas.
-14. Review the architecture for unnecessary complexity, coupling, and terminology drift.
+14. Review the architecture for shallow modules, information leakage, pass-through layers, temporal coupling, overexposed interfaces, mixed general and special-purpose policy, unnecessary complexity, coupling, and terminology drift.
 15. Trace components and decisions to requirements and glossary terms where relevant.
 16. Update `workspace/documentation/glossary.md` when architecture approves, introduces, refines, or deprecates project-specific terms.
 17. Generate `workspace/documentation/architecture.md` as a complete draft.
@@ -208,6 +224,8 @@ This stage is complete when:
 - Important runtime flows are understandable.
 - Performance-sensitive areas are identified.
 - Major decisions and trade-offs are recorded.
+- Complexity-bearing decisions compare at least two meaningful alternatives and explain why the selected interface hides knowledge more effectively.
+- Each important formula, representation, policy, precedence rule, synchronization contract, and lifecycle responsibility has an authoritative owner.
 - Architecture complexity is proportionate to the mod.
 - Components and decisions are traceable to requirements.
 - Architectural names and concepts are consistent with approved glossary terms.

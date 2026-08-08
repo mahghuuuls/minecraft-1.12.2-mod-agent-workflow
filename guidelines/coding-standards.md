@@ -15,6 +15,27 @@ These standards apply to implementation work across all mod projects. Project-sp
 - Tolerate small duplication when the proposed abstraction would make the code harder to understand.
 - Keep likely changes localized behind clear ownership boundaries.
 
+## Complexity Management
+
+Judge design by the amount of knowledge and coordination required to understand or change it, not by class count, pattern count, or whether the code currently works.
+
+- Prefer deep modules: a small, clear interface should hide substantially more implementation detail than it exposes. Do not split behavior into many shallow classes or methods merely to make each unit shorter.
+- Make common operations simple for callers. Rare options, lifecycle details, compatibility branches, and special cases should not burden the normal call path unless callers genuinely need to control them.
+- Give each nontrivial design decision one authoritative owner. A formula, precedence rule, serialization shape, synchronization rule, registry mapping, or compatibility policy duplicated across modules is information leakage even when the duplicated code is short.
+- Organize code around ownership of knowledge, not merely the order in which lifecycle steps happen. Contain required temporal ordering behind an interface instead of making distant callers remember sequences such as initialize, mutate, synchronize, and clean up.
+- Require adjacent layers to provide different abstractions. A wrapper or method that mainly forwards the same arguments to another layer is a red flag unless it enforces a meaningful boundary such as sidedness, authorization, compatibility, lifecycle, or error translation.
+- Pull unavoidable complexity into the module best able to hide it when doing so simplifies multiple callers. Do not use this principle to create a global manager, oversized class, or configuration surface that accumulates unrelated responsibilities.
+- Keep general mechanisms separate from mod-specific policy when they change for different reasons. Keep behavior together when separating it would duplicate knowledge or force callers to coordinate the pieces.
+- Define safe special cases out of existence when one consistent behavior is clearer, such as an idempotent no-op. Do not mask invalid configuration, corrupted state, security failures, or a condition the user must correct.
+- For a new public API, persistent-state boundary, synchronization contract, cross-mod integration, or other complexity-bearing component, sketch at least two meaningfully different designs before selecting one. Compare interface size, knowledge exposed, common use, likely changes, failure behavior, and Minecraft lifecycle constraints. Trivial private implementation choices do not require this exercise.
+- Use precise, consistent names. Difficulty naming or briefly describing a class, method, state value, or component is evidence that its responsibility or abstraction may be unclear; reconsider the design before compensating with a vague name and a long explanation.
+- Comments should state contracts, invariants, ownership, reasons, and non-obvious constraints. Do not repeat the code or expose implementation details in an interface comment when callers do not need them.
+- Make continual small design improvements within the touched scope. Do not patch around a newly exposed design defect merely to finish the issue; when the proper correction would materially expand scope or change approved architecture, stop and route that decision through the owning stage.
+
+Use these as diagnostic principles, not a scoring system. A Forge or Minecraft constraint may justify a shallow adapter, temporal hook, or exposed option, but the implementation and review must name the constraint and show why the complexity is contained.
+
+Common red flags include shallow modules, duplicated design knowledge, pass-through layers, temporal coupling across components, overexposed interfaces, repeated special-case handling, mixed general and special-purpose policy, methods that must be understood together, vague names, comments that repeat code, and behavior that is difficult to describe succinctly.
+
 ## Existing Projects
 
 - Preserve released gameplay behavior unless an approved requirement changes it.

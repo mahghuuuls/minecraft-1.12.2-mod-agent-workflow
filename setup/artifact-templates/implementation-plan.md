@@ -109,6 +109,15 @@
 
 ## Implementation Constraints
 
+## Complexity Management
+
+- Classification: Complexity-bearing / Routine
+- Approved boundary or architectural decision:
+- Design knowledge and authoritative owner:
+- Common operation and required caller knowledge:
+- Likely changes that must remain local:
+- Red flags the implementation and reviewer must inspect:
+
 ## Likely Code Areas
 
 ## Decision
@@ -187,6 +196,13 @@ For a Decision issue, record the resolution and its evidence in the Decision sec
 - Blocking findings:
 - Architecture/process findings:
 - Improvement suggestions:
+- Complexity argument:
+  - Complexity introduced:
+  - Complexity removed:
+  - Deep-module and information-hiding assessment:
+  - Red flags found or accepted:
+  - Simpler alternative, when applicable:
+  - Conclusion: Decreased / Unchanged / Increased, with justification
 - Resolutions:
 
 ### Accepted Review Limitations

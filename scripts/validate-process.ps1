@@ -13,6 +13,7 @@ $requiredPaths = @(
     'guidelines/process-control.md',
     'guidelines/collaboration-guidelines.md',
     'guidelines/agent-diagnostics-toolkit.md',
+    'guidelines/coding-standards.md',
     'guidelines/manual-validation.md',
     'guidelines/project-defaults.md',
     'workflows/initial-development.md',
@@ -80,8 +81,9 @@ $requiredTemplateHeadings = [ordered]@{
     'setup/artifact-templates/project-setup.md' = @('Scenario', 'Public Copy Preferences', 'Git Workflow Preferences', 'Configuration Written', 'Workflow Feedback Log', 'Agent Diagnostics Toolkit', 'Release And Publication Ownership', 'Validation Ownership', 'Owner Approvals')
     'setup/artifact-templates/requirements.md' = @('Purpose And Scope', 'Referenced Documents', 'Actors And Usage Context', 'Requirement Traceability', 'Glossary Updates', 'Unresolved Non-Blocking Questions')
     'setup/artifact-templates/feasibility-research.md' = @('Feature Feasibility', 'Dependencies And Integrations', 'Development Diagnostics Feasibility', 'Evidence And References')
+    'setup/artifact-templates/architecture.md' = @('Components And Responsibilities', 'Dependency Rules', 'Complexity Management', 'Architectural Decisions And Trade-Offs')
     'setup/artifact-templates/project-initialization.md' = @('Project Identity Freeze', 'Template Source', 'Final Repository', 'Owner-Side Git Access Check', 'Development Diagnostic Tooling')
-    'setup/artifact-templates/implementation-plan.md' = @('Implementation Strategy', 'Vertical Slice Overview', 'Issue Summary', 'Verification Strategy', 'Agent Diagnostics Toolkit Plan', 'Verification Environment Plan', 'Manual Validation Decisions', 'Owner-Assisted Validation Campaigns', 'Definition Of Done', 'Manual Observability')
+    'setup/artifact-templates/implementation-plan.md' = @('Implementation Strategy', 'Vertical Slice Overview', 'Issue Summary', 'Verification Strategy', 'Agent Diagnostics Toolkit Plan', 'Verification Environment Plan', 'Manual Validation Decisions', 'Owner-Assisted Validation Campaigns', 'Definition Of Done', 'Manual Observability', 'Complexity Management')
     'setup/artifact-templates/release-handoff.md' = @('Release Identity', 'Source Revision And Repository State', 'Artifact', 'Checks Performed', 'Owner-Managed Publication Steps', 'Owner Approvals')
     'setup/artifact-templates/release-presentation.md' = @('Public Copy Preferences', 'README', 'Mod Page Or Distribution-Page Copy', 'Changelog', 'Release Handoff', 'Development Diagnostics Feedback', 'Owner Approvals')
     'setup/artifact-templates/project-baseline.md' = @('Baseline Identity', 'Supported Environment', 'Canonical Documents', 'Build And Verification', 'Known Limitations', 'Approval')
@@ -89,10 +91,12 @@ $requiredTemplateHeadings = [ordered]@{
 
 $requiredProcessText = [ordered]@{
     'guidelines/collaboration-guidelines.md' = @('inspect the configured Git author name and email')
+    'guidelines/coding-standards.md' = @('## Complexity Management', 'deep modules', 'information leakage')
     'stages/0-project-setup.md' = @('workspace/documentation/workflow-feedback.md', 'workspace/documentation/agent-diagnostics-toolkit-feedback.md')
     'setup/initialize-project.md' = @('## Freeze Project Identity', '## Verify Owner-Side Git Access')
-    'stages/6-implementation-plan.md' = @('## Verification Environment Plan', '**Test now:**', '**Defer:**', '**Waive:**')
-    'stages/7-implementation.md' = @('## Validation Environment Tiers', '## Generated Artifact Inspection', '## Small Follow-Up Path')
+    'stages/4-architecture-definition.md' = @('**Complexity Analysis:**', 'meaningfully different designs', 'authoritative owner')
+    'stages/6-implementation-plan.md' = @('## Verification Environment Plan', '**Test now:**', '**Defer:**', '**Waive:**', '## Complexity Management')
+    'stages/7-implementation.md' = @('## Validation Environment Tiers', '## Generated Artifact Inspection', '## Small Follow-Up Path', '**Complexity argument**')
     'stages/8-release-presentation.md' = @('https://github.com/mahghuuuls/minecraft-1.12.2-mod-agent-workflow', 'authoritative records for the current release artifact checksum')
     'setup/workflow-feedback-template.md' = @('## End Of Workflow Retrospective')
     'guidelines/agent-diagnostics-toolkit.md' = @('development-runtime only', 'Do not clone the toolkit repository into every mod project', 'setup/agent-diagnostics-toolkit-feedback-template.md')

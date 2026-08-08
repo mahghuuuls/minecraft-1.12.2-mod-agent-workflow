@@ -81,10 +81,14 @@ Act as a focused implementation agent.
 - Work on one Ready issue at a time.
 - Confirm that all blocking issues are Done before starting, except for the exact **Awaiting Validation** predecessor allowed by an approved validation campaign.
 - Read the issue and its referenced requirements and architecture sections.
+- Read and apply the Complexity Management rules in `guidelines/coding-standards.md` before structural work.
 - Inspect the existing codebase before making changes.
 - Inspect approved dependency source references when the issue or architecture depends on them.
 - Preserve existing project conventions unless an approved decision requires otherwise.
 - Implement the smallest coherent change that satisfies the issue.
+- For a complexity-bearing issue, establish the approved interface and authoritative knowledge owner before filling in implementation details.
+- Do not introduce shallow wrappers, duplicated policy, pass-through layers, or caller-managed lifecycle ordering unless the approved issue or architecture names the concrete constraint that requires them.
+- Make small complexity reductions in the touched scope when they preserve approved behavior. Route a broader correction through Architecture Definition or Implementation Planning instead of hiding it in the issue.
 - Keep the change limited to the issue's scope.
 - Use existing libraries and architectural components as documented.
 - Avoid duplicating functionality already present in the project or its dependencies.
@@ -331,16 +335,16 @@ After a clean committed checkpoint, confirm the repository is clean when checked
 3. Inspect the relevant existing code.
 4. Confirm that the issue remains implementable as written.
 5. Change the issue status to **In Progress**.
-6. Review its acceptance criteria, verification procedure, and manual-observability contract.
+6. Review its acceptance criteria, verification procedure, manual-observability contract, and Complexity Management classification and contract.
 7. Confirm that any declared diagnostic prerequisite is Done; if required observability is missing from the approved plan, stop and handle it as a Planning Problem.
-8. Implement the smallest coherent change, including approved same-issue diagnostic support.
+8. Implement the approved ownership boundary and common-use contract first, then the smallest coherent internal change, including approved same-issue diagnostic support.
 9. Run compilation and fast automated checks.
 10. Correct failures before expanding the implementation.
 11. When diagnostics are required, verify their observation path and default and authorization behavior before giving the owner a test card under `guidelines/manual-validation.md`.
 12. Perform the required in-game, server, compatibility, or performance verification, or follow an approved validation campaign for its named owner-assisted cards, or record an accepted validation waiver.
 13. After owner-performed actions, inspect the planned accessible current and rotated logs directly and collect any other agent-owned evidence.
 14. Corroborate diagnostic claims at the independent boundary defined by the plan.
-15. Refactor only where it improves the implemented behavior without expanding scope.
+15. Refactor the touched scope to remove complexity introduced or exposed by the change without expanding scope. Route broader structural correction through the owning earlier stage.
 16. Run all relevant checks again after refactoring.
 17. Record completion evidence in the issue.
 18. Perform a final implementation self-review.
@@ -428,6 +432,7 @@ The reviewer judges whether each label is correct, whether an inferred claim is 
 The review agent must receive:
 
 - `guidelines/project-defaults.md`
+- `guidelines/coding-standards.md`, especially its Complexity Management rules
 - The relevant requirements
 - The relevant architecture sections
 - The implementation issue
@@ -455,6 +460,20 @@ The review agent should examine:
 - Whether accepted validation waivers affect public claims or release safety
 - Whether each completion-evidence label is accurate, and whether any acceptance criterion rests on an inferred claim without an accepted waiver
 - Unrelated changes
+
+For every behavioral or structural issue, the reviewer must also provide a short evidence-based **Complexity argument**. This is an argument about the actual change, not a design-principle checklist. It must:
+
+- Identify material complexity introduced and removed.
+- Assess whether important modules present a simple common interface while hiding implementation knowledge and special cases.
+- Identify the authoritative owner of rules, formulas, persistence, synchronization, lifecycle ordering, or compatibility policy, and any duplicated or leaked ownership.
+- Examine the knowledge and sequencing required from callers, including temporal coupling.
+- Examine whether adjacent layers provide distinct abstractions or merely pass calls through.
+- Identify mixed general mechanisms and special policies when they have different reasons to change.
+- Treat difficult names, hard-to-describe responsibilities, and comments that explain mechanics instead of contracts as possible abstraction evidence.
+- Name any Minecraft 1.12.2, Forge, loader, or dependency constraint that requires otherwise undesirable complexity, and assess whether that complexity is localized and hidden.
+- Conclude that the change decreased, left unchanged, or increased complexity. An increase is acceptable only when the approved behavior or a concrete platform constraint requires it and the implementation contains it as well as practical.
+
+The argument must cite concrete classes, methods, interfaces, data owners, or dependency boundaries. Statements such as `follows SOLID`, `looks clean`, or `uses good abstractions` are not evidence. The reviewer need not mention a red flag that is genuinely irrelevant, but must explain enough of the change to support the conclusion. For an editorial-only or evidence-only issue with no structural effect, record that the argument is not structurally applicable and why.
 
 The reviewer should separate:
 
@@ -566,6 +585,13 @@ Every result line ends with one label: (observed), (inspected), or (inferred).
 - Blocking findings:
 - Architecture/process findings:
 - Improvement suggestions:
+- Complexity argument:
+  - Complexity introduced:
+  - Complexity removed:
+  - Deep-module and information-hiding assessment:
+  - Red flags found or accepted:
+  - Simpler alternative, when applicable:
+  - Conclusion: Decreased / Unchanged / Increased, with justification
 - Resolutions:
 
 ### Accepted Review Limitations
@@ -595,6 +621,7 @@ An issue is complete when:
 - Completion evidence is recorded, and every evidence claim carries an accurate observed / inspected / inferred label.
 - No acceptance criterion rests on an inferred claim without an accepted validation waiver.
 - Independent review is complete, including for an issue whose deliverable is evidence rather than code, or an eligible review limitation is explicitly accepted and recorded.
+- Independent review contains an evidence-based complexity argument for every behavioral or structural change.
 - Legitimate review findings are resolved.
 - Any remaining limitations are explicit and approved.
 - The issue status is **Done**.

@@ -15,6 +15,7 @@ Convert the approved requirements and architecture into small, ordered, and veri
 - The approved repository baseline identified by the active workflow
 - The active project under `workspace/project/<project_directory_name>/`
 - The active workflow's `<artifact-root>`
+- `guidelines/coding-standards.md`, including its Complexity Management rules
 - `guidelines/manual-validation.md` when owner-assisted runtime checks are planned
 - `guidelines/agent-diagnostics-toolkit.md` when Project Setup selected the toolkit
 
@@ -28,6 +29,7 @@ Establish:
 - The order in which issues should be completed
 - Which requirements each issue satisfies
 - Which architectural components each issue affects
+- Which issues are complexity-bearing and which approved ownership boundary or architectural decision governs them
 - How each issue will be verified
 - Which validation environment tier each check uses, what it proves, and what it does not prove
 - Whether each owner-performed manual validation is scheduled now, deferred, or waived
@@ -53,6 +55,7 @@ Establish:
 - Designing the minimum observability needed for reliable manual runtime verification
 - Planning development-runtime-only toolkit placement and repeatable test bundles when selected
 - Linking issues to requirements and architecture
+- Preventing implementation issues from inventing shallow wrappers, duplicated design knowledge, or caller-managed lifecycle coordination that the architecture did not approve
 - Identifying likely code areas affected
 - Establishing issue statuses and workflow
 - Establishing a Definition of Done
@@ -84,6 +87,9 @@ Act as an implementation planner.
 - Allow foundational issues only when they genuinely unblock vertical slices.
 - Keep foundational work as small and specific as possible.
 - Give every issue a clear objective and completion boundary.
+- Classify whether each non-decision issue changes a complexity-bearing boundary. For a routine issue, one sentence is sufficient; do not force a design exercise.
+- For a complexity-bearing issue, reference the approved alternative analysis and state the knowledge owner, common path, expected change locality, and red flags the implementation and reviewer must inspect.
+- Return to Architecture Definition when a complexity-bearing implementation has no approved boundary or meaningful alternative analysis. Do not let the implementation issue make an architectural decision implicitly.
 - Make dependencies explicit.
 - Ensure the dependency graph contains no cycles.
 - Schedule high-risk assumptions and implementation validations early.
@@ -261,6 +267,15 @@ Describe the observable behavior available after completion.
 - Client/server restrictions
 - Relevant project defaults
 
+## Complexity Management
+
+- Classification: Complexity-bearing / Routine
+- Approved boundary or architectural decision
+- Design knowledge and authoritative owner
+- Common operation and required caller knowledge
+- Likely changes that must remain local
+- Red flags the implementation and reviewer must inspect
+
 ## Likely Code Areas
 
 - Packages, components, or resources likely to change
@@ -307,6 +322,8 @@ Record the tests, commands, observations, logs, or measurements demonstrating co
 
 Omit **Manual Observability** when the issue has no manual runtime verification. When it applies, complete the section before marking the issue Ready; do not leave the observation path or the inputs required by `guidelines/manual-validation.md` to be invented during Implementation.
 
+Include **Complexity Management** for every non-decision issue. For a Routine issue, record the classification and why the change does not alter a public API, persistent representation, shared policy, synchronization contract, integration boundary, or lifecycle ownership; omit the remaining fields. A Complexity-bearing issue must complete every field and reference the approved architecture decision rather than designing the boundary in the issue.
+
 Omit **Decision** unless the issue's type is Decision. For a Decision issue, omit **Manual Observability** and **Verification** instead, and treat the Decision section as its acceptance criteria.
 
 Use these types:
@@ -348,6 +365,7 @@ Any other implementation issue is Done only when:
 - The implementation follows the approved architecture.
 - Relevant defects have been resolved or explicitly recorded.
 - An independent review has been completed, or an eligible low-risk review limitation has been explicitly accepted under `stages/7-implementation.md`.
+- For a behavioral or structural issue, the independent review contains the evidence-based complexity argument required by `stages/7-implementation.md`.
 - Completion evidence has been recorded.
 - The issue status has been changed to **Done**.
 
@@ -422,7 +440,7 @@ Record the eligibility basis, each covered action, explicit exclusions, invalida
 4. Define the first vertical slice.
 5. Divide remaining behavior into additional vertical slices.
 6. Add only the foundational issues required by identified slices.
-7. Link every issue to requirements and architecture.
+7. Link every issue to requirements and architecture, and classify each non-decision issue as Routine or Complexity-bearing.
 8. Define acceptance criteria and verification for every issue.
 9. Assign each verification check to an environment tier and state what that evidence proves and does not prove.
 10. For every manual runtime check, define its observability contract, evidence source, collection responsibility, necessary corroboration, owner-only observations, reset/cleanup state, and validation-packet group; add any required same-issue diagnostic work or prerequisite issue.
@@ -466,6 +484,7 @@ This stage is complete when:
 - Issues are organized primarily as vertical slices.
 - Necessary foundational work has a specific identified consumer.
 - Every issue has an objective, scope, acceptance criteria, and verification procedure. A Decision issue instead has a question, a named resolver, and the work it blocks.
+- Every non-decision issue has an accurate complexity classification, and every complexity-bearing issue references an approved ownership boundary and alternative analysis.
 - Every verification check identifies its environment tier, evidentiary value, and material limitation.
 - Owner-performed manual checks have one recorded Test now, Defer, or Waive decision.
 - Every manual runtime verification procedure identifies what authoritative state or event it observes and has the necessary diagnostic support in the same issue or an explicit completed prerequisite.

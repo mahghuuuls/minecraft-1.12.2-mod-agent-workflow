@@ -76,6 +76,15 @@
 
 -
 
+## Complexity Management
+
+- Complexity-bearing boundaries:
+- Design knowledge owned by each boundary:
+- Common operations and required caller knowledge:
+- Likely changes kept local:
+- Accepted Minecraft, loader, or dependency complexity:
+- Red flags requiring implementation validation:
+
 ## Architectural Decisions And Trade-Offs
 
 ### ARC-001: Decision Name
@@ -85,6 +94,7 @@
 **Decision:**  
 **Alternatives Considered:**  
 **Reasoning:**  
+**Complexity Analysis:**
 **Consequences:**  
 **Related Requirements:**  
 **Related Glossary Terms:**  
