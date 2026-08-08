@@ -105,6 +105,8 @@ Record exactly one outcome:
 
 Record the outcome and its evidence label in `change-intake.md`.
 
+For a **Reproduced** outcome, preserve the smallest reliable reproduction available and identify the boundary where a future regression could be detected. This is intake evidence, not a premature test-design decision. When no stable reproduction can be retained, record why and identify the evidence that established the cause.
+
 Do not propose a stage route until the outcome is **Reproduced**, unless the owner explicitly accepts proceeding on an unconfirmed report. Record that acceptance and its consequence: the plan may target the wrong cause, and its verification cannot demonstrate that the reported problem is fixed.
 
 **Not This Mod** and **Works As Designed** may still deserve a change when the mod made the mistake easy to make, such as an unclear error message, a confusing config path, or missing documentation. Route that as its own request judged on its own merits, not as a defect fix.
@@ -169,6 +171,7 @@ It records the delta and traceability; it must not duplicate complete canonical 
 The agent-managed work is ready for manual publication when:
 
 - A reported defect has a recorded confirmation outcome, or an owner-accepted decision to proceed without one.
+- A reproduced defect retains a minimal reproduction and candidate detection boundary, or records why a stable reproduction is unavailable.
 - Change Intake, the selected route, and the working-branch decision are approved.
 - Every **Revisit** stage is approved.
 - Every required cycle issue is Done.

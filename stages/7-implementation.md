@@ -95,6 +95,8 @@ Act as a focused implementation agent.
 - Treat dependency source checkouts under `workspace/dependencies/` as read-only references. Do not modify them or copy code from them unless the owner explicitly approves that work and licensing has been checked.
 - Run fast feedback checks throughout implementation.
 - Use test-first development for isolated logic when it provides clear value.
+- For a reproduced defect, establish the planned regression check before applying the correction when practical, record its pre-correction failure, and retain the check after it passes. If that order is impractical or unsafe, perform the planned controlled sensitivity demonstration or record the approved runtime fallback and its limitation.
+- Never weaken an assertion, avoid the failing boundary, or replace the original reproducer merely to make a regression check pass.
 - Do not force TDD onto behavior that can only be meaningfully verified inside Minecraft.
 - Perform the verification defined by the issue.
 - Before asking the owner to perform a manual check, confirm that the issue's planned observability mechanism is implemented and usable. Do not substitute indirect inference when the plan requires authoritative logs, commands, counters, or equivalent diagnostics.
@@ -337,7 +339,7 @@ After a clean committed checkpoint, confirm the repository is clean when checked
 5. Change the issue status to **In Progress**.
 6. Review its acceptance criteria, verification procedure, manual-observability contract, and Complexity Management classification and contract.
 7. Confirm that any declared diagnostic prerequisite is Done; if required observability is missing from the approved plan, stop and handle it as a Planning Problem.
-8. Implement the approved ownership boundary and common-use contract first, then the smallest coherent internal change, including approved same-issue diagnostic support.
+8. For a reproduced defect, establish and record the planned regression check's pre-correction failure or other sensitivity evidence when practical. Then implement the approved ownership boundary and common-use contract followed by the smallest coherent internal change, including approved same-issue diagnostic support.
 9. Run compilation and fast automated checks.
 10. Correct failures before expanding the implementation.
 11. When diagnostics are required, verify their observation path and default and authorization behavior before giving the owner a test card under `guidelines/manual-validation.md`.
@@ -451,6 +453,7 @@ The review agent should examine:
 - Whether the implementation introduces unnecessary indirection, abstraction, state, global behavior, lifecycle coupling, or future-facing structure
 - Whether a simpler structure would satisfy the approved behavior with lower maintenance risk
 - Correctness and regressions
+- For a defect correction, whether the retained regression check reaches the original failure boundary, would fail if the defect returned, and remains at the lowest stable meaningful level rather than duplicating implementation details
 - Client/server separation
 - Error handling
 - Compatibility concerns
@@ -579,6 +582,14 @@ Every result line ends with one label: (observed), (inspected), or (inferred).
 
 - Accepted limitation: <Validation name> was not performed by owner decision.
 
+### Defect Regression Protection
+
+- Original defect and detection boundary:
+- Retained check or scenario path:
+- Pre-correction failure or sensitivity evidence (observed | inspected | inferred):
+- Post-correction result (observed | inspected | inferred):
+- Automation limitation and runtime fallback, when applicable:
+
 ### Independent Implementation And Architecture Review
 
 - Reviewer:
@@ -605,6 +616,8 @@ Every result line ends with one label: (observed), (inspected), or (inferred).
 
 Omit verification categories that genuinely do not apply. Include accepted validation waivers whenever a normally relevant check was skipped by owner decision or ownership boundary. Do not omit a label because the answer is uncomfortable; an honest *inferred* is useful evidence, a mislabelled *observed* is not.
 
+Omit **Defect Regression Protection** when the issue does not correct a reproduced defect. For a defect correction, retain the check or repeatable scenario after the issue is complete; a one-time reproduction that is discarded does not protect against regression.
+
 Omit **Diagnostic Support** when stable normal behavior was sufficient for all manual checks. When it applies, record enough evidence to show that the diagnostic exposed the intended authoritative state and did not remain unintentionally enabled or accessible beyond its approved authorization boundary.
 
 ## Issue Completion Criteria
@@ -620,6 +633,7 @@ An issue is complete when:
 - No unrelated behavior was introduced.
 - Completion evidence is recorded, and every evidence claim carries an accurate observed / inspected / inferred label.
 - No acceptance criterion rests on an inferred claim without an accepted validation waiver.
+- Every corrected defect has retained regression protection and sensitivity evidence, or an explicit explanation of why a repeatable runtime scenario is the lowest reliable level.
 - Independent review is complete, including for an issue whose deliverable is evidence rather than code, or an eligible review limitation is explicitly accepted and recorded.
 - Independent review contains an evidence-based complexity argument for every behavioral or structural change.
 - Legitimate review findings are resolved.

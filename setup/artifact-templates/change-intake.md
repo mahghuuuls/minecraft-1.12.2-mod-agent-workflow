@@ -24,6 +24,9 @@ Omit this section when the request is a feature, enhancement, or refactor.
 - Evidence inspected (logs, config, code path) and who collected it:
 - Outcome: Reproduced / Needs Info / Not This Mod / Works As Designed
 - Evidence label for the outcome (observed | inspected | inferred):
+- Minimal reproduction retained, when Reproduced:
+- Boundary where a future regression can be detected, when Reproduced:
+- Reason no stable reproduction can be retained, when applicable:
 - Missing information, when Needs Info:
 - Established cause, when Not This Mod:
 - Requirement that the behavior matches, when Works As Designed:

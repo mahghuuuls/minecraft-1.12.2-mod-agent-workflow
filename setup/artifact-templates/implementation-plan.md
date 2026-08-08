@@ -133,6 +133,17 @@
 
 ## Verification
 
+## Defect Regression Protection
+
+- Applies: Yes / No
+- Original defect and minimal reproduction:
+- Detection boundary and lowest stable check level:
+- Durable automated check, toolkit bundle, or validation card:
+- How the check would fail if the defect returned:
+- Planned pre-correction failure or controlled sensitivity demonstration:
+- Automation limitation and runtime fallback, when applicable:
+- Retained test or scenario path:
+
 ## Manual Observability
 
 - Authoritative state or event:
@@ -189,6 +200,14 @@ For a Decision issue, record the resolution and its evidence in the Decision sec
 - Result (observed | inspected | inferred):
 
 ### Accepted Validation Waivers
+
+### Defect Regression Protection
+
+- Original defect and detection boundary:
+- Retained check or scenario path:
+- Pre-correction failure or sensitivity evidence (observed | inspected | inferred):
+- Post-correction result (observed | inspected | inferred):
+- Automation limitation and runtime fallback, when applicable:
 
 ### Independent Implementation And Architecture Review
 

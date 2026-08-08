@@ -105,6 +105,8 @@ Act as an implementation planner.
 - Do not treat a diagnostic as proof merely because it reports its own internal result. Plan corroboration at an independent boundary when a faulty calculation or event path could otherwise validate itself.
 - Select verification appropriate to the behavior instead of requiring strict TDD.
 - Use automated tests for isolated logic where practical.
+- For every issue that corrects a reproduced defect, plan durable regression protection at the lowest stable level capable of detecting the original behavior. State how the check reaches the defect boundary and how its sensitivity will be demonstrated.
+- Prefer an automated unit or integration test for isolated behavior. When Minecraft, Forge, Mixins, networking, rendering, another mod, or packaging is essential to the reproduction, retain the smallest repeatable runtime scenario, diagnostic-toolkit bundle, or focused manual validation card and record why lower-level automation would not be meaningful.
 - Use Minecraft client, dedicated-server, multiplayer, compatibility, or performance verification where required.
 - Do not require every environment mechanically. Use code paths and project risks to decide whether a representative non-Overworld check, packaged environment, modpack, or multiplayer check is necessary.
 - Plan a dedicated-server check by default for any mod that loads on a server. Side-safety failures, such as a client-only class reaching server code, are invisible in `runClient` and fatal on a server, so this is not a risk-selected extra. Omit it only for a mod that never loads server-side, and record the reason.
@@ -301,6 +303,17 @@ Describe the observable behavior available after completion.
 - Dedicated-server checks
 - Multiplayer, compatibility, or performance checks when relevant
 
+## Defect Regression Protection
+
+- Applies: Yes / No
+- Original defect and minimal reproduction
+- Detection boundary and lowest stable check level
+- Durable automated check, toolkit bundle, or validation card
+- How the check would fail if the defect returned
+- Planned pre-correction failure or controlled sensitivity demonstration
+- Automation limitation and runtime fallback, when applicable
+- Retained test or scenario path
+
 ## Manual Observability
 
 - Authoritative state or event that a manual check must observe
@@ -321,6 +334,8 @@ Record the tests, commands, observations, logs, or measurements demonstrating co
 ```
 
 Omit **Manual Observability** when the issue has no manual runtime verification. When it applies, complete the section before marking the issue Ready; do not leave the observation path or the inputs required by `guidelines/manual-validation.md` to be invented during Implementation.
+
+Include **Defect Regression Protection** for every issue that corrects a reproduced defect. Omit it for other issues. A passing test name is not sufficient: the plan must explain which original failure boundary the check reaches and what implementation regression would make it fail.
 
 Include **Complexity Management** for every non-decision issue. For a Routine issue, record the classification and why the change does not alter a public API, persistent representation, shared policy, synchronization contract, integration boundary, or lifecycle ownership; omit the remaining fields. A Complexity-bearing issue must complete every field and reference the approved architecture decision rather than designing the boundary in the issue.
 
@@ -364,6 +379,7 @@ Any other implementation issue is Done only when:
 - No unrelated requirements were introduced.
 - The implementation follows the approved architecture.
 - Relevant defects have been resolved or explicitly recorded.
+- A corrected defect has durable regression protection at the lowest stable meaningful level, or records why only a retained runtime scenario is reliable.
 - An independent review has been completed, or an eligible low-risk review limitation has been explicitly accepted under `stages/7-implementation.md`.
 - For a behavioral or structural issue, the independent review contains the evidence-based complexity argument required by `stages/7-implementation.md`.
 - Completion evidence has been recorded.
@@ -485,6 +501,7 @@ This stage is complete when:
 - Necessary foundational work has a specific identified consumer.
 - Every issue has an objective, scope, acceptance criteria, and verification procedure. A Decision issue instead has a question, a named resolver, and the work it blocks.
 - Every non-decision issue has an accurate complexity classification, and every complexity-bearing issue references an approved ownership boundary and alternative analysis.
+- Every issue correcting a reproduced defect specifies durable regression protection, its detection boundary, and how sensitivity to the original failure will be demonstrated.
 - Every verification check identifies its environment tier, evidentiary value, and material limitation.
 - Owner-performed manual checks have one recorded Test now, Defer, or Waive decision.
 - Every manual runtime verification procedure identifies what authoritative state or event it observes and has the necessary diagnostic support in the same issue or an explicit completed prerequisite.

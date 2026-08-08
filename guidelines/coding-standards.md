@@ -117,6 +117,8 @@ Common red flags include shallow modules, duplicated design knowledge, pass-thro
 - Apply the same standard to manual checks. A check whose passing observation would look identical if the feature were absent proves nothing. Establish the distinguishing condition first, then observe.
 - Treat a fixture too small to reach the rule under test as an unreached test, not a passing one. Verify that the data actually exercises the boundary the assertion describes.
 - Cover shipped defaults explicitly. Values a user never edits are still values the mod depends on, and they are easy to leave untested because no test names them.
+- When correcting a reproduced defect, add a durable regression check at the lowest stable level capable of detecting it. Prefer an automated unit or integration test when the behavior can be isolated meaningfully; otherwise retain a focused runtime scenario, diagnostic-toolkit bundle, or manual validation card.
+- When practical and safe, demonstrate that the regression check fails before the correction and passes afterward. If the correction already exists when the check is written, demonstrate sensitivity through a controlled reversal or mutation of the relevant condition when practical. Otherwise explain why that demonstration would be unsafe or disproportionate and identify the independent evidence showing that the check reaches the original defect boundary.
 - Do not require strict TDD for behavior that depends on the Minecraft runtime.
 - Verify the selected loader lifecycle, rendering, world state, entity AI, networking, transformations or Mixins, and compatibility in an appropriate Minecraft environment.
 - Check dedicated-server safety whenever shared or client-related code changes.
