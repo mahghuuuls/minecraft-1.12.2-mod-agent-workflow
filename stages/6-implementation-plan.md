@@ -18,6 +18,7 @@ Convert the approved requirements and architecture into small, ordered, and veri
 - `guidelines/coding-standards.md`, including its Complexity Management and Strategic Modification rules
 - `guidelines/manual-validation.md` when owner-assisted runtime checks are planned
 - `guidelines/agent-diagnostics-toolkit.md` when Project Setup selected the toolkit
+- `guidelines/minecraft-pixel-art.md` when an issue creates or materially revises pixel-art assets
 
 ## Objectives
 
@@ -38,6 +39,7 @@ Establish:
 - Which selected manual checks will use Agent Diagnostics Toolkit bundles, records, or inspections
 - Which technical risks should be addressed early
 - What constitutes completion for each issue
+- The approved brief, candidate-selection loop, workspace, and review contexts for each pixel-art asset issue
 - Which optional requirements are deferred
 
 ## In Scope
@@ -112,6 +114,8 @@ Act as an implementation planner.
 - Do not require every environment mechanically. Use code paths and project risks to decide whether a representative non-Overworld check, packaged environment, modpack, or multiplayer check is necessary.
 - Plan a dedicated-server check by default for any mod that loads on a server. Side-safety failures, such as a client-only class reaching server code, are invisible in `runClient` and fatal on a server, so this is not a risk-selected extra. Omit it only for a mod that never loads server-side, and record the reason.
 - Ensure each issue is understandable to an agent starting with a fresh context.
+- For each issue that creates or materially revises pixel art, tell the owner that the bundled exact-grid renderer will be used, obtain the compact art-direction packet required by `guidelines/minecraft-pixel-art.md`, request optional references, and complete the issue's Pixel-Art Asset section before marking it Ready.
+- Plan three materially different candidates for a new asset direction and focused revisions after selection. Do not require three variants for each file in one inseparable visual set or for every correction to an approved direction.
 - Avoid repeating entire project documents inside every issue.
 - Reference requirements and architectural decisions by stable identifiers.
 - Avoid speculative tasks for hypothetical future needs.
@@ -291,6 +295,21 @@ Describe the observable behavior available after completion.
 
 - Packages, components, or resources likely to change
 
+## Pixel-Art Asset
+
+- Asset ID and category
+- Gameplay meaning and actual display context
+- Canvas dimensions
+- Runtime destination
+- Approved silhouette, composition, materials, palette, and mood
+- Required and forbidden motifs
+- Transparency, animation, tiling, model, or neighboring-asset constraints
+- Project and external references, approved influences, and restrictions
+- Candidate workspace
+- Three-variation plan for a new direction
+- Required inspection views and in-game validation
+- Final grid specification and PNG paths
+
 ## Decision
 
 - Question:
@@ -349,6 +368,8 @@ Include **Defect Regression Protection** for every issue that corrects a reprodu
 Include **Complexity Management** for every non-decision issue. For a Routine issue, record the classification and why the change does not alter a public API, persistent representation, shared policy, synchronization contract, integration boundary, or lifecycle ownership; omit the remaining fields. A Complexity-bearing issue must complete every field and reference the approved architecture decision rather than designing the boundary in the issue.
 
 Include **Existing-Code Design Fit** when an issue modifies an existing production responsibility. Omit it when the issue creates an isolated new responsibility without changing existing production structure. Keep the design target and local-improvement boundary concise; this section authorizes implementation judgment within approved contracts rather than preplanning internal methods.
+
+Include **Pixel-Art Asset** when the issue creates or materially revises pixel art. Complete its brief and reference decision before the issue becomes Ready. Omit it for non-art issues and for code-only changes that merely load an unchanged existing asset.
 
 Omit **Decision** unless the issue's type is Decision. For a Decision issue, omit **Manual Observability** and **Verification** instead, and treat the Decision section as its acceptance criteria.
 
@@ -469,7 +490,7 @@ Record the eligibility basis, each covered action, explicit exclusions, invalida
 5. Divide remaining behavior into additional vertical slices.
 6. Add only the foundational issues required by identified slices.
 7. Link every issue to requirements and architecture, classify each non-decision issue as Routine or Complexity-bearing, and define Existing-Code Design Fit where applicable.
-8. Define acceptance criteria and verification for every issue.
+8. Complete the Pixel-Art Asset section for every applicable issue, including the owner-approved brief, reference decision, three-concept plan for a new direction, and use-specific inspection contexts; then define acceptance criteria and verification for every issue.
 9. Assign each verification check to an environment tier and state what that evidence proves and does not prove.
 10. For every manual runtime check, define its observability contract, evidence source, collection responsibility, necessary corroboration, owner-only observations, reset/cleanup state, and validation-packet group; add any required same-issue diagnostic work or prerequisite issue.
 11. Present one decision packet for owner-performed manual validation and record each check as Test now, Defer, or Waive.
@@ -512,6 +533,7 @@ This stage is complete when:
 - Issues are organized primarily as vertical slices.
 - Necessary foundational work has a specific identified consumer.
 - Every issue has an objective, scope, acceptance criteria, and verification procedure. A Decision issue instead has a question, a named resolver, and the work it blocks.
+- Every issue that creates or materially revises pixel art has an approved Pixel-Art Asset section and follows the candidate and review rules in `guidelines/minecraft-pixel-art.md`.
 - Every non-decision issue has an accurate complexity classification, and every complexity-bearing issue references an approved ownership boundary and alternative analysis.
 - Every issue modifying existing production code identifies its design target, authorized local-improvement boundary, and architecture-revision conditions without overprescribing internal implementation.
 - Every issue correcting a reproduced defect specifies durable regression protection, its detection boundary, and how sensitivity to the original failure will be demonstrated.

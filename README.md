@@ -89,6 +89,7 @@ minecraft-1.12.2-mod-agent-workflow/
 |-- procedures/
 |-- references/
 |-- scripts/
+|-- tools/
 |-- setup/
 |   |-- owner-defaults-template.md
 |   `-- artifact-templates/
@@ -107,6 +108,7 @@ minecraft-1.12.2-mod-agent-workflow/
 - `stages/` defines setup and development stages.
 - `procedures/` contains callable operational checks that do not create another stage lifecycle.
 - `scripts/` contains lightweight process-document consistency checks.
+- `tools/` contains bundled standalone utilities used by the workflow when its task-specific guidance routes to them.
 - `setup/` contains optional manual setup, owner-default templates, artifact templates, defaults, and initialization procedures.
 - `references/` contains curated technical links.
 - `workspace/` contains ignored project-specific configuration, setup owner defaults, documents, artwork, dependency references, templates, and the active mod.

@@ -1,0 +1,21 @@
+@preset bar_icon
+@name mana_drop
+
+. . . . A . . . .
+. . . A B A . . .
+. . . A C B A . .
+. . A B D C B A .
+. A B C E E D B A
+. . A C D E C A .
+. . A B D C B A .
+. . . A C B A . .
+. . . . A . . . .
+
+. = transparent
+A = outline / darkest blue = #07152F
+B = deep mana blue = #1A39D8
+C = medium blue = #2395F0
+D = light cyan = #58DDF6
+E = bright core / highlight = #F2FEFF
+
+

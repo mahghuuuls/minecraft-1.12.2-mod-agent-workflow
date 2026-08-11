@@ -113,18 +113,9 @@ Avoid plastic gloss, excessive particles, random runes, over-sharpening, and det
 
 ### Pixel Art
 
-Use an exact working grid such as 32x32 or 64x64 pixels.
+Follow `guidelines/minecraft-pixel-art.md` for exact-grid construction, the three-concept selection loop, mandatory agent image review, and technical pixel checks. Continue following this icon guideline for release-artwork direction, reference provenance, icon-size evaluation, export, and final owner approval.
 
-Require:
-
-- Intentional pixel clusters
-- Consistent pixel scale
-- Limited palette
-- Controlled dithering
-- No accidental antialiasing
-- Nearest-neighbor scaling
-
-The AI must inspect and correct the pixel grid. Merely prompting for "pixel art" is not sufficient.
+Use an exact working grid such as 32x32 or 64x64 pixels and render it with `tools/pixelart/pixelart.cmd`. Merely prompting for "pixel art" is not sufficient.
 
 ## Prompt Construction
 
@@ -177,7 +168,7 @@ or subpixel detail.
 
 ## Concept and Refinement Loop
 
-1. Generate two to four genuinely different concept directions.
+1. Generate two to four genuinely different concept directions. For pixel art, generate exactly three and follow `guidelines/minecraft-pixel-art.md`.
 2. Label them and explain the design difference briefly.
 3. Present concepts at full size and representative small sizes.
 4. Ask the owner to select one direction or reject all.

@@ -128,6 +128,21 @@
 
 ## Likely Code Areas
 
+## Pixel-Art Asset
+
+- Asset ID and category:
+- Gameplay meaning and actual display context:
+- Canvas dimensions:
+- Runtime destination:
+- Approved silhouette, composition, materials, palette, and mood:
+- Required and forbidden motifs:
+- Transparency, animation, tiling, model, or neighboring-asset constraints:
+- Project and external references, approved influences, and restrictions:
+- Candidate workspace:
+- Three-variation plan for a new direction:
+- Required inspection views and in-game validation:
+- Final grid specification and PNG paths:
+
 ## Decision
 
 - Question:

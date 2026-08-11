@@ -20,6 +20,7 @@ Implementation includes coding, testing, in-game verification, defect correction
 - `guidelines/coding-standards.md`, which governs how the code is written and what counts as verification in this stage
 - `guidelines/manual-validation.md` when the issue includes owner-assisted runtime checks
 - `guidelines/agent-diagnostics-toolkit.md` when Project Setup selected the toolkit
+- `guidelines/minecraft-pixel-art.md` when the issue creates or materially revises pixel-art assets
 
 ## Objectives
 
@@ -36,6 +37,7 @@ For each implementation issue:
 - Record accepted validation waivers when the owner skips or owns a check
 - Obtain an independent review
 - Correct legitimate review findings
+- Create, inspect, and obtain owner selection of pixel-art candidates when the issue includes artwork
 - Resolve the commit checkpoint after the issue is Done, using either specific approval or an applicable standing authorization
 
 ## In Scope
@@ -85,6 +87,7 @@ Act as a focused implementation agent.
 - Read and apply the Complexity Management and Strategic Modification rules in `guidelines/coding-standards.md` before structural work.
 - Inspect the existing codebase before making changes.
 - Inspect approved dependency source references when the issue or architecture depends on them.
+- For a pixel-art asset issue, read `guidelines/minecraft-pixel-art.md`, confirm that its brief and reference decision are approved, and keep unapproved candidates in the issue's artwork workspace rather than the mod repository.
 - Preserve existing project conventions unless an approved decision requires otherwise.
 - Apply the approved Existing-Code Design Fit target when one applies and follow the Strategic Modification rules; do not use diff size as a substitute for design quality.
 - For a complexity-bearing issue, establish the approved interface and authoritative knowledge owner before filling in implementation details.
@@ -122,6 +125,20 @@ At the start of Implementation, the owner may give standing, revocable approval 
 At the start of a Change Cycle Implementation stage, inspect the Implementation Plan and `project-status.md` for a recorded proportionate approval bundle. Honor its covered implementation start, review, and commit actions without repeated approval prompts while every recorded condition remains satisfied. If the records disagree, the issue changes, verification fails or materially changes, unrelated working-tree changes enter the proposed commit, or an excluded action becomes necessary, stop and obtain a revised decision.
 
 The agent may make ordinary implementation decisions that remain within the approved architecture. This includes the proportionate local design improvements authorized by `guidelines/coding-standards.md`, even when they touch multiple related methods or classes inside one approved responsibility. Decisions that alter component responsibilities, dependency directions, public behavior, or project scope require explicit approval.
+
+## Pixel-Art Asset Issues
+
+When an issue creates or materially revises pixel art:
+
+1. Confirm that the Pixel-Art Asset section is complete and approved. If basic art direction is missing, stop and handle it as a Planning Problem instead of improvising or prompting midway through a Ready issue.
+2. Use `tools/pixelart/pixelart.cmd` with `-Review` to render exact-grid PNGs and their inspection views in the approved candidate workspace.
+3. For a new asset or reopened direction, create three materially different candidates. For a focused correction after owner selection, revise only the selected direction unless the owner reopens the concept decision.
+4. Open and inspect every rendered PNG. Apply the actual-size, high-zoom, transparency, and use-specific checks in `guidelines/minecraft-pixel-art.md`.
+5. Reject and replace objectively defective candidates before presenting the set. Do not silently choose among viable directions for the owner.
+6. Present the passing candidates and obtain owner selection before copying a final runtime asset into the mod repository.
+7. Reinspect every material revision and record the final grid, PNG, selection, technical checks, and contextual validation as completion evidence.
+
+An image file existing on disk is not completion evidence. The issue must establish that the exact PNG is technically valid, visually inspected, selected by the owner, and suitable in its actual Minecraft context or has an explicit accepted validation waiver.
 
 ## Feedback Strategy
 
@@ -630,6 +647,7 @@ Omit **Diagnostic Support** when stable normal behavior was sufficient for all m
 An issue is complete when:
 
 - Its implementation satisfies the acceptance criteria.
+- Every included pixel-art asset satisfies `guidelines/minecraft-pixel-art.md`, has an owner-selected direction, and records agent visual inspection plus required contextual validation or an accepted waiver.
 - Relevant automated checks pass.
 - Required in-game verification passes or has an accepted waiver.
 - Required manual observability is implemented in the issue or a completed prerequisite, and its default and authorization behavior are verified where applicable.
