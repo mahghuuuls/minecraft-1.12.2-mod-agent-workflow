@@ -110,14 +110,14 @@ Keep destructive or feature-specific setup in the named test bundle the owner de
 
 ## Bundle And Evidence Workflow
 
-Use the toolkit to reduce setup transcription, not to hide the test from the owner:
+Use the toolkit to reduce deterministic command transcription, not to hide the test from the owner:
 
 1. The agent writes or updates the scenario bundle in the active runtime.
 2. The owner normally runs only the toolkit reload command and one named bundle command.
 3. The owner performs the small number of gameplay actions in the test card.
 4. The agent reads the accessible current or rotated log and attributes the records to the issue and card.
 
-If the owner is being asked to type a repeatable setup command sequence, move that sequence into the bundle. Keep physical gameplay actions, visual observations, audio observations, and subjective interaction quality in the test card.
+If the owner would otherwise type a deterministic multi-command setup, reset, inspection, marker, or cleanup sequence that the selected toolkit supports, move that sequence into a project-owned bundle. Keep the individual commands readable in bundle source and evidence documentation. Keep physical gameplay actions, visual observations, audio observations, and subjective interaction quality in the test card.
 
 Every setup bundle should normally:
 

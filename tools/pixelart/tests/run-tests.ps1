@@ -143,6 +143,24 @@ try {
     }
     Assert-Equal $mismatchRejected $true 'Preset mismatch was not rejected.'
 
+    $besideDirectory = Join-Path $TestDirectory 'beside'
+    [IO.Directory]::CreateDirectory($besideDirectory) | Out-Null
+    $besideSpec = Join-Path $besideDirectory 'candidate.pixelart'
+    [IO.File]::WriteAllText($besideSpec, "@size 1x1`r`n@name candidate-a`r`nX`r`nX = #ABCDEF`r`n")
+    & $Tool $besideSpec -OutputBesideSpecification
+    $besideOutput = Join-Path $besideDirectory 'candidate-a.png'
+    Assert-Equal ([IO.File]::Exists($besideOutput)) $true 'Specification-relative output was not created beside the input.'
+    Assert-Pixel (Read-Png -Path $besideOutput) 0 0 ([byte[]]@(171, 205, 239, 255)) 'Specification-relative output changed the source pixel.'
+
+    $besideConflictRejected = $false
+    try {
+        & $Tool $besideSpec -OutputBesideSpecification -OutputDirectory $TestDirectory 2>$null
+    }
+    catch {
+        $besideConflictRejected = $_.Exception.Message -like '*cannot be combined*'
+    }
+    Assert-Equal $besideConflictRejected $true 'Conflicting specification-relative and explicit output directories were not rejected.'
+
     $reviewDirectory = Join-Path $TestDirectory 'mana-review'
     & $Tool $Example -OutputFile $exampleOutput -Review -PreviewScale 4 -ReviewDirectory $reviewDirectory -Force
 

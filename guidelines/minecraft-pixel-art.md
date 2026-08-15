@@ -33,6 +33,7 @@ An implementation issue that creates or materially revises pixel art must includ
 - Transparency, animation, tiling, model, or neighboring-GUI constraints.
 - Existing project assets that the new asset must match.
 - Optional reference images and which characteristics may guide the result.
+- When generated exploration or a composition reference establishes the direction, two or three defining invariants that reconstruction must preserve, such as perspective, band thickness, setting scale, silhouette, negative space, or major highlight planes.
 
 Do not ask the owner to place every pixel or choose exact hex values unless they want that level of control. The agent translates approved visual direction into a grid and palette.
 
@@ -50,6 +51,7 @@ Use this optional issue section:
 - Canvas dimensions:
 - Runtime destination:
 - Approved silhouette, composition, materials, palette, and mood:
+- Defining composition invariants from generated exploration or a composition reference, when applicable:
 - Required and forbidden motifs:
 - Transparency, animation, tiling, model, or neighboring-asset constraints:
 - Project and external references, approved influences, and restrictions:
@@ -90,7 +92,11 @@ The normal input is a `.pixelart` token grid with an explicit palette. Use `@pre
 
 Render every candidate with `-Review`. This produces transparent nearest-neighbor zoom and grayscale previews from the exact delivery pixels. A `block` preset also produces the required transparent 3x3 tiled review automatically; use `-TilePreview` for another custom-sized repeating texture.
 
+The bundled default output is derived from `@name`, not from the specification's directory. For several specifications belonging to one approved asset workspace, either pass one shared asset-level `-OutputDirectory` or store each specification in its intended output directory and use `-OutputBesideSpecification`. Do not rely on the default when it would scatter one candidate set across name-derived sibling workspaces.
+
 Do not use a diffusion-generated image as the final pixel-art asset. An image generator may help explore broad subject or composition ideas, but the final asset must be reconstructed deliberately on the exact target grid and pass every review in this guideline.
+
+When generated exploration becomes an approved composition reference, technical validity and basic readability are not enough. Put the reference and exact-grid reconstruction side by side and check the recorded defining invariants before candidate presentation. Preserve each invariant or record the concrete grid constraint that requires a deviation. Reject aggressive simplification that removes the selected concept's perspective, mass, setting scale, silhouette, or other defining structure even when the result is still recognizable as the general subject.
 
 Do not create the final by drawing at high resolution and shrinking. Do not use blur, smooth brushes, automatic antialiasing, bilinear or bicubic resampling, or an image-processing step that introduces many nearly identical colors. Inspection previews may be enlarged only with nearest-neighbor scaling.
 
@@ -170,10 +176,11 @@ For each new asset or genuinely new art direction:
 1. Create three materially different candidates from the approved brief.
 2. Vary meaningful design decisions such as silhouette, orientation, composition, material emphasis, or palette structure. Do not present near-duplicates as alternatives.
 3. Inspect every generated PNG using the review procedure below.
-4. Reject and replace a candidate before presentation when it has an objective defect.
-5. Present three passing candidates with labels, actual-size and nearest-neighbor enlarged views, and one sentence explaining each direction.
-6. Ask the owner to select one, request a combination that remains coherent, or reject all three.
-7. Revise only the selected direction.
+4. When a generated exploration or composition reference guides the direction, compare each reconstruction side by side against its defining invariants.
+5. Reject and replace a candidate before presentation when it has an objective defect or loses a defining composition invariant without a recorded grid constraint.
+6. Present three passing candidates with labels, actual-size and nearest-neighbor enlarged views, and one sentence explaining each direction.
+7. Ask the owner to select one, request a combination that remains coherent, or reject all three.
+8. Revise only the selected direction.
 
 Do not create three variants for every focused correction. Once the owner selects a direction, a requested color adjustment, silhouette cleanup, or removal of one detail normally produces one focused revision. Restart the three-concept loop only when the owner reopens the art direction or when the selected concept cannot satisfy the approved brief.
 
@@ -210,6 +217,7 @@ Remake a candidate before presenting it when any automatic rejection condition a
 - A GUI icon has mismatched visual weight beside its neighbors.
 - An entity or model texture has inconsistent texel density or fails on its mapped surfaces.
 - A 1.12.2 legacy-style asset relies primarily on modern Minecraft texture conventions without an approved reason.
+- An exact-grid reconstruction of an approved generated exploration removes a defining composition invariant without a concrete grid constraint or approved change of direction.
 
 Do not endlessly remake a candidate because subjective preference remains uncertain. Once three candidates pass the objective gate, present them so the owner can make the art-direction decision.
 
@@ -232,6 +240,7 @@ Before an asset issue is Done, record:
 - Final `.pixelart` specification and PNG path.
 - Canvas dimensions, format, color type, and alpha result.
 - Agent visual-review results at 1x and high zoom.
+- Side-by-side composition-fidelity result for every defining invariant when generated exploration or a composition reference guided reconstruction.
 - Use-specific inspection result, including tile, GUI-neighbor, model, animation, or in-game context where applicable.
 - Remaining limitations or accepted validation waiver.
 

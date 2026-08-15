@@ -133,10 +133,11 @@ When an issue creates or materially revises pixel art:
 1. Confirm that the Pixel-Art Asset section is complete and approved. If basic art direction is missing, stop and handle it as a Planning Problem instead of improvising or prompting midway through a Ready issue.
 2. Use `tools/pixelart/pixelart.cmd` with `-Review` to render exact-grid PNGs and their inspection views in the approved candidate workspace.
 3. For a new asset or reopened direction, create three materially different candidates. For a focused correction after owner selection, revise only the selected direction unless the owner reopens the concept decision.
-4. Open and inspect every rendered PNG. Apply the actual-size, high-zoom, transparency, and use-specific checks in `guidelines/minecraft-pixel-art.md`.
-5. Reject and replace objectively defective candidates before presenting the set. Do not silently choose among viable directions for the owner.
-6. Present the passing candidates and obtain owner selection before copying a final runtime asset into the mod repository.
-7. Reinspect every material revision and record the final grid, PNG, selection, technical checks, and contextual validation as completion evidence.
+4. When generated exploration or a composition reference established the approved direction, compare each exact-grid reconstruction against the issue's two or three defining composition invariants before treating it as a candidate.
+5. Open and inspect every rendered PNG. Apply the actual-size, high-zoom, transparency, composition-fidelity, and use-specific checks in `guidelines/minecraft-pixel-art.md`.
+6. Reject and replace objectively defective candidates before presenting the set. Do not silently choose among viable directions for the owner.
+7. Present the passing candidates and obtain owner selection before copying a final runtime asset into the mod repository.
+8. Reinspect every material revision and record the final grid, PNG, selection, composition-fidelity result, technical checks, and contextual validation as completion evidence.
 
 An image file existing on disk is not completion evidence. The issue must establish that the exact PNG is technically valid, visually inspected, selected by the owner, and suitable in its actual Minecraft context or has an explicit accepted validation waiver.
 
@@ -210,7 +211,7 @@ When Project Setup selected the toolkit, follow `guidelines/agent-diagnostics-to
 - Verify the exact JAR identity and that it is present only in the intended development runtimes.
 - Read the pinned version's `AGENTS.md` and confirm the live capabilities, environment, and mod list.
 - Keep the shipping mod independent of toolkit classes and inspect release artifacts when the build could leak the dependency.
-- Write scenario setup into a bundle so the owner normally runs only reload, one bundle, and the gameplay action.
+- Package every supported deterministic multi-command setup, reset, inspection, marker, and cleanup sequence into a project-owned bundle so the owner normally runs only reload, one bundle, and genuinely interactive steps. Keep the individual commands visible in bundle source and evidence documentation.
 - Confirm the bundle end record, failures, readiness marks, enabled categories, and starting-state inspections before treating later records as evidence.
 - Preserve or hash the bundle and relevant log before a restart rotates or replaces them.
 - Use the mod's own narrow diagnostics for internal decisions the toolkit cannot expose.
@@ -247,7 +248,21 @@ Before moving an issue to **Awaiting Validation**:
 - Record the exact files and behavior attributable to the issue.
 - Confirm that no failed or missing result makes later campaign implementation unsafe.
 
-The next named campaign issue may then start even though its predecessor is **Awaiting Validation**, but only when the approved plan expressly permits that dependency relaxation. The mod worktree must be clean when the campaign begins, and every accumulated change must belong to the campaign and remain traceable through the retained boundaries. Do not start work outside the campaign until its commit checkpoint is resolved.
+The next named campaign issue may then start even though its predecessor is **Awaiting Validation**, but only when the approved plan expressly permits that dependency relaxation. Every accumulated change must belong to the campaign and remain traceable through the retained boundaries. Do not start work outside the campaign until its commit checkpoint is resolved.
+
+### Clean Validation Source Boundary
+
+The campaign runtime must come from one exact, clean, recoverable mod source tree. Record the commit and, when useful, tree identity used to build or launch it. A stash is not a solution when applying it is what makes the implementation available to the runtime.
+
+Use the source strategy approved in the Implementation Plan:
+
+- When every campaign change is already present in ordinary reviewed commits, verify that exact tree and a clean worktree before the first card.
+- When reviewed **Awaiting Validation** changes are intentionally accumulated, inspect the exact cumulative scope and obtain explicit owner authorization for a local **validation checkpoint commit** naming the campaign. Create it only after every included issue has passed its non-campaign checks and pre-campaign independent review. Ordinary issue or campaign-completion standing authorization does not cover this checkpoint unless it names it specifically.
+- Before requesting that authorization, perform the repository-status, scope, verification-summary, unrelated-file, and repo-facing commit-message checks under **Commit Checkpoints**. Describe the implementation in the message; do not put workflow or validation-checkpoint terminology into repository history.
+- A validation checkpoint makes the implementation reproducible and the worktree clean; it does not mark any issue Done, satisfy owner-assisted cards, authorize a push, or represent campaign completion.
+- A separately prepared validation worktree or retained tree object is acceptable only when the approved plan explains how the runtime is built from that exact tree, how attribution is retained, and how cleanup works. Do not improvise this route during the campaign.
+
+Do not start the owner session until the active runtime source matches the recorded tree and `git status --porcelain` is empty for the mod repository.
 
 When every included issue reaches **Awaiting Validation**, present and execute the campaign through `guidelines/manual-validation.md`. Assign every card and evidence item to its owning issue. A passing card moves only its owning issue toward Done; campaign completion is not blanket proof for the group.
 
@@ -260,7 +275,11 @@ When a card fails:
 - Mark later campaign issues **Blocked** when the finding could invalidate their implementation or evidence; otherwise leave their recorded state unchanged.
 - Correct, reverify, and independently review the affected scope before resuming the campaign.
 
-After every included issue satisfies its Definition of Done, resolve one batch commit checkpoint for the exact campaign scope. The batch requires explicit authorization or standing authorization that specifically covers the named campaign; per-issue standing authorization does not silently become batch authorization.
+After every included issue satisfies its Definition of Done, resolve the campaign completion checkpoint for the exact scope:
+
+- If the mod repository is unchanged from the validation checkpoint, record that no additional commit is needed and identify the checkpoint commit that contains the completed implementation.
+- If validation or follow-up review required corrections, reverify and independently review them, then prepare one separate follow-up commit. Do not amend or rewrite the validation checkpoint merely to make the history look like one commit.
+- Any follow-up commit requires explicit authorization or standing authorization that specifically covers the named campaign completion. Authorization for the validation checkpoint does not cover it, and neither authorization permits a push.
 
 ## Testing Approach
 
@@ -297,6 +316,8 @@ Define expected results before performing any verification.
 ## Commit Checkpoints
 
 After each implementation issue, approved vertical slice, approved validation campaign, or approved small-follow-up batch is marked **Done**, resolve a commit checkpoint before starting the next item. A campaign resolves one checkpoint only after every included issue is Done.
+
+The pre-campaign validation checkpoint described above is a separate reproducibility mechanism, not an early completion checkpoint. It has its own exact owner authorization and must be accounted for when the later campaign completion checkpoint is resolved.
 
 Before requesting commit approval:
 

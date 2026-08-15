@@ -7,6 +7,8 @@ param(
 
     [string]$OutputDirectory,
 
+    [switch]$OutputBesideSpecification,
+
     [string]$Name,
 
     [string]$Preset,
@@ -545,12 +547,16 @@ if (-not [string]::IsNullOrWhiteSpace($Preset)) {
 $reviewRequested = $Review -or $TilePreview -or -not [string]::IsNullOrWhiteSpace($ReviewDirectory) -or $PreviewScale -ne 0
 
 if (-not [string]::IsNullOrWhiteSpace($OutputFile)) {
-    if (-not [string]::IsNullOrWhiteSpace($OutputDirectory) -or -not [string]::IsNullOrWhiteSpace($Name)) {
-        throw '-OutputFile cannot be combined with -OutputDirectory or -Name.'
+    if (-not [string]::IsNullOrWhiteSpace($OutputDirectory) -or $OutputBesideSpecification -or -not [string]::IsNullOrWhiteSpace($Name)) {
+        throw '-OutputFile cannot be combined with -OutputDirectory, -OutputBesideSpecification, or -Name.'
     }
     $resolvedOutput = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFile)
 }
 else {
+    if ($OutputBesideSpecification -and -not [string]::IsNullOrWhiteSpace($OutputDirectory)) {
+        throw '-OutputBesideSpecification cannot be combined with -OutputDirectory.'
+    }
+
     if ([string]::IsNullOrWhiteSpace($Name)) {
         if (-not [string]::IsNullOrWhiteSpace($spec.Name)) {
             $Name = $spec.Name
@@ -563,7 +569,10 @@ else {
     Assert-SafeName -Candidate $Name
     $assetId = [IO.Path]::GetFileNameWithoutExtension($Name)
 
-    if ([string]::IsNullOrWhiteSpace($OutputDirectory)) {
+    if ($OutputBesideSpecification) {
+        $OutputDirectory = [IO.Path]::GetDirectoryName($resolvedInput)
+    }
+    elseif ([string]::IsNullOrWhiteSpace($OutputDirectory)) {
         if (-not [string]::IsNullOrWhiteSpace($env:MINECRAFT_PIXELART_OUTPUT_DIR)) {
             $OutputDirectory = $env:MINECRAFT_PIXELART_OUTPUT_DIR
         }

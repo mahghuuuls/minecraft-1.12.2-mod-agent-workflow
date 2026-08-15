@@ -43,6 +43,7 @@
 - Log retention:
 - Planned toolkit-assisted checks:
 - Evidence the toolkit cannot provide:
+- Owner-facing decision-packet summary:
 
 ## Verification Environment Plan
 
@@ -58,9 +59,9 @@
 
 ## Owner-Assisted Validation Campaigns
 
-| Campaign | Included Issues And Cards | Shared Runtime Benefit | Readiness Gate | Evidence Attribution | Failure Route | Batch Commit Policy |
-| --- | --- | --- | --- | --- | --- | --- |
-|  |  |  |  |  |  |  |
+| Campaign | Included Issues And Cards | Shared Runtime Benefit | Readiness Gate | Evidence Attribution | Failure Route | Validation Source Strategy | Completion Commit Policy |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+|  |  |  |  |  |  |  |  |
 
 ## Approval And Authorization Packet
 
@@ -135,6 +136,7 @@
 - Canvas dimensions:
 - Runtime destination:
 - Approved silhouette, composition, materials, palette, and mood:
+- Defining composition invariants from generated exploration or a composition reference, when applicable:
 - Required and forbidden motifs:
 - Transparency, animation, tiling, model, or neighboring-asset constraints:
 - Project and external references, approved influences, and restrictions:
@@ -183,6 +185,7 @@
 - Cleanup and runtime stop/continue condition:
 - Validation packet group and restart boundary:
 - Agent Diagnostics Toolkit bundle, categories, marks, and retained paths:
+- Deterministic command sequences assigned to bundles, or reason manual commands are unavoidable:
 
 ## Completion Evidence
 

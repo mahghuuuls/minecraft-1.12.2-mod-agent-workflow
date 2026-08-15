@@ -22,6 +22,12 @@ tools\pixelart\pixelart.cmd tools\pixelart\examples\mana-drop.pixelart -OutputFi
 
 Existing files are protected by default. Add `-Force` when replacement is intentional.
 
+When a specification already lives in the approved directory where its PNG should be reviewed, keep the output beside it without repeating a full path:
+
+```bat
+tools\pixelart\pixelart.cmd workspace\artwork\pixelart\example\candidates\candidate-a.pixelart -OutputBesideSpecification -Review
+```
+
 ## Review output
 
 Use `-Review` for every candidate that will be evaluated visually:
@@ -109,11 +115,14 @@ Output selection, from most explicit to least explicit:
 
 1. `-OutputFile` specifies the complete destination.
 2. `-OutputDirectory` and optional `-Name` select a directory and filename.
-3. `MINECRAFT_PIXELART_OUTPUT_DIR` configures the default directory.
-4. A copy bundled under `tools/pixelart/` uses `workspace/artwork/pixelart/<asset-name>/candidates/`.
-5. A standalone copy otherwise uses `generated` under the current working directory.
+3. `-OutputBesideSpecification` uses the input specification's directory and the optional `-Name` or `@name` filename.
+4. `MINECRAFT_PIXELART_OUTPUT_DIR` configures the default directory.
+5. A copy bundled under `tools/pixelart/` uses `workspace/artwork/pixelart/<asset-name>/candidates/`.
+6. A standalone copy otherwise uses `generated` under the current working directory.
 
 This makes the normal agent path one command, keeps unapproved work in the ignored artwork workspace, and retains an exact destination for copying an approved final asset into the mod repository.
+
+The bundled default is name-derived, not specification-relative. For several candidates in one approved asset workspace, prefer one shared `-OutputDirectory` or place the specifications in their intended candidate directory and use `-OutputBesideSpecification`; otherwise different `@name` values intentionally create different asset workspaces.
 
 ## Verification
 
@@ -123,4 +132,4 @@ Run the dependency-free test script:
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\pixelart\tests\run-tests.ps1
 ```
 
-The tests decode the generated PNGs enough to verify dimensions, RGBA color type, transparent pixels, exact palette colors, alpha values, overwrite protection, preset mismatch rejection, nearest-neighbor zoom, transparency-preserving grayscale conversion, and 3x3 block tiling.
+The tests decode the generated PNGs enough to verify dimensions, RGBA color type, transparent pixels, exact palette colors, alpha values, overwrite protection, preset mismatch rejection, explicit specification-relative output, nearest-neighbor zoom, transparency-preserving grayscale conversion, and 3x3 block tiling.

@@ -21,6 +21,7 @@ Before the owner starts a shared game, server, or modpack session, present the c
 - Configuration groups and their exact values.
 - Every required start, restart, reconnect, or shutdown point.
 - Shared setup, safety preparation, and final cleanup.
+- The exact source revision or validation checkpoint used by the runtime and confirmation that its mod worktree is clean.
 - Which evidence the agent will inspect and which observations only the owner can supply.
 - Whether the Agent Diagnostics Toolkit is active, its pinned version and runtime placement, any approved automatic baseline, and the bundle names used during the session.
 
@@ -47,15 +48,15 @@ During execution, normally present only the next test card. A small batch is acc
 1. <exact command or physical action>
 2. <next action>
 
-**You should see**
+**Owner checks**
 
-- <only owner-visible results that establish success>
+- <only visual, audio, interaction-quality, or otherwise agent-inaccessible results>
 
 **I will verify**
 
 - <logs, counters, files, or authoritative values the agent will inspect directly>
 
-**Report:** Reply `Done` if every item under **You should see** passed. Otherwise report only the mismatch or unexpected behavior.
+**Report:** Reply `Done` after completing **Do this** if every listed **Owner checks** item passed. When **Owner checks** is omitted, `Done` confirms that the actions were completed without a visible anomaly. Otherwise report only the mismatch or unexpected behavior.
 
 **After this test:** <keep the game open, close it, preserve state, or perform cleanup>
 ```
@@ -65,7 +66,8 @@ Keep headings and language stable across cards so the owner does not have to rel
 ## Card-Writing Rules
 
 - Put commands in copyable code blocks and list them in execution order.
-- When an approved Agent Diagnostics Toolkit bundle performs setup, normally ask for only its reload command, its named run command, and the remaining gameplay action. Do not repeat the bundled commands in the owner-facing card.
+- When the selected Agent Diagnostics Toolkit supports the required operations, package every deterministic multi-command setup, reset, inspection, marker, and cleanup sequence as a project-owned bundle. The owner-facing card should normally contain only its reload command, its named run command, and genuinely interactive or judgment-dependent steps. Keep the individual commands in bundle source and evidence documentation for auditability.
+- When a deterministic sequence cannot be bundled because the selected toolkit lacks a required operation, state that limitation in the plan and present the commands together in one copyable block. Convenience alone is not a reason to make the owner enter a supported sequence manually.
 - Distinguish commands from mouse, keyboard, inventory, combat, waiting, or observation steps.
 - State the complete starting state. Never rely on the owner remembering an earlier temporary config value, selected hotbar slot, equipped item, game mode, mana value, or diagnostic toggle.
 - When a shared setup applies to several consecutive cards, state it once in the session map and identify the exact state or delta each card requires.
@@ -76,13 +78,14 @@ Keep headings and language stable across cards so the owner does not have to rel
 - State whether the owner should keep the game or server open. Do not leave the runtime lifecycle implicit.
 - Do not ask the owner to repeat authoritative values, diagnostic output, log lines, or file content the agent can inspect directly.
 - Do not advance from a toolkit-assisted card until the agent has checked bundle completion and readiness marks when later evidence depends on them.
-- Ask a specific owner-only question only when `Done` cannot capture a required visual, audio, interaction-quality, real-multiplayer, or external-environment observation.
+- Keep **Owner checks** limited to visual, audio, interaction-quality, real-multiplayer, or external-environment observations unavailable to the agent. Numeric state, command output, configuration, dimensions, registry state, and retained diagnostic records belong under **I will verify** whenever accessible.
+- Ask a specific owner-only question only when `Done` cannot capture a required inaccessible observation.
 
 ## Evidence Handoff
 
 The owner performs the interaction. The agent collects every accessible current and rotated log, generated file, command result, counter, artifact, or other planned evidence after the card.
 
-Use **You should see** only for evidence the agent cannot reliably obtain, such as:
+Use **Owner checks** only for evidence the agent cannot reliably obtain, such as:
 
 - Visual layout or animation.
 - Audio.

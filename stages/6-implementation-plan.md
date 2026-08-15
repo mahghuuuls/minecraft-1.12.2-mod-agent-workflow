@@ -37,9 +37,11 @@ Establish:
 - What authoritative state or event each manual runtime check must observe, and how it will be observed
 - Who collects each evidence source, including which accessible logs the agent will inspect directly and which observations require the owner
 - Which selected manual checks will use Agent Diagnostics Toolkit bundles, records, or inspections
+- Which deterministic setup, reset, inspection, and cleanup command sequences will be packaged as project-owned toolkit bundles when the selected toolkit supports them
 - Which technical risks should be addressed early
 - What constitutes completion for each issue
 - The approved brief, candidate-selection loop, workspace, and review contexts for each pixel-art asset issue
+- The defining composition invariants that exact-grid reconstructions must preserve when generated exploration establishes the selected visual direction
 - Which optional requirements are deferred
 
 ## In Scope
@@ -100,6 +102,8 @@ Act as an implementation planner.
 - For every manual runtime check, identify the authoritative state or event being tested and whether normal behavior exposes it reliably.
 - Identify the evidence source, its accessible path or surface, retention or rotation behavior when relevant, and whether the agent or owner collects it.
 - When the toolkit is selected, plan bundle names, setup and teardown responsibilities, narrow record categories, readiness marks, runtime placement, and retained evidence before asking the owner to test.
+- When presenting the owner-facing manual-validation decision packet, surface the selected toolkit directly: pinned artifact, current or deferred runtime installation, proposed campaigns, evidence it can collect, and the behavior that still requires mod-specific diagnostics or owner observation. Do not make the owner recover this from Project Setup or the completed plan.
+- Package deterministic multi-command setup, reset, inspection, and cleanup sequences as project-owned bundles when the selected toolkit supports the required commands. Leave only genuinely interactive or judgment-dependent steps to the owner, and retain the individual commands in bundle source and evidence documentation.
 - Assign every runtime check to the lowest validation tier that supplies meaningful evidence, and state any important limitation of that tier.
 - When normal behavior is insufficient, include the minimum diagnostic mechanism in the same vertical slice or add an explicit prerequisite issue that delivers it first.
 - Prefer same-issue diagnostics; use a prerequisite when the mechanism is shared by multiple slices or substantial enough to require separate implementation and review.
@@ -302,6 +306,7 @@ Describe the observable behavior available after completion.
 - Canvas dimensions
 - Runtime destination
 - Approved silhouette, composition, materials, palette, and mood
+- Defining composition invariants from an approved generated exploration or composition reference, when applicable
 - Required and forbidden motifs
 - Transparency, animation, tiling, model, or neighboring-asset constraints
 - Project and external references, approved influences, and restrictions
@@ -355,6 +360,7 @@ Describe the observable behavior available after completion.
 - Complete starting/reset state, cleanup, and runtime stop/continue condition
 - Validation packet group and unavoidable restart boundary
 - Agent Diagnostics Toolkit bundle, record categories, and retained bundle/log paths when selected
+- Deterministic command sequences assigned to project-owned bundles, or the specific unsupported operation that requires manual commands
 
 ## Completion Evidence
 
@@ -451,6 +457,8 @@ Do not repeatedly ask about a deferred or waived check unless new evidence mater
 
 When Project Setup selected the Agent Diagnostics Toolkit, add a toolkit plan to the Implementation Plan. Name the pinned artifact, runtime placement, baseline and login-automation choices, bundle storage, log-retention path, and checks that will use it. A toolkit-assisted check must still state what the toolkit cannot prove and which mod-specific diagnostic or owner-visible observation supplies the missing evidence.
 
+Present a compact toolkit summary alongside the owner-facing **Test now / Defer / Waive** packet. The summary must state the pinned artifact, whether it is already installed or deferred for a named runtime, the campaigns or cards that will use it, the evidence it can collect, and its material evidentiary limits. This is a presentation of the approved toolkit plan, not a second toolkit decision.
+
 ## Owner-Assisted Validation Campaigns
 
 When several small related issues require the same expensive runtime, the plan may group their owner-assisted checks into one validation campaign. Use a campaign only when it reduces launches or configuration churn without making a failure difficult to attribute.
@@ -464,7 +472,9 @@ For each campaign, record:
 - How diagnostics, evidence, and retained per-issue change-boundary snapshots distinguish every included issue.
 - Whether an earlier issue may reach **Awaiting Validation** and allow the next named issue to start despite the normal Done blocker.
 - The failure-isolation and rollback route.
-- The final batch-commit scope and its required authorization.
+- The source-tree strategy that will make the campaign runtime clean and reproducible, including whether accumulated **Awaiting Validation** work needs an owner-authorized validation checkpoint commit.
+- The exact validation-checkpoint scope and required authorization when that strategy needs one.
+- The completion-commit scope and required authorization, including how it will account for a validation checkpoint: no additional commit when the mod tree is unchanged, or a separately authorized follow-up commit for reviewed corrections.
 
 Do not create a campaign for unrelated issues, high-risk migrations, destructive behavior, or checks whose failure would make later implementation unsafe or likely to target the wrong design. Keep the group as small as practical. A campaign is a testing schedule, not permission to weaken acceptance criteria, independent review, evidence attribution, or commit authorization.
 
@@ -490,11 +500,11 @@ Record the eligibility basis, each covered action, explicit exclusions, invalida
 5. Divide remaining behavior into additional vertical slices.
 6. Add only the foundational issues required by identified slices.
 7. Link every issue to requirements and architecture, classify each non-decision issue as Routine or Complexity-bearing, and define Existing-Code Design Fit where applicable.
-8. Complete the Pixel-Art Asset section for every applicable issue, including the owner-approved brief, reference decision, three-concept plan for a new direction, and use-specific inspection contexts; then define acceptance criteria and verification for every issue.
+8. Complete the Pixel-Art Asset section for every applicable issue, including the owner-approved brief, reference decision, defining composition invariants when generated exploration guides reconstruction, three-concept plan for a new direction, and use-specific inspection contexts; then define acceptance criteria and verification for every issue.
 9. Assign each verification check to an environment tier and state what that evidence proves and does not prove.
 10. For every manual runtime check, define its observability contract, evidence source, collection responsibility, necessary corroboration, owner-only observations, reset/cleanup state, and validation-packet group; add any required same-issue diagnostic work or prerequisite issue.
-11. Present one decision packet for owner-performed manual validation and record each check as Test now, Defer, or Waive.
-12. Define any eligible owner-assisted validation campaign, including readiness gates, evidence attribution, failure isolation, and batch-commit policy.
+11. Present one decision packet for owner-performed manual validation and record each check as Test now, Defer, or Waive; when the toolkit is selected, include its compact owner-facing summary.
+12. Define any eligible owner-assisted validation campaign, including readiness gates, evidence attribution, failure isolation, deterministic bundle coverage, clean validation-source strategy, and completion-commit policy.
 13. Identify dependencies and blockers, including diagnostic prerequisites that must be Done before dependent manual verification begins.
 14. Construct the dependency graph.
 15. Check the graph for cycles.
@@ -542,7 +552,9 @@ This stage is complete when:
 - Every manual runtime verification procedure identifies what authoritative state or event it observes and has the necessary diagnostic support in the same issue or an explicit completed prerequisite.
 - Every manual runtime verification procedure assigns evidence collection: the agent directly inspects accessible current and rotated logs, while owner-returned evidence is limited to inaccessible observations or environments.
 - Every owner-assisted procedure contains enough planned state, grouping, and lifecycle information to produce the session map and test cards required by `guidelines/manual-validation.md` without inventing test behavior during Implementation.
-- Every validation campaign is small, shares a justified runtime cost, preserves per-issue evidence attribution, and records readiness, failure, and commit boundaries.
+- When the toolkit is selected, the manual-validation decision packet clearly states its pinned artifact, installation state, planned campaign use, obtainable evidence, and limits.
+- Deterministic multi-command owner sequences are assigned to supported project-owned toolkit bundles, with any unavoidable manual sequence justified.
+- Every validation campaign is small, shares a justified runtime cost, preserves per-issue evidence attribution, and records readiness, failure, clean validation-source, validation-checkpoint, and completion-commit boundaries.
 - Every issue references relevant requirements and architecture.
 - All blocking relationships are explicit.
 - The dependency graph is acyclic.
