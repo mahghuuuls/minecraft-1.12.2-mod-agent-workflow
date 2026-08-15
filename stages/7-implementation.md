@@ -21,6 +21,7 @@ Implementation includes coding, testing, in-game verification, defect correction
 - `guidelines/manual-validation.md` when the issue includes owner-assisted runtime checks
 - `guidelines/agent-diagnostics-toolkit.md` when Project Setup selected the toolkit
 - `guidelines/minecraft-pixel-art.md` when the issue creates or materially revises pixel-art assets
+- `tools/evidence-pack/README.md` when the issue or campaign plans a retained evidence pack
 
 ## Objectives
 
@@ -115,6 +116,7 @@ Act as a focused implementation agent.
 - Stop and report when requirements, architecture, or feasibility assumptions are invalidated.
 - Do not make product or architectural decisions without approval.
 - Record completion evidence in the issue file.
+- Use the planned evidence pack as the single source of volatile test totals, hashes, sizes, and retained-file identities. Record claim-specific interpretations in issue prose instead of copying the same changing values into several current-state documents.
 - Move the issue to Review only after implementation verification succeeds or accepted waivers are recorded.
 - Do not mark the issue Done until independent review is complete or an eligible review limitation is explicitly accepted.
 - After marking an issue Done, prepare a commit checkpoint and either ask the project owner whether to commit or apply an applicable standing implementation-commit authorization. For an approved validation campaign, wait until every included issue is Done and resolve the campaign's batch checkpoint instead.
@@ -225,6 +227,25 @@ When a framework generates or rewrites user-visible files such as configuration 
 
 Check a fresh generation. When existing users or committed defaults may be affected, also check the relevant existing-file migration or preservation path. Record the generated path and observed content in completion evidence.
 
+## Evidence Packs
+
+Use `tools/evidence-pack/evidence-pack.cmd` for every approved validation campaign and every other planned checkpoint that retains multiple volatile outputs such as JUnit XML, a built JAR, runtime logs, generated configuration, screenshots, or a prepared change-boundary archive. A simple issue with one stable check and no retained binary evidence does not need a pack merely for uniformity.
+
+An evidence pack is the single mechanical source of truth for its checkpoint's source commit/tree, worktree state, retained paths, byte sizes, SHA-256 identities, JUnit totals, and JAR inventory. Issue files and ledgers should reference the manifest and record only claim-specific facts that matter to acceptance. Do not copy the complete manifest inventory into several documents.
+
+Before capture:
+
+- Run the issue's required build, tests, runtime checks, and artifact generation. The packager does not run or interpret them.
+- Inspect the specification's exact source repository, output directory, JUnit groups, retained files, destinations, and source-cleanliness policy.
+- Keep the output outside the mod repository and use a new checkpoint directory. Never overwrite an earlier pack.
+- Use `requireClean: false` only when the approved checkpoint intentionally captures dirty pre-commit state; the manifest must remain truthful about that state.
+
+After capture, run `verify` against the retained manifest before independent review or campaign evidence follow-up. Reference the manifest path and hash in the owning issue. When a correction changes source or any retained output, create a new pack, mark the previous checkpoint superseded, and update the reference; do not rewrite the old pack to make it appear current.
+
+The packager establishes file identity and internal mechanical consistency only. It does not determine whether a test is meaningful, interpret a log, assign an evidence label, corroborate a diagnostic, validate an external runtime, or decide that an issue is Done. Every claim derived from a pack still needs the accurate **inspected** or weaker label required below. Owner-observed evidence remains separate.
+
+Release Presentation retains its own authority boundary: `release-handoff.md` and the approved project baseline remain authoritative for the current release artifact checksum. An implementation evidence pack may be referenced as historical support but does not replace that handoff.
+
 ## Small Follow-Up Path
 
 After the planned behavioral issues are Done, classify each requested follow-up before editing:
@@ -245,6 +266,7 @@ Before moving an issue to **Awaiting Validation**:
 - Verify its diagnostics and evidence-retention path.
 - Complete a pre-campaign independent implementation review of the code and available evidence and resolve all findings, or record an eligible accepted review limitation.
 - Retain a read-only per-issue patch or equivalent change-boundary snapshot and its checksum so later cumulative work does not erase source attribution.
+- Capture and verify the planned per-issue or campaign evidence pack when the available checkpoint already contains multiple volatile artifacts; later owner evidence must produce a new final campaign pack rather than overwrite it.
 - Record the exact files and behavior attributable to the issue.
 - Confirm that no failed or missing result makes later campaign implementation unsafe.
 
@@ -479,6 +501,7 @@ The review agent must receive:
 - The implementation issue
 - The code changes
 - Verification evidence
+- The evidence-pack manifest and successful verification output when the issue planned one
 - Accepted validation waivers
 
 The review agent should examine:
@@ -592,6 +615,14 @@ Every result line ends with one label: (observed), (inspected), or (inferred).
 - Command:
 - Result (observed | inspected | inferred):
 
+### Evidence Pack
+
+- Checkpoint:
+- Manifest path and SHA-256:
+- Source commit, tree, and cleanliness:
+- Verification command and result (observed | inspected | inferred):
+- Superseded pack, when a correction required a replacement:
+
 ### In-Game Verification
 
 - Environment tier:
@@ -661,6 +692,8 @@ Omit verification categories that genuinely do not apply. Include accepted valid
 
 Omit **Defect Regression Protection** when the issue does not correct a reproduced defect. For a defect correction, retain the check or repeatable scenario after the issue is complete; a one-time reproduction that is discarded does not protect against regression.
 
+Omit **Evidence Pack** when no pack was planned and the issue has only simple stable evidence. When it applies, record the manifest reference rather than reproducing its complete inventory, and label every interpretation separately.
+
 Omit **Diagnostic Support** when stable normal behavior was sufficient for all manual checks. When it applies, record enough evidence to show that the diagnostic exposed the intended authoritative state and did not remain unintentionally enabled or accessible beyond its approved authorization boundary.
 
 ## Issue Completion Criteria
@@ -676,6 +709,7 @@ An issue is complete when:
 - The implementation follows the approved architecture.
 - No unrelated behavior was introduced.
 - Completion evidence is recorded, and every evidence claim carries an accurate observed / inspected / inferred label.
+- Every planned evidence pack is captured at the current source checkpoint, verifies successfully, and is referenced without treating its mechanical inventory as proof of requirement satisfaction.
 - No acceptance criterion rests on an inferred claim without an accepted validation waiver.
 - Every corrected defect has retained regression protection and sensitivity evidence, or an explicit explanation of why a repeatable runtime scenario is the lowest reliable level.
 - Independent review is complete, including for an issue whose deliverable is evidence rather than code, or an eligible review limitation is explicitly accepted and recorded.

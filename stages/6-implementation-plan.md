@@ -19,6 +19,7 @@ Convert the approved requirements and architecture into small, ordered, and veri
 - `guidelines/manual-validation.md` when owner-assisted runtime checks are planned
 - `guidelines/agent-diagnostics-toolkit.md` when Project Setup selected the toolkit
 - `guidelines/minecraft-pixel-art.md` when an issue creates or materially revises pixel-art assets
+- `tools/evidence-pack/README.md` when an issue or campaign will retain a multi-artifact evidence checkpoint
 
 ## Objectives
 
@@ -38,6 +39,7 @@ Establish:
 - Who collects each evidence source, including which accessible logs the agent will inspect directly and which observations require the owner
 - Which selected manual checks will use Agent Diagnostics Toolkit bundles, records, or inspections
 - Which deterministic setup, reset, inspection, and cleanup command sequences will be packaged as project-owned toolkit bundles when the selected toolkit supports them
+- Which issue, campaign, and final implementation checkpoints require one immutable evidence pack as the source of volatile artifact identities
 - Which technical risks should be addressed early
 - What constitutes completion for each issue
 - The approved brief, candidate-selection loop, workspace, and review contexts for each pixel-art asset issue
@@ -101,6 +103,7 @@ Act as an implementation planner.
 - Define verification before implementation begins.
 - For every manual runtime check, identify the authoritative state or event being tested and whether normal behavior exposes it reliably.
 - Identify the evidence source, its accessible path or surface, retention or rotation behavior when relevant, and whether the agent or owner collects it.
+- Plan an evidence pack when a checkpoint must retain multiple volatile outputs such as XML reports, JARs, logs, generated configuration, or change-boundary archives. Name the pack specification, output, source-cleanliness requirement, and artifact groups; do not plan to copy the same changing hashes and totals into several current-state documents.
 - When the toolkit is selected, plan bundle names, setup and teardown responsibilities, narrow record categories, readiness marks, runtime placement, and retained evidence before asking the owner to test.
 - When presenting the owner-facing manual-validation decision packet, surface the selected toolkit directly: pinned artifact, current or deferred runtime installation, proposed campaigns, evidence it can collect, and the behavior that still requires mod-specific diagnostics or owner observation. Do not make the owner recover this from Project Setup or the completed plan.
 - Package deterministic multi-command setup, reset, inspection, and cleanup sequences as project-owned bundles when the selected toolkit supports the required commands. Leave only genuinely interactive or judgment-dependent steps to the owner, and retain the individual commands in bundle source and evidence documentation.
@@ -362,12 +365,23 @@ Describe the observable behavior available after completion.
 - Agent Diagnostics Toolkit bundle, record categories, and retained bundle/log paths when selected
 - Deterministic command sequences assigned to project-owned bundles, or the specific unsupported operation that requires manual commands
 
+## Evidence Pack
+
+- Applies: Yes / No
+- Checkpoint identity and reason:
+- Specification and output paths:
+- Source repository and cleanliness requirement:
+- JUnit groups and explicit retained files:
+- Current-state documents that will reference the manifest instead of duplicating volatile identities:
+
 ## Completion Evidence
 
 Record the tests, commands, observations, logs, or measurements demonstrating completion.
 ```
 
 Omit **Manual Observability** when the issue has no manual runtime verification. When it applies, complete the section before marking the issue Ready; do not leave the observation path or the inputs required by `guidelines/manual-validation.md` to be invented during Implementation.
+
+Include **Evidence Pack** when the issue retains multiple volatile evidence outputs or belongs to an owner-assisted validation campaign. A simple issue with one stable report or no retained binary evidence may omit it. The pack is a mechanical provenance artifact, not a substitute for claim-level evidence labels or independent review.
 
 Include **Defect Regression Protection** for every issue that corrects a reproduced defect. Omit it for other issues. A passing test name is not sufficient: the plan must explain which original failure boundary the check reaches and what implementation regression would make it fail.
 
@@ -470,6 +484,7 @@ For each campaign, record:
 - The common environment, configuration groups, restart boundaries, and session order.
 - The automated, static, agent-run runtime, and independent-review gate each issue must pass before the campaign begins.
 - How diagnostics, evidence, and retained per-issue change-boundary snapshots distinguish every included issue.
+- The campaign evidence-pack specification, immutable output checkpoint, retained artifact groups, and manifest-reference policy.
 - Whether an earlier issue may reach **Awaiting Validation** and allow the next named issue to start despite the normal Done blocker.
 - The failure-isolation and rollback route.
 - The source-tree strategy that will make the campaign runtime clean and reproducible, including whether accumulated **Awaiting Validation** work needs an owner-authorized validation checkpoint commit.
@@ -502,7 +517,7 @@ Record the eligibility basis, each covered action, explicit exclusions, invalida
 7. Link every issue to requirements and architecture, classify each non-decision issue as Routine or Complexity-bearing, and define Existing-Code Design Fit where applicable.
 8. Complete the Pixel-Art Asset section for every applicable issue, including the owner-approved brief, reference decision, defining composition invariants when generated exploration guides reconstruction, three-concept plan for a new direction, and use-specific inspection contexts; then define acceptance criteria and verification for every issue.
 9. Assign each verification check to an environment tier and state what that evidence proves and does not prove.
-10. For every manual runtime check, define its observability contract, evidence source, collection responsibility, necessary corroboration, owner-only observations, reset/cleanup state, and validation-packet group; add any required same-issue diagnostic work or prerequisite issue.
+10. For every manual runtime check, define its observability contract, evidence source, collection responsibility, necessary corroboration, owner-only observations, reset/cleanup state, and validation-packet group; add any required same-issue diagnostic work or prerequisite issue. Plan one evidence pack for every campaign and other multi-artifact checkpoint.
 11. Present one decision packet for owner-performed manual validation and record each check as Test now, Defer, or Waive; when the toolkit is selected, include its compact owner-facing summary.
 12. Define any eligible owner-assisted validation campaign, including readiness gates, evidence attribution, failure isolation, deterministic bundle coverage, clean validation-source strategy, and completion-commit policy.
 13. Identify dependencies and blockers, including diagnostic prerequisites that must be Done before dependent manual verification begins.
@@ -552,6 +567,7 @@ This stage is complete when:
 - Every manual runtime verification procedure identifies what authoritative state or event it observes and has the necessary diagnostic support in the same issue or an explicit completed prerequisite.
 - Every manual runtime verification procedure assigns evidence collection: the agent directly inspects accessible current and rotated logs, while owner-returned evidence is limited to inaccessible observations or environments.
 - Every owner-assisted procedure contains enough planned state, grouping, and lifecycle information to produce the session map and test cards required by `guidelines/manual-validation.md` without inventing test behavior during Implementation.
+- Every multi-artifact or campaign checkpoint has one planned evidence-pack source of truth, while issue documents retain claim-specific interpretations rather than duplicate volatile identities.
 - When the toolkit is selected, the manual-validation decision packet clearly states its pinned artifact, installation state, planned campaign use, obtainable evidence, and limits.
 - Deterministic multi-command owner sequences are assigned to supported project-owned toolkit bundles, with any unavoidable manual sequence justified.
 - Every validation campaign is small, shares a justified runtime cost, preserves per-issue evidence attribution, and records readiness, failure, clean validation-source, validation-checkpoint, and completion-commit boundaries.

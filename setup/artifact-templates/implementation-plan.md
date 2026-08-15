@@ -34,6 +34,12 @@
 
 -
 
+## Evidence Pack Plan
+
+| Checkpoint | Reason | Specification | Immutable Output | Source Cleanliness | Retained Artifact Groups |
+| --- | --- | --- | --- | --- | --- |
+|  |  |  |  |  |  |
+
 ## Agent Diagnostics Toolkit Plan
 
 - Selection and pinned artifact:
@@ -187,6 +193,15 @@
 - Agent Diagnostics Toolkit bundle, categories, marks, and retained paths:
 - Deterministic command sequences assigned to bundles, or reason manual commands are unavoidable:
 
+## Evidence Pack
+
+- Applies: Yes / No
+- Checkpoint identity and reason:
+- Specification and output paths:
+- Source repository and cleanliness requirement:
+- JUnit groups and explicit retained files:
+- Current-state documents that will reference the manifest instead of duplicating volatile identities:
+
 ## Completion Evidence
 
 Every result line ends with one label: (observed), (inspected), or (inferred). See Evidence Labels in `stages/7-implementation.md`.
@@ -197,6 +212,14 @@ For a Decision issue, record the resolution and its evidence in the Decision sec
 
 - Command:
 - Result (observed | inspected | inferred):
+
+### Evidence Pack
+
+- Checkpoint:
+- Manifest path and SHA-256:
+- Source commit, tree, and cleanliness:
+- Verification command and result (observed | inspected | inferred):
+- Superseded pack, when a correction required a replacement:
 
 ### In-Game Verification
 
