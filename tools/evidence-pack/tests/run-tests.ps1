@@ -5,6 +5,7 @@ Set-StrictMode -Version 2.0
 $ErrorActionPreference = 'Stop'
 
 $Tool = Join-Path (Split-Path -Parent $PSScriptRoot) 'evidence-pack.ps1'
+$Launcher = Join-Path (Split-Path -Parent $PSScriptRoot) 'evidence-pack.cmd'
 $TestDirectory = Join-Path ([IO.Path]::GetTempPath()) ('minecraft-evidence-pack-' + [Guid]::NewGuid().ToString('N'))
 $Utf8NoBom = New-Object Text.UTF8Encoding($false)
 
@@ -18,6 +19,11 @@ function Write-Utf8 {
 function Assert-Equal {
     param($Actual, $Expected, [string]$Message)
     if ($Actual -ne $Expected) { throw "$Message Expected '$Expected', got '$Actual'." }
+}
+
+function Get-Sha256 {
+    param([string]$Path)
+    return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToUpperInvariant()
 }
 
 function Invoke-GitFixture {
@@ -104,7 +110,10 @@ try {
     $manifestPath = Join-Path $outputDirectory 'manifest.json'
     $manifest = [IO.File]::ReadAllText($manifestPath) | ConvertFrom-Json
     Assert-Equal $manifest.checkpoint 'fixture-final' 'Checkpoint identity is wrong.'
+    Assert-Equal $manifest.toolVersion '1.1.0' 'Tool version is wrong.'
     Assert-Equal $manifest.source.worktreeClean $true 'Clean fixture was recorded as dirty.'
+    Assert-Equal $manifest.source.commit.Length 40 'Captured commit is not a complete SHA-1 object ID.'
+    Assert-Equal $manifest.source.tree.Length 40 'Captured tree is not a complete SHA-1 object ID.'
     Assert-Equal $manifest.tests.suites 2 'JUnit suite count is wrong.'
     Assert-Equal $manifest.tests.tests 5 'JUnit test count is wrong.'
     Assert-Equal $manifest.tests.skipped 1 'JUnit skipped count is wrong.'
@@ -117,6 +126,24 @@ try {
     Assert-Equal ($verifyOutput -join "`n" -like '*Evidence pack verified: fixture-final*') $true 'Verification did not report success.'
     $inspectOutput = @(& $Tool inspect -Manifest $manifestPath)
     Assert-Equal ($inspectOutput -join "`n" -like '*Checkpoint: fixture-final*') $true 'Inspection did not report checkpoint identity.'
+
+    $launcherCommand = 'set "PSModuleAutoLoadingPreference=None" && call "' + $Launcher + '" verify -Manifest "' + $manifestPath + '"'
+    $launcherOutput = @(& cmd.exe /d /c $launcherCommand)
+    Assert-Equal $LASTEXITCODE 0 'Batch launcher failed with module autoload disabled.'
+    Assert-Equal ($launcherOutput -join "`n" -like '*Evidence pack verified: fixture-final*') $true 'Batch launcher did not verify the pack with module autoload disabled.'
+
+    $validManifestBytes = [IO.File]::ReadAllBytes($manifestPath)
+    $validHashBytes = [IO.File]::ReadAllBytes((Join-Path $outputDirectory 'manifest.sha256'))
+    $invalidIdentityManifest = [IO.File]::ReadAllText($manifestPath) | ConvertFrom-Json
+    $invalidIdentityManifest.source.commit = '6'
+    Write-Utf8 $manifestPath (($invalidIdentityManifest | ConvertTo-Json -Depth 12) + "`r`n")
+    Write-Utf8 (Join-Path $outputDirectory 'manifest.sha256') "$(Get-Sha256 $manifestPath)  manifest.json`r`n"
+    $invalidIdentityRejected = $false
+    try { & $Tool verify -Manifest $manifestPath 2>$null | Out-Null }
+    catch { $invalidIdentityRejected = $_.Exception.Message -like '*complete 40- or 64-character*' }
+    Assert-Equal $invalidIdentityRejected $true 'Verifier accepted a truncated Git object ID.'
+    [IO.File]::WriteAllBytes($manifestPath, $validManifestBytes)
+    [IO.File]::WriteAllBytes((Join-Path $outputDirectory 'manifest.sha256'), $validHashBytes)
 
     $manifestBytes = [IO.File]::ReadAllBytes($manifestPath)
     [IO.File]::AppendAllText($manifestPath, " ", $Utf8NoBom)

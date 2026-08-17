@@ -381,7 +381,7 @@ Record the tests, commands, observations, logs, or measurements demonstrating co
 
 Omit **Manual Observability** when the issue has no manual runtime verification. When it applies, complete the section before marking the issue Ready; do not leave the observation path or the inputs required by `guidelines/manual-validation.md` to be invented during Implementation.
 
-Include **Evidence Pack** when the issue retains multiple volatile evidence outputs or belongs to an owner-assisted validation campaign. A simple issue with one stable report or no retained binary evidence may omit it. The pack is a mechanical provenance artifact, not a substitute for claim-level evidence labels or independent review.
+Include **Evidence Pack** when the issue retains multiple volatile evidence outputs or belongs to an owner-assisted validation campaign. A simple issue with one stable report or no retained binary evidence may omit it. Use the canonical execution routing table in `stages/7-implementation.md#evidence-pack-routing` when defining cleanliness and replacement checkpoints. The pack is a mechanical provenance artifact, not a substitute for claim-level evidence labels or independent review.
 
 Include **Defect Regression Protection** for every issue that corrects a reproduced defect. Omit it for other issues. A passing test name is not sufficient: the plan must explain which original failure boundary the check reaches and what implementation regression would make it fail.
 

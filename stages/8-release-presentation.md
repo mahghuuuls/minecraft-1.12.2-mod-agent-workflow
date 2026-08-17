@@ -202,7 +202,7 @@ If the owner explicitly selects a combined documentation style, keep repository-
 When CurseForge is a selected distribution platform and the mod-page source is agent-managed, prepare the copy for CurseForge's Markdown editor rather than assuming a repository preview is equivalent.
 
 - Prefer basic Markdown paragraphs, headings, bold text, lists, links, inline code, fenced code, and horizontal rules.
-- Do not put Markdown emphasis or link notation inside block-level HTML. For an approved colored label or disclaimer, use the smallest inline `<span>` form from `guidelines/project-defaults.md` and leave ordinary prose and links outside the span.
+- Do not put Markdown emphasis or link notation inside block-level HTML. For the default colored disclaimer, use the single inline `<span>` form from `guidelines/project-defaults.md` around the complete disclaimer, including its label, prose, and workflow link.
 - Prefer bold bullet definitions over pipe tables unless the owner confirms the actual CurseForge preview renders the table correctly.
 - Do not rely on blockquotes as the only visual separation for an important notice. A bold label and horizontal rule are safer when the distinction matters.
 - Check whether the platform already displays the project title and other metadata before repeating them at the top of the description.

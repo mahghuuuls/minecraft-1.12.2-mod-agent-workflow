@@ -4,6 +4,8 @@ This dependency-free PowerShell tool captures a mechanically consistent evidence
 
 The tool does not decide whether an acceptance criterion passed, assign `observed` / `inspected` / `inferred` labels, interpret logs, update issue status, or replace independent review. Those responsibilities remain in `stages/7-implementation.md`.
 
+Whether to use the tool is governed by the compact routing table in `stages/7-implementation.md#evidence-pack-routing`. In short, follow an approved `Applies: Yes` issue or campaign plan, use one pack when several volatile outputs need one attributable identity, and omit it for simple stable evidence. The Stage 7 table is canonical for dirty provisional captures, clean final captures, and superseding changed packs.
+
 ## Commands
 
 From the workflow repository root on Windows:
@@ -18,7 +20,7 @@ tools\evidence-pack\evidence-pack.cmd inspect -Manifest workspace\validation\imp
 - `verify` checks the manifest hash, every retained file identity, JUnit totals, JAR inventory, and unexpected files.
 - `inspect` prints the checkpoint's source and aggregate identities without interpreting them.
 
-The launcher applies `ExecutionPolicy Bypass` only to that child process; it does not change machine policy.
+The launcher applies `ExecutionPolicy Bypass` only to that child process; it does not change machine policy. The tool explicitly imports its required standard PowerShell Utility and Management modules, so it does not depend on module autoload being enabled.
 
 ## Specification
 
@@ -109,3 +111,4 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\evidence-pack\test
 ```
 
 The tests cover clean capture, Git provenance, JUnit aggregation, JAR inventory, manifest integrity, retained-file verification, tamper detection, unexpected-file detection, immutable destinations, and the clean-worktree gate.
+They also require complete Git commit/tree object IDs, reject truncated identities during verification, and exercise the batch launcher with PowerShell module autoload disabled.

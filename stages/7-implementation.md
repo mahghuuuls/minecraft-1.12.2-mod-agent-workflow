@@ -231,6 +231,18 @@ Check a fresh generation. When existing users or committed defaults may be affec
 
 Use `tools/evidence-pack/evidence-pack.cmd` for every approved validation campaign and every other planned checkpoint that retains multiple volatile outputs such as JUnit XML, a built JAR, runtime logs, generated configuration, screenshots, or a prepared change-boundary archive. A simple issue with one stable check and no retained binary evidence does not need a pack merely for uniformity.
 
+### Evidence-Pack Routing
+
+| Situation | Required action |
+| --- | --- |
+| The approved issue says `Evidence Pack: Applies: Yes` | Capture and verify the specified pack at that checkpoint. |
+| An approved owner-assisted validation campaign is being evidenced | Capture and verify the campaign pack required by its plan. |
+| A checkpoint must retain multiple volatile outputs with one attributable identity | Plan, capture, and verify one pack even when the need was discovered after the initial issue draft; reconcile the issue or plan before relying on it. |
+| The issue has only simple stable evidence and no pack was planned | Omit the pack. Do not create one merely for uniformity. |
+| An explicitly planned dirty pre-commit or pre-review boundary is needed | A provisional pack may use `requireClean: false`; record the dirty paths and do not present it as final evidence. |
+| A final issue or campaign checkpoint is captured | Require a clean source worktree unless an approved limitation explicitly makes that impossible. |
+| Source or any retained output changes after capture | Create a new immutable pack, mark the old pack superseded, and update the owning reference. Never overwrite the old pack. |
+
 An evidence pack is the single mechanical source of truth for its checkpoint's source commit/tree, worktree state, retained paths, byte sizes, SHA-256 identities, JUnit totals, and JAR inventory. Issue files and ledgers should reference the manifest and record only claim-specific facts that matter to acceptance. Do not copy the complete manifest inventory into several documents.
 
 Before capture:

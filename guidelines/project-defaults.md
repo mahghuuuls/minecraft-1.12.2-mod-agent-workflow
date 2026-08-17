@@ -83,10 +83,10 @@ Do not leave example values in initialized project files.
 Default colored disclaimer for a Markdown target that accepts inline styling:
 
 ```markdown
-<span style="color:#d6a100">**AI usage disclaimer:**</span> This mod was developed with AI-agent assistance using [this agent workflow](https://github.com/mahghuuuls/minecraft-1.12.2-mod-agent-workflow). The project owner reviewed the work during development.
+<span style="color:#d6a100">**AI usage disclaimer:** This mod was developed with AI-agent assistance using [this agent workflow](https://github.com/mahghuuuls/minecraft-1.12.2-mod-agent-workflow). The project owner reviewed the work during development.</span>
 ```
 
-Use the smallest inline element needed for the colored label and leave the ordinary text and link outside it. Do not place Markdown emphasis or links inside a block-level HTML element such as `<p>`; some distribution renderers preserve the block styling but display the nested Markdown notation literally.
+Use one inline `span` around the complete disclaimer so the label, explanatory text, and workflow link share the same color. Do not replace it with a block-level HTML element such as `<p>`; some distribution renderers preserve block styling but display nested Markdown notation literally.
 
 ## Commit Messages
 

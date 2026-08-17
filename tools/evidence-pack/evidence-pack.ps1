@@ -11,6 +11,13 @@ param(
 
 Set-StrictMode -Version 2.0
 $ErrorActionPreference = 'Stop'
+
+# Windows PowerShell does not always autoload standard modules when the tool
+# is launched through the batch wrapper. Load both dependencies explicitly.
+# Utility provides JSON and hashing commands; Management provides filesystem,
+# location, and object-construction commands used throughout the tool.
+Import-Module Microsoft.PowerShell.Utility -ErrorAction Stop
+Import-Module Microsoft.PowerShell.Management -ErrorAction Stop
 $Utf8NoBom = New-Object Text.UTF8Encoding($false)
 
 function Get-OptionalProperty {
@@ -102,6 +109,26 @@ function Invoke-Git {
     finally {
         Pop-Location
     }
+}
+
+function Assert-GitObjectId {
+    param([string]$Value, [string]$Label)
+
+    if ([string]::IsNullOrWhiteSpace($Value) -or $Value -notmatch '^(?:[0-9A-Fa-f]{40}|[0-9A-Fa-f]{64})$') {
+        throw "$Label must be one complete 40- or 64-character hexadecimal Git object ID."
+    }
+}
+
+function Get-GitObjectId {
+    param([string]$Repository, [string[]]$Arguments, [string]$Label)
+
+    $lines = @(Invoke-Git $Repository $Arguments)
+    if ($lines.Count -ne 1) {
+        throw "$Label must resolve to exactly one Git object ID, but Git returned $($lines.Count) lines."
+    }
+    $value = $lines[0].Trim()
+    Assert-GitObjectId $value $Label
+    return $value.ToLowerInvariant()
 }
 
 function Get-FileIdentity {
@@ -352,8 +379,8 @@ function Invoke-Capture {
     if (Test-PathInside $outputDirectory $sourceRepository) { throw 'Evidence-pack outputDirectory must be outside the source repository.' }
     if ([IO.Directory]::Exists($outputDirectory) -or [IO.File]::Exists($outputDirectory)) { throw "Evidence-pack output already exists and will not be overwritten: $outputDirectory" }
 
-    $commit = (Invoke-Git $sourceRepository @('rev-parse', 'HEAD'))[0]
-    $tree = (Invoke-Git $sourceRepository @('rev-parse', 'HEAD^{tree}'))[0]
+    $commit = Get-GitObjectId $sourceRepository @('rev-parse', 'HEAD') 'Source commit'
+    $tree = Get-GitObjectId $sourceRepository @('rev-parse', 'HEAD^{tree}') 'Source tree'
     $branchLines = @(Invoke-Git $sourceRepository @('branch', '--show-current'))
     $branch = if ($branchLines.Count -gt 0) { $branchLines[0] } else { '(detached)' }
     $statusLines = @(Invoke-Git $sourceRepository @('status', '--porcelain=v1', '--untracked-files=all'))
@@ -461,7 +488,7 @@ function Invoke-Capture {
 
         $manifestObject = [ordered]@{
             schemaVersion = 1
-            toolVersion = '1.0.0'
+            toolVersion = '1.1.0'
             checkpoint = $checkpoint
             capturedAtUtc = $capturedAt
             source = $source
@@ -500,6 +527,8 @@ function Read-ManifestWithIntegrity {
     if ($actualHash -ne $Matches.hash.ToUpperInvariant()) { throw "Manifest SHA-256 mismatch: expected $($Matches.hash), got $actualHash." }
     $manifestObject = [IO.File]::ReadAllText($resolvedManifest) | ConvertFrom-Json
     if ((Get-OptionalProperty $manifestObject 'schemaVersion' 0) -ne 1) { throw 'Manifest schemaVersion must be 1.' }
+    Assert-GitObjectId ([string]$manifestObject.source.commit) 'Manifest source commit'
+    Assert-GitObjectId ([string]$manifestObject.source.tree) 'Manifest source tree'
     return [pscustomobject]@{ Path = $resolvedManifest; Root = $packRoot; Hash = $actualHash; Data = $manifestObject }
 }
 

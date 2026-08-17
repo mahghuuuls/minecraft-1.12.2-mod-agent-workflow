@@ -22,6 +22,7 @@ Before the owner starts a shared game, server, or modpack session, present the c
 - Every required start, restart, reconnect, or shutdown point.
 - Shared setup, safety preparation, and final cleanup.
 - The exact source revision or validation checkpoint used by the runtime and confirmation that its mod worktree is clean.
+- The exact development player name and casing when the session reuses an integrated-server world or player record, plus confirmation that the runtime logged in with that identity before any reconnect or persistence card.
 - Which evidence the agent will inspect and which observations only the owner can supply.
 - Whether the Agent Diagnostics Toolkit is active, its pinned version and runtime placement, any approved automatic baseline, and the bundle names used during the session.
 
@@ -70,6 +71,7 @@ Keep headings and language stable across cards so the owner does not have to rel
 - When a deterministic sequence cannot be bundled because the selected toolkit lacks a required operation, state that limitation in the plan and present the commands together in one copyable block. Convenience alone is not a reason to make the owner enter a supported sequence manually.
 - Distinguish commands from mouse, keyboard, inventory, combat, waiting, or observation steps.
 - State the complete starting state. Never rely on the owner remembering an earlier temporary config value, selected hotbar slot, equipped item, game mode, mana value, or diagnostic toggle.
+- For a persistence card, identify what persistence is actually under test. When only item or capability data must survive, prefer a world-owned fixture such as a labeled chest or other block entity so player-record selection cannot create a false loss. Use player inventory only when player-inventory persistence itself is the subject, and then verify the exact player identity and casing before the first save boundary.
 - When a shared setup applies to several consecutive cards, state it once in the session map and identify the exact state or delta each card requires.
 - Include a reset step whenever state can leak from a prior card. A reset must be observable or independently checkable when an unapplied reset could produce a false pass.
 - Define expected results before the action. Include the distinguishing condition that would look different if the feature were absent or broken.

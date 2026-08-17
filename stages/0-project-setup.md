@@ -400,6 +400,8 @@ Relevant values may include:
 - `use_modern_java_syntax`
 - `license`
 
+Preserve `minecraft_username` exactly as approved, including letter casing. When an existing integrated-server test world or player record will be reused, compare the configured name with the established runtime identity before planning reconnect or persistence checks; do not silently normalize the value.
+
 Shared defaults remain in `setup/template-defaults.properties`. Do not edit shared defaults during mod development.
 
 If a new mod's repository, directory name, mod ID, display name, public description, root package, or main class is deferred, do not create an invalid properties file merely to complete the stage. Record the missing values and that Project Initialization must resolve them before cloning.

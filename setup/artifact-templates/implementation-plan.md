@@ -36,6 +36,8 @@
 
 ## Evidence Pack Plan
 
+Apply the routing rules in `stages/7-implementation.md#evidence-pack-routing`; do not infer a pack requirement merely from this table's presence.
+
 | Checkpoint | Reason | Specification | Immutable Output | Source Cleanliness | Retained Artifact Groups |
 | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |
@@ -194,6 +196,8 @@
 - Deterministic command sequences assigned to bundles, or reason manual commands are unavoidable:
 
 ## Evidence Pack
+
+Use `stages/7-implementation.md#evidence-pack-routing` to decide whether this section applies.
 
 - Applies: Yes / No
 - Checkpoint identity and reason:
