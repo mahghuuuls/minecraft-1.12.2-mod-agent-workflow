@@ -20,10 +20,13 @@
 
 ## Artifact
 
-- Path:
+- Canonical upload-ready path under `<mod-repository>/build/libs/`:
 - Filename:
 - Size:
 - SHA-256:
+- Exactly one normal distributable JAR identified in `build/libs`:
+- Stale normal distributable JAR check:
+- Retained evidence-copy path, when applicable:
 - Checksum authority: This record and the approved project baseline
 - Build command:
 - Result:

@@ -343,7 +343,7 @@ Do not use the internal record as public copy.
 18. Inspect the mod repository, then present the complete public materials, release version, intended release-file scope, and proposed commit message before final artifact validation. The checkpoint may ask the owner to (a) approve the materials and (b) authorize the focused release-preparation commit in one response, but the two decisions must be labeled separately.
 19. Treat public-material approval and commit authorization as separate authorization boundaries even when requested together. Public-material approval alone does not authorize the commit.
 20. If the materials are approved and the commit is authorized, commit only the approved release/version/public-material changes and verify the repository is clean at the resulting revision.
-21. If release validation is agent-managed, build the exact release artifact from that clean committed revision, inspect it, calculate its checksum, and record the authoritative artifact identity and checksum in the handoff.
+21. If release validation is agent-managed, run the approved clean build from that clean committed revision, identify exactly one normal distributable JAR under `<mod-repository>/build/libs/`, inspect it, calculate its checksum, leave it there as the canonical upload source, and record that path and identity in the handoff. Remove no auxiliary build output merely because it is not uploadable, but reject stale normal distributable JARs from older versions.
 22. If release packaging is owner-managed, record the approved source revision, expected command/artifact pattern, and owner-managed boundary instead of building.
 23. When the toolkit was used, review its feedback artifact and record which entries remain Candidate, Confirmed, or Reported; do not modify or report to the external toolkit project without separate authorization.
 24. Present the completed internal presentation record and release handoff for stage approval.
@@ -407,6 +407,8 @@ This stage is complete when:
 - `<artifact-root>/release-handoff.md` is generated and approved when a release artifact is built, identified, or handed off.
 - The approved release version is recorded; first public releases default to `1.0.0` unless the owner chose otherwise.
 - Agent-managed release artifacts are built, inspected, and checksummed from the clean committed source revision recorded in the handoff.
+- The validated upload-ready JAR remains at its canonical `<mod-repository>/build/libs/` path, exactly one normal distributable JAR is identified there, and no stale normal distributable JAR from an older version remains.
+- Any retained artifact elsewhere is treated as an evidence copy rather than the owner-upload source.
 - The current artifact checksum is authoritative in `release-handoff.md` and the approved project baseline rather than duplicated as current state across issue or presentation files.
 - No uncommitted release/version/public-material change remains when an agent-managed artifact handoff is finalized.
 - Owner-managed publication remains clearly outside the agent workflow.

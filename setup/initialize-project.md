@@ -482,6 +482,7 @@ Verify:
 - Processed mod metadata applies the canonical minimum-only policy to every declared mod dependency, while build resolution still identifies the exact inspected artifact.
 - The main mod class and package compile.
 - The produced artifact is the expected normal distributable mod artifact for the selected loader.
+- The normal distributable mod artifact is produced under `<mod-repository>/build/libs/`; auxiliary classifier artifacts are distinguishable from it.
 - The artifact targets the approved Java runtime version.
 - No development, sources, or Javadoc artifact is mistaken for the release artifact.
 - Selected development diagnostic tooling is absent from the distributable artifact and processed dependency metadata.

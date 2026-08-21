@@ -31,6 +31,7 @@ If source code, resources, version metadata, dependencies, configuration default
 - Do not modify production source, resources, version metadata, dependencies, or public release files.
 - Do not commit, push, upload, or publish without the separately required authorization.
 - Do not select a development, sources, Javadoc, or otherwise non-release artifact.
+- Treat the normal distributable JAR under `<mod-repository>/build/libs/` as the canonical upload source. Retained copies elsewhere are evidence only.
 - Do not claim compatibility or publication results that the evidence does not establish.
 - Build outputs and local reports may be regenerated and remain uncommitted.
 
@@ -42,7 +43,7 @@ If source code, resources, version metadata, dependencies, configuration default
 4. Confirm the approved build environment, build command, expected artifact pattern, and normal release artifact.
 5. Stop stale development processes when they would lock or contaminate build outputs.
 6. Run the clean approved build and all automated checks included by that command.
-7. Select the normal release artifact and record its path, filename, size, and SHA-256 checksum.
+7. Confirm that the clean build left exactly one normal distributable JAR under `<mod-repository>/build/libs/`, with no stale normal distributable JAR from an older version. Select that file and record its path, filename, size, and SHA-256 checksum.
 8. Inspect archive integrity, processed mod metadata, version, Minecraft/loader compatibility fields, author/source fields, Java class target, bundled libraries, and prohibited development-only contents as relevant.
 9. Run only the runtime, compatibility, or multiplayer checks explicitly assigned for this revalidation. Carry forward accepted waivers without repeatedly asking for waived owner-managed checks unless new evidence makes one release-blocking.
 10. Compare the new artifact identity and inspection results with the approved handoff.
@@ -56,6 +57,7 @@ Revalidation is complete when:
 - The exact approved clean source revision was used.
 - The clean build and assigned checks passed, or failures are reported plainly.
 - The normal release artifact was identified and inspected.
+- The validated upload-ready JAR remains under `<mod-repository>/build/libs/`, and any retained copy elsewhere is identified as evidence rather than the upload source.
 - The checksum and comparison result are recorded.
 - No source or public release material was changed.
 - No upload or publication occurred.

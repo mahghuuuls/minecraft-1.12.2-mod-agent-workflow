@@ -47,7 +47,8 @@
 
 ## Release Artifact
 
-- Path or filename:
+- Canonical upload-ready path under `<mod-repository>/build/libs/`:
+- Filename:
 - Checksum:
 - Build command:
 

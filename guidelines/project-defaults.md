@@ -20,6 +20,18 @@ These defaults apply to every mod unless an approved project-specific decision o
 - Do not upgrade or replace build components without an approved project-specific reason.
 - Record the exact fetched template commit during Initialization.
 
+## Canonical Release Artifact Location
+
+This policy is an invariant. A mod project must not override it through Project Setup, owner defaults, release ownership, or a custom evidence location.
+
+- The canonical owner-upload source is the normal distributable mod JAR under `<mod-repository>/build/libs/`.
+- An agent-managed release build or release revalidation must begin from the approved clean source revision and use the approved clean build command. After validation, the exact upload-ready JAR must remain in `build/libs`; do not move the only copy into a workspace evidence directory.
+- `build/libs` may contain auxiliary outputs such as sources or Javadoc JARs when the approved build produces them, but exactly one normal distributable JAR must be identified as upload-ready. A clean release build must remove stale normal distributable JARs from older versions.
+- "Latest" means the artifact built and validated from the currently approved release version and source revision. Never select a JAR by modification time or filename alone.
+- Evidence packs, release validation directories, and other retained locations may contain byte-identical copies. They are evidence copies, not the canonical upload source.
+- `release-handoff.md` must record the canonical `build/libs` path, filename, size, and checksum. Immediately before owner upload, verify that the file still exists at that path and matches the handoff checksum.
+- A later development or release build may replace transient contents under `build/libs`. After any later build or source change, do not call an artifact upload-ready until Release Presentation or `procedures/revalidate-release.md` has validated the current `build/libs` artifact again.
+
 ## Dependency Source References
 
 - Clone or inspect dependency source repositories only when they are needed to answer a concrete research, compatibility, API, or implementation question.
