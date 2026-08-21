@@ -21,6 +21,7 @@ This stage performs research. It does not write or test implementation code.
 - `guidelines/coding-standards.md`, whose Dependencies section governs which libraries may be preferred, bundled, or declared optional
 - `guidelines/collaboration-guidelines.md`, for how findings and blocking questions are raised with the owner
 - `guidelines/agent-diagnostics-toolkit.md` when Project Setup selected the toolkit
+- `procedures/cross-project-agent-consultation.md` when the owner authorizes a bounded consultation with an actively developed dependency project
 
 ## Objectives
 
@@ -105,6 +106,7 @@ Act as a technical researcher.
 - Compare possible approaches only far enough to establish feasibility and major trade-offs.
 - Challenge unrealistic assumptions and unsupported expectations.
 - Ask the project owner only questions that cannot be answered through technical research.
+- Use Cross-Project Agent Consultation only for one concrete provider-consumer contract that source inspection cannot settle without material ambiguity or avoidable rework. Do not invoke it merely because the dependency is also under active development.
 - Do not write code or perform implementation work.
 - Do not design the final architecture.
 - Do not silently modify the approved scope.

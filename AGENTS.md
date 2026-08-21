@@ -175,7 +175,7 @@ Do not silently resolve contradictions between sources. Follow `guidelines/proce
 - `setup/workflow-feedback-template.md`: template for the project-specific feedback log.
 - `stages/*.md`: setup and reusable development-stage responsibilities.
 - `procedures/*.md`: callable operational procedures that do not create an additional reusable-stage approval lifecycle.
-- `tools/`: bundled standalone utilities and their own usage documentation, examples, and tests. Workflow routing must be defined by the process file that owns the relevant task.
+- `tools/`: bundled standalone utilities and their own usage documentation, examples, and tests. A tool-local `AGENTS.md`, when present, owns instructions for agents invoking or maintaining that tool and must be read before use. Workflow routing must still be defined by the process file that owns the relevant task.
 - `scripts/validate-process.ps1`: lightweight consistency validation for versioned process files and artifact-template ownership.
 - `scripts/validate-workspace.ps1`: read-only mechanical consistency validation for the active runtime workspace; it reports but never decides approvals or rewrites project state.
 

@@ -20,6 +20,7 @@ $requiredPaths = @(
     'workflows/existing-mod-assessment.md',
     'workflows/change-cycle.md',
     'workflows/process-maintenance.md',
+    'procedures/cross-project-agent-consultation.md',
     'procedures/revalidate-release.md',
     'scripts/validate-workspace.ps1',
     'scripts/test-validate-workspace.ps1',
@@ -31,7 +32,12 @@ $requiredPaths = @(
     'stages/5-initialization.md',
     'stages/6-implementation-plan.md',
     'stages/7-implementation.md',
-    'stages/8-release-presentation.md'
+    'stages/8-release-presentation.md',
+    'tools/agent-session/agent-session.cmd',
+    'tools/agent-session/agent-session.ps1',
+    'tools/agent-session/AGENTS.md',
+    'tools/agent-session/README.md',
+    'tools/agent-session/tests/run-tests.ps1'
 )
 
 foreach ($relativePath in $requiredPaths) {
@@ -103,6 +109,8 @@ $requiredProcessText = [ordered]@{
     'stages/8-release-presentation.md' = @('https://github.com/mahghuuuls/minecraft-1.12.2-mod-agent-workflow', 'authoritative records for the current release artifact checksum')
     'setup/workflow-feedback-template.md' = @('## End Of Workflow Retrospective')
     'guidelines/agent-diagnostics-toolkit.md' = @('development-runtime only', 'Do not clone the toolkit repository into every mod project', 'setup/agent-diagnostics-toolkit-feedback-template.md')
+    'procedures/cross-project-agent-consultation.md' = @('This is an optional procedure.', 'Agreement between agents is not evidence', 'tools/agent-session/agent-session.cmd')
+    'tools/agent-session/AGENTS.md' = @('The mailbox does not contact or wake Codex, Claude, Gemini, or another agent.', 'Use the stable `code` field for branching', 'Agreement between agents is provisional consultation output, not approval.')
 }
 
 foreach ($entry in $requiredProcessText.GetEnumerator()) {

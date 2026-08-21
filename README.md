@@ -115,6 +115,8 @@ minecraft-1.12.2-mod-agent-workflow/
 
 Each mod under `workspace/project/` is an independent Git repository with its own commits and remote.
 
+Rare API-provider/API-consumer questions between actively developed mods can use the optional [Cross-Project Agent Consultation](procedures/cross-project-agent-consultation.md). It provides a short local exchange and closing report without adding another development stage or giving either agent authority over the other project.
+
 ## Updating Your Copy
 
 The workflow changes regularly as new projects expose gaps in it, so pulling before starting a new mod is worthwhile. Normal users are not expected to edit or commit changes to this workflow repository. Update a clone with:

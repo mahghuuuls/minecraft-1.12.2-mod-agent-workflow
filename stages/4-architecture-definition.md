@@ -20,6 +20,7 @@ The architecture should provide a clear map of where responsibilities belong and
 - `guidelines/project-defaults.md`, including its Mod Dependency Version Constraints
 - `guidelines/coding-standards.md`, whose General Design and Loader Integration sections are what the Architecture Quality criteria below resolve to in code
 - `guidelines/collaboration-guidelines.md`, for how decisions and their alternatives are recorded and approved
+- `procedures/cross-project-agent-consultation.md` when the owner authorizes a bounded consultation with an actively developed provider or consumer project
 
 ## Objectives
 
@@ -111,6 +112,7 @@ Act as a software architect collaborating with the project owner.
 - Use one focused question for a branching owner decision; group closely related recommended architectural defaults into a compact decision packet when they can be reviewed together safely.
 - Do not ask questions that can be answered from the approved documents or technical research.
 - Trace architectural decisions back to requirements or established constraints.
+- When a concrete cross-project API contract remains ambiguous after inspecting both available boundaries, use the optional consultation procedure rather than making either agent's preference authoritative. Route any resulting requirement or scope change backward normally.
 - Define architecture at the level of responsibilities, contracts, ownership, and dependency direction. Name a class, method, or package as an architectural constraint only when its specific identity or boundary matters; do not freeze incidental implementation structure.
 - Record the internal design freedom left to Implementation and the evidence that should trigger an architecture revision. Approval of this artifact does not make internal decomposition immutable.
 - Identify decisions that remain uncertain and require validation during Implementation.
