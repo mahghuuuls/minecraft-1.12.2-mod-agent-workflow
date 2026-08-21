@@ -53,6 +53,7 @@ release_handoff_mode=agent-managed-release-validation
 release_owner_readme=agent
 release_owner_mod_page=agent
 release_owner_changelog=agent
+release_owner_platform_changelog=agent
 release_owner_icon=owner
 release_owner_screenshots=owner
 release_owner_curseforge_upload=owner

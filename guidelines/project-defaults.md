@@ -131,7 +131,8 @@ Release and publication defaults are:
 
 - README: agent-managed
 - Mod page or distribution-page copy: agent-managed
-- Changelog: agent-managed
+- Repository `CHANGELOG.md`: agent-managed
+- Distribution-platform release changelog: agent-managed and delivered as paste-ready chat text during Release Presentation
 - Icon: owner-managed
 - Screenshots: owner-managed
 - CurseForge upload: owner-managed

@@ -325,7 +325,8 @@ Start from these defaults unless the owner changes them:
 | --- | --- | --- |
 | README | Agent | Prepare concise repository-facing documentation unless another documentation style is approved. |
 | Mod page or distribution-page copy | Agent | Prepare concise player/download-facing copy such as `MOD-PAGE.md` unless owner-managed or deferred. |
-| Changelog | Agent | Prepare concise player-facing release notes from approved changes. |
+| Repository `CHANGELOG.md` | Agent | Preserve useful release history, including concise technical notes when they help players, pack authors, or maintainers. |
+| Distribution-platform release changelog | Agent | Prepare short paste-ready text containing only player-noticeable changes; first public releases default to `Initial release`. |
 | Icon | Owner | Do not research, generate, or select an icon unless the owner explicitly assigns icon work to the agent. |
 | Screenshots | Owner | Do not plan, request, capture, select, or prepare screenshots unless explicitly assigned. |
 | CurseForge upload | Owner | Do not research upload mechanics, publication page setup, or final platform field choices unless explicitly assigned. |
@@ -380,6 +381,7 @@ Relevant values may include:
 - `release_owner_readme`
 - `release_owner_mod_page`
 - `release_owner_changelog`
+- `release_owner_platform_changelog`
 - `release_owner_icon`
 - `release_owner_screenshots`
 - `release_owner_curseforge_upload`

@@ -34,10 +34,18 @@
 - Owner preview checklist supplied:
 - Reported rendering discrepancies and resolution:
 
-## Changelog
+## Repository CHANGELOG.md
 
 - Status:
 - Version:
+
+## Distribution-Platform Release Changelog
+
+- Status:
+- Target platform:
+- First public release:
+- Exact paste-ready text:
+- Delivered directly in chat:
 
 ## Reusable Public Description Or Summary
 

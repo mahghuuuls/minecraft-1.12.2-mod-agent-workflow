@@ -92,7 +92,7 @@ $requiredTemplateHeadings = [ordered]@{
     'setup/artifact-templates/project-initialization.md' = @('Project Identity Freeze', 'Template Source', 'Final Repository', 'Owner-Side Git Access Check', 'Development Diagnostic Tooling')
     'setup/artifact-templates/implementation-plan.md' = @('Implementation Strategy', 'Vertical Slice Overview', 'Issue Summary', 'Verification Strategy', 'Agent Diagnostics Toolkit Plan', 'Verification Environment Plan', 'Manual Validation Decisions', 'Owner-Assisted Validation Campaigns', 'Definition Of Done', 'Manual Observability', 'Complexity Management', 'Existing-Code Design Fit', 'Defect Regression Protection')
     'setup/artifact-templates/release-handoff.md' = @('Release Identity', 'Source Revision And Repository State', 'Artifact', 'Checks Performed', 'Owner-Managed Publication Steps', 'Owner Approvals')
-    'setup/artifact-templates/release-presentation.md' = @('Public Copy Preferences', 'README', 'Mod Page Or Distribution-Page Copy', 'Changelog', 'Release Handoff', 'Development Diagnostics Feedback', 'Owner Approvals')
+    'setup/artifact-templates/release-presentation.md' = @('Public Copy Preferences', 'README', 'Mod Page Or Distribution-Page Copy', 'Repository CHANGELOG.md', 'Distribution-Platform Release Changelog', 'Release Handoff', 'Development Diagnostics Feedback', 'Owner Approvals')
     'setup/artifact-templates/project-baseline.md' = @('Baseline Identity', 'Supported Environment', 'Canonical Documents', 'Build And Verification', 'Known Limitations', 'Approval')
 }
 
@@ -107,8 +107,9 @@ $requiredProcessText = [ordered]@{
     'workflows/change-cycle.md' = @('smallest reliable reproduction', 'future regression could be detected')
     'stages/6-implementation-plan.md' = @('## Verification Environment Plan', '**Test now:**', '**Defer:**', '**Waive:**', '## Complexity Management', '## Existing-Code Design Fit', '## Defect Regression Protection')
     'stages/7-implementation.md' = @('## Validation Environment Tiers', '## Generated Artifact Inspection', '## Small Follow-Up Path', '**Complexity argument**', 'pre-correction failure', 'Strategic Modification', 'Coherent fit / Justified tactical compromise')
-    'stages/8-release-presentation.md' = @('https://github.com/mahghuuuls/minecraft-1.12.2-mod-agent-workflow', 'authoritative records for the current release artifact checksum', '<mod-repository>/build/libs/', 'canonical upload source')
+    'stages/8-release-presentation.md' = @('https://github.com/mahghuuuls/minecraft-1.12.2-mod-agent-workflow', 'authoritative records for the current release artifact checksum', '<mod-repository>/build/libs/', 'canonical upload source', '## Distribution-Platform Release Changelog', 'use exactly `Initial release` by default', 'paste-ready block')
     'setup/workflow-feedback-template.md' = @('## End Of Workflow Retrospective')
+    'setup/template-defaults.properties' = @('release_owner_changelog=agent', 'release_owner_platform_changelog=agent')
     'guidelines/agent-diagnostics-toolkit.md' = @('development-runtime only', 'Do not clone the toolkit repository into every mod project', 'setup/agent-diagnostics-toolkit-feedback-template.md')
     'procedures/cross-project-agent-consultation.md' = @('This is an optional procedure.', 'Agreement between agents is not evidence', 'tools/agent-session/agent-session.cmd')
     'tools/agent-session/AGENTS.md' = @('The mailbox does not contact or wake Codex, Claude, Gemini, or another agent.', 'Use the stable `code` field for branching', 'Agreement between agents is provisional consultation output, not approval.')

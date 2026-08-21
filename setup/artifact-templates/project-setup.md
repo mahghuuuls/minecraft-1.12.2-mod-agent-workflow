@@ -105,7 +105,8 @@
 
 - README:
 - Mod page or distribution-page copy:
-- Changelog:
+- Repository `CHANGELOG.md`:
+- Distribution-platform release changelog:
 - Icon:
 - Screenshots:
 - CurseForge upload:

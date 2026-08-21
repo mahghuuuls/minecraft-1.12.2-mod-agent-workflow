@@ -33,7 +33,8 @@ Establish:
 - A concise repository-facing README when agent-managed
 - A separate concise player/download-facing public description suitable for a mod page when agent-managed
 - A short AI usage disclaimer near the top of player/download-facing copy by default, linking to this exact agent workflow unless the owner asks to remove or rewrite it
-- A concise player-facing changelog
+- A repository `CHANGELOG.md` with useful release history
+- A separate concise distribution-platform release changelog, delivered in chat as paste-ready player-facing text
 - The approved release version, defaulting to `1.0.0` for a first public release unless the owner chooses otherwise
 - A clear feature summary based only on implemented behavior
 - A high-level configuration summary when the mod has user-facing configuration
@@ -47,7 +48,8 @@ Establish:
 
 - Create or update `README.md` as repository-facing project documentation
 - Create or update separate player/download-facing copy, such as `MOD-PAGE.md` or an owner-approved equivalent
-- Create or update `CHANGELOG.md` as player-facing release notes
+- Create or update `CHANGELOG.md` as repository release history
+- Draft the separate distribution-platform release changelog, retain its exact approved copy in `release-presentation.md`, and provide it directly in chat for the owner's publication form
 - Prepare a CurseForge-style project description or summary text when public copy is agent-managed
 - Include the default AI usage disclaimer in `MOD-PAGE.md` or equivalent player/download-facing copy unless the owner opts out
 - Summarize implemented features in player language
@@ -216,7 +218,11 @@ Platform rendering constraints are universal process guidance; punctuation and p
 
 ## Changelog Guidance
 
-The changelog should summarize player-visible changes.
+Treat the repository changelog and the distribution-platform release changelog as separate public artifacts for different audiences.
+
+### Repository CHANGELOG.md
+
+`CHANGELOG.md` preserves useful release history for players, pack authors, and maintainers. It should lead with player-visible changes, but it may include concise technical maintenance, API, configuration, dependency, or packaging notes when they help someone understand the release or repository history.
 
 Use concise categories such as:
 
@@ -227,6 +233,17 @@ Use concise categories such as:
 - Known Issues
 
 Use approved glossary terms for feature names and player-visible behavior. Exclude internal refactors, implementation history, and workflow details unless they affect users.
+
+### Distribution-Platform Release Changelog
+
+The distribution-platform release changelog is the short text pasted into the release-specific changelog field on CurseForge or another selected platform. It is not a copy of the mod-page description and must not duplicate the full repository changelog.
+
+- Include only changes an ordinary player is likely to notice: new content or behavior, balance changes, user-visible fixes, meaningful compatibility changes, and known issues that affect play.
+- Omit internal refactors, architecture, tests, build changes, dependency-coordinate maintenance, metadata corrections, evidence, workflow history, and developer-only tooling unless they change installation or play for users.
+- Prefer one short sentence or a compact bullet list. Do not add categories merely to mirror `CHANGELOG.md`.
+- For the first public release, use exactly `Initial release` by default. Do not summarize the entire initial feature set again unless the owner requests expanded text.
+- For later releases, derive the short copy from the approved implementation and repository changelog, then edit it independently for the player audience.
+- Record the exact approved text in `release-presentation.md` and present the same text in the final stage conversation inside a clearly labeled paste-ready block. Do not make the owner extract it from a file.
 
 ## Optional Publication Assets
 
@@ -309,7 +326,7 @@ Record the suggested shots, any staged configuration, and its reversion in `rele
 Use it to record:
 
 - Source implementation evidence supporting public claims
-- Ownership decisions for README, changelog, icon, screenshots, platform submission, publication, and validation
+- Ownership decisions for README, mod-page copy, repository `CHANGELOG.md`, distribution-platform release changelog, icon, screenshots, platform submission, publication, and validation
 - Whether icon and screenshots are owner-provided, agent-managed, or deferred
 - Known limitations and whether they are public-facing or internal
 - Deferred owner-managed assets or publication actions
@@ -330,7 +347,7 @@ Do not use the internal record as public copy.
 5. Identify which public materials are agent-managed.
 6. Draft or update repository-facing README content when agent-managed.
 7. Draft or update player/download-facing mod-page copy when agent-managed, including the default AI usage disclaimer unless the owner opts out.
-8. Draft or update player-facing changelog content when agent-managed.
+8. Draft or update repository `CHANGELOG.md` when agent-managed, then draft the separate distribution-platform release changelog for its narrower player audience. For a first public release, default the platform text to `Initial release`.
 9. Prepare a CurseForge-style summary or description only as reusable public copy, not as platform-field research.
 10. Add high-level configuration and player-facing multiplayer/client/server notes when applicable.
 11. Record icon and screenshot paths as owner-provided, agent-managed, or deferred.
@@ -346,7 +363,7 @@ Do not use the internal record as public copy.
 21. If release validation is agent-managed, run the approved clean build from that clean committed revision, identify exactly one normal distributable JAR under `<mod-repository>/build/libs/`, inspect it, calculate its checksum, leave it there as the canonical upload source, and record that path and identity in the handoff. Remove no auxiliary build output merely because it is not uploadable, but reject stale normal distributable JARs from older versions.
 22. If release packaging is owner-managed, record the approved source revision, expected command/artifact pattern, and owner-managed boundary instead of building.
 23. When the toolkit was used, review its feedback artifact and record which entries remain Candidate, Confirmed, or Reported; do not modify or report to the external toolkit project without separate authorization.
-24. Present the completed internal presentation record and release handoff for stage approval.
+24. Present the completed internal presentation record and release handoff for stage approval. In the same chat response, include the exact distribution-platform release changelog in a clearly labeled paste-ready block.
 25. Revise until explicitly approved. If a revision changes the committed release source, obtain new commit authorization and repeat artifact validation before final approval.
 
 ## Output Artifacts
@@ -388,7 +405,9 @@ This stage is complete when:
 - Repository README copy is concise, repository-facing, and approved when agent-managed.
 - Mod-page or distribution-page copy is concise, player/download-facing, and approved when agent-managed.
 - Mod-page or distribution-page copy includes the default AI usage disclaimer near the top unless the owner approved removing or rewriting it.
-- Changelog is concise, player-facing, and approved.
+- Repository `CHANGELOG.md` is useful release history and is approved.
+- The distribution-platform release changelog contains only player-noticeable changes, is retained exactly in `release-presentation.md`, and is provided directly in chat as paste-ready text.
+- A first public release uses `Initial release` as its default distribution-platform release changelog unless the owner approved different wording.
 - Feature, configuration, and multiplayer/client/server notes match implemented behavior.
 - Shipped dependency metadata uses inclusive verified minimums with no upper bounds, while public copy does not overclaim untested future compatibility.
 - Public wording uses approved glossary terms consistently when the glossary applies.
