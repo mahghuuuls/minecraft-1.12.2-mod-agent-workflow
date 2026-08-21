@@ -47,7 +47,9 @@
 
 ## Compatibility Requirements
 
--
+- Required dependency minimums and acceptance criteria:
+- Exact build-artifact pinning distinguished from shipping metadata:
+- Untested later-version compatibility claims excluded:
 
 ## Performance Requirements
 

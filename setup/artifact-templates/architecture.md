@@ -14,7 +14,9 @@
 
 ## Selected Libraries And Dependencies
 
--
+- Exact development/build artifacts:
+- Verified minimum runtime versions:
+- Shipping metadata constraint form:
 
 ## Package Structure
 

@@ -53,7 +53,8 @@
 
 ## Player-Facing Compatibility Notes
 
--
+- Verified dependency minimums and tested baseline:
+- Permissive metadata distinguished from verified future compatibility:
 
 ## Icon Path
 

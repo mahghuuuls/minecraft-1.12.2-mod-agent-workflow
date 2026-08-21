@@ -22,7 +22,11 @@
 
 ## Dependencies And Integrations
 
--
+- Required and optional dependencies:
+- Exact artifacts inspected:
+- Verified minimum runtime versions:
+- Intended minimum-only shipping constraints:
+- Independent constraints imposed by other required mods:
 
 ## Dependency Source References
 

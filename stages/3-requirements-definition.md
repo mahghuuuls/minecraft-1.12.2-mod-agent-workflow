@@ -13,6 +13,7 @@ Convert the approved concept into precise, observable, and testable behavior wit
 - `workspace/documentation/concept-and-scope.md`
 - `workspace/documentation/feasibility-research.md`
 - `workspace/documentation/glossary.md`, when present
+- `guidelines/project-defaults.md`, including its Mod Dependency Version Constraints
 - Any approved decisions produced from feasibility findings
 
 ## Objectives
@@ -93,6 +94,7 @@ Act as a requirements analyst.
 - Ask about retroactive behavior when features affect existing worlds, entities, or saved data.
 - Ask about multiplayer authority, synchronization, and permissions when relevant.
 - Ask what happens when configuration, dependencies, input, or state are invalid.
+- Express required mod dependency compatibility as the verified minimum version or newer. Never approve an exact-only dependency version or an upper-bounded range, and do not describe permissive metadata as proof that untested future versions work.
 - When the approved concept records a diagnostic mode in scope, define its default state, intended output, audience, and limits so it remains useful for validation without becoming normal gameplay noise. Cover what a manual check would otherwise have to infer, so later verification can rest on evidence rather than inference, and state the output's boundaries where high-frequency paths, privacy, or log volume are a concern.
 - Distinguish required behavior from optional behavior.
 - Avoid inventing requirements or expanding the approved scope.
@@ -197,7 +199,7 @@ Notes should not prescribe implementation unless the detail is an established pr
 7. Interview the project owner using focused questions or compact related decision packets according to `guidelines/collaboration-guidelines.md`.
 8. Resolve behavioral ambiguities, terminology ambiguities, and contradictions.
 9. Define rules, limits, exceptions, and failure behavior.
-10. Define configuration, debug, multiplayer, persistence, and compatibility behavior where relevant.
+10. Define configuration, debug, multiplayer, persistence, and compatibility behavior where relevant, including minimum-only version requirements for required mod dependencies.
 11. Convert agreed behavior into atomic requirements.
 12. Assign stable identifiers and priorities.
 13. Add objective acceptance criteria.
@@ -223,6 +225,7 @@ This stage is complete when:
 - Required behavior is precise and observable.
 - Meaningful boundaries and exceptions are defined.
 - Relevant configuration, multiplayer, persistence, and failure behavior is covered.
+- Required mod dependencies use inclusive verified minimums with no upper bounds, and their acceptance criteria distinguish build-artifact pinning from shipping metadata.
 - Every required behavior has objective acceptance criteria.
 - Requirements use approved glossary terms consistently.
 - Glossary terms that materially affect behavior are approved or revised.

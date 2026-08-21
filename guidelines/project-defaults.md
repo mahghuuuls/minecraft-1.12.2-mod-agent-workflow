@@ -1,6 +1,6 @@
 # Project Defaults
 
-These defaults apply to every mod unless an approved project-specific decision overrides them.
+These defaults apply to every mod unless an approved project-specific decision overrides them. A section marked as an invariant is not project-overridable.
 
 `setup/template-defaults.properties` is the authoritative source for machine-readable shared preferences. Project identity, loader, compatible runtimes, distribution targets, release ownership, and template selection belong in `workspace/project.properties` and approved project documents.
 
@@ -43,6 +43,20 @@ These defaults apply to every mod unless an approved project-specific decision o
 - Do not use runtime APIs newer than the approved target unless an approved compatible dependency supplies them.
 - A newer development JDK does not authorize a newer release target.
 - Record supported runtime environments explicitly rather than inferring them from the loader name.
+
+## Mod Dependency Version Constraints
+
+This policy is an invariant. A mod project must not override it through requirements, architecture, owner defaults, or release metadata.
+
+Separate reproducible build resolution from player-facing runtime compatibility:
+
+- Development and build configuration should resolve the exact dependency artifact that was inspected and tested. An exact build coordinate or pinned local artifact is evidence and reproducibility input; it is not the shipping compatibility range.
+- Every required mod dependency declared in shipping metadata must use an inclusive verified minimum version with no upper bound. For Forge 1.12.2 metadata, use the equivalent of `[minimum,)`.
+- When an optional mod integration declares a version constraint, use the same inclusive-minimum, no-upper-bound form. A resource-only or convention-based optional integration that does not need a declared dependency may remain undeclared.
+- Never ship an exact-only mod dependency version or a dependency range with an upper bound.
+- Do not add an upper bound speculatively, copy one from another mod, or use one to protect against a possible future incompatibility. Another required mod may impose its own independent constraints; do not duplicate those constraints as this mod's policy.
+- If a later dependency release proves incompatible, preserve player choice instead of retroactively blocking that version in metadata. Document the known problem and release a compatibility correction. Raise the minimum version only when the corrected implementation genuinely requires a newer dependency API or behavior.
+- A minimum-only range permits players to try later versions; it does not claim those untested versions are verified compatible. Public documentation must distinguish the verified minimum and tested baseline from that permissive policy.
 
 ## Project Identity
 
@@ -153,6 +167,6 @@ Apply owner-managed defaults directly unless the owner explicitly requests agent
 
 - Operational overrides belong in the ignored `workspace/project.properties`.
 - Behavioral and architectural decisions belong in approved project documents.
-- Explicit project decisions take precedence over shared preferences.
+- Explicit project decisions take precedence over shared preferences except for sections explicitly marked as workflow invariants.
 - Never infer or apply an override silently.
 - Record consequences when an override affects compatibility, architecture, licensing, or distribution.

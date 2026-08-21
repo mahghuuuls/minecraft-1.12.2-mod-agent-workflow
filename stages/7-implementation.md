@@ -88,6 +88,7 @@ Act as a focused implementation agent.
 - Read and apply the Complexity Management and Strategic Modification rules in `guidelines/coding-standards.md` before structural work.
 - Inspect the existing codebase before making changes.
 - Inspect approved dependency source references when the issue or architecture depends on them.
+- When an issue adds or changes a mod dependency, keep exact artifact selection in development/build resolution and apply the canonical minimum-only policy to source and processed shipping metadata.
 - For a pixel-art asset issue, read `guidelines/minecraft-pixel-art.md`, confirm that its brief and reference decision are approved, and keep unapproved candidates in the issue's artwork workspace rather than the mod repository.
 - Preserve existing project conventions unless an approved decision requires otherwise.
 - Apply the approved Existing-Code Design Fit target when one applies and follow the Strategic Modification rules; do not use diff size as a substitute for design quality.
@@ -226,6 +227,8 @@ Toolkit use does not lower evidence standards. A structured record can still be 
 When a framework generates or rewrites user-visible files such as configuration files, metadata, manifests, or example output, inspect the actual generated artifact. Source strings alone are not sufficient evidence because the framework may add labels, reorder content, escape characters, or preserve stale values.
 
 Check a fresh generation. When existing users or committed defaults may be affected, also check the relevant existing-file migration or preservation path. Record the generated path and observed content in completion evidence.
+
+When dependency metadata changes, inspect both the source metadata and the processed metadata inside the distributable artifact. Verify the loader-specific relation accepts the approved minimum and representative later versions, rejects versions below the minimum, and contains neither an exact-only constraint nor an upper bound. Keep this separate from the exact artifact used by the development build.
 
 ## Evidence Packs
 
@@ -715,6 +718,7 @@ An issue is complete when:
 - Its implementation satisfies the acceptance criteria.
 - Every included pixel-art asset satisfies `guidelines/minecraft-pixel-art.md`, has an owner-selected direction, and records agent visual inspection plus required contextual validation or an accepted waiver.
 - Relevant automated checks pass.
+- Any changed mod dependency metadata is verified at source and processed-artifact boundaries against the canonical minimum-only policy.
 - Required in-game verification passes or has an accepted waiver.
 - Required manual observability is implemented in the issue or a completed prerequisite, and its default and authorization behavior are verified where applicable.
 - Client, dedicated-server, multiplayer, compatibility, and performance checks pass where assigned or have accepted waivers.

@@ -98,6 +98,7 @@ Act as an implementation planner.
 - Return to Architecture Definition when a complexity-bearing implementation has no approved boundary or meaningful alternative analysis. Do not let the implementation issue make an architectural decision implicitly.
 - For an issue that modifies existing production code, describe the desired fit of the new behavior, the boundary for proportionate local design improvement under `guidelines/coding-standards.md`, and the conditions that would require an architecture revision. Preserve implementation discretion instead of prescribing a method-by-method patch.
 - Make dependencies explicit.
+- When an issue adds or changes mod dependencies, plan separate checks for exact development artifact resolution and canonical minimum-only shipping metadata, including inspection of the processed distributable metadata.
 - Ensure the dependency graph contains no cycles.
 - Schedule high-risk assumptions and implementation validations early.
 - Define verification before implementation begins.
@@ -338,6 +339,7 @@ Describe the observable behavior available after completion.
 - Development-client checks
 - Dedicated-server checks
 - Multiplayer, compatibility, or performance checks when relevant
+- Processed dependency metadata inspection when the issue adds or changes a mod dependency
 
 ## Defect Regression Protection
 

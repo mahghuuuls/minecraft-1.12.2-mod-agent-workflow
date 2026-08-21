@@ -30,6 +30,7 @@ The repository does not need to be empty. Project Initialization is not used.
 - Existing source code and Git history
 - Existing README, changelog, issue history, releases, and other supplied evidence
 - Shared guidelines and defaults
+- `guidelines/project-defaults.md`, including its Mod Dependency Version Constraints
 
 ## Workflow-Specific AI Behavior
 
@@ -43,6 +44,7 @@ Act as a baseline investigator.
 - Do not modernize, migrate, refactor, fix, or reformat production files during assessment.
 - Build outputs and local IDE files may be generated when required for inspection but must not be committed.
 - Record technical debt and defects without correcting them.
+- Audit source and processed mod metadata for exact-only dependency versions and upper-bounded ranges. Record any mismatch with the canonical minimum-only policy as baseline debt; assessment does not authorize correcting it.
 - Use a focused question where one unresolved intent changes the baseline; group closely related low-risk confirmations when the same evidence supports them.
 - Use `workspace/documentation/` as `<artifact-root>`.
 
@@ -66,7 +68,7 @@ Record this route in `project-status.md`.
 1. Record this workflow as **In Progress** in `project-status.md` and update `project-state.md`.
 2. Clone or identify the existing repository without altering its history.
 3. Record its origin, branch, HEAD revision, tags, release evidence, and working-tree state.
-4. Inspect its build, metadata, source structure, resources, dependencies, configuration, and existing documentation.
+4. Inspect its build, source and processed metadata, source structure, resources, dependencies, configuration, and existing documentation, including dependency constraint forms.
 5. Run the least invasive meaningful build and verification available.
 6. Draft `project-baseline.md` with evidence, unknowns, and observed limitations.
 7. Present the assessment checkpoint for approval.
@@ -104,6 +106,7 @@ This workflow is complete when:
 - The current build and available verification results are recorded honestly.
 - Concept, feasibility, requirements, and architecture are approved as a current baseline.
 - Existing behavior and unknowns are explicit.
+- Existing dependency metadata is classified as conforming or nonconforming against the canonical minimum-only policy without being silently changed.
 - No production behavior was intentionally changed.
 - `project-baseline.md` is approved.
 - The workflow is explicitly approved as complete.

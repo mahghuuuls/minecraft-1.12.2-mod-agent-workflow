@@ -17,6 +17,7 @@ The architecture should provide a clear map of where responsibilities belong and
 - `workspace/documentation/glossary.md`, when present
 - The active mod repository, when architecture must account for existing code
 - Approved dependency source reference checkouts under `workspace/dependencies/`, when Feasibility Research created or accepted them
+- `guidelines/project-defaults.md`, including its Mod Dependency Version Constraints
 - `guidelines/coding-standards.md`, whose General Design and Loader Integration sections are what the Architecture Quality criteria below resolve to in code
 - `guidelines/collaboration-guidelines.md`, for how decisions and their alternatives are recorded and approved
 
@@ -33,6 +34,7 @@ Establish:
 - Client, server, and shared-code separation
 - Configuration, networking, and persistence approaches
 - External library and mod integrations
+- The separation between exact dependency artifact resolution and minimum-only shipping metadata
 - How dependency source findings affect integration boundaries, if applicable
 - Important runtime and data flows
 - Performance-sensitive areas
@@ -100,6 +102,7 @@ Act as a software architect collaborating with the project owner.
 - Evaluate candidate libraries identified during Feasibility Research.
 - Use approved dependency source checkouts as read-only evidence for integration decisions.
 - Select dependencies only when they provide meaningful value.
+- Record the exact artifact used by the build separately from the verified minimum encoded in shipping metadata; the compatibility policy itself is owned by `guidelines/project-defaults.md` and must not be replaced by a project-specific upper bound.
 - Explain important alternatives and their trade-offs.
 - For each complexity-bearing boundary, sketch at least two meaningfully different designs before selecting one. Compare common usage, interface knowledge, likely changes, special cases, dependency leakage, and Minecraft lifecycle constraints.
 - Do not satisfy the alternative-design requirement with cosmetic variations or a post-hoc list of rejected names for the selected structure.
@@ -193,7 +196,7 @@ Minor and self-evident choices do not require separate decision records or two d
 3. Extract architectural constraints, quality needs, and approved terminology.
 4. Group requirements into related responsibilities.
 5. Identify major components, ownership boundaries, complexity-bearing decisions, and the design knowledge each component owns.
-6. Evaluate relevant libraries and integration approaches.
+6. Evaluate relevant libraries, integration approaches, exact build artifacts, and verified minimum shipping versions.
 7. Review approved dependency source reference findings when they affect integration design.
 8. Define package organization and dependency directions.
 9. Define loader lifecycle and event integration.
@@ -222,6 +225,7 @@ This stage is complete when:
 - Major components and their responsibilities are defined.
 - Package boundaries and dependency directions are clear.
 - Relevant libraries and dependencies have been selected with reasons.
+- Dependency integration records exact build artifacts separately from minimum-only shipping metadata.
 - Loader lifecycle and integration points are identified.
 - Client, server, and shared-code boundaries are explicit.
 - Relevant configuration, networking, persistence, and integration approaches are defined.

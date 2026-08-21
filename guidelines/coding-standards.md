@@ -95,10 +95,11 @@ Software design continues whenever existing code changes. Optimize for the small
 
 - Prefer established libraries when Feasibility Research shows that they fit the requirement and constraints.
 - Declare required dependencies in development configuration and mod metadata.
+- Follow the Mod Dependency Version Constraints in `guidelines/project-defaults.md`: pin the inspected artifact for reproducible development, but declare shipping runtime dependencies as an inclusive verified minimum with no upper bound.
 - Declare optional dependencies without making them mandatory at class-loading time.
 - Use the dependency mechanisms supplied by the configured template.
 - Never bundle another mod into the release JAR unless explicitly required and legally permitted.
-- Preserve required dependency versions and loading order where compatibility depends on them.
+- Preserve verified minimum dependency versions and loading order where compatibility depends on them; do not turn a tested artifact version into an exact-only or upper-bounded shipping constraint.
 - Review transitive dependencies and exclude unnecessary ones deliberately.
 
 ## Errors and Logging

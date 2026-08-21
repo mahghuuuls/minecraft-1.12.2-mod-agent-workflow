@@ -39,6 +39,7 @@
 
 - Source and resource structure, when assessed:
 - Dependencies and integrations:
+- Dependency metadata constraint audit:
 - Configuration and persisted-data concerns:
 - Observed behavior:
 - Known defects or debt:

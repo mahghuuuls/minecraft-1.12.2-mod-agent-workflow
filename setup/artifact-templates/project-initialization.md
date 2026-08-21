@@ -44,6 +44,12 @@
 
 -
 
+## Dependency Version Resolution
+
+- Exact development/build artifacts:
+- Verified minimum shipping versions:
+- Processed metadata inspection:
+
 ## Development Diagnostic Tooling
 
 - Agent Diagnostics Toolkit decision:

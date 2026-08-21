@@ -62,6 +62,7 @@ Establish:
 - Confirm the approved release version before packaging or handoff
 - Build, inspect, checksum, and record the release artifact when release JAR generation/validation is agent-managed by Project Setup or explicit owner instruction
 - When the Agent Diagnostics Toolkit was used, verify that its classes, JAR, metadata relation, and development-only test assets are absent from the shipping artifact and player dependency instructions
+- Verify that every shipped mod dependency relation follows the canonical minimum-only policy and remains distinct from exact build-artifact pinning
 - Produce `<artifact-root>/release-handoff.md` when a release artifact is built or identified
 - Summarize unresolved Agent Diagnostics Toolkit feedback internally without turning it into player-facing mod limitations unless it affected release evidence
 
@@ -102,6 +103,7 @@ Act as a release documentation editor.
 - Keep technical evidence, unresolved validation gaps, and ownership decisions in `release-presentation.md`.
 - Keep the authoritative current artifact identity, checksum, source revision, repository state, and handoff evidence in `release-handoff.md`. Reference that record elsewhere instead of copying the checksum.
 - Treat mod-page copy as an iterative public-copy artifact; review it for audience fit, repetition, useful links, owner-provided wording, roadmap-risk wording, concise scope, and plain install-side statements.
+- Describe dependency compatibility using the verified minimum and tested baseline. Do not present permissive minimum-only metadata as proof that every future dependency version is compatible.
 - Treat the AI usage disclaimer as a default transparency note, not as internal workflow history. Keep it short, generic, and removable by owner request.
 - Follow the release ownership matrix strictly.
 - For agent-managed validation, validate the artifact from the exact clean committed revision recorded in the handoff. Do not treat a build from uncommitted release changes as final release evidence.
@@ -335,7 +337,7 @@ Do not use the internal record as public copy.
 12. Follow icon or screenshot workflows only when those areas are agent-managed or explicitly assigned.
 13. Offer a screenshot shot list unless screenshots are deferred, stage any scenario the owner accepts, and revert staged state after capture.
 14. When CurseForge is selected, perform the CurseForge Markdown compatibility review and give the owner the rendered-preview checklist.
-15. Check every public claim against approved implementation evidence and approved glossary terminology.
+15. Check every public claim against approved implementation evidence and approved glossary terminology; inspect the release artifact's processed dependency metadata for exact-only or upper-bounded relations.
 16. Update `workspace/documentation/glossary.md` when release copy approves, refines, or deprecates public-facing project terminology.
 17. Keep technical evidence and internal limitations in `release-presentation.md` rather than public README or mod-page copy.
 18. Inspect the mod repository, then present the complete public materials, release version, intended release-file scope, and proposed commit message before final artifact validation. The checkpoint may ask the owner to (a) approve the materials and (b) authorize the focused release-preparation commit in one response, but the two decisions must be labeled separately.
@@ -388,6 +390,7 @@ This stage is complete when:
 - Mod-page or distribution-page copy includes the default AI usage disclaimer near the top unless the owner approved removing or rewriting it.
 - Changelog is concise, player-facing, and approved.
 - Feature, configuration, and multiplayer/client/server notes match implemented behavior.
+- Shipped dependency metadata uses inclusive verified minimums with no upper bounds, while public copy does not overclaim untested future compatibility.
 - Public wording uses approved glossary terms consistently when the glossary applies.
 - Public-facing glossary updates introduced by release copy are recorded.
 - Icon and screenshot paths are recorded as owner-provided, agent-managed, or deferred.

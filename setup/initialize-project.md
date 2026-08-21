@@ -18,6 +18,8 @@ setup/template-defaults.properties
 
 This file defines shared Minecraft, Java, distribution, branch, naming, documentation, syntax, and license preferences. Loader, template, and project identity are project-specific.
 
+Also read the Mod Dependency Version Constraints in `guidelines/project-defaults.md`. They govern shipping metadata whenever approved dependencies are applied during initialization.
+
 ### Project Configuration
 
 Read when present:
@@ -344,6 +346,8 @@ Update the template's actual:
 
 Do not enable optional product or build capabilities unless the approved architecture requires them. Approved development diagnostic tooling is operational test support and follows its separate setup decision.
 
+For every approved mod dependency applied during initialization, keep the exact inspected artifact or coordinate in development/build resolution and independently encode the shipping metadata constraint according to `guidelines/project-defaults.md`. Inspect the template's actual metadata syntax rather than copying the build version into the runtime relation.
+
 Do not add gameplay implementation.
 
 When Project Setup selected the Agent Diagnostics Toolkit, follow `guidelines/agent-diagnostics-toolkit.md`. Prefer the template's verified development-runtime configuration and required deobfuscation path. Do not add the toolkit to compile API, implementation, shading, shipping metadata, or player dependency instructions. If the pinned artifact is not yet available, record installation as deferred before the first dependent validation card rather than inserting an unverified coordinate.
@@ -475,6 +479,7 @@ Verify:
 - The build completes.
 - Tests pass when present.
 - Processed mod metadata contains the approved values.
+- Processed mod metadata applies the canonical minimum-only policy to every declared mod dependency, while build resolution still identifies the exact inspected artifact.
 - The main mod class and package compile.
 - The produced artifact is the expected normal distributable mod artifact for the selected loader.
 - The artifact targets the approved Java runtime version.

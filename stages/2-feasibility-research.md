@@ -17,6 +17,7 @@ This stage performs research. It does not write or test implementation code.
 - Any supplied source code, mod files, documentation, or references
 - Any owner-provided dependency source repository URLs, local paths, or version constraints
 - `workspace/documentation/dependency-references.md`, when present
+- `guidelines/project-defaults.md`, whose Mod Dependency Version Constraints separate exact research/build artifacts from minimum-only shipping metadata
 - `guidelines/coding-standards.md`, whose Dependencies section governs which libraries may be preferred, bundled, or declared optional
 - `guidelines/collaboration-guidelines.md`, for how findings and blocking questions are raised with the owner
 - `guidelines/agent-diagnostics-toolkit.md` when Project Setup selected the toolkit
@@ -31,6 +32,7 @@ Establish:
 - Which existing mod libraries could support the implementation
 - Whether required integration points appear accessible
 - Which dependencies would be required or optional
+- The exact dependency artifacts inspected and the verified minimum versions suitable for minimum-only shipping metadata
 - Whether advanced implementation or build mechanisms are actually required by the approved behavior
 - Whether the provisional loader and template can support the identified requirements without unnecessary capabilities
 - Whether dependency source repositories need local reference checkouts
@@ -95,6 +97,7 @@ Act as a technical researcher.
 - Check each candidate library against the project defaults.
 - Evaluate whether candidate libraries are maintained, accessible, legally usable, and suitable for the approved distribution platforms.
 - Identify required and transitive dependencies.
+- Record the exact inspected artifact separately from the verified minimum runtime version. Do not recommend an exact-only dependency or an upper-bounded runtime range.
 - Use `workspace/dependencies/<dependency-name>/` for approved local dependency source checkouts and treat them as read-only reference material.
 - Record the dependency repository URL, requested ref, resolved commit when available, checkout reason, and licensing constraints.
 - Keep Agent Diagnostics Toolkit compatibility separate from product feasibility: an incompatible optional test tool changes the evidence plan, not the approved mod concept.
@@ -138,6 +141,8 @@ For each relevant library, investigate:
 - Minecraft 1.12.2 compatibility
 - Selected loader and runtime compatibility
 - Required dependencies
+- Exact artifact and version inspected for research or reproducible build resolution
+- Lowest version the project can responsibly require from available API and compatibility evidence
 - Client, server, or shared usage
 - License and redistribution restrictions
 - Source-code and documentation availability
@@ -188,7 +193,7 @@ Do not classify a feature as feasible merely because a possible approach can be 
 7. Decide whether any dependency source repository needs a local reference checkout.
 8. Request owner approval before cloning dependency source locally unless the owner already provided the local path or repository for this purpose.
 9. Update `workspace/documentation/dependency-references.md` when dependency source references are approved or changed.
-10. Evaluate candidate libraries against the project defaults.
+10. Evaluate candidate libraries against the project defaults, recording exact inspected artifacts separately from minimum-only shipping constraints.
 11. Record evidence and confidence for each conclusion.
 12. Classify the feasibility of every high-level feature.
 13. Identify risks and questions requiring later validation.
@@ -217,6 +222,7 @@ This stage is complete when:
 - Relevant existing libraries have been investigated.
 - Promising libraries and their limitations are documented.
 - Required and optional dependencies are identified.
+- Each required mod dependency has an exact inspected artifact for reproducibility and a verified minimum version for unbounded shipping metadata; no exact-only or upper-bounded runtime constraint is recommended.
 - Necessary dependency source checkouts are recorded with URL/path, ref or commit, reason, and licensing constraints.
 - Important compatibility and client/server limitations are understood.
 - Major technical and performance risks are recorded.
