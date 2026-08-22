@@ -127,7 +127,7 @@ Rare API-provider/API-consumer questions between actively developed mods can use
 
 Examples from real projects. Claude Opus 5 is known for the wall-of-text problem and the jargon problem; `plain-language` and `bottom-line` are the fix. Gemini 3.1 Pro and Gemini 3.7 Flash had trouble following `guidelines/coding-standards.md`; `standards-review` is the remedy. When in-game tests of a feature keep arriving badly prepared, without a starting state or a defined expected result, `validation-session` is the remedy.
 
-Eight skills are included. The **[Skills Guide](skills/SKILLS-GUIDE.md)** describes each one, the documented failure it remedies, and the models where that failure was observed; [skills/README.md](skills/README.md) covers installation. A skill can never approve a stage, waive a check, or turn an unobserved claim into evidence. Where a skill and a stage document disagree, the stage document is correct.
+Eight skills are included. See [skills/README.md](skills/README.md) for which one fits which problem, how to install them, and which models needed them in practice.
 
 ## Updating Your Copy
 
