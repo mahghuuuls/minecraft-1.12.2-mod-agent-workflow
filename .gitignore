@@ -20,6 +20,7 @@
 !/stages/
 !/workflows/
 !/tools/
+!/skills/
 
 # The workspace holds project-specific runtime state: configuration, documents,
 # artwork, dependency references, the template checkout, and the active mod

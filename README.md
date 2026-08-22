@@ -8,6 +8,8 @@ The process draws on established engineering practice rather than being invented
 
 The workflow is revised as mods are actually built with it. Friction encountered during a real project is recorded as feedback and applied afterwards in a separate maintenance pass, so the guidance addresses problems that occurred rather than problems imagined in advance. Mods produced this way are validated in a Cleanroom modpack of over 300 mods, which is where compatibility and load-order problems tend to surface.
 
+If your agent is not following the workflow properly, such as answering in walls of text, skipping required reviews, or recording evidence loosely, see [Working With Skills](#working-with-skills) for optional remedies.
+
 > [!CAUTION]
 > AI agents can be dangerous. Use this workflow with care and review the actions an agent proposes or performs.
 
@@ -90,6 +92,7 @@ minecraft-1.12.2-mod-agent-workflow/
 |-- references/
 |-- scripts/
 |-- tools/
+|-- skills/
 |-- setup/
 |   |-- owner-defaults-template.md
 |   `-- artifact-templates/
@@ -111,11 +114,20 @@ minecraft-1.12.2-mod-agent-workflow/
 - `tools/` contains bundled standalone utilities used by the workflow when its task-specific guidance routes to them.
 - `setup/` contains optional manual setup, owner-default templates, artifact templates, defaults, and initialization procedures.
 - `references/` contains curated technical links.
+- `skills/` contains optional agent skills. Nothing in the workflow requires them; see [Working With Skills](#working-with-skills).
 - `workspace/` contains ignored project-specific configuration, setup owner defaults, documents, artwork, dependency references, templates, and the active mod.
 
 Each mod under `workspace/project/` is an independent Git repository with its own commits and remote.
 
 Rare API-provider/API-consumer questions between actively developed mods can use the optional [Cross-Project Agent Consultation](procedures/cross-project-agent-consultation.md). It provides a short local exchange and closing report without adding another development stage or giving either agent authority over the other project.
+
+## Working With Skills
+
+`skills/` holds optional agent skills. **They are not part of the workflow**: no stage references them, and the process behaves identically without them. Use one only when an agent is not following the workflow as written, as a correction made once instead of in every message.
+
+Examples from real projects. Claude Opus 5 is known for the wall-of-text problem and the jargon problem; `plain-language` and `bottom-line` are the fix. Gemini 3.1 Pro and Gemini 3.7 Flash had trouble following `guidelines/coding-standards.md`; `standards-review` is the remedy. When in-game tests of a feature keep arriving badly prepared, without a starting state or a defined expected result, `validation-session` is the remedy.
+
+Eight skills are included. The **[Skills Guide](skills/SKILLS-GUIDE.md)** describes each one, the documented failure it remedies, and the models where that failure was observed; [skills/README.md](skills/README.md) covers installation. A skill can never approve a stage, waive a check, or turn an unobserved claim into evidence. Where a skill and a stage document disagree, the stage document is correct.
 
 ## Updating Your Copy
 
