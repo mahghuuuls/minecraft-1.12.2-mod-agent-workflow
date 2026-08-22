@@ -123,7 +123,7 @@ Rare API-provider/API-consumer questions between actively developed mods can use
 
 ## Working With Skills
 
-`skills/` holds optional agent skills. **They are not part of the workflow**: no stage references them, and the process behaves identically without them. Use one only when an agent is not following the workflow as written, as a correction made once instead of in every message.
+`skills/` holds optional agent skills. **They are not part of the workflow**: no stage references them, and the process behaves identically without them. Use one only when an agent keeps failing to follow the workflow as written; invoking it by name replaces typing the same correction out every time the problem recurs.
 
 Examples from real projects. Claude Opus 5 is known for the wall-of-text problem and the jargon problem; `plain-language` and `bottom-line` are the fix. Gemini 3.1 Pro and Gemini 3.7 Flash had trouble following `guidelines/coding-standards.md`; `standards-review` is the remedy. When in-game tests of a feature keep arriving badly prepared, without a starting state or a defined expected result, `validation-session` is the remedy.
 

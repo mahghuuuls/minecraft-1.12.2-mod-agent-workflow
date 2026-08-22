@@ -10,7 +10,7 @@ Use a skill when an agent is not behaving the way the workflow already asks it t
 
 The stage documents and `guidelines/` already say how an agent should work and how it should report. A capable agent following them needs nothing here. But agents differ, and some drift in ways that are tiresome to correct by hand every time: long answers when a short one was asked for, jargon where plain words would do, or skipping the parts of a procedure that make its evidence worth anything.
 
-A skill is a way to make that correction once instead of in every message.
+A skill does not fix the drift; the agent will do it again. What it replaces is typing the same correction out each time. You invoke the skill by name instead, as often as the problem recurs.
 
 **If the agent is already following the workflow, adding these will not improve anything.** They are a remedy, not an upgrade.
 
