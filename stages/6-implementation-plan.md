@@ -341,6 +341,14 @@ Describe the observable behavior available after completion.
 - Multiplayer, compatibility, or performance checks when relevant
 - Processed dependency metadata inspection when the issue adds or changes a mod dependency
 
+## Release Identity Work
+
+- Applies: Yes / No
+- Approved release version or identity affected
+- Source property, processed metadata, filename, and other identity-bearing outputs owned by this issue
+- Changelog or public-copy ownership deferred to Release Presentation, when applicable
+- Verification due before any packaged-artifact or runtime campaign that depends on this identity
+
 ## Defect Regression Protection
 
 - Applies: Yes / No
@@ -386,6 +394,8 @@ Omit **Manual Observability** when the issue has no manual runtime verification.
 Include **Evidence Pack** when the issue retains multiple volatile evidence outputs or belongs to an owner-assisted validation campaign. A simple issue with one stable report or no retained binary evidence may omit it. Use the canonical execution routing table in `stages/7-implementation.md#evidence-pack-routing` when defining cleanliness and replacement checkpoints. The pack is a mechanical provenance artifact, not a substitute for claim-level evidence labels or independent review.
 
 Include **Defect Regression Protection** for every issue that corrects a reproduced defect. Omit it for other issues. A passing test name is not sufficient: the plan must explain which original failure boundary the check reaches and what implementation regression would make it fail.
+
+Include **Release Identity Work** when the approved requirements or change intake name a release version, change artifact identity, or require packaged validation under a new identity. At least one issue must own every implementation-time identity change needed before that validation. Do not assign repository changelog or mod-page drafting here merely to close the table; those remain Release Presentation work unless they are themselves required test inputs.
 
 Include **Complexity Management** for every non-decision issue. For a Routine issue, record the classification and why the change does not alter a public API, persistent representation, shared policy, synchronization contract, integration boundary, or lifecycle ownership; omit the remaining fields. A Complexity-bearing issue must complete every field and reference the approved architecture decision rather than designing the boundary in the issue.
 
@@ -518,19 +528,20 @@ Record the eligibility basis, each covered action, explicit exclusions, invalida
 6. Add only the foundational issues required by identified slices.
 7. Link every issue to requirements and architecture, classify each non-decision issue as Routine or Complexity-bearing, and define Existing-Code Design Fit where applicable.
 8. Complete the Pixel-Art Asset section for every applicable issue, including the owner-approved brief, reference decision, defining composition invariants when generated exploration guides reconstruction, three-concept plan for a new direction, and use-specific inspection contexts; then define acceptance criteria and verification for every issue.
-9. Assign each verification check to an environment tier and state what that evidence proves and does not prove.
-10. For every manual runtime check, define its observability contract, evidence source, collection responsibility, necessary corroboration, owner-only observations, reset/cleanup state, and validation-packet group; add any required same-issue diagnostic work or prerequisite issue. Plan one evidence pack for every campaign and other multi-artifact checkpoint.
-11. Present one decision packet for owner-performed manual validation and record each check as Test now, Defer, or Waive; when the toolkit is selected, include its compact owner-facing summary.
-12. Define any eligible owner-assisted validation campaign, including readiness gates, evidence attribution, failure isolation, deterministic bundle coverage, clean validation-source strategy, and completion-commit policy.
-13. Identify dependencies and blockers, including diagnostic prerequisites that must be Done before dependent manual verification begins.
-14. Construct the dependency graph.
-15. Check the graph for cycles.
-16. Schedule risky assumptions and validation work early.
-17. Confirm that every required behavior is covered.
-18. Identify optional requirements that will be deferred.
-19. Generate the implementation-plan artifacts as complete drafts.
-20. Assess and record proportionate approval-bundle eligibility.
-21. Present the drafts and, when eligible, the bounded approval and authorization packet; revise them until explicitly approved.
+9. Map every approved release/version target to the issue that owns its implementation-time identity changes, and make the processed identity check due before packaged or runtime validation that relies on it.
+10. Assign each verification check to an environment tier and state what that evidence proves and does not prove.
+11. For every manual runtime check, define its observability contract, evidence source, collection responsibility, necessary corroboration, owner-only observations, reset/cleanup state, and validation-packet group; add any required same-issue diagnostic work or prerequisite issue. Plan one evidence pack for every campaign and other multi-artifact checkpoint.
+12. Present one decision packet for owner-performed manual validation and record each check as Test now, Defer, or Waive; when the toolkit is selected, include its compact owner-facing summary.
+13. Define any eligible owner-assisted validation campaign, including readiness gates, evidence attribution, failure isolation, deterministic bundle coverage, clean validation-source strategy, and completion-commit policy.
+14. Identify dependencies and blockers, including diagnostic prerequisites that must be Done before dependent manual verification begins.
+15. Construct the dependency graph.
+16. Check the graph for cycles.
+17. Schedule risky assumptions and validation work early.
+18. Confirm that every required behavior is covered.
+19. Identify optional requirements that will be deferred.
+20. Generate the implementation-plan artifacts as complete drafts.
+21. Assess and record proportionate approval-bundle eligibility.
+22. Present the drafts and, when eligible, the bounded approval and authorization packet; revise them until explicitly approved.
 
 ## Output Artifacts
 
@@ -556,6 +567,7 @@ The implementation plan should reference these files instead of duplicating thei
 This stage is complete when:
 
 - Every MUST requirement is covered by at least one issue.
+- Every approved release/version target has an implementation-time identity owner, with processed identity verification due before dependent packaged or runtime validation.
 - Every SHOULD and MAY requirement is scheduled or explicitly deferred.
 - Issues are organized primarily as vertical slices.
 - Necessary foundational work has a specific identified consumer.

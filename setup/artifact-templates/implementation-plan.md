@@ -34,6 +34,12 @@
 
 -
 
+## Release Identity Ownership
+
+| Approved Release Identity | Owning Issue | Identity-Bearing Sources And Outputs | Due Checkpoint | Release-Presentation Work Kept Separate |
+| --- | --- | --- | --- | --- |
+|  |  |  |  |  |
+
 ## Evidence Pack Plan
 
 Apply the routing rules in `stages/7-implementation.md#evidence-pack-routing`; do not infer a pack requirement merely from this table's presence.
@@ -165,6 +171,14 @@ Apply the routing rules in `stages/7-implementation.md#evidence-pack-routing`; d
 ## Acceptance Criteria
 
 ## Verification
+
+## Release Identity Work
+
+- Applies: Yes / No
+- Approved release version or identity affected:
+- Source property, processed metadata, filename, and other identity-bearing outputs:
+- Changelog or public-copy ownership deferred to Release Presentation:
+- Verification due checkpoint:
 
 ## Defect Regression Protection
 

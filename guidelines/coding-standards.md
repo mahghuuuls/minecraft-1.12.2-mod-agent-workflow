@@ -45,7 +45,7 @@ Software design continues whenever existing code changes. Optimize for the small
 - Treat cleanup outside the touched responsibility, or cleanup whose risk and verification cost are disproportionate to the issue, as separate work. Record it when useful, but do not hide it in the current change.
 - When a deadline, compatibility requirement, dependency limitation, or other concrete constraint forces a tactical compromise, minimize and localize the added complexity and record the constraint and the cleaner deferred alternative. Do not present the compromise as the preferred design.
 - Update comments, contracts, invariants, and nearby developer documentation affected by the change. Put rationale that future maintainers need next to the relevant code or authoritative design note, not only in an issue record or commit message.
-- During final self-review, inspect the complete diff for stale comments, obsolete TODOs, temporary diagnostics, accidental test hooks, and documentation that no longer matches behavior.
+- During final self-review, inspect the complete diff for stale comments, obsolete TODOs, temporary diagnostics, accidental test hooks, and documentation that no longer matches behavior. Compare the implemented contracts with the approved requirements, architecture, configuration semantics, and existing public files; a mismatch is an upstream revision or release-copy problem, not something to leave for a later agent to discover.
 - Independent review must assess whether the changed area incorporates the requested behavior coherently or merely layers on a tactical patch, citing concrete special cases, dependencies, duplication, indirection, or accepted constraints.
 
 ## Existing Projects
@@ -127,6 +127,8 @@ Software design continues whenever existing code changes. Optimize for the small
 - Treat compilation as necessary but insufficient evidence of correctness.
 - Use automated tests for isolated logic when they provide useful feedback.
 - A test must be able to fail. Before claiming a test covers a behavior, name the specific change to the implementation that would make it fail. When no such change can be named, the test does not cover that behavior regardless of how it reads.
+- Describe a test by the production boundary it exercises, not by its class or method name. Do not call a test an integration, persistence, networking, or lifecycle test when it only reproduces equivalent arithmetic or parsing outside the production path.
+- When reporting suite totals, pair the count with a short capability statement: what production behavior or boundary the tests can detect, and what important runtime behavior they cannot establish. A passing count is inventory, not proof of every named feature.
 - Apply the same standard to manual checks. A check whose passing observation would look identical if the feature were absent proves nothing. Establish the distinguishing condition first, then observe.
 - Treat a fixture too small to reach the rule under test as an unreached test, not a passing one. Verify that the data actually exercises the boundary the assertion describes.
 - Cover shipped defaults explicitly. Values a user never edits are still values the mod depends on, and they are easy to leave untested because no test names them.

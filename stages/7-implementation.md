@@ -286,6 +286,7 @@ Before moving an issue to **Awaiting Validation**:
 - Capture and verify the planned per-issue or campaign evidence pack when the available checkpoint already contains multiple volatile artifacts; later owner evidence must produce a new final campaign pack rather than overwrite it.
 - Record the exact files and behavior attributable to the issue.
 - Confirm that no failed or missing result makes later campaign implementation unsafe.
+- When the campaign uses a packaged artifact or approved new release identity, confirm the planned owner issue has updated the source version, expected filename, and processed mod metadata. Do not spend owner runtime effort on an artifact that still identifies as the baseline release.
 
 The next named campaign issue may then start even though its predecessor is **Awaiting Validation**, but only when the approved plan expressly permits that dependency relaxation. Every accumulated change must belong to the campaign and remain traceable through the retained boundaries. Do not start work outside the campaign until its commit checkpoint is resolved.
 
@@ -426,7 +427,7 @@ After a clean committed checkpoint, confirm the repository is clean when checked
 14. Corroborate diagnostic claims at the independent boundary defined by the plan.
 15. Apply proportionate local improvements and route broader structural correction under the Strategic Modification rules in `guidelines/coding-standards.md`.
 16. Run all relevant checks again after refactoring.
-17. Record completion evidence in the issue.
+17. Record completion evidence in the issue. When citing automated totals, state the production boundary those tests exercise and the important runtime behavior they do not establish; do not let suite or class names substitute for that capability statement.
 18. Perform the final implementation self-review and final-diff maintenance check required by `guidelines/coding-standards.md`.
 19. Change the issue status to **Review**.
 20. Submit the change to an independent review agent. If the owner gave standing approval for required review agents, including a valid recorded proportionate approval bundle, do not ask for repeated per-issue approval unless the review scope changes.
@@ -515,6 +516,7 @@ The review agent must receive:
 - `guidelines/coding-standards.md`, especially its Complexity Management and Strategic Modification rules
 - The relevant requirements
 - The relevant architecture sections
+- Current repository and player-facing documentation whose behavioral claims overlap the issue
 - The implementation issue
 - The code changes
 - Verification evidence
@@ -540,6 +542,8 @@ The review agent should examine:
 - Performance risks
 - Unnecessary complexity
 - Missing or inadequate verification
+- Whether test labels and completion summaries match the production boundary actually exercised, including whether a purported integration, persistence, networking, or lifecycle test invokes the relevant production path rather than reproducing equivalent logic
+- Whether implementation, generated configuration, or runtime evidence contradicts an approved requirement, architecture decision, or existing public claim; every contradiction must identify the earliest owning stage and block completion until the backward-transition or release-copy correction is resolved
 - Whether accepted validation waivers affect public claims or release safety
 - Whether each completion-evidence label is accurate, and whether any acceptance criterion rests on an inferred claim without an accepted waiver
 - Unrelated changes
@@ -720,6 +724,7 @@ An issue is complete when:
 - Its implementation satisfies the acceptance criteria.
 - Every included pixel-art asset satisfies `guidelines/minecraft-pixel-art.md`, has an owner-selected direction, and records agent visual inspection plus required contextual validation or an accepted waiver.
 - Relevant automated checks pass.
+- Automated-check evidence states what production boundary the tests can detect and what material runtime behavior they cannot prove; totals are not presented as standalone coverage evidence.
 - Any changed mod dependency metadata is verified at source and processed-artifact boundaries against the canonical minimum-only policy.
 - Required in-game verification passes or has an accepted waiver.
 - Required manual observability is implemented in the issue or a completed prerequisite, and its default and authorization behavior are verified where applicable.
@@ -751,6 +756,7 @@ The Implementation stage is complete when:
 - No release-blocking defects remain.
 - The code matches the approved architecture.
 - Approved documents reflect any accepted changes made during implementation.
+- Current public files and canonical artifacts do not materially contradict the completed implementation; discovered mismatches have followed the backward-transition or owning release-copy route.
 - All commit checkpoints are completed or explicitly deferred.
 - No required issue remains Backlog, Ready, In Progress, Review, or Blocked.
 - The project owner approves the implemented mod for Release Presentation.

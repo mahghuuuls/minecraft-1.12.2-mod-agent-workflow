@@ -154,6 +154,8 @@ Draft the smallest useful mod page first and expand it only when a normal player
 6. Only limitations that materially affect normal installation or use.
 7. A useful source or companion-project link when applicable.
 
+Before expanding that first draft, remove facts already supplied by the distribution page's title and metadata. Normally do not repeat the mod name as a heading or in the opening sentence, restate the game or Minecraft version, list loader/runtime test results, or announce that there are no dependencies. State a dependency only when one exists or its absence resolves a real installation ambiguity. Keep required-side installation to one plain sentence unless the topology is unusual. Translate lifecycle terminology into player language, for example `Changes require a restart.` rather than `server or integrated-server restart.`
+
 Do not turn the mod page into a condensed requirements document. Avoid enumerating every numeric validation rule, parser edge case, excluded source, compatibility qualification, or internal evidence result. Keep those details in generated config comments, the repository README, changelog, or internal presentation record according to their audience. Prefer combining a short explanation with its example over creating a separate section for every topic.
 
 Include the generic AI usage disclaimer from the Public Documentation section of `guidelines/project-defaults.md` near the top of player/download-facing copy by default, after the opening description and before feature details. Preserve its exact workflow link, `https://github.com/mahghuuuls/minecraft-1.12.2-mod-agent-workflow`. Use its inline form when the target accepts color styling; do not replace it with a block-level HTML wrapper around Markdown.
@@ -182,6 +184,8 @@ Review mod-page copy for:
 - Repetition: avoid repeating the mod name or the same compatibility point unnecessarily
 - Link usefulness: include relevant external links when they help players
 - Platform redundancy: remove or justify Minecraft version, loader, dependency, and other metadata when the distribution platform already displays it and the prose does not need it
+- Negative-information redundancy: omit `no dependencies`, `no API required`, and similar absence statements unless players could reasonably infer a dependency or the platform metadata is insufficient
+- Evidence leakage: omit tested runtime versions, test matrices, and validation qualifications unless the result materially changes an ordinary installation decision
 - Plain language: replace internal qualifiers such as "best-effort", "runtime evidence", "validation", or "implementation limitation" with user-facing wording, or omit them when the caveat does not affect installation or practical use
 - Roadmap risk: avoid phrases such as `first release` unless future support promises are intentional
 - Scope clarity: keep limitations concise without over-explaining implementation details
@@ -404,6 +408,7 @@ This stage is complete when:
 
 - Repository README copy is concise, repository-facing, and approved when agent-managed.
 - Mod-page or distribution-page copy is concise, player/download-facing, and approved when agent-managed.
+- Mod-page or distribution-page copy has passed the platform-redundancy check: it does not needlessly repeat the displayed project name, game/version/loader metadata, absence of dependencies, test matrix, expanded install scenarios, or implementation-specific restart terminology.
 - Mod-page or distribution-page copy includes the default AI usage disclaimer near the top unless the owner approved removing or rewriting it.
 - Repository `CHANGELOG.md` is useful release history and is approved.
 - The distribution-platform release changelog contains only player-noticeable changes, is retained exactly in `release-presentation.md`, and is provided directly in chat as paste-ready text.

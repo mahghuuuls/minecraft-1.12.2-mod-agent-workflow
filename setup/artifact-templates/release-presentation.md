@@ -31,6 +31,7 @@
 - Target editor or renderer:
 - Compatibility review performed:
 - Inline HTML or Markdown constraints:
+- Platform-redundancy review (project name, game/version/loader metadata, negative dependency statements, test details, installation wording, and technical lifecycle terms):
 - Owner preview checklist supplied:
 - Reported rendering discrepancies and resolution:
 
