@@ -486,6 +486,9 @@ Verify:
 - The artifact targets the approved Java runtime version.
 - No development, sources, or Javadoc artifact is mistaken for the release artifact.
 - Selected development diagnostic tooling is absent from the distributable artifact and processed dependency metadata.
+- The distributable artifact's `META-INF/MANIFEST.MF` declares only what the artifact contains. In particular, a `MixinConfigs` attribute must name only files present in the jar, and a mod with mixins disabled must carry no `MixinConfigs` attribute at all. A loader that honours the attribute refuses to start over a name it cannot resolve, and neither the development client (loose classes, no manifest) nor a plain Forge server (ignores the attribute) can show the failure.
+
+> **Known template defect, with an expiry.** CleanroomMC ForgeDevEnv writes `MixinConfigs` from `mixin_configs` without checking `use_mixins`, and ships a non-empty `mixin_configs` default, so a mod with `use_mixins = false` fails the check above out of the box. Tracked upstream as https://github.com/CleanroomMC/ForgeDevEnv/issues/67. If the check fails on such a mod, wrap the `MixinConfigs` and `MixinConnector` block in `build.gradle` with `if (propertyBool('use_mixins'))`, as every other mixin block in that file already is. **Remove this note when issue #67 is closed and the project's resolved template commit is at or after the fixing commit.** The check above stays; it is a property of any correct jar.
 
 Record the command, environment, output result, and produced artifact.
 

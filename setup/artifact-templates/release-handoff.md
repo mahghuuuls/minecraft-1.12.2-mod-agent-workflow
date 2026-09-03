@@ -34,6 +34,7 @@
 ## Checks Performed
 
 -
+- Manifest attributes resolve to jar content (in particular no `MixinConfigs` naming a missing file):
 - Development-only diagnostic toolkit exclusion, when applicable:
 
 ## Accepted Validation Waivers
