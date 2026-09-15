@@ -2,7 +2,7 @@
 
 Skills in this directory are **optional**. The workflow does not require them, does not reference them from any stage, and works exactly the same whether or not you install any of them.
 
-In my experience, ChatGPT's 5.6 Sol models (medium and higher) follow this workflow well without any skill. Claude's Opus 5 does the work to the workflow well enough, but needs the explanation skills heavily. Google's Gemini 3.1 Pro and Gemini 3.7 Flash skip many of the workflow's requirements, and making them follow it takes significant effort even with the skills. You can still build a working mod with them, but expect more code revision and more effort on your part to think up test scenarios.
+In my experience, ChatGPT's 5.6 Sol models (medium and higher) and ChatGPT's Astra models follow this workflow well without any skill. Claude's Fable 5.0 and 5.1 also work well enough without any skill. Claude's Opus 5 does the work to the workflow well enough, but needs the explanation skills heavily. Google's Gemini 3.1 Pro and Gemini 3.7 Flash skip many of the workflow's requirements, and making them follow it takes significant effort even with the skills. You can still build a working mod with them, but expect more code revision and more effort on your part to think up test scenarios.
 
 ## When to reach for one
 
