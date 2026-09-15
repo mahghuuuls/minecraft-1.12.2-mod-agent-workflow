@@ -22,6 +22,8 @@ Implementation includes coding, testing, in-game verification, defect correction
 - `guidelines/agent-diagnostics-toolkit.md` when Project Setup selected the toolkit
 - `guidelines/minecraft-pixel-art.md` when the issue creates or materially revises pixel-art assets
 - `tools/evidence-pack/README.md` when the issue or campaign plans a retained evidence pack
+- `tools/session-log/README.md` when a validation session or campaign leaves runtime logs the agent must read
+- `tools/mod-jar/README.md` when a session loads jars copied from another instance or an issue names another mod's item ids
 - `procedures/cross-project-agent-consultation.md` when implementation exposes an owner-authorized API-provider/API-consumer question that approved artifacts and source inspection cannot settle
 
 ## Objectives
@@ -110,7 +112,7 @@ Act as a focused implementation agent.
 - Before asking the owner to perform a manual check, confirm that the issue's planned observability mechanism is implemented and usable. Do not substitute indirect inference when the plan requires authoritative logs, commands, counters, or equivalent diagnostics.
 - Present owner-assisted checks using the session map and test cards in `guidelines/manual-validation.md`.
 - When the toolkit is selected, verify the pinned artifact and live capabilities, write the approved bundles, and inspect bundle completion and structured records instead of asking the owner to relay setup commands or log text.
-- After the owner performs a manual action, inspect agent-accessible current and rotated logs directly. Ask the owner for log content only when the runtime is external, the files are unavailable, or direct inspection fails.
+- After the owner performs a manual action, inspect agent-accessible current and rotated logs directly. Ask the owner for log content only when the runtime is external, the files are unavailable, or direct inspection fails. Use `tools/session-log/session-log.cmd` to find each launch across `latest.log` and the rotated files and to slice the toolkit records and log lines between two marks or around one bundle run; cite what was read by file and line.
 - Keep diagnostic work within the approved issue or its declared prerequisite. If required observability is missing from the plan, treat it as a Planning Problem rather than silently expanding the issue or sending an unreliable test recipe.
 - Treat compilation as necessary but not sufficient evidence that behavior works.
 - Check dedicated-server safety whenever client-only code is involved and the check is assigned or practical.
@@ -371,6 +373,7 @@ Before requesting commit approval:
 - Summarize the completed code change in repository terms.
 - Summarize verification evidence and remaining limitations.
 - Confirm that no unrelated files are included.
+- Run `scripts/validate-workspace.ps1` from the workflow root and resolve what it reports, so the issue files, the plan, and the status ledgers agree before the checkpoint closes.
 - Propose a repo-facing commit message.
 
 Commit-message guidance, owned by `guidelines/project-defaults.md` and repeated here because it is needed at the moment the message is written:
@@ -440,7 +443,7 @@ After a clean committed checkpoint, confirm the repository is clean when checked
 21. Address legitimate review findings.
 22. Repeat verification for affected behavior or record approved waiver updates.
 23. Mark the issue **Done** only when the Definition of Done is satisfied. When only approved campaign cards remain, mark it **Awaiting Validation** and follow the campaign procedure instead.
-24. Prepare the issue or completed-campaign commit checkpoint and determine whether a specific authorization, standing implementation-commit authorization, or valid recorded proportionate approval bundle applies.
+24. Prepare the issue or completed-campaign commit checkpoint: run `scripts/validate-workspace.ps1` from the workflow root and resolve its findings, then determine whether a specific authorization, standing implementation-commit authorization, or valid recorded proportionate approval bundle applies.
 25. Create the commit only under that authorization, otherwise request approval or record the approved deferral.
 26. Select the next Ready issue only after the commit checkpoint is resolved, except for the next explicitly named issue in an approved validation campaign.
 

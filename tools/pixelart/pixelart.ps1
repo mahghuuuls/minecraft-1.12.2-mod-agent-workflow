@@ -1,7 +1,21 @@
 [CmdletBinding()]
 param(
-    [Parameter(Position = 0)]
-    [string]$InputFile,
+    [Parameter(Position = 0, ValueFromRemainingArguments = $true)]
+    [string[]]$InputFile,
+
+    [switch]$Compose,
+
+    [switch]$Compare,
+
+    [string]$Reference,
+
+    [ValidateRange(1, 64)]
+    [int]$Columns,
+
+    [ValidateRange(0, 64)]
+    [int]$Gap = 1,
+
+    [string]$Background,
 
     [string]$OutputFile,
 
@@ -519,16 +533,461 @@ function Assert-SafeName {
     }
 }
 
+function Read-PngPixels {
+    # Decodes an existing PNG into the same RGBA layout the renderer writes. Reading uses the
+    # System.Drawing decoder that ships with Windows .NET, so any PNG color type or filter
+    # works; writing never depends on it. GDI+ may round the color of a semi-transparent
+    # pixel by one step; fully opaque and fully transparent pixels are read exactly.
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path
+    )
+
+    Add-Type -AssemblyName System.Drawing -ErrorAction Stop
+    $bitmap = New-Object System.Drawing.Bitmap($Path)
+    try {
+        $imageWidth = [int]$bitmap.Width
+        $imageHeight = [int]$bitmap.Height
+        if ($imageWidth -lt 1 -or $imageHeight -lt 1 -or $imageWidth -gt 4096 -or $imageHeight -gt 4096) {
+            throw "PNG $Path is ${imageWidth}x${imageHeight}; each dimension must be within 1..4096."
+        }
+
+        $rectangle = New-Object System.Drawing.Rectangle(0, 0, $imageWidth, $imageHeight)
+        $locked = $bitmap.LockBits($rectangle, [System.Drawing.Imaging.ImageLockMode]::ReadOnly, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+        try {
+            $stride = [int]$locked.Stride
+            $buffer = New-Object byte[] ($stride * $imageHeight)
+            [Runtime.InteropServices.Marshal]::Copy($locked.Scan0, $buffer, 0, $buffer.Length)
+        }
+        finally {
+            $bitmap.UnlockBits($locked)
+        }
+    }
+    finally {
+        $bitmap.Dispose()
+    }
+
+    $pixels = New-Object byte[] ($imageWidth * $imageHeight * 4)
+    for ($y = 0; $y -lt $imageHeight; $y++) {
+        for ($x = 0; $x -lt $imageWidth; $x++) {
+            $sourceOffset = ($y * $stride) + ($x * 4)
+            $targetOffset = (($y * $imageWidth) + $x) * 4
+            $pixels[$targetOffset] = $buffer[$sourceOffset + 2]
+            $pixels[$targetOffset + 1] = $buffer[$sourceOffset + 1]
+            $pixels[$targetOffset + 2] = $buffer[$sourceOffset]
+            $pixels[$targetOffset + 3] = $buffer[$sourceOffset + 3]
+        }
+    }
+
+    return [pscustomobject]@{
+        Width = $imageWidth
+        Height = $imageHeight
+        Pixels = $pixels
+    }
+}
+
+function Get-InputImage {
+    # Loads one input for -Compose or -Compare: a .pixelart grid is rendered exactly as the
+    # normal mode renders it, and a .png is decoded. Command-line size claims apply to every
+    # input, so one call can require, for example, that every sheet member is 16x16.
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path,
+
+        [string]$CommandPreset,
+
+        [int]$CommandWidth,
+
+        [int]$CommandHeight
+    )
+
+    $resolvedPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
+    if (-not [IO.File]::Exists($resolvedPath)) {
+        throw "Input file not found: $resolvedPath"
+    }
+
+    $extension = [IO.Path]::GetExtension($resolvedPath).ToLowerInvariant()
+    if ($extension -eq '.pixelart') {
+        $inputSpec = Read-PixelArtSpec -Path $resolvedPath
+        Assert-ExpectedDimensions -Spec $inputSpec -CommandPreset $CommandPreset -CommandWidth $CommandWidth -CommandHeight $CommandHeight
+        $imageWidth = $inputSpec.Width
+        $imageHeight = $inputSpec.Height
+        $imagePixels = [byte[]](Get-SpecPixels -Spec $inputSpec)
+    }
+    elseif ($extension -eq '.png') {
+        $png = Read-PngPixels -Path $resolvedPath
+        $pngClaims = [pscustomobject]@{
+            Width = $png.Width
+            Height = $png.Height
+            Preset = $null
+            DeclaredWidth = 0
+            DeclaredHeight = 0
+        }
+        Assert-ExpectedDimensions -Spec $pngClaims -CommandPreset $CommandPreset -CommandWidth $CommandWidth -CommandHeight $CommandHeight
+        $imageWidth = $png.Width
+        $imageHeight = $png.Height
+        $imagePixels = $png.Pixels
+    }
+    else {
+        throw "Unsupported input '$resolvedPath'. Use a .pixelart specification or a .png file."
+    }
+
+    return [pscustomobject]@{
+        Path = $resolvedPath
+        Label = [IO.Path]::GetFileName($resolvedPath)
+        Width = $imageWidth
+        Height = $imageHeight
+        Pixels = $imagePixels
+    }
+}
+
+function New-SheetPixels {
+    # Places several images on one transparent (or solid) sheet at native resolution: equal
+    # cells sized by the largest input, each image at the top-left of its cell, a gap of
+    # $GapPixels source pixels between cells and around the border. Transparent source pixels
+    # leave the background visible; every other pixel is copied without blending. The caller
+    # scales the finished sheet with nearest-neighbor replication.
+    param(
+        [Parameter(Mandatory = $true)]
+        [object[]]$Images,
+
+        [Parameter(Mandatory = $true)]
+        [int]$ColumnCount,
+
+        [Parameter(Mandatory = $true)]
+        [int]$GapPixels,
+
+        [Parameter(Mandatory = $true)]
+        [byte[]]$BackgroundColor
+    )
+
+    $cellWidth = 0
+    $cellHeight = 0
+    foreach ($image in $Images) {
+        $cellWidth = [Math]::Max($cellWidth, $image.Width)
+        $cellHeight = [Math]::Max($cellHeight, $image.Height)
+    }
+
+    $columnsUsed = [Math]::Min($ColumnCount, $Images.Count)
+    $rowsUsed = [int][Math]::Ceiling($Images.Count / $columnsUsed)
+    $sheetWidth = ($columnsUsed * $cellWidth) + (($columnsUsed + 1) * $GapPixels)
+    $sheetHeight = ($rowsUsed * $cellHeight) + (($rowsUsed + 1) * $GapPixels)
+    if ($sheetWidth -gt 4096 -or $sheetHeight -gt 4096) {
+        throw "The sheet would be ${sheetWidth}x${sheetHeight} source pixels. Keep each sheet dimension at or below 4096 pixels."
+    }
+
+    $sheet = New-Object byte[] ($sheetWidth * $sheetHeight * 4)
+    if ($BackgroundColor[3] -ne 0) {
+        [Array]::Copy($BackgroundColor, 0, $sheet, 0, 4)
+        $filled = 4
+        while ($filled -lt $sheet.Length) {
+            $chunk = [Math]::Min($filled, $sheet.Length - $filled)
+            [Array]::Copy($sheet, 0, $sheet, $filled, $chunk)
+            $filled += $chunk
+        }
+    }
+
+    for ($index = 0; $index -lt $Images.Count; $index++) {
+        $image = $Images[$index]
+        $column = $index % $columnsUsed
+        $row = [int][Math]::Floor($index / $columnsUsed)
+        $originX = $GapPixels + ($column * ($cellWidth + $GapPixels))
+        $originY = $GapPixels + ($row * ($cellHeight + $GapPixels))
+        for ($y = 0; $y -lt $image.Height; $y++) {
+            for ($x = 0; $x -lt $image.Width; $x++) {
+                $sourceOffset = (($y * $image.Width) + $x) * 4
+                if ($image.Pixels[$sourceOffset + 3] -eq 0) {
+                    continue
+                }
+                $targetOffset = ((($originY + $y) * $sheetWidth) + $originX + $x) * 4
+                [Array]::Copy($image.Pixels, $sourceOffset, $sheet, $targetOffset, 4)
+            }
+        }
+    }
+
+    return [pscustomobject]@{
+        Width = $sheetWidth
+        Height = $sheetHeight
+        Pixels = $sheet
+        CellWidth = $cellWidth
+        CellHeight = $cellHeight
+        Columns = $columnsUsed
+        Rows = $rowsUsed
+    }
+}
+
+function New-DifferencePixels {
+    # Builds the third -Compare panel: a pixel that is identical in both images becomes the
+    # grayscale candidate pixel (alpha kept), and a pixel that differs in any channel becomes
+    # opaque red. The counts say how the differences split between color changes and
+    # transparency changes.
+    param(
+        [Parameter(Mandatory = $true)]
+        [object]$ReferenceImage,
+
+        [Parameter(Mandatory = $true)]
+        [object]$CandidateImage
+    )
+
+    $pixelCount = $CandidateImage.Width * $CandidateImage.Height
+    $difference = [byte[]](Convert-PixelsToGrayscale -Pixels $CandidateImage.Pixels)
+    $colorChanged = 0
+    $becameTransparent = 0
+    $becameOpaque = 0
+    for ($offset = 0; $offset -lt $difference.Length; $offset += 4) {
+        $same = $true
+        for ($channel = 0; $channel -lt 4; $channel++) {
+            if ($ReferenceImage.Pixels[$offset + $channel] -ne $CandidateImage.Pixels[$offset + $channel]) {
+                $same = $false
+                break
+            }
+        }
+        if ($same) {
+            continue
+        }
+
+        $referenceAlpha = $ReferenceImage.Pixels[$offset + 3]
+        $candidateAlpha = $CandidateImage.Pixels[$offset + 3]
+        if ($referenceAlpha -ne 0 -and $candidateAlpha -eq 0) {
+            $becameTransparent++
+        }
+        elseif ($referenceAlpha -eq 0 -and $candidateAlpha -ne 0) {
+            $becameOpaque++
+        }
+        else {
+            $colorChanged++
+        }
+
+        $difference[$offset] = 255
+        $difference[$offset + 1] = 32
+        $difference[$offset + 2] = 32
+        $difference[$offset + 3] = 255
+    }
+
+    return [pscustomobject]@{
+        Width = $CandidateImage.Width
+        Height = $CandidateImage.Height
+        Pixels = $difference
+        Label = 'difference'
+        PixelCount = $pixelCount
+        Different = $colorChanged + $becameTransparent + $becameOpaque
+        ColorChanged = $colorChanged
+        BecameTransparent = $becameTransparent
+        BecameOpaque = $becameOpaque
+    }
+}
+
+function Get-SheetScale {
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$CellWidth,
+
+        [Parameter(Mandatory = $true)]
+        [int]$CellHeight,
+
+        [int]$RequestedScale
+    )
+
+    if ($RequestedScale -ne 0) {
+        return $RequestedScale
+    }
+    $largestDimension = [Math]::Max($CellWidth, $CellHeight)
+    $automatic = [int][Math]::Floor(256 / $largestDimension)
+    return [Math]::Max(1, [Math]::Min(16, $automatic))
+}
+
+function Write-ScaledSheet {
+    param(
+        [Parameter(Mandatory = $true)]
+        [object]$Sheet,
+
+        [Parameter(Mandatory = $true)]
+        [int]$Scale,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Destination
+    )
+
+    $scaled = Resize-PixelsNearestNeighbor -Pixels $Sheet.Pixels -ImageWidth $Sheet.Width -ImageHeight $Sheet.Height -Scale $Scale
+    $bytes = New-PngBytesFromPixels -ImageWidth $scaled.Width -ImageHeight $scaled.Height -Pixels $scaled.Pixels
+    $parentDirectory = [IO.Path]::GetDirectoryName($Destination)
+    if (-not [IO.Directory]::Exists($parentDirectory)) {
+        [IO.Directory]::CreateDirectory($parentDirectory) | Out-Null
+    }
+    [IO.File]::WriteAllBytes($Destination, [byte[]]$bytes)
+    return $scaled
+}
+
+function Assert-SheetModeOptions {
+    param([string]$Mode)
+
+    if ($Review -or $TilePreview -or -not [string]::IsNullOrWhiteSpace($ReviewDirectory)) {
+        throw "$Mode cannot be combined with -Review, -TilePreview, or -ReviewDirectory; the sheet is already a review image."
+    }
+    if (-not [string]::IsNullOrWhiteSpace($OutputDirectory) -or $OutputBesideSpecification -or -not [string]::IsNullOrWhiteSpace($Name)) {
+        throw "$Mode cannot be combined with -OutputDirectory, -OutputBesideSpecification, or -Name. Use -OutputFile, or accept the default beside the first input."
+    }
+}
+
+function Resolve-SheetOutput {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$FirstInputPath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Suffix
+    )
+
+    if (-not [string]::IsNullOrWhiteSpace($OutputFile)) {
+        $destination = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFile)
+    }
+    else {
+        $stem = [IO.Path]::GetFileNameWithoutExtension($FirstInputPath)
+        $destination = Join-Path ([IO.Path]::GetDirectoryName($FirstInputPath)) "$stem-$Suffix.png"
+    }
+
+    if (-not $destination.EndsWith('.png', [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'The output file must use the .png extension.'
+    }
+    if ([IO.File]::Exists($destination) -and -not $Force) {
+        throw "Output already exists: $destination. Use -Force to replace it."
+    }
+    return $destination
+}
+
+function Get-BackgroundColor {
+    if ([string]::IsNullOrWhiteSpace($Background)) {
+        return [byte[]]@(0, 0, 0, 0)
+    }
+    if ($Background -notmatch '^#[0-9A-Fa-f]{6}(?:[0-9A-Fa-f]{2})?$') {
+        throw "-Background must be #RRGGBB or #RRGGBBAA, not '$Background'."
+    }
+    return Convert-HexColor -Hex $Background -LineNumber 0
+}
+
+function Invoke-ComposeMode {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string[]]$Inputs
+    )
+
+    Assert-SheetModeOptions -Mode '-Compose'
+    if (-not [string]::IsNullOrWhiteSpace($Reference)) {
+        throw '-Reference belongs to -Compare, not -Compose. List every input after -Compose instead.'
+    }
+
+    $images = New-Object 'System.Collections.Generic.List[object]'
+    foreach ($input in $Inputs) {
+        $images.Add((Get-InputImage -Path $input -CommandPreset $Preset -CommandWidth $Width -CommandHeight $Height))
+    }
+
+    $columnCount = $images.Count
+    if ($Columns -ne 0) {
+        $columnCount = $Columns
+    }
+
+    $destination = Resolve-SheetOutput -FirstInputPath $images[0].Path -Suffix 'sheet'
+    $sheet = New-SheetPixels -Images $images.ToArray() -ColumnCount $columnCount -GapPixels $Gap -BackgroundColor (Get-BackgroundColor)
+    $scale = Get-SheetScale -CellWidth $sheet.CellWidth -CellHeight $sheet.CellHeight -RequestedScale $PreviewScale
+    $scaled = Write-ScaledSheet -Sheet $sheet -Scale $scale -Destination $destination
+
+    Write-Output "Created $destination ($($scaled.Width)x$($scaled.Height), $($images.Count) inputs in $($sheet.Columns)x$($sheet.Rows) cells of $($sheet.CellWidth)x$($sheet.CellHeight), gap $Gap, nearest-neighbor scale ${scale}x)"
+    for ($index = 0; $index -lt $images.Count; $index++) {
+        $image = $images[$index]
+        $column = $index % $sheet.Columns
+        $row = [int][Math]::Floor($index / $sheet.Columns)
+        Write-Output "  cell row $($row + 1) column $($column + 1): $($image.Label) ($($image.Width)x$($image.Height))"
+    }
+}
+
+function Invoke-CompareMode {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string[]]$Inputs
+    )
+
+    Assert-SheetModeOptions -Mode '-Compare'
+    if ($Inputs.Count -ne 1) {
+        throw '-Compare takes exactly one candidate input plus -Reference <png or pixelart>.'
+    }
+    if ([string]::IsNullOrWhiteSpace($Reference)) {
+        throw '-Compare needs -Reference <png or pixelart>, the image the candidate is checked against.'
+    }
+    if ($Columns -ne 0) {
+        throw '-Columns applies to -Compose only; -Compare always uses one row.'
+    }
+
+    $referenceImage = Get-InputImage -Path $Reference -CommandPreset $Preset -CommandWidth $Width -CommandHeight $Height
+    $referenceImage.Label = "reference $($referenceImage.Label)"
+    $candidateImage = Get-InputImage -Path $Inputs[0] -CommandPreset $Preset -CommandWidth $Width -CommandHeight $Height
+    $candidateImage.Label = "candidate $($candidateImage.Label)"
+
+    $panels = New-Object 'System.Collections.Generic.List[object]'
+    $panels.Add($referenceImage)
+    $panels.Add($candidateImage)
+
+    $difference = $null
+    $sameSize = ($referenceImage.Width -eq $candidateImage.Width) -and ($referenceImage.Height -eq $candidateImage.Height)
+    if ($sameSize) {
+        $difference = New-DifferencePixels -ReferenceImage $referenceImage -CandidateImage $candidateImage
+        $panels.Add($difference)
+    }
+
+    $destination = Resolve-SheetOutput -FirstInputPath $candidateImage.Path -Suffix 'compare'
+    $sheet = New-SheetPixels -Images $panels.ToArray() -ColumnCount $panels.Count -GapPixels $Gap -BackgroundColor (Get-BackgroundColor)
+    $scale = Get-SheetScale -CellWidth $sheet.CellWidth -CellHeight $sheet.CellHeight -RequestedScale $PreviewScale
+    $scaled = Write-ScaledSheet -Sheet $sheet -Scale $scale -Destination $destination
+
+    Write-Output "Created $destination ($($scaled.Width)x$($scaled.Height), nearest-neighbor scale ${scale}x)"
+    Write-Output "  panel 1: $($referenceImage.Label) ($($referenceImage.Width)x$($referenceImage.Height))"
+    Write-Output "  panel 2: $($candidateImage.Label) ($($candidateImage.Width)x$($candidateImage.Height))"
+    if ($sameSize) {
+        Write-Output '  panel 3: difference (gray = same pixel, red = different pixel)'
+        $percent = [Math]::Round((100.0 * $difference.Different) / $difference.PixelCount, 1)
+        Write-Output "Different pixels: $($difference.Different) of $($difference.PixelCount) ($percent%): $($difference.ColorChanged) changed color or alpha, $($difference.BecameTransparent) opaque in the reference but transparent in the candidate, $($difference.BecameOpaque) transparent in the reference but opaque in the candidate"
+    }
+    else {
+        Write-Output "Sizes differ (reference $($referenceImage.Width)x$($referenceImage.Height), candidate $($candidateImage.Width)x$($candidateImage.Height)); no difference panel was made."
+    }
+}
+
 if ($ListPresets) {
     Show-Presets
     return
 }
 
-if ([string]::IsNullOrWhiteSpace($InputFile)) {
+$inputs = @(@($InputFile) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+
+if ($Compose -and $Compare) {
+    throw 'Use either -Compose or -Compare, not both.'
+}
+
+if ($Compose) {
+    if ($inputs.Count -lt 1) {
+        throw '-Compose needs at least one .pixelart or .png input.'
+    }
+    Invoke-ComposeMode -Inputs $inputs
+    return
+}
+
+if ($Compare) {
+    Invoke-CompareMode -Inputs $inputs
+    return
+}
+
+if (-not [string]::IsNullOrWhiteSpace($Reference)) {
+    throw '-Reference is only used with -Compare.'
+}
+
+if ($inputs.Count -eq 0) {
     throw 'Provide a .pixelart specification file, or use -ListPresets.'
 }
 
-$resolvedInput = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($InputFile)
+if ($inputs.Count -gt 1) {
+    throw 'Provide one specification for a normal render. Add -Compose to place several inputs on one sheet, or -Compare with -Reference to check one candidate against another image.'
+}
+
+$resolvedInput = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($inputs[0])
 if (-not [IO.File]::Exists($resolvedInput)) {
     throw "Input file not found: $resolvedInput"
 }

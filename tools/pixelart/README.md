@@ -50,6 +50,39 @@ tools\pixelart\pixelart.cmd artwork\custom-tile.pixelart -OutputFile artwork\cus
 
 Every preview is generated directly from the same RGBA pixel buffer as the delivery PNG. Enlargement uses nearest-neighbor replication only, and every transparent source pixel remains transparent in the review output.
 
+## Sheets: several candidates on one image
+
+`-Compose` renders every listed input (`.pixelart` grids and existing `.png` files, mixed freely) onto one sheet, so a candidate set can be judged in one look instead of one file at a time:
+
+```bat
+tools\pixelart\pixelart.cmd -Compose candidates\a.pixelart candidates\b.pixelart textures\current.png -Columns 3 -Background #303030
+```
+
+- Cells are equal, sized by the largest input; each image sits at the top-left of its cell.
+- `-Columns` sets the cells per row (default: everything on one row). `-Gap` sets the gap in source pixels between cells and around the border (default 1).
+- `-Background` fills the sheet with `#RRGGBB` or `#RRGGBBAA` (default transparent). Transparent source pixels show the background; other pixels are copied without blending.
+- The sheet is scaled with nearest-neighbor replication; `-PreviewScale` overrides the automatic scale.
+- The default output is `<first input stem>-sheet.png` beside the first input. `-OutputFile` selects another destination. `-Force` replaces an existing file.
+- `-Preset`, `-Width`, and `-Height` apply to every input, so one call can require that every member is 16x16.
+- The tool prints the cell order (row and column for each input) because the sheet carries no labels.
+
+## Compare: a candidate against a reference
+
+`-Compare` puts a reference and a candidate side by side and adds a difference panel when both have the same size:
+
+```bat
+tools\pixelart\pixelart.cmd -Compare candidates\a.pixelart -Reference textures\current.png -PreviewScale 8
+```
+
+- Panel 1 is the reference, panel 2 the candidate, panel 3 the difference: a pixel that is identical in both becomes the grayscale candidate pixel, a pixel that differs in any channel becomes opaque red.
+- The output line reports how many pixels differ and how the differences split: color or alpha changed, opaque in the reference but transparent in the candidate, transparent in the reference but opaque in the candidate.
+- Either side may be a `.pixelart` grid or a `.png`. When the sizes differ, the two panels are still produced and the tool says that no difference panel was made.
+- The default output is `<candidate stem>-compare.png` beside the candidate; `-OutputFile`, `-Force`, `-Gap`, `-Background`, and `-PreviewScale` work as for `-Compose`.
+
+Reading an existing PNG uses the System.Drawing decoder that ships with Windows .NET, so any PNG color type works. Writing never depends on it. GDI+ may round the color of a semi-transparent pixel by one step; fully opaque and fully transparent pixels are read exactly, and a PNG this tool wrote compares equal to its own specification.
+
+`-Compose` and `-Compare` cannot be combined with `-Review`, `-TilePreview`, `-ReviewDirectory`, `-OutputDirectory`, `-OutputBesideSpecification`, or `-Name`.
+
 ## Specification format
 
 ```text
@@ -132,4 +165,4 @@ Run the dependency-free test script:
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\pixelart\tests\run-tests.ps1
 ```
 
-The tests decode the generated PNGs enough to verify dimensions, RGBA color type, transparent pixels, exact palette colors, alpha values, overwrite protection, preset mismatch rejection, explicit specification-relative output, nearest-neighbor zoom, transparency-preserving grayscale conversion, and 3x3 block tiling.
+The tests decode the generated PNGs enough to verify dimensions, RGBA color type, transparent pixels, exact palette colors, alpha values, overwrite protection, preset mismatch rejection, explicit specification-relative output, nearest-neighbor zoom, transparency-preserving grayscale conversion, 3x3 block tiling, sheet composition (cell placement, background fill, mixed `.pixelart` and `.png` inputs, reported cell order), comparison (panel placement, gray and red difference marks, difference counts, a rendered PNG equal to its own specification), and the rejection of mixed modes.

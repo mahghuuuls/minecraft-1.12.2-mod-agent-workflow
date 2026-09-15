@@ -194,7 +194,7 @@ Do not classify a feature as feasible merely because a possible approach can be 
 6. Research relevant APIs, libraries, mods, dependencies, and technical mechanisms, including advanced build capabilities deferred by Project Setup when the approved behavior makes them relevant.
 7. Decide whether any dependency source repository needs a local reference checkout.
 8. Request owner approval before cloning dependency source locally unless the owner already provided the local path or repository for this purpose.
-9. Update `workspace/documentation/dependency-references.md` when dependency source references are approved or changed, including the verified registry id of every item, block, or entity of another mod the concept names, with the source it was read from (registration code or language keys, not asset file names).
+9. Update `workspace/documentation/dependency-references.md` when dependency source references are approved or changed, including the verified registry id of every item, block, or entity of another mod the concept names, with the source it was read from (registration code or language keys, not asset file names). `tools/mod-jar/mod-jar.cmd find -Text <name> <jar>` shows which of those sources a jar carries for a name.
 10. Evaluate candidate libraries against the project defaults, recording exact inspected artifacts separately from minimum-only shipping constraints.
 11. Record evidence and confidence for each conclusion.
 12. Classify the feasibility of every high-level feature.

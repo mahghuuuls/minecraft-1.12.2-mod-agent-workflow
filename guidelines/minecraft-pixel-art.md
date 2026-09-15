@@ -92,11 +92,13 @@ The normal input is a `.pixelart` token grid with an explicit palette. Use `@pre
 
 Render every candidate with `-Review`. This produces transparent nearest-neighbor zoom and grayscale previews from the exact delivery pixels. A `block` preset also produces the required transparent 3x3 tiled review automatically; use `-TilePreview` for another custom-sized repeating texture.
 
+To present several candidates, or a candidate next to the textures it must sit beside in game, use `-Compose` to put the specifications and existing PNGs on one sheet at one scale. To check a reconstruction against its reference, use `-Compare <candidate> -Reference <png or pixelart>`; the difference panel marks every changed pixel and the output counts them.
+
 The bundled default output is derived from `@name`, not from the specification's directory. For several specifications belonging to one approved asset workspace, either pass one shared asset-level `-OutputDirectory` or store each specification in its intended output directory and use `-OutputBesideSpecification`. Do not rely on the default when it would scatter one candidate set across name-derived sibling workspaces.
 
 Do not use a diffusion-generated image as the final pixel-art asset. An image generator may help explore broad subject or composition ideas, but the final asset must be reconstructed deliberately on the exact target grid and pass every review in this guideline.
 
-When generated exploration becomes an approved composition reference, technical validity and basic readability are not enough. Put the reference and exact-grid reconstruction side by side and check the recorded defining invariants before candidate presentation. Preserve each invariant or record the concrete grid constraint that requires a deviation. Reject aggressive simplification that removes the selected concept's perspective, mass, setting scale, silhouette, or other defining structure even when the result is still recognizable as the general subject.
+When generated exploration becomes an approved composition reference, technical validity and basic readability are not enough. Put the reference and exact-grid reconstruction side by side (`-Compare` with `-Reference` does this at one scale) and check the recorded defining invariants before candidate presentation. Preserve each invariant or record the concrete grid constraint that requires a deviation. Reject aggressive simplification that removes the selected concept's perspective, mass, setting scale, silhouette, or other defining structure even when the result is still recognizable as the general subject.
 
 Do not create the final by drawing at high resolution and shrinking. Do not use blur, smooth brushes, automatic antialiasing, bilinear or bicubic resampling, or an image-processing step that introduces many nearly identical colors. Inspection previews may be enlarged only with nearest-neighbor scaling.
 

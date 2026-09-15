@@ -49,6 +49,10 @@ Do all of this first. A session that stops because a bundle has a typo has waste
 - **Set the configuration yourself.** Say exactly which file and which values, and remember this mod
   family has no config screen: a config change means editing the file and restarting. Group the
   cards so the session needs the fewest restarts.
+- **Check copied jars before the launch.** When the session loads jars copied from another
+  instance, run `tools/mod-jar/mod-jar.cmd check -Folder <run/mods> -Provided <mod ids the dev
+  classpath already has>` and fix what it reports. A missing dependency or a duplicate costs the
+  owner a launch.
 - **Preserve any log that a restart would rotate away.**
 - **Present one session map**, then stop. The map is: the runtime, the ordered card titles and what
   each shows, the config groups and their values, every restart point, the shared setup and final
@@ -65,6 +69,10 @@ and keep the headings identical from card to card so the owner never has to rele
 bundle's end record, its failures, its readiness marks, and the categories it enabled — a bundle
 whose command was accepted is not a bundle that ran. For stateful or failure-sensitive cards, read
 the evidence before sending the next card.
+
+`tools/session-log/session-log.cmd` does the reading: it finds each launch across `latest.log` and
+the rotated files, slices records and lines between two marks or around one bundle run, and lists
+errors with their stack traces. Cite what you read by file and line.
 
 **Ask for one thing only: what the logs cannot hold.** Visual layout, animation, colour, sound,
 whether an input felt right, real multi-client behaviour, an environment whose files you cannot
@@ -98,6 +106,8 @@ make the reset observable when an unapplied reset could look like a pass.
   unobserved. An unobserved card is not a passed card, and recording the gap is how it gets picked
   up by the next session instead of being lost.
 - Turn off temporary diagnostics. Restore temporary config and world state.
+- Run `scripts/validate-workspace.ps1` from the workflow root after writing the results, and fix
+  what it reports.
 - Say whether they can close the game.
 - Do not make them restate anything they already reported.
 

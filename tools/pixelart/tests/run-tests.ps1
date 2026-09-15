@@ -194,6 +194,57 @@ try {
     Assert-Equal $tilePng.Height 96 'Block tile review height is wrong.'
     Assert-Pixel $tilePng 95 95 ([byte[]]@(52, 86, 120, 255)) 'Block tile review changed the repeated pixels.'
 
+    $twoSpec = Join-Path $TestDirectory 'two.pixelart'
+    [IO.File]::WriteAllText($twoSpec, "@size 2x2`r`nA .`r`n. A`r`nA = #FF0000`r`n")
+    $twoChangedSpec = Join-Path $TestDirectory 'two-changed.pixelart'
+    [IO.File]::WriteAllText($twoChangedSpec, "@size 2x2`r`nA .`r`n. B`r`nA = #FF0000`r`nB = #00FF00`r`n")
+
+    $sheetOutput = Join-Path $TestDirectory 'sheet.png'
+    $composeOutput = @(& $Tool -Compose $twoSpec $exampleOutput $twoChangedSpec -Columns 2 -PreviewScale 3 -Background '#202020' -OutputFile $sheetOutput)
+    $sheetPng = Read-Png -Path $sheetOutput
+    Assert-Equal $sheetPng.Width 63 'Compose sheet width is wrong (2 columns of 9x9 cells, gap 1, scale 3).'
+    Assert-Equal $sheetPng.Height 63 'Compose sheet height is wrong (2 rows of 9x9 cells, gap 1, scale 3).'
+    Assert-Pixel $sheetPng 0 0 ([byte[]]@(32, 32, 32, 255)) 'Compose background was not filled.'
+    Assert-Pixel $sheetPng 3 3 ([byte[]]@(255, 0, 0, 255)) 'Compose did not place the first input in the first cell.'
+    Assert-Pixel $sheetPng 6 3 ([byte[]]@(32, 32, 32, 255)) 'Compose painted a transparent source pixel over the background.'
+    Assert-Pixel $sheetPng 45 15 ([byte[]]@(242, 254, 255, 255)) 'Compose did not place the PNG input in the second cell.'
+    Assert-Pixel $sheetPng 6 36 ([byte[]]@(0, 255, 0, 255)) 'Compose did not place the third input on the second row.'
+    Assert-Equal (($composeOutput -join "`n") -like '*cell row 2 column 1: two-changed.pixelart (2x2)*') $true 'Compose did not report the cell order.'
+
+    $compareOutput = @(& $Tool -Compare $twoChangedSpec -Reference $twoSpec -PreviewScale 4)
+    $compareFile = Join-Path $TestDirectory 'two-changed-compare.png'
+    Assert-Equal ([IO.File]::Exists($compareFile)) $true 'Compare did not create its default output beside the candidate.'
+    $comparePng = Read-Png -Path $compareFile
+    Assert-Equal $comparePng.Width 40 'Compare sheet width is wrong (three 2x2 panels, gap 1, scale 4).'
+    Assert-Equal $comparePng.Height 16 'Compare sheet height is wrong.'
+    Assert-Pixel $comparePng 4 4 ([byte[]]@(255, 0, 0, 255)) 'Compare did not place the reference in panel 1.'
+    Assert-Pixel $comparePng 20 8 ([byte[]]@(0, 255, 0, 255)) 'Compare did not place the candidate in panel 2.'
+    Assert-Pixel $comparePng 28 4 ([byte[]]@(77, 77, 77, 255)) 'Compare difference panel did not gray an unchanged pixel.'
+    Assert-Pixel $comparePng 32 4 ([byte[]]@(0, 0, 0, 0)) 'Compare difference panel changed a transparent unchanged pixel.'
+    Assert-Pixel $comparePng 32 8 ([byte[]]@(255, 32, 32, 255)) 'Compare difference panel did not mark the changed pixel red.'
+    Assert-Equal (($compareOutput -join "`n") -like '*Different pixels: 1 of 4 (25%)*') $true 'Compare did not report the difference count.'
+
+    $identicalOutput = @(& $Tool -Compare $exampleOutput -Reference $Example -OutputFile (Join-Path $TestDirectory 'identical.png'))
+    Assert-Equal (($identicalOutput -join "`n") -like '*Different pixels: 0 of 81 (0%)*') $true 'A rendered PNG did not compare equal to its own specification.'
+
+    $composeReviewRejected = $false
+    try {
+        & $Tool -Compose $twoSpec -Review 2>$null
+    }
+    catch {
+        $composeReviewRejected = $_.Exception.Message -like '*cannot be combined with -Review*'
+    }
+    Assert-Equal $composeReviewRejected $true 'Compose combined with -Review was not rejected.'
+
+    $multipleInputsRejected = $false
+    try {
+        & $Tool $twoSpec $twoChangedSpec -OutputFile (Join-Path $TestDirectory 'never.png') 2>$null
+    }
+    catch {
+        $multipleInputsRejected = $_.Exception.Message -like '*Provide one specification for a normal render*'
+    }
+    Assert-Equal $multipleInputsRejected $true 'Several inputs without -Compose were not rejected.'
+
     $defaultAssetName = 'automated_default_' + [Guid]::NewGuid().ToString('N')
     $defaultSpec = Join-Path $TestDirectory 'default.pixelart'
     [IO.File]::WriteAllText($defaultSpec, "@size 1x1`r`n@name $defaultAssetName`r`nX`r`nX = #123456`r`n")

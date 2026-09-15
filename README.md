@@ -111,7 +111,7 @@ minecraft-1.12.2-mod-agent-workflow/
 - `stages/` defines setup and development stages.
 - `procedures/` contains callable operational checks that do not create another stage lifecycle.
 - `scripts/` contains lightweight process-document consistency checks.
-- `tools/` contains bundled standalone utilities used by the workflow when its task-specific guidance routes to them.
+- `tools/` contains bundled standalone utilities used by the workflow when its task-specific guidance routes to them: `agent-session`, `evidence-pack`, `mod-jar`, `pixelart`, and `session-log`, each with its own README and tests.
 - `setup/` contains optional manual setup, owner-default templates, artifact templates, defaults, and initialization procedures.
 - `references/` contains curated technical links.
 - `skills/` contains optional agent skills. Nothing in the workflow requires them; see [Working With Skills](#working-with-skills).
