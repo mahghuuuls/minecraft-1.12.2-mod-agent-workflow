@@ -209,7 +209,7 @@ Verify current destination requirements during Release Presentation.
 
 For each approved distribution platform, verify current image requirements and prepare a compliant export. For CurseForge specifically, the current safe export is an original 400x400 PNG; do not use WebP or blank/copied artwork.
 
-Also prepare the in-mod asset at the resolution and path required by the project's metadata. It may share the approved design but must be validated in the actual mod list or UI where it appears.
+Also prepare the in-mod asset at the resolution and path required by the project's metadata. It may share the approved design but must be validated in the actual mod list or UI where it appears. The in-mod asset changes the jar, so settle it before the release-preparation commit of Release Presentation; where the mod registers a creative tab, that tab shows the mod icon too (the item carrying it, or the image), and the same in-game check covers both.
 
 Record dimensions, format, file size, path, and validation results.
 
@@ -219,7 +219,7 @@ After owner approval:
 
 1. Place delivery exports under `workspace/artwork/icon/final/`.
 2. Copy only required approved assets into the mod repository.
-3. Confirm metadata points to the correct in-mod asset.
+3. Confirm metadata points to the correct in-mod asset, and that any creative tab the mod registers shows the same icon.
 4. Record final paths and reference provenance in `<artifact-root>/release-presentation.md`.
 5. Preserve rejected candidates only when the owner requests it.
 

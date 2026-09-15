@@ -103,6 +103,7 @@ Do not leave example values in initialized project files.
 - Player/download-facing copy should include the project GitHub/source link when the repository URL is known, unless the owner explicitly omits it or the selected platform already provides a sufficiently visible source link.
 - Keep internal workflow details, implementation evidence, validation logs, bytecode checks, QA-style test reports, and obvious repository boilerplate out of public documentation unless the owner explicitly asks for them or the information affects normal player decisions.
 - Avoid internal engineering qualifiers such as "best-effort", "runtime evidence", or "implementation limitation" in public copy unless the user impact is explained plainly.
+- Player/download-facing copy states what the mod does in plain declarative sentences. It does not sell: no evocative fragments, no counts of content, no superlatives, unless the owner asks for that voice. Hyperlink every other mod the copy names.
 - Avoid repeating platform-displayed metadata such as Minecraft version, loader, or dependency fields in mod-page prose unless the information affects player understanding, installation, or compatibility decisions.
 - Use a single combined document only when the owner explicitly chooses that structure.
 

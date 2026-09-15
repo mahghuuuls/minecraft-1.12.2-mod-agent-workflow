@@ -456,7 +456,7 @@ Use these evidence tiers consistently:
 
 1. **Automated or static:** compilation, unit tests, static inspection, or artifact inspection.
 2. **Development client:** `runClient`, including its integrated server when applicable.
-3. **Development dedicated server:** `runServer`. Needs the server configuration described under Development Dedicated Server Setup in `stages/7-implementation.md`.
+3. **Development dedicated server:** `runServer`. Needs the server configuration described under Development Dedicated Server Setup in `stages/7-implementation.md`. Optional mods that carry Mixins may not load here even when they load in `runClient`; plan checks that need them on a server for tier 4 or 5.
 4. **Packaged clean environment:** the built jar in a clean Forge client or dedicated server.
 5. **Target modpack or alternate runtime:** the built jar in the intended pack, including Cleanroom when selected.
 6. **External multiplayer:** a separately operated multiplayer environment.

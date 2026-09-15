@@ -101,7 +101,7 @@ Act as a release documentation editor.
 - Record new or changed public-facing terms in the glossary when they affect how players, modpack authors, config users, or later documents should refer to a feature.
 - Keep repository README and mod-page copy separate by default unless the owner explicitly chooses a combined document.
 - Describe only implemented and approved behavior.
-- In player/download-facing copy, explain why a player would want the mod before listing technical details.
+- In player/download-facing copy, state what the mod does in plain declarative sentences before listing details. Do not sell it: no evocative fragments, no counts of content, no superlatives, unless the owner asks for that voice.
 - Keep configuration and multiplayer notes high-level unless a player must follow a specific rule.
 - Keep internal engineering evidence out of public files.
 - Keep technical evidence, unresolved validation gaps, and ownership decisions in `release-presentation.md`.
@@ -148,13 +148,15 @@ Player/download-facing copy should live in a separate file by default, such as `
 
 Draft the smallest useful mod page first and expand it only when a normal player needs more information to decide, install, or configure the mod. Omit template-shaped sections that add no useful information. As a drafting guardrail for a narrow mod, keep the first draft to roughly 200 prose words or fewer, excluding configuration examples and required legal text. This is not a publication limit. For a narrow mod, the default shape is:
 
-1. One short opening paragraph explaining the value.
+1. One short opening paragraph stating what the mod does. Plain declarative sentences; no evocative fragments, content counts, or superlatives unless the owner asks for them.
 2. The approved AI usage disclaimer.
 3. A few feature bullets only when the opening does not already communicate the behavior.
 4. One compact configuration example when configuration is central.
 5. One plain installation-side statement.
 6. Only limitations that materially affect normal installation or use.
 7. A useful source or companion-project link when applicable.
+
+For a content mod with several integrations (content per supported mod), the default shape after the disclaimer is one section per integration, one line per item it adds, and no totals anywhere, so a later release adds a section without rewriting the page. Hyperlink every other mod named, on its first mention or in its section heading, to its page on the selected distribution platform after checking that the page exists.
 
 Before expanding that first draft, remove facts already supplied by the distribution page's title and metadata. Normally do not repeat the mod name as a heading or in the opening sentence, restate the game or Minecraft version, list loader/runtime test results, or announce that there are no dependencies. State a dependency only when one exists or its absence resolves a real installation ambiguity. Keep required-side installation to one plain sentence unless the topology is unusual. Translate lifecycle terminology into player language, for example `Changes require a restart.` rather than `server or integrated-server restart.`
 
@@ -182,7 +184,7 @@ When the repository URL is known, include a GitHub/source link by default unless
 Review mod-page copy for:
 
 - Audience fit: player/download-page readers, not source repository readers
-- Tone: preserve owner-provided introductory wording when supplied
+- Tone: plain statements of what the mod does, not promotional copy; preserve owner-provided introductory wording when supplied
 - Repetition: avoid repeating the mod name or the same compatibility point unnecessarily
 - Link usefulness: include relevant external links when they help players
 - Platform redundancy: remove or justify Minecraft version, loader, dependency, and other metadata when the distribution platform already displays it and the prose does not need it
@@ -254,6 +256,10 @@ The distribution-platform release changelog is the short text pasted into the re
 ## Optional Publication Assets
 
 Icon and screenshot work is optional publication-asset work. It must not block README/changelog approval, release artifact validation, or handoff approval when it is owner-managed or deferred.
+
+The in-mod logo is the exception in timing, not in blocking: the file the mod metadata names (`logoFile` in `mcmod.info`) ships inside the jar, so the icon question is asked at the start of this stage, before the release-preparation commit. An icon decided in time goes into that commit; a deferred icon means the jar ships without an in-mod logo, and the presentation record says so. Deciding it after packaging costs another commit, another clean build, and a rewritten handoff.
+
+Where the mod registers a creative tab, the tab's icon is the same decision as the mod icon: the item that carries the mod icon, or the icon image itself. A placeholder such as "the first registered item" ships unless someone notices, so the packaged-client check of the last campaign, or the release inspection, looks at the creative tab.
 
 Use the release ownership matrix from Project Setup.
 
@@ -356,7 +362,7 @@ Do not use the internal record as public copy.
 8. Draft or update repository `CHANGELOG.md` when agent-managed, then draft the separate distribution-platform release changelog for its narrower player audience. For a first public release, default the platform text to `Initial release`.
 9. Prepare a CurseForge-style summary or description only as reusable public copy, not as platform-field research.
 10. Add high-level configuration and player-facing multiplayer/client/server notes when applicable.
-11. Record icon and screenshot paths as owner-provided, agent-managed, or deferred.
+11. Record icon and screenshot paths as owner-provided, agent-managed, or deferred. Ask the icon question before step 18, so an icon decided now ships in the release-preparation commit (the in-mod logo and, where one exists, the creative tab icon); a deferred icon is recorded as such.
 12. Follow icon or screenshot workflows only when those areas are agent-managed or explicitly assigned.
 13. Offer a screenshot shot list unless screenshots are deferred, stage any scenario the owner accepts, and revert staged state after capture.
 14. When CurseForge is selected, perform the CurseForge Markdown compatibility review and give the owner the rendered-preview checklist.
@@ -366,7 +372,7 @@ Do not use the internal record as public copy.
 18. Inspect the mod repository, then present the complete public materials, release version, intended release-file scope, and proposed commit message before final artifact validation. The checkpoint may ask the owner to (a) approve the materials and (b) authorize the focused release-preparation commit in one response, but the two decisions must be labeled separately.
 19. Treat public-material approval and commit authorization as separate authorization boundaries even when requested together. Public-material approval alone does not authorize the commit.
 20. If the materials are approved and the commit is authorized, commit only the approved release/version/public-material changes and verify the repository is clean at the resulting revision.
-21. If release validation is agent-managed, run the approved clean build from that clean committed revision, identify exactly one normal distributable JAR under `<mod-repository>/build/libs/`, inspect it, read its manifest and confirm every attribute resolves to content in the jar, calculate its checksum, leave it there as the canonical upload source, and record that path and identity in the handoff. Remove no auxiliary build output merely because it is not uploadable, but reject stale normal distributable JARs from older versions.
+21. If release validation is agent-managed, run the approved clean build from that clean committed revision, identify exactly one normal distributable JAR under `<mod-repository>/build/libs/`, inspect it, read its manifest and confirm every attribute resolves to content in the jar, confirm the in-mod logo the metadata names is in the jar (or that no logo is named and the record says the icon was deferred), calculate its checksum, leave it there as the canonical upload source, and record that path and identity in the handoff. Remove no auxiliary build output merely because it is not uploadable, but reject stale normal distributable JARs from older versions.
 22. If release packaging is owner-managed, record the approved source revision, expected command/artifact pattern, and owner-managed boundary instead of building.
 23. When the toolkit was used, review its feedback artifact and record which entries remain Candidate, Confirmed, or Reported; do not modify or report to the external toolkit project without separate authorization.
 24. Present the completed internal presentation record and release handoff for stage approval. In the same chat response, include the exact distribution-platform release changelog in a clearly labeled paste-ready block.
