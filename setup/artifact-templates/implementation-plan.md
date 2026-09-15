@@ -14,9 +14,9 @@
 
 ## Issue Summary
 
-| Issue | Title | Type | Status | Dependencies |
-| --- | --- | --- | --- | --- |
-| IMP-001 |  | Vertical Slice | Ready |  |
+| Issue | Title | Type | Dependencies |
+| --- | --- | --- | --- |
+| IMP-001 |  | Vertical Slice |  |
 
 ## Dependency Graph
 

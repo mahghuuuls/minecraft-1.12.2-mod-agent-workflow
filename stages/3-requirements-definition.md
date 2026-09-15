@@ -162,6 +162,10 @@ Use requirement priorities consistently:
 - **SHOULD:** Expected unless there is an approved reason to omit it.
 - **MAY:** Optional behavior that is permitted but not required.
 
+### Numeric Design Data
+
+When requirements carry a table of tuning numbers (per-item values, dials, scores, weights), keep those numbers in one machine-readable file under `workspace/documentation/` (CSV or JSON), name that file in the requirements as the authority, and let every other view be rendered from it or point at it: requirement text, a scoring or balance document, a public balance page, and tests that assert defaults. Never hand-copy the table into a second document. A changed number changes the source file, and each derived view is regenerated or re-checked from it in the same change. State in the requirements which file is the source and how each derived view is produced.
+
 ## Requirement Format
 
 Use stable identifiers such as `REQ-001`.

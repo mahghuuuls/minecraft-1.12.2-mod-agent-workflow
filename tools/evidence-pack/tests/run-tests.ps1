@@ -110,7 +110,8 @@ try {
     $manifestPath = Join-Path $outputDirectory 'manifest.json'
     $manifest = [IO.File]::ReadAllText($manifestPath) | ConvertFrom-Json
     Assert-Equal $manifest.checkpoint 'fixture-final' 'Checkpoint identity is wrong.'
-    Assert-Equal $manifest.toolVersion '1.1.0' 'Tool version is wrong.'
+    Assert-Equal $manifest.toolVersion '1.2.0' 'Tool version is wrong.'
+    Assert-Equal (@($manifest.runtimeSources)).Count 0 'A specification without runtimeSources recorded phantom runtime sources.'
     Assert-Equal $manifest.source.worktreeClean $true 'Clean fixture was recorded as dirty.'
     Assert-Equal $manifest.source.commit.Length 40 'Captured commit is not a complete SHA-1 object ID.'
     Assert-Equal $manifest.source.tree.Length 40 'Captured tree is not a complete SHA-1 object ID.'
@@ -197,6 +198,50 @@ try {
     try { & $Tool capture -Spec $insideSpecPath 2>$null | Out-Null }
     catch { $insideRejected = $_.Exception.Message -like '*must be outside the source repository*' }
     Assert-Equal $insideRejected $true 'Output inside the source repository was not rejected.'
+
+    $runtimeSpecification = ($specification | ConvertTo-Json -Depth 8) | ConvertFrom-Json
+    $runtimeSpecification.checkpoint = 'fixture-runtime'
+    $runtimeSpecification.outputDirectory = 'evidence/runtime-fixture'
+    $fixtureCommit = [string]$manifest.source.commit
+    $runtimeSpecification | Add-Member -NotePropertyName runtimeSources -NotePropertyValue @(
+        [ordered]@{ label = 'launch-1'; commit = $fixtureCommit; worktreeClean = $true },
+        [ordered]@{ label = 'launch-2'; commit = $fixtureCommit; worktreeClean = $false; note = 'one recipe file edited before the launch' }
+    )
+    $runtimeSpecPath = Join-Path $TestDirectory 'runtime-spec.json'
+    Write-Utf8 $runtimeSpecPath (($runtimeSpecification | ConvertTo-Json -Depth 8) + "`r`n")
+    $runtimeCaptureOutput = @(& $Tool capture -Spec $runtimeSpecPath)
+    Assert-Equal ($runtimeCaptureOutput -join "`n" -like '*Declared runtime sources: 2*') $true 'Capture did not report the declared runtime sources.'
+    $runtimeManifestPath = Join-Path $TestDirectory 'evidence\runtime-fixture\manifest.json'
+    & $Tool verify -Manifest $runtimeManifestPath | Out-Null
+    $runtimeManifest = [IO.File]::ReadAllText($runtimeManifestPath) | ConvertFrom-Json
+    Assert-Equal $runtimeManifest.runtimeSources.Count 2 'Declared runtime sources were not recorded in the manifest.'
+    Assert-Equal $runtimeManifest.runtimeSources[0].sameAsCapture $true 'A clean runtime at the capture commit was not marked as the same source.'
+    Assert-Equal $runtimeManifest.runtimeSources[1].sameAsCapture $false 'A dirty runtime was marked as the same source as the capture.'
+    Assert-Equal $runtimeManifest.runtimeSources[1].note 'one recipe file edited before the launch' 'The dirty runtime note was not retained.'
+    $runtimeSummary = [IO.File]::ReadAllText((Join-Path $TestDirectory 'evidence\runtime-fixture\summary.md'))
+    Assert-Equal ($runtimeSummary -like '*## Declared Runtime Sources*') $true 'Summary did not list the declared runtime sources.'
+    $runtimeInspectOutput = @(& $Tool inspect -Manifest $runtimeManifestPath)
+    Assert-Equal ($runtimeInspectOutput -join "`n" -like '*Declared runtime source: launch-2*') $true 'Inspect did not print the declared runtime sources.'
+
+    $undeclaredDirtySpecification = ($runtimeSpecification | ConvertTo-Json -Depth 8) | ConvertFrom-Json
+    $undeclaredDirtySpecification.outputDirectory = 'evidence/runtime-undeclared-fixture'
+    $undeclaredDirtySpecification.runtimeSources[1].note = ''
+    $undeclaredDirtySpecPath = Join-Path $TestDirectory 'runtime-undeclared-spec.json'
+    Write-Utf8 $undeclaredDirtySpecPath (($undeclaredDirtySpecification | ConvertTo-Json -Depth 8) + "`r`n")
+    $undeclaredDirtyRejected = $false
+    try { & $Tool capture -Spec $undeclaredDirtySpecPath 2>$null | Out-Null }
+    catch { $undeclaredDirtyRejected = $_.Exception.Message -like '*must say what differed*' }
+    Assert-Equal $undeclaredDirtyRejected $true 'A dirty runtime source without a note was not rejected.'
+
+    $shortCommitSpecification = ($runtimeSpecification | ConvertTo-Json -Depth 8) | ConvertFrom-Json
+    $shortCommitSpecification.outputDirectory = 'evidence/runtime-short-fixture'
+    $shortCommitSpecification.runtimeSources[0].commit = 'abc123'
+    $shortCommitSpecPath = Join-Path $TestDirectory 'runtime-short-spec.json'
+    Write-Utf8 $shortCommitSpecPath (($shortCommitSpecification | ConvertTo-Json -Depth 8) + "`r`n")
+    $shortCommitRejected = $false
+    try { & $Tool capture -Spec $shortCommitSpecPath 2>$null | Out-Null }
+    catch { $shortCommitRejected = $_.Exception.Message -like '*complete 40- or 64-character*' }
+    Assert-Equal $shortCommitRejected $true 'A truncated runtime source commit was not rejected.'
 
     $dirtyPath = Join-Path $repository 'dirty.txt'
     Write-Utf8 $dirtyPath 'dirty'

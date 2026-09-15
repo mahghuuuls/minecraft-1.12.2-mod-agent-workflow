@@ -304,7 +304,7 @@ function Write-Utf8File {
 }
 
 function New-SummaryText {
-    param($Checkpoint, $CapturedAt, $Source, $Tests, $Files, $Jars)
+    param($Checkpoint, $CapturedAt, $Source, $Tests, $Files, $Jars, $Runtimes)
 
     $lines = [System.Collections.Generic.List[string]]::new()
     $lines.Add("# Evidence Pack: $Checkpoint")
@@ -314,6 +314,11 @@ function New-SummaryText {
     $lines.Add("- Source tree: $($Source.tree)")
     $lines.Add("- Branch: $($Source.branch)")
     $lines.Add("- Worktree clean: $($Source.worktreeClean)")
+    if ($Runtimes.Count -gt 0) {
+        $lines.Add("- Declared runtime sources: $($Runtimes.Count), listed below")
+    } else {
+        $lines.Add('- Declared runtime sources: none; every retained runtime output is declared to come from the source commit and tree above')
+    }
     $lines.Add("- JUnit suites/tests: $($Tests.suites) / $($Tests.tests)")
     $lines.Add("- JUnit failures/errors/skipped: $($Tests.failures) / $($Tests.errors) / $($Tests.skipped)")
     $lines.Add("- Captured input files: $($Files.Count)")
@@ -324,6 +329,20 @@ function New-SummaryText {
     $lines.Add('| --- | --- | ---: | --- |')
     foreach ($file in $Files) {
         $lines.Add("| $($file.role) | ``$($file.retainedPath)`` | $($file.bytes) | ``$($file.sha256)`` |")
+    }
+
+    if ($Runtimes.Count -gt 0) {
+        $lines.Add('')
+        $lines.Add('## Declared Runtime Sources')
+        $lines.Add('')
+        $lines.Add('Declared by the specification and recorded as declared; the tool does not verify which tree a runtime output came from.')
+        $lines.Add('')
+        $lines.Add('| Label | Commit | Tree clean | Same as capture | Note |')
+        $lines.Add('| --- | --- | --- | --- | --- |')
+        foreach ($runtime in $Runtimes) {
+            $note = ([string]$runtime.note).Replace('|', '\|')
+            $lines.Add("| $($runtime.label) | ``$($runtime.commit)`` | $($runtime.worktreeClean) | $($runtime.sameAsCapture) | $note |")
+        }
     }
 
     if ($Jars.Count -gt 0) {
@@ -388,6 +407,27 @@ function Invoke-Capture {
     $requireClean = Get-OptionalBoolean $specification 'requireClean' $true
     if ($requireClean -and -not $worktreeClean) {
         throw "Evidence checkpoint '$checkpoint' requires a clean source worktree, but Git reported $($statusLines.Count) changed path(s)."
+    }
+
+    $runtimeSources = [System.Collections.Generic.List[object]]::new()
+    foreach ($runtime in @(Get-OptionalProperty $specification 'runtimeSources' @())) {
+        $runtimeLabel = [string](Get-OptionalProperty $runtime 'label' '')
+        Assert-SafeIdentifier $runtimeLabel 'runtime source label'
+        $runtimeCommit = ([string](Get-OptionalProperty $runtime 'commit' '')).Trim()
+        Assert-GitObjectId $runtimeCommit "Runtime source '$runtimeLabel' commit"
+        $runtimeCommit = $runtimeCommit.ToLowerInvariant()
+        $runtimeClean = Get-OptionalBoolean $runtime 'worktreeClean' $true
+        $runtimeNote = [string](Get-OptionalProperty $runtime 'note' '')
+        if (-not $runtimeClean -and [string]::IsNullOrWhiteSpace($runtimeNote)) {
+            throw "Runtime source '$runtimeLabel' declares a dirty tree, so its 'note' must say what differed from commit $runtimeCommit."
+        }
+        $runtimeSources.Add([ordered]@{
+            label = $runtimeLabel
+            commit = $runtimeCommit
+            worktreeClean = $runtimeClean
+            note = $runtimeNote
+            sameAsCapture = (($runtimeCommit -eq $commit) -and $runtimeClean)
+        })
     }
 
     $outputParent = [IO.Path]::GetDirectoryName($outputDirectory)
@@ -483,15 +523,16 @@ function Invoke-Capture {
         }
 
         $summaryPath = Join-Path $temporaryDirectory 'summary.md'
-        Write-Utf8File $summaryPath (New-SummaryText $checkpoint $capturedAt $source $tests $manifestFiles $jarInspections)
+        Write-Utf8File $summaryPath (New-SummaryText $checkpoint $capturedAt $source $tests $manifestFiles $jarInspections $runtimeSources)
         Add-GeneratedFileRecord $summaryPath 'summary.md' 'generated-summary' $destinations $manifestFiles
 
         $manifestObject = [ordered]@{
             schemaVersion = 1
-            toolVersion = '1.1.0'
+            toolVersion = '1.2.0'
             checkpoint = $checkpoint
             capturedAtUtc = $capturedAt
             source = $source
+            runtimeSources = @($runtimeSources)
             tests = $tests
             files = @($manifestFiles)
             jars = @($jarInspections)
@@ -505,6 +546,7 @@ function Invoke-Capture {
         Write-Output "Created evidence pack $outputDirectory"
         Write-Output "Manifest SHA-256 $manifestHash"
         Write-Output "Source $commit (tree $tree, clean=$worktreeClean)"
+        Write-Output "Declared runtime sources: $($runtimeSources.Count)"
         Write-Output "JUnit $totalTests tests across $totalSuites suites; failures=$totalFailures errors=$totalErrors skipped=$totalSkipped"
     }
     catch {
@@ -529,6 +571,9 @@ function Read-ManifestWithIntegrity {
     if ((Get-OptionalProperty $manifestObject 'schemaVersion' 0) -ne 1) { throw 'Manifest schemaVersion must be 1.' }
     Assert-GitObjectId ([string]$manifestObject.source.commit) 'Manifest source commit'
     Assert-GitObjectId ([string]$manifestObject.source.tree) 'Manifest source tree'
+    foreach ($runtime in @(Get-OptionalProperty $manifestObject 'runtimeSources' @())) {
+        Assert-GitObjectId ([string](Get-OptionalProperty $runtime 'commit' '')) "Manifest runtime source '$(Get-OptionalProperty $runtime 'label' '')' commit"
+    }
     return [pscustomobject]@{ Path = $resolvedManifest; Root = $packRoot; Hash = $actualHash; Data = $manifestObject }
 }
 
@@ -619,6 +664,14 @@ function Invoke-Inspect {
     Write-Output "Source tree: $($loaded.Data.source.tree)"
     Write-Output "Branch: $($loaded.Data.source.branch)"
     Write-Output "Worktree clean: $($loaded.Data.source.worktreeClean)"
+    $declaredRuntimes = @(Get-OptionalProperty $loaded.Data 'runtimeSources' @())
+    if ($declaredRuntimes.Count -eq 0) {
+        Write-Output 'Declared runtime sources: none (every retained runtime output declared to come from the source commit)'
+    } else {
+        foreach ($runtime in $declaredRuntimes) {
+            Write-Output "Declared runtime source: $($runtime.label) commit $($runtime.commit) clean=$($runtime.worktreeClean) sameAsCapture=$($runtime.sameAsCapture) $($runtime.note)"
+        }
+    }
     Write-Output "JUnit: $($loaded.Data.tests.tests) tests / $($loaded.Data.tests.suites) suites / $($loaded.Data.tests.failures) failures / $($loaded.Data.tests.errors) errors / $($loaded.Data.tests.skipped) skipped"
     Write-Output "Retained files: $($loaded.Data.files.Count)"
     Write-Output "Manifest SHA-256: $($loaded.Hash)"

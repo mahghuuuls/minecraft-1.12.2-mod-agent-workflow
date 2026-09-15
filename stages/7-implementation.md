@@ -120,6 +120,7 @@ Act as a focused implementation agent.
 - Do not make product or architectural decisions without approval.
 - Record completion evidence in the issue file.
 - When an issue adds or changes player-facing text (item names, tooltips, journal or book text, effect names, death messages) or crafting recipes, present the strings and the recipe list in chat as one short packet at the issue's checkpoint, before the campaign that shows them in game. Neither the agent nor the harness can judge the owner's taste; the packet replaces discovering it mid-session and revising under a running game.
+- When an issue changes a number that has a machine-readable source under Stage 3's Numeric Design Data rule, change the source file first and regenerate or re-check every derived view (requirement text, balance documents, public pages, tests) in the same issue. A number that lives in two places is a drift waiting for the next review to find.
 - Use the planned evidence pack as the single source of volatile test totals, hashes, sizes, and retained-file identities. Record claim-specific interpretations in issue prose instead of copying the same changing values into several current-state documents.
 - Move the issue to Review only after implementation verification succeeds or accepted waivers are recorded.
 - Do not mark the issue Done until independent review is complete or an eligible review limitation is explicitly accepted.
@@ -250,6 +251,7 @@ Use `tools/evidence-pack/evidence-pack.cmd` for every approved validation campai
 | An explicitly planned dirty pre-commit or pre-review boundary is needed | A provisional pack may use `requireClean: false`; record the dirty paths and do not present it as final evidence. |
 | A final issue or campaign checkpoint is captured | Require a clean source worktree unless an approved limitation explicitly makes that impossible. |
 | Source or any retained output changes after capture | Create a new immutable pack, mark the old pack superseded, and update the owning reference. Never overwrite the old pack. |
+| A retained runtime output (log, record, generated configuration) was produced from a tree other than the capture commit, because session fixes were committed before the final capture or the runtime ran from a dirty tree | Declare each such runtime in the specification's `runtimeSources` (a label, the full commit it was based on, whether the tree was clean, and what differed). The manifest then carries both identities. A pack without `runtimeSources` declares that every retained runtime output came from the capture commit and tree. |
 
 An evidence pack is the single mechanical source of truth for its checkpoint's source commit/tree, worktree state, retained paths, byte sizes, SHA-256 identities, JUnit totals, and JAR inventory. Issue files and ledgers should reference the manifest and record only claim-specific facts that matter to acceptance. Do not copy the complete manifest inventory into several documents.
 
@@ -259,6 +261,7 @@ Before capture:
 - Inspect the specification's exact source repository, output directory, JUnit groups, retained files, destinations, and source-cleanliness policy.
 - Keep the output outside the mod repository and use a new checkpoint directory. Never overwrite an earlier pack.
 - Use `requireClean: false` only when the approved checkpoint intentionally captures dirty pre-commit state; the manifest must remain truthful about that state.
+- State the runtime provenance honestly. A campaign often runs across several launches while fixes land, and the clean commit captured at the end is newer than the tree the owner played. List every retained runtime output's real source under `runtimeSources`; a jar in the pack that never ran in the session is only honest evidence when the manifest says so.
 
 After capture, run `verify` against the retained manifest before independent review or campaign evidence follow-up. Reference the manifest path and hash in the owning issue. When a correction changes source or any retained output, create a new pack, mark the previous checkpoint superseded, and update the reference; do not rewrite the old pack to make it appear current.
 

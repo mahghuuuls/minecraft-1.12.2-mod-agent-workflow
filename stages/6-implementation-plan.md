@@ -233,6 +233,8 @@ Use these statuses:
 - **Done:** Acceptance criteria, verification, and review are complete.
 - **Deferred:** Intentionally excluded from the current release.
 
+A status is written in exactly one place: the `**Status:**` line of the issue file. The Issue Summary table lists identity, title, type, and dependencies and carries no status column; `project-status.md` names the current issue and points at the issue files; session maps and results cite issue IDs, not statuses. `scripts/validate-workspace.ps1` prints a roll-up of every issue's status from the files whenever it runs, so nobody needs a second copy to see the whole picture. A restated status is a second copy that drifts.
+
 Only issues with the **Ready** status should be given to an implementation agent. The sole exception is advancing to the next named Ready issue inside an approved validation campaign after its predecessor reaches **Awaiting Validation** under `stages/7-implementation.md`.
 
 ## Issue Format

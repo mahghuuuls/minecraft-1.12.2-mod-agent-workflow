@@ -82,6 +82,23 @@ try {
 
     Assert-ExitCode 'valid workspace' 0 (Invoke-Validator)
 
+    $planNoStatus = @'
+# Implementation Plan
+
+## Issue Summary
+
+| Issue | Title | Type | Dependencies |
+| --- | --- | --- | --- |
+| IMP-001 | Fixture | Vertical Slice | None |
+'@
+    Write-Utf8 $planPath $planNoStatus
+    $noStatusResult = Invoke-Validator
+    Assert-ExitCode 'plan without a status column' 0 $noStatusResult
+    if ($noStatusResult.Output -notlike '*IMP-001 Ready*') {
+        throw "Validator did not print the issue status roll-up. Output: $($noStatusResult.Output)"
+    }
+    Write-Utf8 $planPath $planReady
+
     $cycleRoot = Join-Path $documentationRoot 'cycles/CYCLE-001-fixture'
     $cycleIssuesRoot = Join-Path $cycleRoot 'issues'
     New-Item -ItemType Directory -Path $cycleIssuesRoot -Force | Out-Null
@@ -136,7 +153,7 @@ try {
     Write-Utf8 $planPath $twoActivePlan
     Assert-ExitCode 'multiple active issues' 1 (Invoke-Validator)
 
-    Write-Host 'Workspace validator tests passed: valid state and cycle-scoped identifiers accepted; invalid status, missing stage artifacts, ledger or plan disagreement, and multiple active issues rejected.' -ForegroundColor Green
+    Write-Host 'Workspace validator tests passed: valid state, a plan without a status column (with the issue roll-up printed), and cycle-scoped identifiers accepted; invalid status, missing stage artifacts, ledger or plan disagreement, and multiple active issues rejected.' -ForegroundColor Green
 } finally {
     $resolvedTestRoot = [System.IO.Path]::GetFullPath($testRoot)
     $resolvedTempRoot = [System.IO.Path]::GetFullPath([System.IO.Path]::GetTempPath())

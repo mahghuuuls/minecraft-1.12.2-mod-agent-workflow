@@ -114,7 +114,7 @@ Create it when the first workflow begins. Record:
 - Current stage or workflow checkpoint
 - Status or disposition of every relevant stage
 - Approved output artifacts
-- Current implementation issue, when applicable
+- Current implementation issue ID, when applicable. The issue file holds its status; do not restate per-issue statuses or per-issue commit lists here.
 - Blocking questions or decisions. When a blocking question is tracked as a `Type: Decision` implementation issue, reference that issue instead of restating it here.
 - Manual publication state, when applicable
 
@@ -132,7 +132,7 @@ Record the disposition of each reusable stage for the active workflow. Dispositi
 
 Implementation issue statuses are defined by the Implementation Plan stage.
 
-`project-status.md` is the authoritative ledger for workflow, stage, cycle, issue, baseline, and blocking-decision status. When another project artifact or resume snapshot disagrees with it, stop and reconcile the evidence instead of silently choosing one.
+`project-status.md` is the authoritative ledger for workflow, stage, cycle, baseline, and blocking-decision status. Implementation issue status is authoritative in the issue file alone; the plan table, the ledgers, and the resume snapshot point at issues by ID and never restate a status, and `scripts/validate-workspace.ps1` prints the roll-up from the issue files. When another project artifact or resume snapshot disagrees with an authority, stop and reconcile the evidence instead of silently choosing one.
 
 Run `scripts/validate-workspace.ps1` after material ledger changes, before a session handoff, and when resuming a long project. The script is read-only and checks only mechanical consistency, including exact status values, active-item counts, structured paths, issue-plan agreement, and resume references. A passing script does not prove that an approval occurred or that the recorded decision is correct. Warnings require inspection but do not fail the command; errors must be reconciled against `project-status.md` and the underlying evidence rather than repaired automatically.
 
@@ -155,7 +155,7 @@ Use this file to reduce context reconstruction after chat forks, context compact
 - Active mod repository path
 - Active workflow, stage, or checkpoint as recorded in `project-status.md`
 - Artifact root
-- Current issue, when applicable
+- Current issue ID, when applicable (never its status)
 - Next action and required approval
 - Blocking questions
 - Deferred prerequisites

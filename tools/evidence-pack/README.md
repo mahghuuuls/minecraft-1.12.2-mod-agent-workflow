@@ -62,6 +62,17 @@ The launcher applies `ExecutionPolicy Bypass` only to that child process; it doe
 
 `requireClean` defaults to `true`. Set it to `false` only when the approved workflow intentionally captures a dirty pre-checkpoint boundary. The manifest records the full porcelain status either way; disabling the gate does not describe the source as clean.
 
+`runtimeSources` is optional. It declares which tree each retained runtime output (a log, a record, a generated configuration) was actually produced from, for the common case where a campaign ran across several launches while fixes were committed, so the clean commit captured at the end is newer than the tree the owner played:
+
+```json
+"runtimeSources": [
+  { "label": "launch-1", "commit": "<full commit id>", "worktreeClean": true },
+  { "label": "launch-2", "commit": "<full commit id>", "worktreeClean": false, "note": "the Skyroot recipe fix, uncommitted at the time" }
+]
+```
+
+Each entry needs a safe `label` and a complete commit id; `worktreeClean` defaults to `true`; a dirty entry must carry a `note` saying what differed. The tool copies the declarations into the manifest with a `sameAsCapture` flag, lists them in `summary.md`, and prints them on `inspect`. A specification without `runtimeSources` declares that every retained runtime output came from the capture commit and tree. The declarations are recorded, not verified: the tool cannot know which tree a log came from.
+
 JUnit groups copy every matching report and aggregate suites, tests, failures, errors, and skipped counts. Files are copied only when explicitly listed. Every retained `.jar` is inspected automatically; `forbiddenPrefixes` records matching archive entries without interpreting whether a match is acceptable.
 
 ## Output
@@ -89,6 +100,7 @@ The output directory must be outside the source mod repository. This prevents re
 An evidence pack establishes mechanical provenance:
 
 - Exact source commit, tree, branch, cleanliness, and dirty-path list.
+- The declared runtime sources, as declared.
 - Exact retained file identities and modification times.
 - Aggregate JUnit values derived from retained XML.
 - JAR entry, class, resource, and configured forbidden-prefix counts.
@@ -99,6 +111,7 @@ It does not establish:
 - That a test reaches the requirement it claims to test.
 - That a log line came from the intended gameplay action.
 - That the runtime used the expected external environment.
+- That a retained runtime output really came from the tree its `runtimeSources` entry declares.
 - That an owner-visible result passed.
 - That an issue is complete.
 
@@ -110,5 +123,5 @@ Issue evidence should reference one pack and record only the claim-specific inte
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\evidence-pack\tests\run-tests.ps1
 ```
 
-The tests cover clean capture, Git provenance, JUnit aggregation, JAR inventory, manifest integrity, retained-file verification, tamper detection, unexpected-file detection, immutable destinations, and the clean-worktree gate.
+The tests cover clean capture, Git provenance, declared runtime sources (recorded, summarized, printed on inspect; a dirty entry without a note and a truncated commit rejected), JUnit aggregation, JAR inventory, manifest integrity, retained-file verification, tamper detection, unexpected-file detection, immutable destinations, and the clean-worktree gate.
 They also require complete Git commit/tree object IDs, reject truncated identities during verification, and exercise the batch launcher with PowerShell module autoload disabled.

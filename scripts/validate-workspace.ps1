@@ -161,6 +161,12 @@ if ($activeIssues.Count -gt 1) {
     Add-ValidationError "Multiple implementation issues are In Progress: $($activeIssues.Id -join ', ')."
 }
 
+$rollupLines = [System.Collections.Generic.List[string]]::new()
+foreach ($group in ($issueRecords | Group-Object Scope | Sort-Object Name)) {
+    $summary = (@($group.Group | Sort-Object Id | ForEach-Object { "$($_.Id) $($_.Status)" })) -join ', '
+    $rollupLines.Add("$($group.Name): $summary")
+}
+
 $planFiles = @(Get-ChildItem -LiteralPath $documentationRoot -Recurse -File -Filter 'implementation-plan.md' -ErrorAction SilentlyContinue)
 foreach ($plan in $planFiles) {
     $lineNumber = 0
@@ -262,6 +268,13 @@ if (Test-Path -LiteralPath $statePath -PathType Leaf) {
                 Add-ValidationWarning "Resume snapshot may be stale: project-state.md '$($pair[0])' is '$stateValue', while project-status.md '$($pair[1])' is '$statusValue'."
             }
         }
+    }
+}
+
+if ($rollupLines.Count -gt 0) {
+    Write-Host 'Issue status roll-up (read from the issue files, the only place a status is written):' -ForegroundColor Cyan
+    foreach ($line in $rollupLines) {
+        Write-Host "- $line" -ForegroundColor Cyan
     }
 }
 
