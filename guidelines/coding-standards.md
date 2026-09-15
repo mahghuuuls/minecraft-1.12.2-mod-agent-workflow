@@ -51,6 +51,7 @@ Software design continues whenever existing code changes. Optimize for the small
 ## Existing Projects
 
 - Preserve released gameplay behavior unless an approved requirement changes it.
+- Take an item, block, or entity id of another mod from that mod's registration code (its registry class or `RegistryEvent` handler) or its language file item keys, never from an asset file name: a model or texture name can differ from the registry name, and a block with metadata variants registers its item under the block's id with a `data` value. Record the source of each cross-mod id in `workspace/documentation/dependency-references.md`. Forge skips a recipe that names a wrong id and says so only in the log, and only with that mod present, so no build check catches it.
 - Preserve mod IDs, registry names, saved-data formats, dependency identifiers, and configuration keys when compatibility requires them.
 - Avoid unrelated rewrites while migrating build systems or implementing features.
 - Keep existing worlds and configuration files compatible whenever reasonably possible.

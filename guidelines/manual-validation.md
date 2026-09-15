@@ -25,6 +25,7 @@ Before the owner starts a shared game, server, or modpack session, present the c
 - The exact development player name and casing when the session reuses an integrated-server world or player record, plus confirmation that the runtime logged in with that identity before any reconnect or persistence card.
 - Which evidence the agent will inspect and which observations only the owner can supply.
 - Whether the Agent Diagnostics Toolkit is active, its pinned version and runtime placement, any approved automatic baseline, and the bundle names used during the session.
+- When the session loads jars copied from another instance, the result of a dependency check done before the owner launches: read each copied jar's `mcmod.info` (`requiredMods`, `dependencies`) and resolve the needs transitively against the run's mod set, and check the development classpath for a coremod or loader the copied jar would duplicate (the same mod ID already present, such as a mixin loader). A missing dependency or a duplicate costs the owner a launch, and the fix is a copy or a removal the agent can make in advance.
 
 Group cards by configuration state and minimize restarts. Do not reveal previously known checks one at a time after the runtime is already open. This overview is a session map, not the detailed procedure for every card.
 

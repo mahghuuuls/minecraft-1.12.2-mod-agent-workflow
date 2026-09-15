@@ -119,6 +119,7 @@ Act as a focused implementation agent.
 - Stop and report when requirements, architecture, or feasibility assumptions are invalidated.
 - Do not make product or architectural decisions without approval.
 - Record completion evidence in the issue file.
+- When an issue adds or changes player-facing text (item names, tooltips, journal or book text, effect names, death messages) or crafting recipes, present the strings and the recipe list in chat as one short packet at the issue's checkpoint, before the campaign that shows them in game. Neither the agent nor the harness can judge the owner's taste; the packet replaces discovering it mid-session and revising under a running game.
 - Use the planned evidence pack as the single source of volatile test totals, hashes, sizes, and retained-file identities. Record claim-specific interpretations in issue prose instead of copying the same changing values into several current-state documents.
 - Move the issue to Review only after implementation verification succeeds or accepted waivers are recorded.
 - Do not mark the issue Done until independent review is complete or an eligible review limitation is explicitly accepted.
