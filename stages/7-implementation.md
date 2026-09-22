@@ -24,6 +24,7 @@ Implementation includes coding, testing, in-game verification, defect correction
 - `tools/evidence-pack/README.md` when the issue or campaign plans a retained evidence pack
 - `tools/session-log/README.md` when a validation session or campaign leaves runtime logs the agent must read
 - `tools/mod-jar/README.md` when a session loads jars copied from another instance or an issue names another mod's item ids
+- `tools/modelpreview/README.md` when the issue creates or materially revises a block model JSON with its own elements
 - `procedures/cross-project-agent-consultation.md` when implementation exposes an owner-authorized API-provider/API-consumer question that approved artifacts and source inspection cannot settle
 
 ## Objectives
@@ -149,6 +150,15 @@ When an issue creates or materially revises pixel art:
 8. Reinspect every material revision and record the final grid, PNG, selection, composition-fidelity result, technical checks, and contextual validation as completion evidence.
 
 An image file existing on disk is not completion evidence. The issue must establish that the exact PNG is technically valid, visually inspected, selected by the owner, and suitable in its actual Minecraft context or has an explicit accepted validation waiver.
+
+## Block Model Issues
+
+When an issue creates or materially revises a block model JSON with its own elements (a shape beyond the vanilla `block/cross` and cube parents):
+
+1. Render every model and every blockstate variant that turns it with `tools/modelpreview/modelpreview.cmd`, and open the sheet. The tool checks the 1.12 format rules (coordinate range, rotation angles and axes, texture variables and files, face names) and draws the vanilla side, top, bottom, and inventory views with the vanilla face shade.
+2. Inspect the views for what the game would show: a face pointing the wrong way, a texture on the wrong face or mirrored, a misplaced uv, an element that leaves the block, a rotation about the wrong origin, a wall model that does not touch its wall.
+3. Fix and re-render before the owner sees anything. The tool report at zero errors and the inspected sheet are the agent's evidence; they do not replace the owner's look in Blockbench or in the game, which stays on the validation cards.
+4. Record the final render path, the report line, and what was inspected as completion evidence.
 
 ## Feedback Strategy
 
