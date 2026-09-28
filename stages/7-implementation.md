@@ -340,6 +340,21 @@ After every included issue satisfies its Definition of Done, resolve the campaig
 - If validation or follow-up review required corrections, reverify and independently review them, then prepare one separate follow-up commit. Do not amend or rewrite the validation checkpoint merely to make the history look like one commit.
 - Any follow-up commit requires explicit authorization or standing authorization that specifically covers the named campaign completion. Authorization for the validation checkpoint does not cover it, and neither authorization permits a push.
 
+### Closing A Campaign
+
+Close a campaign in this order. Each step feeds the next, and a step done out of order is the usual source of a wrong path, a stale count, or a pack captured from the wrong tree.
+
+1. Save every runtime output the cards used (current and rotated logs, the configuration file as the game rewrote it, bundle files, owner screenshots) into the campaign staging folder before any launch, edit, or rename can change it.
+2. Write the campaign results file from the records and the owner's words, with the deviations, the per-card lines, the errors read from the logs, and the automated checks after any correction.
+3. Apply corrections the cards produced, rerun the automated checks, and submit the corrections to the follow-up review; take its findings before anything is committed.
+4. Make the completion commit under the authorization that covers it, and confirm `git status --porcelain` is empty.
+5. Ask the owner for a build from that clean tree when the pack retains the jar or the test results.
+6. Write the pack specification with every retained file and every runtime source declared honestly, capture the pack, and run `verify` on its manifest.
+7. Record in each included issue: the in-game verification lines, the follow-up review, the completion commit, and the pack path with its manifest hash; move the issue to **Done**.
+8. Update `project-status.md` (commit list, next action, next approval, current issue line) and `project-state.md`.
+9. Run `scripts/validate-workspace.ps1`; it checks that every Done issue's pack exists and that its manifest still matches its recorded hash.
+10. Restore the runtime: configuration file, extra jars copied for the session, and any instance the campaign borrowed; record what stays.
+
 ## Testing Approach
 
 The verification standards in `guidelines/coding-standards.md` govern every check in this stage, automated and manual alike. Read that section before defining expected results, not after observing them.

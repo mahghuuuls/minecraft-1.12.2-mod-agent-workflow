@@ -91,6 +91,17 @@ Keep headings and language stable across cards so the owner does not have to rel
 - Keep **Owner checks** limited to visual, audio, interaction-quality, real-multiplayer, or external-environment observations unavailable to the agent. Numeric state, command output, configuration, dimensions, registry state, and retained diagnostic records belong under **I will verify** whenever accessible.
 - Ask a specific owner-only question only when `Done` cannot capture a required inaccessible observation.
 
+## Fixture Patterns
+
+These fixture shapes have held up across sessions. Use them before inventing a new one.
+
+- **A sky platform at fixed coordinates.** A bundle teleports the operator to an absolute position high above any terrain (for example `201 151 201`), waits for the chunks, fills a stone platform under that position, teleports again, and builds the fixtures on the platform with name signs. Every later bundle then uses the same absolute coordinates, in any world, with no dependence on where the owner stands or what the terrain is. Build fixtures from blocks that do not fall.
+- **A carved room in the Nether.** The same idea below the bedrock roof: teleport to an absolute position around y 100, fill a box of air, lay a floor, and build on the floor. The room needs no portal search once the operator is in the dimension.
+- **A platform far from the dragon in the End.** Around `301 151 301` there is only void: the dragon stays near the center and the outer islands start much farther out.
+- **Portals from a bundle.** An obsidian frame with a fire block inside lights a Nether portal; an `end_portal` block set in a floor sends the operator to the End from any dimension. Give a floor portal a sign or teleport the operator onto it.
+- **One pick per fixture, then the record.** A fixture bundle records its own blocks and the operator position at the end; a check bundle after the owner's hit records the same absolute slots, the tile entity tags, and the inventory. A separate kit bundle switches the owner to survival with an empty inventory just before the hit.
+- **A config variant per launch,** kept as a copy in the staging folder with the file as the game rewrote it, and the original restored after the session.
+
 ## Evidence Handoff
 
 The owner performs the interaction. The agent collects every accessible current and rotated log, generated file, command result, counter, artifact, or other planned evidence after the card. `tools/session-log/session-log.cmd` reads the current and rotated logs, finds each launch, and slices the toolkit records and log lines between two marks or around one bundle run.

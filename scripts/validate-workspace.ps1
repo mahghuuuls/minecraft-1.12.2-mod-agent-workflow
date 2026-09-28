@@ -161,6 +161,41 @@ if ($activeIssues.Count -gt 1) {
     Add-ValidationError "Multiple implementation issues are In Progress: $($activeIssues.Id -join ', ')."
 }
 
+# Every Done issue whose Evidence Pack section applies must name at least one pack folder that exists and whose
+# manifest still matches the hash recorded beside it. The pack tool writes manifest.sha256 as "<hex>  manifest.json".
+foreach ($record in ($issueRecords | Where-Object { $_.Status -eq 'Done' })) {
+    $issueText = Get-Content -Raw -LiteralPath $record.Path
+    $packSection = [regex]::Match($issueText, '(?ms)^## Evidence Pack\s*$(?<body>.*?)(?=^## |\z)')
+    if (-not $packSection.Success) { continue }
+    if ($packSection.Groups['body'].Value -notmatch 'Applies:\s*\*{0,2}Yes') { continue }
+    # A planned name such as campaign-a-<commit> is a placeholder, not a path; the lookahead skips names that run into a '<'.
+    $packPaths = @([regex]::Matches($issueText, '(?<path>workspace[/\\]validation[/\\]campaigns[/\\][A-Za-z0-9._-]+)(?![A-Za-z0-9._-]*<)') | ForEach-Object { $_.Groups['path'].Value } | Sort-Object -Unique)
+    if ($packPaths.Count -eq 0) {
+        Add-ValidationWarning "Done issue $($record.Id) says its evidence pack applies but names no pack folder under workspace/validation/campaigns: $($record.Path)"
+        continue
+    }
+    foreach ($packPath in $packPaths) {
+        $packDirectory = Resolve-ProcessPath $packPath
+        if (-not (Test-Path -LiteralPath $packDirectory -PathType Container)) {
+            Add-ValidationError "Done issue $($record.Id) names an evidence pack folder that does not exist: $packPath"
+            continue
+        }
+        $manifest = Join-Path $packDirectory 'manifest.json'
+        if (-not (Test-Path -LiteralPath $manifest -PathType Leaf)) {
+            Add-ValidationError "Evidence pack named by $($record.Id) has no manifest.json: $packPath"
+            continue
+        }
+        $recordedHashFile = Join-Path $packDirectory 'manifest.sha256'
+        if (Test-Path -LiteralPath $recordedHashFile -PathType Leaf) {
+            $recorded = ([regex]::Match((Get-Content -Raw -LiteralPath $recordedHashFile), '[A-Fa-f0-9]{64}')).Value
+            $actual = (Get-FileHash -LiteralPath $manifest -Algorithm SHA256).Hash
+            if ($recorded -and $recorded.ToUpperInvariant() -ne $actual.ToUpperInvariant()) {
+                Add-ValidationError "Evidence pack named by $($record.Id) has a manifest that no longer matches its recorded hash: $packPath"
+            }
+        }
+    }
+}
+
 $rollupLines = [System.Collections.Generic.List[string]]::new()
 foreach ($group in ($issueRecords | Group-Object Scope | Sort-Object Name)) {
     $summary = (@($group.Group | Sort-Object Id | ForEach-Object { "$($_.Id) $($_.Status)" })) -join ', '
@@ -293,4 +328,4 @@ if ($errors.Count -gt 0) {
     exit 1
 }
 
-Write-Host "Workspace validation passed: workflow/stage statuses, issue statuses, active-item counts, structured paths, plan/issue agreement, and resume references are mechanically consistent." -ForegroundColor Green
+Write-Host "Workspace validation passed: workflow/stage statuses, issue statuses, active-item counts, structured paths, plan/issue agreement, evidence packs of Done issues, and resume references are mechanically consistent." -ForegroundColor Green

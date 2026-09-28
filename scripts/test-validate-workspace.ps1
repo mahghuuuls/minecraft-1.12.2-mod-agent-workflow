@@ -153,7 +153,66 @@ try {
     Write-Utf8 $planPath $twoActivePlan
     Assert-ExitCode 'multiple active issues' 1 (Invoke-Validator)
 
-    Write-Host 'Workspace validator tests passed: valid state, a plan without a status column (with the issue roll-up printed), and cycle-scoped identifiers accepted; invalid status, missing stage artifacts, ledger or plan disagreement, and multiple active issues rejected.' -ForegroundColor Green
+    # Evidence packs of Done issues: the named folder must exist and its manifest must match the recorded hash.
+    Write-Utf8 $issuePath $issueReady
+    Write-Utf8 (Join-Path $issuesRoot 'IMP-002-second-fixture.md') @'
+# IMP-002: Second Fixture
+
+**Status:** Done
+
+## Evidence Pack
+
+- Applies: Yes (Campaign X).
+
+## Verification
+
+- Planned pack: `workspace/validation/campaigns/campaign-x-<commit>/` (a placeholder the validator must ignore).
+
+## Completion Evidence
+
+- Evidence pack: `workspace/validation/campaigns/campaign-x-abc1234/`, verified.
+'@
+    Write-Utf8 $planPath @'
+# Implementation Plan
+
+## Issue Summary
+
+| Issue | Title | Status | Dependencies |
+| --- | --- | --- | --- |
+| IMP-001 | Fixture | Ready | None |
+| IMP-002 | Second Fixture | Done | None |
+'@
+    Assert-ExitCode 'done issue naming a missing pack' 1 (Invoke-Validator)
+
+    $packRoot = Join-Path $testRoot 'validation/campaigns/campaign-x-abc1234'
+    New-Item -ItemType Directory -Path $packRoot -Force | Out-Null
+    $manifestPath = Join-Path $packRoot 'manifest.json'
+    Write-Utf8 $manifestPath '{ "checkpoint": "campaign-x" }'
+    $manifestHash = (Get-FileHash -LiteralPath $manifestPath -Algorithm SHA256).Hash
+    Write-Utf8 (Join-Path $packRoot 'manifest.sha256') "$manifestHash  manifest.json"
+    Assert-ExitCode 'done issue naming a verified pack' 0 (Invoke-Validator)
+
+    Write-Utf8 $manifestPath '{ "checkpoint": "campaign-x", "changed": true }'
+    Assert-ExitCode 'done issue naming a pack whose manifest changed' 1 (Invoke-Validator)
+    Remove-Item -LiteralPath (Join-Path $packRoot 'manifest.json')
+    Assert-ExitCode 'done issue naming a pack without a manifest' 1 (Invoke-Validator)
+
+    Write-Utf8 (Join-Path $issuesRoot 'IMP-002-second-fixture.md') @'
+# IMP-002: Second Fixture
+
+**Status:** Done
+
+## Evidence Pack
+
+- Applies: Yes (Campaign X).
+'@
+    $noPackResult = Invoke-Validator
+    Assert-ExitCode 'done issue with an applicable pack but no path' 0 $noPackResult
+    if ($noPackResult.Output -notlike '*names no pack folder*') {
+        throw "Validator did not warn about the missing pack path. Output: $($noPackResult.Output)"
+    }
+
+    Write-Host 'Workspace validator tests passed: valid state, a plan without a status column (with the issue roll-up printed), and cycle-scoped identifiers accepted; evidence packs of Done issues checked; invalid status, missing stage artifacts, ledger or plan disagreement, and multiple active issues rejected.' -ForegroundColor Green
 } finally {
     $resolvedTestRoot = [System.IO.Path]::GetFullPath($testRoot)
     $resolvedTempRoot = [System.IO.Path]::GetFullPath([System.IO.Path]::GetTempPath())
