@@ -104,6 +104,8 @@ Do not edit versioned process files during mod development because a feedback en
 - Never revert work outside the current task.
 - Keep edits within the active repository, stage, issue, or approved mod-development scope.
 - Follow existing conventions unless an approved decision changes them.
+- Never run a text replacement over evidence, staging, or campaign folders. A log or configuration copy kept as evidence must stay exactly as it was recorded; a rename or wording change in the project does not reach into the evidence.
+- Write a multi-line or quote-heavy edit as a script file and run the file. Inline shell strings with nested quotes, pipes, or backticks break silently or apply a mangled edit; a script file can be read back before it runs.
 
 ## Git and External Actions
 

@@ -107,6 +107,18 @@ try {
 { "textures": { "particle": "testmod:blocks/north" },
   "elements": [ { "from": [0,0,0], "to": [16,16,16], "faces": { "north": { "texture": "#nobody" } } } ] }
 '@
+    Write-Json 'models\block\zfight.json' @'
+{ "textures": { "particle": "testmod:blocks/north", "a": "testmod:blocks/north" },
+  "elements": [
+    { "from": [0,0,0], "to": [8,16,16], "faces": { "east": { "texture": "#a" }, "north": { "texture": "#a" } } },
+    { "from": [8,2,2], "to": [8,14,14], "faces": { "east": { "texture": "#a" }, "west": { "texture": "#a" } } } ] }
+'@
+    Write-Json 'models\block\touching.json' @'
+{ "textures": { "particle": "testmod:blocks/north", "a": "testmod:blocks/north" },
+  "elements": [
+    { "from": [0,0,0], "to": [8,16,16], "faces": { "east": { "texture": "#a" }, "north": { "texture": "#a" } } },
+    { "from": [8,0,0], "to": [16,16,16], "faces": { "west": { "texture": "#a" }, "north": { "texture": "#a" } } } ] }
+'@
     Write-Json 'blockstates\cube.json' @'
 { "variants": { "facing=north": { "model": "testmod:cube" }, "facing=east": { "model": "testmod:cube", "y": 90 } } }
 '@
@@ -187,6 +199,20 @@ try {
     Assert-True ($r.ExitCode -eq 1 -and $r.Output -match "variable '#nobody'") 'unbound texture variable is an error'
     $r = Invoke-Tool @((Join-Path $ns 'models\block\cube.json'), '-ValidateOnly')
     Assert-True ($r.ExitCode -eq 0 -and $r.Output -match '0 error\(s\), 0 warning\(s\)' -and -not (Test-Path (Join-Path $work 'cube-validate.png'))) 'a valid model passes without rendering'
+
+    Write-Host 'z-fight warning'
+    $r = Invoke-Tool @((Join-Path $ns 'models\block\zfight.json'), '-ValidateOnly')
+    Assert-True ($r.ExitCode -eq 0 -and $r.Output -match 'z-fight: element 0 east and element 1 east lie in one plane at x=8') 'a plane on a cube face pointing the same way warns'
+    $r = Invoke-Tool @((Join-Path $ns 'models\block\touching.json'), '-ValidateOnly')
+    Assert-True ($r.ExitCode -eq 0 -and $r.Output -notmatch 'z-fight') 'two cuboids touching back to back do not warn'
+    $r = Invoke-Tool @((Join-Path $ns 'models\block\cross.json'), '-ValidateOnly')
+    Assert-True ($r.Output -notmatch 'z-fight') 'crossed planes do not warn'
+
+    Write-Host 'bare model names'
+    $r = Invoke-Tool @('cube', '-AssetsRoot', $assets, '-ValidateOnly')
+    Assert-True ($r.ExitCode -eq 0 -and $r.Output -match 'Model chain: testmod:block/cube') 'a bare name resolves under the assets root'
+    $r = Invoke-Tool @('cube', '-ValidateOnly')
+    Assert-True ($r.ExitCode -ne 0 -and $r.Output -match 'bare name such as name or block/name together with -AssetsRoot') 'a bare name without a root names the accepted forms'
 
     Write-Host 'output protection'
     $r = Invoke-Tool @((Join-Path $ns 'models\block\cube.json'), '-Views', 'north', '-Scale', '2', '-OutputFile', $out)

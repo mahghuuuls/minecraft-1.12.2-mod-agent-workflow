@@ -145,9 +145,10 @@ When an issue creates or materially revises pixel art:
 3. For a new asset or reopened direction, create three materially different candidates. For a focused correction after owner selection, revise only the selected direction unless the owner reopens the concept decision.
 4. When generated exploration or a composition reference established the approved direction, compare each exact-grid reconstruction against the issue's two or three defining composition invariants before treating it as a candidate.
 5. Open and inspect every rendered PNG. Apply the actual-size, high-zoom, transparency, composition-fidelity, and use-specific checks in `guidelines/minecraft-pixel-art.md`.
-6. Reject and replace objectively defective candidates before presenting the set. Do not silently choose among viable directions for the owner.
-7. Present the passing candidates and obtain owner selection before copying a final runtime asset into the mod repository.
-8. Reinspect every material revision and record the final grid, PNG, selection, composition-fidelity result, technical checks, and contextual validation as completion evidence.
+6. For a texture that a `block/cross` model shows (a flat plant and the like), also render the model with `tools/modelpreview/modelpreview.cmd` at the `gui` view and one side view and look for mirrored copies of off-center features; the symmetry rule in `guidelines/minecraft-pixel-art.md` says when a copy is a defect.
+7. Reject and replace objectively defective candidates before presenting the set. Do not silently choose among viable directions for the owner.
+8. Present the passing candidates and obtain owner selection before copying a final runtime asset into the mod repository.
+9. Reinspect every material revision and record the final grid, PNG, selection, composition-fidelity result, technical checks, and contextual validation as completion evidence.
 
 An image file existing on disk is not completion evidence. The issue must establish that the exact PNG is technically valid, visually inspected, selected by the owner, and suitable in its actual Minecraft context or has an explicit accepted validation waiver.
 
@@ -210,7 +211,7 @@ A freshly created `runServer` environment rejects the development client's login
 
 - `online-mode=false`. The development client authenticates with a placeholder session that Mojang cannot verify, so the default setting refuses it as an invalid session.
 - `gamemode=1` with `force-gamemode=true`. Without creative access the owner must obtain every test item by hand, which turns a short check into a scavenger hunt.
-- An entry in `ops.json` when the check needs commands.
+- Operator rights given from the server console after the first join (`op <name>`, with the name exactly as the join line prints it), when the check needs commands. Do not write an `ops.json` entry in advance: an offline-mode server derives the UUID from the exact name the client sends, which can differ in case from the singleplayer profile, so a precomputed entry misses and a later `deop` by name removes the wrong entry. Before a card that removes operator rights, make sure `ops.json` holds only the real entry.
 
 These values suit a throwaway local development server only. `online-mode=false` disables account verification entirely. Never recommend it for a server reachable from a network, never carry it into public documentation or a packaged environment, and never apply it to a server the owner actually runs.
 

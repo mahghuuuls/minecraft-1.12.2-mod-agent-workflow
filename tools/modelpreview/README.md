@@ -44,7 +44,7 @@ Warnings: a texture reference without a `blocks/` or `items/` prefix (1.12.2 loo
 
 | Option | Meaning |
 | --- | --- |
-| `ModelFile` | A model JSON path, or a resource name such as `minecraft:block/furnace` or `examplemod:block/lamp`. |
+| `ModelFile` | A model JSON path; a resource name such as `minecraft:block/furnace` or `examplemod:block/lamp`; or a bare name such as `lamp` or `block/lamp` together with `-AssetsRoot`, when exactly one namespace under that root holds it. |
 | `-Blockstate`, `-Variant` | Read the model and its `x` and `y` from a blockstate variant (the `variants` form; multipart is not supported). |
 | `-RotateX`, `-RotateY` | Blockstate rotations in 90 degree steps, when not read from a blockstate. |
 | `-AssetsRoot` | The folder that holds the namespace folders. Derived from the model or blockstate path when it lies under `assets/<namespace>/`. |
@@ -58,7 +58,7 @@ Warnings: a texture reference without a `blocks/` or `items/` prefix (1.12.2 loo
 ## Limits
 
 - Orthographic only: no perspective, no lighting beyond the direction shade, no ambient occlusion, no block tint, no item models, no multipart blockstates.
-- A model whose faces overlap exactly (two planes in one place) draws whichever the depth test meets first, as the game would flicker between them.
+- A model whose faces overlap exactly (two planes in one place) draws whichever the depth test meets first, as the game would flicker between them. Two faces of different elements that point the same way, lie in one axis-aligned plane, and overlap get a `z-fight` warning; faces that touch back to back (two cuboids sharing a face) do not, because the game hides both.
 - The preview shows geometry and texture mapping. It does not show how the block sits among its neighbors, under water, or with the game's light; that remains an in-game check.
 
 ## Verification

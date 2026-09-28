@@ -110,6 +110,7 @@ Do not create the final by drawing at high resolution and shrinking. Do not use 
 - Define entity and model texture dimensions from the approved model and UV layout. Maintain consistent texel density across connected surfaces.
 - Define every animation frame at one consistent size. A vertically stacked animation texture is an export layout, not permission to mix pixel scales between frames.
 - Do not enlarge a subject merely to fill unused transparent space. Negative space can improve silhouette and orientation.
+- Draw a texture for the vanilla `block/cross` model mirror-symmetric about the vertical line between columns 7 and 8, or record the asymmetry as an accepted decision in the issue. The model draws both planes on both sides, so an off-center feature appears as a mirrored copy from other angles; a one-pixel stalk cannot be centered on a 16-pixel texture, and that small offset is normal, while a large off-center feature is a defect.
 
 Minecraft model textures referenced by block and item models must satisfy the square power-of-two and mipmapping constraints documented for Forge 1.12.x. Animated model textures are the documented exception: the PNG may contain vertically stacked square frames with a corresponding `.mcmeta` definition. Do not apply that model-texture rule blindly to arbitrary GUI sheets whose code defines another layout.
 

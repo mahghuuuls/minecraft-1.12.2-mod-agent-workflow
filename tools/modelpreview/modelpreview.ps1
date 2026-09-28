@@ -455,7 +455,17 @@ function Resolve-Input {
         if ($path -notmatch '^(block|item)/') { $path = "block/$path" }
         return @($namespace, $path, ($ModelFile -replace '[^A-Za-z0-9]+', '_'))
     }
-    if (-not (Test-Path -LiteralPath $ModelFile)) { throw "Model file not found: $ModelFile" }
+    if (-not (Test-Path -LiteralPath $ModelFile)) {
+        # A bare name such as lamp or block/lamp, looked up under the assets root when exactly one namespace holds it.
+        if ($AssetsRoot -and $ModelFile -match '^[a-z0-9_./-]+$') {
+            $path = $ModelFile -replace '\.json$', ''
+            if ($path -notmatch '^(block|item)/') { $path = "block/$path" }
+            $hits = @(Get-ChildItem -LiteralPath $AssetsRoot -Directory -ErrorAction SilentlyContinue | Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName "models/$path.json") })
+            if ($hits.Count -eq 1) { return @($hits[0].Name, $path, ($ModelFile -replace '[^A-Za-z0-9]+', '_')) }
+            if ($hits.Count -gt 1) { throw "Model '$ModelFile' exists in several namespaces under $AssetsRoot ($($hits.Name -join ', ')); give it as namespace:$path" }
+        }
+        throw "Model file not found: $ModelFile. Give a path to a model JSON, a resource name such as modid:block/name (or minecraft:block/furnace), or a bare name such as name or block/name together with -AssetsRoot."
+    }
     $full = (Resolve-Path -LiteralPath $ModelFile).Path
     if ($full -match '^(.*[\\/]assets)[\\/]([^\\/]+)[\\/]models[\\/](.+)\.json$') {
         if (-not $AssetsRoot) { $script:AssetsRoot = $Matches[1] }
@@ -560,6 +570,37 @@ foreach ($element in @($elements | Where-Object { $null -ne $_ })) {
 }
 
 foreach ($face in $faces) { $null = Get-Texture -Name $face.Texture -Origin $face.Label }
+
+# ---- coplanar faces of different elements that point the same way: the game flickers between them
+function Get-AxisPlane { param($Face)
+    for ($axis = 0; $axis -lt 3; $axis++) {
+        $v = $Face.Corners[0][$axis]; $flat = $true
+        foreach ($c in $Face.Corners) { if ([Math]::Abs($c[$axis] - $v) -gt 0.0001) { $flat = $false; break } }
+        if ($flat) { return @($axis, $v) }
+    }
+    return $null
+}
+function Get-PlaneBounds { param($Face, [int]$Axis)
+    $other = @(0, 1, 2) | Where-Object { $_ -ne $Axis }
+    $min = @([double]::MaxValue, [double]::MaxValue); $max = @([double]::MinValue, [double]::MinValue)
+    foreach ($c in $Face.Corners) { for ($i = 0; $i -lt 2; $i++) { $x = $c[$other[$i]]; if ($x -lt $min[$i]) { $min[$i] = $x }; if ($x -gt $max[$i]) { $max[$i] = $x } } }
+    return @($min, $max)
+}
+$axisNames = @('x', 'y', 'z')
+for ($a = 0; $a -lt $faces.Count; $a++) {
+    $planeA = Get-AxisPlane $faces[$a]; if ($null -eq $planeA) { continue }
+    $elementA = ($faces[$a].Label -split ' ')[1]; $sideA = ($faces[$a].Label -split ' ')[2]
+    for ($b = $a + 1; $b -lt $faces.Count; $b++) {
+        $elementB = ($faces[$b].Label -split ' ')[1]; $sideB = ($faces[$b].Label -split ' ')[2]
+        if ($elementA -eq $elementB -or $sideA -ne $sideB) { continue }
+        $planeB = Get-AxisPlane $faces[$b]; if ($null -eq $planeB) { continue }
+        if ($planeA[0] -ne $planeB[0] -or [Math]::Abs($planeA[1] - $planeB[1]) -gt 0.0001) { continue }
+        $ba = Get-PlaneBounds $faces[$a] $planeA[0]; $bb = Get-PlaneBounds $faces[$b] $planeA[0]
+        $overlap = $true
+        for ($i = 0; $i -lt 2; $i++) { if ([Math]::Min($ba[1][$i], $bb[1][$i]) - [Math]::Max($ba[0][$i], $bb[0][$i]) -le 0.0001) { $overlap = $false } }
+        if ($overlap) { Add-Problem 'warn' ("z-fight: {0} and {1} lie in one plane at {2}={3} and overlap; the game flickers between them. Move one element by a fraction of a pixel or drop one face." -f $faces[$a].Label, $faces[$b].Label, $axisNames[$planeA[0]], $planeA[1]) }
+    }
+}
 
 # ---- report
 foreach ($line in $script:Notes) { Write-Host "note  $line" }
