@@ -42,6 +42,10 @@ $requiredPaths = @(
     'tools/evidence-pack/evidence-pack.ps1',
     'tools/evidence-pack/README.md',
     'tools/evidence-pack/tests/run-tests.ps1',
+    'tools/host-run/host-run.cmd',
+    'tools/host-run/host-run.ps1',
+    'tools/host-run/README.md',
+    'tools/host-run/tests/run-tests.ps1',
     'tools/mod-jar/mod-jar.cmd',
     'tools/mod-jar/mod-jar.ps1',
     'tools/mod-jar/README.md',
@@ -114,14 +118,14 @@ $requiredTemplateHeadings = [ordered]@{
 
 $requiredProcessText = [ordered]@{
     'guidelines/collaboration-guidelines.md' = @('inspect the configured Git author name and email')
-    'guidelines/project-defaults.md' = @('## Canonical Release Artifact Location', 'The canonical owner-upload source is the normal distributable mod JAR under `<mod-repository>/build/libs/`', 'After any later build or source change')
-    'guidelines/coding-standards.md' = @('## Complexity Management', '## Strategic Modification', 'deep modules', 'information leakage', 'smallest coherent design', 'durable regression check', 'complete diff for stale comments', 'tools/mod-jar/mod-jar.cmd find')
+    'guidelines/project-defaults.md' = @('## Canonical Release Artifact Location', '## Shared Machine', 'The canonical owner-upload source is the normal distributable mod JAR under `<mod-repository>/build/libs/`', 'After any later build or source change')
+    'guidelines/coding-standards.md' = @('## Complexity Management', '## Strategic Modification', 'deep modules', 'information leakage', 'smallest coherent design', 'durable regression check', 'complete diff for stale comments', 'tools/mod-jar/mod-jar.cmd find', '## Running Builds And Tests', 'tools/host-run/host-run.cmd run')
     'guidelines/manual-validation.md' = @('tools/mod-jar/mod-jar.cmd check', 'tools/session-log/session-log.cmd')
     'guidelines/minecraft-pixel-art.md' = @('-Compose', '-Compare')
     'stages/2-feasibility-research.md' = @('tools/mod-jar/mod-jar.cmd find')
     'skills/validation-session/SKILL.md' = @('scripts/validate-workspace.ps1', 'tools/session-log/session-log.cmd', 'tools/mod-jar/mod-jar.cmd check')
     'guidelines/process-control.md' = @('invalidates or materially challenges', 'avoidable tactical complexity')
-    'stages/0-project-setup.md' = @('workspace/documentation/workflow-feedback.md', 'workspace/documentation/agent-diagnostics-toolkit-feedback.md')
+    'stages/0-project-setup.md' = @('workspace/documentation/workflow-feedback.md', 'workspace/documentation/agent-diagnostics-toolkit-feedback.md', 'tools/host-run/host-run.cmd run')
     'setup/initialize-project.md' = @('## Freeze Project Identity', '## Verify Owner-Side Git Access')
     'stages/4-architecture-definition.md' = @('**Complexity Analysis:**', 'meaningfully different designs', 'authoritative owner', 'internal design freedom')
     'workflows/change-cycle.md' = @('smallest reliable reproduction', 'future regression could be detected')

@@ -160,7 +160,8 @@ Inspect and record:
 - Existing nested repositories
 - Existing configuration and setup artifacts
 - Existing development-runtime log locations, agent access, and observed retention or rotation behavior
-- Whether the agent can execute the build tool itself, established by attempting it rather than by observing that it is installed
+- Whether the agent can execute the build tool itself, established by attempting it rather than by observing that it is installed, and by which launch path (direct, or through `tools/host-run`)
+- Other mod projects active on the same computer: other workflow checkouts, the agents working in them, the shared test instances they use, and the dedicated-server ports they recorded; then the port this project takes (Shared Machine in `guidelines/project-defaults.md`)
 
 Project defaults define the intended environment. Missing tools may be installed later when they are not needed by the first stage, but record the stage by which each is required.
 
@@ -170,7 +171,9 @@ Attempt a task that compiles or tests, never a version or help command. A build 
 
 When the attempt fails, capture the underlying error rather than concluding that the tool is unavailable. An environment lacking loopback networking, subprocess creation, or file watching produces a specific and recognizable failure, and recording it prevents the same diagnosis being repeated later in the project. Options such as disabling the build daemon are worth one attempt, but a forked worker process is normally unavoidable for compilation and testing.
 
-Explain the outcome to the owner when the agent cannot run the build, following the environment-limitation rules in `guidelines/collaboration-guidelines.md`. The owner is about to take on every build and test in the project, so they need the cause, the attempted workarounds, and the resulting division of work before planning depends on it.
+When the direct attempt fails with a loopback or subprocess error, run the same task through `tools/host-run/host-run.cmd run` before concluding anything. The tool starts the command outside the agent's process tree, which is where such a restriction usually comes from, waits for it, and prints its output; read `tools/host-run/README.md` first. Record which launch path built the project, direct or `tools/host-run`, because every later build, test run, and release build in the project uses it. `guidelines/coding-standards.md`, Running Builds And Tests, owns the rule.
+
+Explain the outcome to the owner when the agent cannot run the build by either path, following the environment-limitation rules in `guidelines/collaboration-guidelines.md`. The owner is about to take on every build and test in the project, so they need the cause, the attempted workarounds, and the resulting division of work before planning depends on it.
 
 Inspect likely log locations directly when a development runtime already exists. Record the current-log path, any rotated or archived logs useful after a manual test, and whether the agent can read them from the shared workspace. If the runtime has not been initialized, record the expected location when known and make direct discovery a prerequisite before the first runtime validation packet. Do not ask the owner to copy logs that the agent can access directly.
 

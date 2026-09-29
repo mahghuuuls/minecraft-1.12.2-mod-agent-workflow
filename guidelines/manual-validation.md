@@ -27,6 +27,8 @@ Before the owner starts a shared game, server, or modpack session, present the c
 - Whether the Agent Diagnostics Toolkit is active, its pinned version and runtime placement, any approved automatic baseline, and the bundle names used during the session.
 - When the session loads jars copied from another instance, the result of a dependency check done before the owner launches: read each copied jar's `mcmod.info` (`requiredMods`, `dependencies`) and resolve the needs transitively against the run's mod set, and check the development classpath for a coremod or loader the copied jar would duplicate (the same mod ID already present, such as a mixin loader). A missing dependency or a duplicate costs the owner a launch, and the fix is a copy or a removal the agent can make in advance. `tools/mod-jar/mod-jar.cmd check -Folder <mods directory> -Provided <mod ids already on the development classpath>` performs this check mechanically, including the `@Mod` dependencies that `mcmod.info` does not list.
 
+- When the session uses a shared test instance, the result of the lock check from Shared Machine in `guidelines/project-defaults.md`: the `mods` folder listed, no foreign lock note or jar found, and this project's lock note written.
+
 Group cards by configuration state and minimize restarts. Do not reveal previously known checks one at a time after the runtime is already open. This overview is a session map, not the detailed procedure for every card.
 
 When the Implementation Plan defines an owner-assisted validation campaign spanning several issues, present one campaign session map and retain each card's issue attribution internally. Do not make the owner manage issue boundaries that do not change the actions, but do preserve enough diagnostic separation for the agent to assign every result correctly.
@@ -136,5 +138,6 @@ At the end of the session:
 - State which cards passed, failed, were deferred, or were waived.
 - Inspect the final accessible evidence and record it in the owning issue.
 - Disable temporary diagnostics and restore temporary configuration or world state.
+- Remove the files copied into a shared test instance and this project's lock note (Shared Machine in `guidelines/project-defaults.md`).
 - State whether the owner may close the client/server or whether another approved session remains.
 - Do not make the owner restate successful observations already covered by `Done`.

@@ -48,6 +48,15 @@ This policy is an invariant. A mod project must not override it through Project 
 - Use the project's wrapper instead of a separately installed build-tool version.
 - Use `project_default_branch` for a newly initialized mod repository, and for all work until the mod has actually been published. After a publication is reported, recommend a `develop` branch for each Change Cycle. See Branching Before And After Publication in `guidelines/collaboration-guidelines.md`.
 
+## Shared Machine
+
+The owner often develops several mods at the same time on one computer, in separate workflow checkouts and with different agents. Never assume the machine is idle.
+
+- Builds do not collide. Each mod has its own repository, `run/` directory, and build output, and the shared Gradle cache handles concurrent builds. Do not start two builds of the same repository at once.
+- Each project uses its own dedicated-server port, recorded in `project-setup.md` during Project Setup: the first project on the machine takes 25565, the next 25566, and so on, checked against the ports the other checkouts recorded. Write it as `server-port` in `run/server.properties` with the other development server settings.
+- A shared test instance (a modpack or clean instance outside the mod repository) is borrowed, not owned. Before copying anything into it, list its `mods` folder and look for a lock note `mods/.agent-lock`. If a lock note from another project is there, or a jar that is neither in the instance's recorded mod list nor yours, stop and ask the owner. Otherwise write `mods/.agent-lock` with the project name, the agent, and the date, run the session, and remove the copied files and the lock note during cleanup. An instance the owner declared read-only receives nothing, not even the lock note.
+- Names of temporary folders, scheduled tasks, and other machine-wide resources carry the project name or a unique id, never a fixed name that every project would share.
+
 ## Runtime Compatibility
 
 - Treat `target_java_version` as the default release target.

@@ -210,6 +210,7 @@ Dimension checks are risk-based. For dimension-agnostic code, inspect the releva
 A freshly created `runServer` environment rejects the development client's login and leaves the owner with no way to obtain test items. Prepare `run/server.properties` before requesting a dedicated-server check, or the request fails for reasons that have nothing to do with the mod.
 
 - `online-mode=false`. The development client authenticates with a placeholder session that Mojang cannot verify, so the default setting refuses it as an invalid session.
+- `server-port` set to the port recorded for this project in `project-setup.md` (Shared Machine in `guidelines/project-defaults.md`), so a development server of another project on the same computer does not block the launch.
 - `gamemode=1` with `force-gamemode=true`. Without creative access the owner must obtain every test item by hand, which turns a short check into a scavenger hunt.
 - Operator rights given from the server console after the first join (`op <name>`, with the name exactly as the join line prints it), when the check needs commands. Do not write an `ops.json` entry in advance: an offline-mode server derives the UUID from the exact name the client sends, which can differ in case from the singleplayer profile, so a precomputed entry misses and a later `deop` by name removes the wrong entry. Before a card that removes operator rights, make sure `ops.json` holds only the real entry.
 
@@ -348,7 +349,7 @@ Close a campaign in this order. Each step feeds the next, and a step done out of
 2. Write the campaign results file from the records and the owner's words, with the deviations, the per-card lines, the errors read from the logs, and the automated checks after any correction.
 3. Apply corrections the cards produced, rerun the automated checks, and submit the corrections to the follow-up review; take its findings before anything is committed.
 4. Make the completion commit under the authorization that covers it, and confirm `git status --porcelain` is empty.
-5. Ask the owner for a build from that clean tree when the pack retains the jar or the test results.
+5. Build from that clean tree when the pack retains the jar or the test results, using the launch path recorded in Project Setup (see Running Builds And Tests in `guidelines/coding-standards.md`); ask the owner only when Project Setup recorded that the agent cannot build.
 6. Write the pack specification with every retained file and every runtime source declared honestly, capture the pack, and run `verify` on its manifest.
 7. Record in each included issue: the in-game verification lines, the follow-up review, the completion commit, and the pack path with its manifest hash; move the issue to **Done**.
 8. Update `project-status.md` (commit list, next action, next approval, current issue line) and `project-state.md`.

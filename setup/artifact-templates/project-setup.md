@@ -16,9 +16,11 @@
 - Git:
 - Java:
 - IntelliJ IDEA:
-- Agent can execute the build tool (attempted, not assumed):
+- Agent can execute the build tool (attempted, not assumed; record the launch path, direct or through `tools/host-run`):
 - Existing runtime directories:
 - Existing nested repositories:
+- Other mod projects active on this computer (checkouts, agents, shared instances, ports taken):
+- Dedicated-server port for this project:
 
 ## Development Logs And Runtime Evidence
 

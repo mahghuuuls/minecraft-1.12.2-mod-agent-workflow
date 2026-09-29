@@ -140,3 +140,16 @@ Software design continues whenever existing code changes. Optimize for the small
 - Check dedicated-server safety whenever shared or client-related code changes.
 - Verify default and unusual but valid configuration combinations.
 - Include focused manual scenarios for gameplay behavior that cannot be meaningfully automated.
+
+## Running Builds And Tests
+
+- Run the build and the tests yourself whenever the environment allows it, read the output, and report the totals. Do not ask the owner to run a build or paste its output when you can run it.
+- When a build started from the agent shell fails with a loopback or subprocess error (Gradle's `Unable to establish loopback connection`, or `Invalid argument: connect` from `java.nio.channels.Pipe`), start it outside the agent's process tree with `tools/host-run/host-run.cmd run` instead. Read `tools/host-run/README.md` before the first use.
+
+  ```bat
+  tools\host-run\host-run.cmd run -WorkingDirectory workspace\project\<mod-name> -Command "gradlew.bat clean build --console=plain" -TailLines 40
+  ```
+
+  The tool waits for the command, prints its output, keeps the full output in its run folder, and exits with the command's exit code.
+- Use the launch path recorded in `project-setup.md` for every build, test run, and release build of the project. Ask the owner to build only when both paths fail, and then follow the environment-limitation rules in `guidelines/collaboration-guidelines.md`.
+- Give a build a timeout above its longest expected duration, and never start two builds of the same repository at the same time.
