@@ -47,7 +47,7 @@ The toolkit must be development-runtime only:
 - Do not include its JAR in a release handoff for the mod under development.
 - Inspect the generated mod artifact and dependency metadata when the build configuration could accidentally package or publish it.
 
-When the selected template supports a development-only runtime configuration, use that configuration and its required deobfuscation mechanism. A normal packaged Forge test instance may instead receive the pinned release JAR directly in its `mods` directory. Do not assume that the same obfuscated JAR can be dropped into a deobfuscated `runClient` or `runServer` environment; verify the selected template's local-file or remote dependency path. The exact Gradle notation is template-specific and must be verified against that build rather than copied from another project.
+When the selected template supports a development-only runtime configuration, use that configuration and its required deobfuscation mechanism. The agent-managed test instance may instead receive the pinned release JAR directly in its `mods` directory. Do not assume that the same obfuscated JAR can be dropped into a deobfuscated `runClient` or `runServer` environment; verify the selected template's local-file or remote dependency path. The exact Gradle notation is template-specific and must be verified against that build rather than copied from another project.
 
 Do not clone the toolkit repository into every mod project. A source checkout is optional reference material under `workspace/dependencies/` when exact source inspection is needed, and it remains a separate repository. The released JAR is sufficient for normal use.
 

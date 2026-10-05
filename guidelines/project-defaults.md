@@ -54,11 +54,23 @@ The owner often develops several mods at the same time on one computer, in separ
 
 - Builds do not collide. Each mod has its own repository, `run/` directory, and build output, and the shared Gradle cache handles concurrent builds. Do not start two builds of the same repository at once.
 - Each project uses its own dedicated-server port, recorded in `project-setup.md` during Project Setup: the first project on the machine takes 25565, the next 25566, and so on, checked against the ports the other checkouts recorded. Write it as `server-port` in `run/server.properties` with the other development server settings.
-- A shared test instance (a modpack or clean instance outside the mod repository) is borrowed, not owned. Before copying anything into it, list its `mods` folder and look for a lock note `mods/.agent-lock`. If a lock note from another project is there, or a jar that is neither in the instance's recorded mod list nor yours, stop and ask the owner. Otherwise write `mods/.agent-lock` with the project name, the agent, and the date, run the session, and remove the copied files and the lock note during cleanup. An instance the owner declared read-only receives nothing, not even the lock note.
+- A shared test instance (the agent-managed test instance under Test Instance below, or any modpack or clean instance outside the mod repository) is borrowed, not owned. Before copying anything into it, list its `mods` folder and look for a lock note `mods/.agent-lock`. If a lock note from another project is there, or a jar that is neither in the instance's recorded mod list nor yours, stop and ask the owner. Otherwise write `mods/.agent-lock` with the project name, the agent, and the date, run the session, and remove the copied files and the lock note during cleanup. An instance the owner declared read-only receives nothing, not even the lock note.
 - Names of temporary folders, scheduled tasks, and other machine-wide resources carry the project name or a unique id, never a fixed name that every project would share.
+
+## Test Instance
+
+Every mod gets its packaged checks in one agent-managed test instance: a modpack instance in the owner's launcher, outside every mod repository, that exists for testing and nothing else.
+
+- The owner creates it once, in Project Setup or earlier, from the BareBones Template (Cleanroom) modpack on CurseForge (`https://www.curseforge.com/minecraft/modpacks/barebones-template-cleanroom`) unless the owner chooses another template. That pack holds only performance, quality-of-life, and bugfix mods plus the Cleanroom relauncher, so a mod that launches there has met the base most 1.12.2 packs run on today, on Cleanroom, through the launcher players use, with no gameplay content in the way. The pack's own readme says to remove PackCompanion after the first launch; the recorded baseline is the instance after that step.
+- Project Setup records the launcher, the instance name and path, the template and its version, and the template mod list (the `mods` folder as created, file names and sizes). That list is the reset baseline. One instance serves every mod the owner develops; `owner-defaults.md` carries it to the next project.
+- The agent may add and remove mods, change configuration, and create, reset, or delete worlds there. It records every change in the campaign results, and it resets the instance to the baseline at the end of every campaign and before a release check: the `mods` folder matches the recorded list, configuration files it changed are restored, and configuration files added mods generated are removed. The lock-note rules under Shared Machine apply, because another project may be using the same instance.
+- The instance is tier 4 of the verification environment plan (`stages/6-implementation-plan.md`): the packaged jar, a clean base, and the only Cleanroom launch the workflow gives a mod. The development client and server stay standard Forge.
+- Fallback: when the Cleanroom relauncher in the template fails on the owner's machine, the owner creates the same instance on standard Forge with the same mod list; record that the Cleanroom check then rests on the owner's own pack or is waived.
+- An owner may decline the instance. Record that as the validation waiver `Test instance testing was not performed by owner decision`; the mod then ships without a packaged or Cleanroom launch, and the release records say so.
 
 ## Runtime Compatibility
 
+- The compatible runtime target of this workflow is Cleanroom. The artifact stays a Forge artifact built with the approved template, which is what Cleanroom runs; the development client and dedicated server run standard Forge, and the test instance runs Cleanroom. Do not plan standard-Forge-only or dual-runtime support; a mod that needs Cleanroom-native APIs or Java 25-only behavior is a template decision (see `references/template-candidates.md`), not a runtime decision.
 - Treat `target_java_version` as the default release target.
 - Validate the actual Java target against the selected loader, runtimes, dependencies, and template.
 - Do not use runtime APIs newer than the approved target unless an approved compatible dependency supplies them.
@@ -152,7 +164,7 @@ Release and publication defaults are:
 Validation ownership defaults are:
 
 - Dedicated server testing: owner-executed and expected by default
-- Cleanroom testing: owner-managed
+- Test instance testing (the packaged jar in the agent-managed test instance, on Cleanroom): owner-executed, agent-prepared, expected by default
 - External multiplayer testing: owner-managed
 
 A dedicated-server check is a normal part of validating a mod that loads on a server, not an exceptional request. The owner runs it; the agent prepares the recipe, supplies the server configuration it needs, and reads the resulting logs. Omit it only for a mod that never loads server-side, and record the reason.

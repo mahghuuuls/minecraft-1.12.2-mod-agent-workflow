@@ -287,9 +287,8 @@ Accepted limitation: <Validation name> was not performed by owner decision.
 Examples:
 
 ```text
-Accepted limitation: Cleanroom testing was not performed by owner decision.
+Accepted limitation: Test instance testing was not performed by owner decision.
 Accepted limitation: External multiplayer testing was not performed by owner decision.
-Accepted limitation: Clean launcher testing was not performed by owner decision.
 ```
 
 A validation waiver is valid only when:

@@ -153,3 +153,4 @@ Software design continues whenever existing code changes. Optimize for the small
   The tool waits for the command, prints its output, keeps the full output in its run folder, and exits with the command's exit code.
 - Use the launch path recorded in `project-setup.md` for every build, test run, and release build of the project. Ask the owner to build only when both paths fail, and then follow the environment-limitation rules in `guidelines/collaboration-guidelines.md`.
 - Give a build a timeout above its longest expected duration, and never start two builds of the same repository at the same time.
+- `clean` fails with `Unable to delete directory ... build` while a Gradle daemon from an earlier build still holds files there. Run `gradlew.bat --stop` through the same launch path first, then `clean build`; do not retry `clean` alone or delete `build` by hand.

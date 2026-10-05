@@ -21,7 +21,7 @@ Do not recommend a template solely because it appears in this file. Requirements
 Use as the provisional default when the mod should:
 
 - Run on standard Forge
-- Also remain compatible with Cleanroom where feasible
+- Run on Cleanroom, the workflow's runtime target
 - Target Java 8 bytecode for broad compatibility
 - Use a modern Java development environment
 - Want a versatile baseline while any need for Mixins, coremods, access transformers, shadowing, or publishing configuration remains deferred to Feasibility Research

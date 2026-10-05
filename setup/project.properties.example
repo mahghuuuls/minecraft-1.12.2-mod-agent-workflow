@@ -25,6 +25,10 @@ supported_runtimes=
 distribution_platforms=curseforge
 mod_runtime_role=
 
+# Agent-managed test instance (Test Instance in guidelines/project-defaults.md); empty when declined:
+test_instance_path=
+test_instance_template=barebones-template-cleanroom
+
 # Approved template for Initial Development:
 template_repository_url=
 template_repository_ref=
@@ -60,7 +64,7 @@ release_owner_curseforge_upload=owner
 release_owner_release_jar_generation=agent
 release_owner_final_publication_verification=agent
 release_owner_dedicated_server_testing=owner
-release_owner_cleanroom_testing=owner
+release_owner_test_instance_testing=owner
 release_owner_external_multiplayer_testing=owner
 
 # Optional project-specific overrides:

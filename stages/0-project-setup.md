@@ -40,6 +40,7 @@ Establish:
 - Preferred time to offer pushes and whether bounded standing implementation-commit authorization should be offered later
 - Client/server responsibility when the concept is known, or an explicit deferral to Concept and Scope / Feasibility Research when it is premature
 - A provisional loader, compatible-runtime, and template choice for Initial Development
+- The agent-managed test instance: recorded from `owner-defaults.md`, created now by the owner from the recommended template, or declined with a waiver
 - Default distribution destination or a known project-specific override, without researching publication mechanics
 - Known dependency source repositories or owner-provided dependency references, only when already relevant
 - Default release and validation ownership plus any owner-requested overrides
@@ -68,6 +69,7 @@ Establish:
 - Explain the distinction between mod loader, compatible runtime, distribution platform, and installation side before asking about an override involving those concepts
 - Apply owner and shared defaults for provisional loader/runtime/template/distribution choices; research alternatives during Project Setup only when an already-known hard constraint prevents using the default
 - Record provisional loader, runtime, and template candidates or defer final validation to Feasibility Research
+- Ask once about the agent-managed test instance, explain why it matters, and record it (Test Instance in `guidelines/project-defaults.md`)
 - Record known dependency source repositories as optional references, or defer dependency-source decisions to Feasibility Research
 - Create or update `workspace/documentation/dependency-references.md` when dependency source references are already approved or supplied
 - Explain repository requirements for the selected scenario
@@ -162,6 +164,7 @@ Inspect and record:
 - Existing development-runtime log locations, agent access, and observed retention or rotation behavior
 - Whether the agent can execute the build tool itself, established by attempting it rather than by observing that it is installed, and by which launch path (direct, or through `tools/host-run`)
 - Other mod projects active on the same computer: other workflow checkouts, the agents working in them, the shared test instances they use, and the dedicated-server ports they recorded; then the port this project takes (Shared Machine in `guidelines/project-defaults.md`)
+- The agent-managed test instance when `owner-defaults.md` names one: its path exists, its `mods` folder against the recorded template list, and whether another project's lock note is present
 
 Project defaults define the intended environment. Missing tools may be installed later when they are not needed by the first stage, but record the stage by which each is required.
 
@@ -272,12 +275,20 @@ Default recommendations:
 
 Record a reason when the toolkit is available but deliberately not selected. Do not treat non-use as a validation waiver; the issue still needs another adequate evidence mechanism.
 
+## Test Instance
+
+Ask once, before the template question, whether the owner has or will create an agent-managed test instance (Test Instance in `guidelines/project-defaults.md`). Apply the answer from `owner-defaults.md` when it names one and the instance exists.
+
+Explain why in a few sentences: the development client proves the code, not the package; players install the jar through a launcher into a pack of base mods on Cleanroom, and the mixin loaders, lighting engines, and fixes in that base are what break a mod that worked in `runClient`; an instance the agent may prepare and reset gives every mod that launch with no owner setup per campaign.
+
+Recommend the BareBones Template (Cleanroom) modpack from CurseForge, installed in the owner's launcher under a name that says it is for testing. Tell the owner the two steps the template's readme requires: launch it once, then remove PackCompanion. Then record the launcher, the instance name and path, the template and version, and capture the template mod list as the reset baseline into `project-setup.md`. When the owner declines, record the waiver named in Test Instance and move on; do not ask again in later stages.
+
 ## Template Guidance
 
 For Initial Development:
 
 1. Read `references/template-candidates.md`.
-2. Ask whether the artifact must run on standard Forge, Cleanroom, or both.
+2. Record Cleanroom as the compatible runtime. The workflow targets Cleanroom only (Runtime Compatibility in `guidelines/project-defaults.md`); the artifact remains a Forge artifact, and the development runtimes remain standard Forge. Do not ask about standard-Forge-only or dual-runtime support.
 3. Ask whether Java, Kotlin, or Scala is intended.
 4. For a new mod, default Mixins, coremods, access transformers, shading, and advanced automation to deferred Feasibility Research. Do not ask the owner to predict these mechanisms before Concept and Scope defines the behavior.
 5. Ask about an advanced build capability during Project Setup only when the owner has already supplied a hard technical constraint or inspected existing-project evidence makes the capability unavoidable.
@@ -289,19 +300,19 @@ For Initial Development:
 Use these terms consistently:
 
 - **Loader:** the mod-loading platform whose APIs and metadata the artifact uses, such as Forge.
-- **Compatible runtime:** an environment expected to run that loader artifact, such as standard Forge or Cleanroom.
+- **Compatible runtime:** the environment expected to run that loader artifact. In this workflow it is Cleanroom, which runs Forge artifacts; standard Forge is only the development runtime.
 - **Distribution platform:** a place where the owner may publish the artifact, such as CurseForge; it is not a mod loader.
 - **Installation side:** whether the completed behavior requires installation on the client, dedicated server, or both; defer this until the concept is understood when necessary.
 
 Use this recommendation order unless inspected evidence or project constraints justify another choice:
 
-1. **ForgeDevEnv:** recommended default for broad Forge and Cleanroom compatibility.
-2. **CleanroomModTemplate:** specialized choice for Cleanroom-exclusive development.
+1. **ForgeDevEnv:** recommended default; it builds the Forge artifact that Cleanroom runs, with standard Forge development runtimes.
+2. **CleanroomModTemplate:** specialized choice for a mod that needs Cleanroom-native APIs or Java 25-only behavior.
 3. **GregTechCEu Buildscripts:** advanced choice for projects that need its managed build and automation.
 4. **TemplateDevEnvKt:** language-specific alternative for Kotlin.
 5. **Another researched candidate:** only when the maintained shortlist does not fit.
 
-Do not select CleanroomModTemplate merely because Cleanroom compatibility is desired. A conventional Forge artifact is normally the broader compatibility target; CleanroomModTemplate is appropriate when Cleanroom-native or Java 25-only behavior is intentional.
+Do not select CleanroomModTemplate merely because the runtime target is Cleanroom; every mod here targets Cleanroom. A conventional Forge artifact from ForgeDevEnv runs there and keeps the standard Forge development runtimes; CleanroomModTemplate is appropriate when Cleanroom-native APIs or Java 25-only behavior is intentional.
 
 Do not recommend archived, unlicensed, experimental, or multiversion templates without explaining their risk and proving that they support the approved Minecraft 1.12.2 target.
 
@@ -336,12 +347,12 @@ Start from these defaults unless the owner changes them:
 | Release JAR generation | Agent | Generate or identify the normal release artifact when later stages require a release handoff. |
 | Final publication verification | Agent | Verify approved local handoff information by default; external publication checks require owner-provided context or explicit approval. |
 | Dedicated server testing | Owner runs, agent prepares | Expected by default for any mod that loads on a server. The agent prepares the recipe and the server configuration it needs, and reads the logs; the owner runs it. Omit only for a mod that never loads server-side, with the reason recorded. |
-| Cleanroom testing | Owner | Record compatibility expectations or limitations; do not attempt or repeatedly request Cleanroom runtime testing unless explicitly assigned. |
+| Test instance testing | Owner runs, agent prepares | Expected by default: the packaged jar in the agent-managed test instance (Cleanroom). The agent copies the jars, writes the configuration and bundles, reads the logs, and resets the instance; the owner launches. Omit only when the owner declined the instance, recorded as a waiver. |
 | External multiplayer testing | Owner | Do not attempt, research, or repeatedly request external multiplayer validation unless explicitly assigned. |
 
 Apply the defaults directly and summarize them as one decision packet. Ask only what the owner wants to override or what project evidence makes ambiguous. Do not ask every row separately. Approval of the complete Project Setup artifact approves the recorded defaults and overrides; a separate matrix approval is unnecessary.
 
-Dedicated-server, Cleanroom, and external-multiplayer testing are validation ownership decisions rather than publication assets. Keep them visibly separated from README, mod-page, icon, screenshot, upload, and artifact-generation responsibilities when presenting the matrix.
+Dedicated-server, test-instance, and external-multiplayer testing are validation ownership decisions rather than publication assets. Keep them visibly separated from README, mod-page, icon, screenshot, upload, and artifact-generation responsibilities when presenting the matrix.
 
 Record the approved matrix in `workspace/documentation/project-setup.md`. Later stages must follow it. If a later stage needs to perform owner-managed work, stop and ask the owner to revise the matrix or approve a one-time exception.
 
@@ -381,6 +392,8 @@ Relevant values may include:
 - `preferred_push_prompt_cadence`
 - `offer_standing_implementation_commit_authorization`
 - `release_handoff_mode`
+- `test_instance_path`
+- `test_instance_template`
 - `release_owner_readme`
 - `release_owner_mod_page`
 - `release_owner_changelog`
@@ -391,7 +404,7 @@ Relevant values may include:
 - `release_owner_release_jar_generation`
 - `release_owner_final_publication_verification`
 - `release_owner_dedicated_server_testing`
-- `release_owner_cleanroom_testing`
+- `release_owner_test_instance_testing`
 - `release_owner_external_multiplayer_testing`
 - `agent_diagnostics_toolkit_use`
 - `agent_diagnostics_toolkit_version`
@@ -420,17 +433,18 @@ If a new mod's repository, directory name, mod ID, display name, public descript
 5. Discover accessible current and rotated development logs, or record when runtime initialization must complete that discovery.
 6. Resolve known repository configuration without requiring a final new-mod repository before Concept and Scope.
 7. Collect or defer practical project defaults.
-8. Apply or provisionally defer loader, runtime, template, and distribution defaults; ask only about known constraints or requested overrides.
-9. Record the release and validation ownership defaults and collect only necessary overrides.
-10. Resolve the Agent Diagnostics Toolkit preference and record any deferred artifact verification.
-11. Record public-copy and Git workflow preferences.
-12. Create the workflow feedback log when it does not exist.
-13. Create the Agent Diagnostics Toolkit feedback log when use is selected.
-14. Write only approved known operational values.
-15. Record deferred prerequisites and the stage by which each is required.
-16. Propose the applicable workflow.
-17. Produce the setup artifact.
-18. Present the artifact and workflow selection for separate explicit approval.
+8. Resolve the agent-managed test instance: apply the saved one, guide its creation, or record the waiver.
+9. Apply or provisionally defer loader, runtime, template, and distribution defaults; ask only about known constraints or requested overrides.
+10. Record the release and validation ownership defaults and collect only necessary overrides.
+11. Resolve the Agent Diagnostics Toolkit preference and record any deferred artifact verification.
+12. Record public-copy and Git workflow preferences.
+13. Create the workflow feedback log when it does not exist.
+14. Create the Agent Diagnostics Toolkit feedback log when use is selected.
+15. Write only approved known operational values.
+16. Record deferred prerequisites and the stage by which each is required.
+17. Propose the applicable workflow.
+18. Produce the setup artifact.
+19. Present the artifact and workflow selection for separate explicit approval.
 
 ## Output Artifact
 
@@ -482,6 +496,7 @@ This stage is complete when:
 - Unknown repository and project identity values are either recorded or deferred to Project Initialization.
 - Future prerequisites have explicit deadlines.
 - The loader, runtime, template, and distribution decisions are recorded or legitimately deferred/not applicable.
+- The agent-managed test instance is recorded with its path, template, and baseline mod list, or declined with the recorded waiver.
 - Accessible development-log paths and retention or rotation behavior are recorded, or discovery is explicitly due after runtime initialization and before the first runtime validation packet.
 - Whether the agent can execute the build tool is recorded as an attempted result, or explicitly due before the first issue that depends on a build.
 - Known dependency source references are recorded or explicitly deferred when relevant.

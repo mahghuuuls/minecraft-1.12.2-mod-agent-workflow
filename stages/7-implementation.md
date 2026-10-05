@@ -187,7 +187,8 @@ Use the environment tiers approved in the implementation plan. Record the exact 
 
 - `runClient` may prove integrated-server behavior but does not prove a standalone dedicated-server launch.
 - `runServer` does not prove client rendering or a packaged modpack installation.
-- A packaged clean environment does not prove compatibility with the target modpack or alternate runtime.
+- The development client and server run standard Forge. Only the test instance runs Cleanroom, so a mod without a test-instance card has never run on the workflow's runtime target.
+- The test instance does not prove compatibility with the owner's own modpack.
 - A target modpack check does not by itself prove general compatibility with every modpack.
 - External multiplayer is required only when the approved risk or behavior needs separately operated multiplayer evidence.
 
@@ -326,7 +327,7 @@ Do not start the owner session until the active runtime source matches the recor
 
 When every included issue reaches **Awaiting Validation**, present and execute the campaign through `guidelines/manual-validation.md`. Assign every card and evidence item to its owning issue. A passing card moves only its owning issue toward Done; campaign completion is not blanket proof for the group.
 
-After the campaign cards pass, submit the newly collected evidence to a focused independent follow-up review before marking issues Done. One reviewer may inspect the complete campaign evidence in one context, but must report whether each included issue's acceptance criteria are independently supported. Any post-review correction receives its own focused verification and follow-up.
+After the campaign cards pass, submit the newly collected evidence to a focused independent follow-up review before marking issues Done. One reviewer may inspect the complete campaign evidence in one context, but must report whether each included issue's acceptance criteria are independently supported. The reviewer also compares each card's expected results with the criterion it claims to check, and names every criterion, or part of one, that no card reached (a craft never performed, an effect never applied, an item never looked at). Any post-review correction receives its own focused verification and follow-up.
 
 When a card fails:
 
@@ -347,14 +348,14 @@ Close a campaign in this order. Each step feeds the next, and a step done out of
 
 1. Save every runtime output the cards used (current and rotated logs, the configuration file as the game rewrote it, bundle files, owner screenshots) into the campaign staging folder before any launch, edit, or rename can change it.
 2. Write the campaign results file from the records and the owner's words, with the deviations, the per-card lines, the errors read from the logs, and the automated checks after any correction.
-3. Apply corrections the cards produced, rerun the automated checks, and submit the corrections to the follow-up review; take its findings before anything is committed.
+3. Apply corrections the cards produced, rerun the automated checks, and submit the corrections and the results file to the follow-up review; take its findings before anything is committed. A criterion the review finds unreached is closed by one extra card in the same campaign, run while the instance is still prepared, or by a limitation the owner accepts and the issue records. It is never closed by a result line that says "met". Keep the instance prepared until this step is done; restoring it earlier means preparing it twice.
 4. Make the completion commit under the authorization that covers it, and confirm `git status --porcelain` is empty.
 5. Build from that clean tree when the pack retains the jar or the test results, using the launch path recorded in Project Setup (see Running Builds And Tests in `guidelines/coding-standards.md`); ask the owner only when Project Setup recorded that the agent cannot build.
 6. Write the pack specification with every retained file and every runtime source declared honestly, capture the pack, and run `verify` on its manifest.
 7. Record in each included issue: the in-game verification lines, the follow-up review, the completion commit, and the pack path with its manifest hash; move the issue to **Done**.
 8. Update `project-status.md` (commit list, next action, next approval, current issue line) and `project-state.md`.
 9. Run `scripts/validate-workspace.ps1`; it checks that every Done issue's pack exists and that its manifest still matches its recorded hash.
-10. Restore the runtime: configuration file, extra jars copied for the session, and any instance the campaign borrowed; record what stays.
+10. Restore the runtime: the development configuration file, and the test instance reset to its recorded baseline (`mods` folder against the template list, changed configuration restored, generated configuration of removed mods deleted, lock note removed); record what stays, such as a test world. This is the last step for the reason given in step 3.
 
 ## Testing Approach
 

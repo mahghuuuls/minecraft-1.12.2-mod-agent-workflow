@@ -64,7 +64,7 @@ Establish:
 - Confirm the approved release version before packaging or handoff
 - Build, inspect, checksum, and record the release artifact when release JAR generation/validation is agent-managed by Project Setup or explicit owner instruction
 - Read the release artifact's `META-INF/MANIFEST.MF` and confirm every attribute names something the jar actually carries; a `MixinConfigs` entry for a file that is not in the jar is a crash at discovery on any loader that honours it
-- When the owner has an instance of a target loader the development client does not run (for example Cleanroom), drop the built release artifact into it and confirm the mod passes discovery before the handoff is finalized; the development client and a plain Forge server cannot show packaging defects
+- Drop the built release artifact into the agent-managed test instance, reset to its baseline, and have the owner launch it once; confirm from the log that the mod passes discovery on Cleanroom and that the in-mod logo shows in the mod list, before the handoff is finalized. The development client and a plain Forge server cannot show packaging defects
 - When the Agent Diagnostics Toolkit was used, verify that its classes, JAR, metadata relation, and development-only test assets are absent from the shipping artifact and player dependency instructions
 - Verify that every shipped mod dependency relation follows the canonical minimum-only policy and remains distinct from exact build-artifact pinning
 - Produce `<artifact-root>/release-handoff.md` when a release artifact is built or identified
@@ -76,7 +76,7 @@ Do not:
 
 - Add or change mod behavior
 - Perform unrelated refactoring
-- Perform clean-instance, dedicated-server, Cleanroom, or multiplayer runtime testing unless assigned by the ownership matrix or explicitly requested by the owner
+- Perform dedicated-server or multiplayer runtime testing, or test-instance testing beyond the release discovery launch above, unless assigned by the ownership matrix or explicitly requested by the owner
 - Include build evidence, bytecode details, validation logs, QA-style usage steps, or internal test reports in public documentation
 - Include redundant platform requirements that the distribution platform already displays unless players need the information to decide whether to install
 - Research platform-submission mechanics, live project fields, page setup, or final platform field choices unless explicitly assigned by the owner
@@ -362,7 +362,7 @@ Do not use the internal record as public copy.
 8. Draft or update repository `CHANGELOG.md` when agent-managed, then draft the separate distribution-platform release changelog for its narrower player audience. For a first public release, default the platform text to `Initial release`.
 9. Prepare a CurseForge-style summary or description only as reusable public copy, not as platform-field research.
 10. Add high-level configuration and player-facing multiplayer/client/server notes when applicable.
-11. Record icon and screenshot paths as owner-provided, agent-managed, or deferred. Ask the icon question before step 18, so an icon decided now ships in the release-preparation commit (the in-mod logo and, where one exists, the creative tab icon); a deferred icon is recorded as such.
+11. Record icon and screenshot paths as owner-provided, agent-managed, or deferred. Ask the icon question before step 18, so an icon decided now ships in the release-preparation commit (the in-mod logo and, where one exists, the creative tab icon); a deferred icon is recorded as such. When the mod already has approved pixel art that stands for it (the creative tab item, a signature item), offer that art as the first candidate, enlarged without resampling on the backgrounds the platform uses, before asking whether to defer: it is the quickest decision, and an owner who is asked only "defer or provide" tends to reopen the icon after the handoff, which costs a second release build.
 12. Follow icon or screenshot workflows only when those areas are agent-managed or explicitly assigned.
 13. Offer a screenshot shot list unless screenshots are deferred, stage any scenario the owner accepts, and revert staged state after capture.
 14. When CurseForge is selected, perform the CurseForge Markdown compatibility review and give the owner the rendered-preview checklist.

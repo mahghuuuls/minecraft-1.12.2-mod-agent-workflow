@@ -65,7 +65,7 @@ Reads every jar in a mods folder and reports whether the set can load:
 - `MISSING`: a `required-after`, `required-before`, or `mcmod.info requiredMods` target that no jar, built-in id (`minecraft`, `forge`, `fml`, `mcp`), or `-Provided` id supplies.
 - `VERSION`: a present mod whose version is outside the required range. The comparison is basic (numeric segments as numbers, other segments as text, a trailing qualifier sorts before the plain version), so read the versions when a range is unusual.
 
-Notes list jars without a mod id (libraries, coremod-only jars), coremod, tweaker, or mixin jars (a development runtime that already has the same mod on its Gradle classpath refuses the copy as a duplicate), unreadable `mcmod.info` files, unknown dependency instructions, and optional-dependency version mismatches.
+Notes list jars without a mod id (libraries, coremod-only jars), coremod, tweaker, or mixin jars (a development runtime that already has the same mod on its Gradle classpath refuses the copy as a duplicate), unreadable `mcmod.info` files, unknown dependency instructions, and optional-dependency version mismatches. A coremod that registers its mod id from its loading plugin rather than an `@Mod` class (MixinBooter is one) appears as `no mod id found` and still shows as `MISSING` for the mods that require it; when its jar is in the folder, name its id with `-Provided`.
 
 `-Provided <ids>` names mods that the environment supplies without a jar in the folder, such as a mixin loader on the development classpath or the mods of the base instance. The result line says `OK` or the number of problems; `-Strict` turns problems into a failing exit code for scripts, and `-Json` prints the report as data.
 

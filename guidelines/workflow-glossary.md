@@ -54,6 +54,10 @@ Owner: `guidelines/process-control.md`
 A bounded, revocable permission covering a defined series of future actions, so that each one does not require separate approval. Never open-ended, and does not extend past the stage that granted it.
 Owner: `guidelines/collaboration-guidelines.md`
 
+**Test Instance**
+The one agent-managed modpack instance in the owner's launcher, created from a template pack (BareBones Template (Cleanroom) by default), where every mod gets its packaged and Cleanroom checks and which the agent resets to its recorded baseline after use.
+Owner: `guidelines/project-defaults.md`
+
 **Validation Waiver**
 An accepted record that an owner-managed validation check will not be performed, together with its reason. Not a way to hide a known defect, failed check, or unverified claim.
 Owner: `guidelines/process-control.md`

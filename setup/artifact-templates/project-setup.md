@@ -63,6 +63,15 @@
 - Preferred push prompt cadence:
 - Offer bounded standing implementation-commit authorization:
 
+## Test Instance
+
+- Decision (recorded from owner defaults, created now, or declined with waiver):
+- Launcher:
+- Instance name and path:
+- Template and version:
+- Baseline mod list (file names and sizes, captured after the template's first-launch steps):
+- Lock check result:
+
 ## Loader, Runtime, Template, And Distribution
 
 - Loader:
@@ -118,7 +127,7 @@
 ## Validation Ownership
 
 - Dedicated server testing:
-- Cleanroom testing:
+- Test instance testing:
 - External multiplayer testing:
 
 ## Release Handoff

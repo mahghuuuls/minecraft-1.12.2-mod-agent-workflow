@@ -15,7 +15,7 @@ Do not duplicate general workflow rules here. If a preference should apply to ev
 Use these as starting recommendations during Project Setup unless the owner or project context points elsewhere:
 
 - Loader:
-- Runtime target:
+- Runtime target: Cleanroom (the workflow's only runtime target; record a note here only if a template decision depends on it)
 - Implementation language:
 - Template candidate:
 - Distribution platform:
@@ -36,6 +36,16 @@ Use this section only for questions the owner repeatedly answers the same way du
 - Default Minecraft development username:
 - Preferred repository naming pattern:
 - Other setup answers:
+
+## Test Instance
+
+The agent-managed test instance is shared by every mod this owner develops (Test Instance in `guidelines/project-defaults.md`). Record it once and Project Setup applies it.
+
+- Launcher:
+- Instance name and path:
+- Template and version (default: BareBones Template (Cleanroom) from CurseForge):
+- Baseline mod list location (captured after the template's first-launch steps):
+- Fallback instance on standard Forge, when the Cleanroom relauncher failed:
 
 ## Agent Diagnostics Toolkit Preference
 
