@@ -164,7 +164,7 @@ Inspect and record:
 - Existing development-runtime log locations, agent access, and observed retention or rotation behavior
 - Whether the agent can execute the build tool itself, established by attempting it rather than by observing that it is installed, and by which launch path (direct, or through `tools/host-run`)
 - Other mod projects active on the same computer: other workflow checkouts, the agents working in them, the shared test instances they use, and the dedicated-server ports they recorded; then the port this project takes (Shared Machine in `guidelines/project-defaults.md`)
-- The agent-managed test instance when `owner-defaults.md` names one: its path exists, its `mods` folder against the recorded template list, and whether another project's lock note is present
+- The agent-managed test instance when `owner-defaults.md` names one: its path exists, its `mods` folder against the recorded template list, whether another project's lock note is present, and the version its runtime reports for `mixinbooter`, read from its newest log that entered a world, when one exists (Mixins in `guidelines/project-defaults.md`)
 
 Project defaults define the intended environment. Missing tools may be installed later when they are not needed by the first stage, but record the stage by which each is required.
 
@@ -281,7 +281,7 @@ Ask once, before the template question, whether the owner has or will create an 
 
 Explain why in a few sentences: the development client proves the code, not the package; players install the jar through a launcher into a pack of base mods on Cleanroom, and the mixin loaders, lighting engines, and fixes in that base are what break a mod that worked in `runClient`; an instance the agent may prepare and reset gives every mod that launch with no owner setup per campaign.
 
-Recommend the BareBones Template (Cleanroom) modpack from CurseForge, installed in the owner's launcher under a name that says it is for testing. Tell the owner the two steps the template's readme requires: launch it once, then remove PackCompanion. Then record the launcher, the instance name and path, the template and version, and capture the template mod list as the reset baseline into `project-setup.md`. When the owner declines, record the waiver named in Test Instance and move on; do not ask again in later stages.
+Recommend the BareBones Template (Cleanroom) modpack from CurseForge, installed in the owner's launcher under a name that says it is for testing. Tell the owner the two steps the template's readme requires: launch it once, then remove PackCompanion. Then have the owner create a new world in it once, so its log lists the version the runtime reports for `mixinbooter` (Mixins in `guidelines/project-defaults.md`). Then record the launcher, the instance name and path, the template and version, and capture the template mod list as the reset baseline into `project-setup.md`. When the owner declines, record the waiver named in Test Instance and move on; do not ask again in later stages.
 
 ## Template Guidance
 
@@ -346,7 +346,7 @@ Start from these defaults unless the owner changes them:
 | CurseForge upload | Owner | Do not research upload mechanics, publication page setup, or final platform field choices unless explicitly assigned. |
 | Release JAR generation | Agent | Generate or identify the normal release artifact when later stages require a release handoff. |
 | Final publication verification | Agent | Verify approved local handoff information by default; external publication checks require owner-provided context or explicit approval. |
-| Dedicated server testing | Owner runs, agent prepares | Expected by default for any mod that loads on a server. The agent prepares the recipe and the server configuration it needs, and reads the logs; the owner runs it. Omit only for a mod that never loads server-side, with the reason recorded. |
+| Dedicated server testing | Owner checks, agent prepares | Expected by default for any mod that loads on a server. The agent prepares the recipe and the server configuration, starts the development dedicated server when it can, and reads the logs; the owner connects and performs the checks. Omit only for a mod that never loads server-side, with the reason recorded. |
 | Test instance testing | Owner runs, agent prepares | Expected by default: the packaged jar in the agent-managed test instance (Cleanroom). The agent copies the jars, writes the configuration and bundles, reads the logs, and resets the instance; the owner launches. Omit only when the owner declined the instance, recorded as a waiver. |
 | External multiplayer testing | Owner | Do not attempt, research, or repeatedly request external multiplayer validation unless explicitly assigned. |
 

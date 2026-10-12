@@ -54,7 +54,7 @@ Establish:
 - Inspecting dependency source repositories when documentation, released artifacts, or online source browsing are insufficient
 - Identifying possible technical mechanisms
 - Investigating client and dedicated-server limitations
-- Identifying whether Mixins, coremods, access transformers, reflection, shading, or similar mechanisms may be necessary
+- Identifying whether Mixins, coremods, access transformers, reflection, shading, or similar mechanisms may be necessary; when Mixins are, MixinBooter is the loader and its declared minimum follows Mixins in `guidelines/project-defaults.md`
 - Evaluating advanced build or automation capabilities only when approved behavior or operational constraints create a concrete need
 - Validating the provisional template against concrete capability findings from this stage
 - Inspecting the selected toolkit artifact, metadata, guide, or source far enough to identify compatibility risks and the required development-runtime dependency path

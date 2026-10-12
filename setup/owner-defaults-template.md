@@ -45,6 +45,8 @@ The agent-managed test instance is shared by every mod this owner develops (Test
 - Instance name and path:
 - Template and version (default: BareBones Template (Cleanroom) from CurseForge):
 - Baseline mod list location (captured after the template's first-launch steps):
+- Version the runtime reports for `mixinbooter`, with the template and Cleanroom versions it was read from (from `Client attempting to join with ... mods` in a log that entered a world; read again when either changes):
+- Game-written configuration files exempt from the reset, if any:
 - Fallback instance on standard Forge, when the Cleanroom relauncher failed:
 
 ## Agent Diagnostics Toolkit Preference

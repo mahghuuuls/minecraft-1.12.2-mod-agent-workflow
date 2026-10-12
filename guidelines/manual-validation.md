@@ -27,7 +27,7 @@ Before the owner starts a shared game, server, or modpack session, present the c
 - Whether the Agent Diagnostics Toolkit is active, its pinned version and runtime placement, any approved automatic baseline, and the bundle names used during the session.
 - When the session loads jars copied from another instance, the result of a dependency check done before the owner launches: read each copied jar's `mcmod.info` (`requiredMods`, `dependencies`) and resolve the needs transitively against the run's mod set, and check the development classpath for a coremod or loader the copied jar would duplicate (the same mod ID already present, such as a mixin loader). A missing dependency or a duplicate costs the owner a launch, and the fix is a copy or a removal the agent can make in advance. `tools/mod-jar/mod-jar.cmd check -Folder <mods directory> -Provided <mod ids already on the development classpath>` performs this check mechanically, including the `@Mod` dependencies that `mcmod.info` does not list. The jar list for the launch is the output of this check, not the plan's list of mod names: run it over the candidate folder until it reports zero problems. Find each `MISSING` mod by running `check` over the source instance's folder, which prints the mod id every jar provides, so a jar whose file name differs from its mod id (a Baubles build named `Bubbles-x.y.z.jar`) is still found. A coremod that carries no `@Mod` class, such as MixinBooter, is reported as `no mod id found`; confirm its jar is in the folder and pass its id with `-Provided`.
 
-- When the session uses a shared test instance, the result of the lock check from Shared Machine in `guidelines/project-defaults.md`: the `mods` folder listed, no foreign lock note or jar found, and this project's lock note written.
+- When the session uses a shared test instance, the result of the lock check from Shared Machine in `guidelines/project-defaults.md`: the `mods` folder listed, no foreign lock note or jar found, and this project's lock note written; and the instance `config` folder copied into the staging folder (Test Instance in the same file).
 
 Group cards by configuration state and minimize restarts. Do not reveal previously known checks one at a time after the runtime is already open. This overview is a session map, not the detailed procedure for every card.
 
@@ -70,6 +70,7 @@ Keep headings and language stable across cards so the owner does not have to rel
 ## Card-Writing Rules
 
 - Put commands in copyable code blocks and list them in execution order.
+- Write launch steps in the form recorded in `project-setup.md` for the owner (their terminal, working folder, and exact command), not in the form the agent uses for its own builds. When none is recorded yet, ask at the first owner launch and record it.
 - When the selected Agent Diagnostics Toolkit supports the required operations, package every deterministic multi-command setup, reset, inspection, marker, and cleanup sequence as a project-owned bundle. The owner-facing card should normally contain only its reload command, its named run command, and genuinely interactive or judgment-dependent steps. Keep the individual commands in bundle source and evidence documentation for auditability.
 - When a deterministic sequence cannot be bundled because the selected toolkit lacks a required operation, state that limitation in the plan and present the commands together in one copyable block. Convenience alone is not a reason to make the owner enter a supported sequence manually.
 - Distinguish commands from mouse, keyboard, inventory, combat, waiting, or observation steps.
@@ -85,6 +86,9 @@ Keep headings and language stable across cards so the owner does not have to rel
 - Make a portal the bundle places findable. A portal block flush in a dark floor is missed; give it a sign or have the bundle teleport the operator onto it.
 - Ask for one visual verdict at a time. A card whose **Owner checks** lists several looks gets `Done` back and the individual answers are lost; when the agent needs more than one verdict, ask one yes-or-no question per item in the report line.
 - Define expected results before the action. Include the distinguishing condition that would look different if the feature were absent or broken.
+- Freeze a starting state that changes by itself. When the expected result depends on a state that decays or advances on its own (regeneration, a cooldown, a potion running out, a mob despawning), stop the mechanism for the card (turn it off in that launch's configuration, or, when the action itself can be a bundle command, set the state and act in the same bundle run), or give the owner a time window the agent has checked is long enough. Say which on the card. A card that asks the owner to act "right away" against a fast mechanism tests reaction time, not the mod.
+- For a refusal or feedback card, pick a trigger the mod always refuses in that state, or have the bundle fix the view first (for example `tp @s ~ ~ ~ ~ -90` in the bundle looks straight up, so a left click swings at air when nothing is within reach overhead). Otherwise the owner can perform a neighboring action by accident, such as clicking a block within reach instead of swinging at air, and the card fails for the wrong reason.
+- When a card checks a value from a lower-priority source (an addon's provider, a fallback, a built-in default), list every source that would win over it (configuration entries, override lists, other providers) and confirm the seed clears each one before the session.
 - Copy every expected result on a card from the acceptance criterion it checks or from the authoritative data row (for a data-driven mod, the roster row of the item in play). Do not retype it from memory of the feature: a line that contradicts the criterion costs an owner question at best, and at worst reads as a defect. Check the kind of the item or fixture before naming a line it should show; an item of another kind shows other lines.
 - Keep requirement IDs, architecture IDs, implementation history, and evidence theory out of the owner-facing card unless they are necessary to perform the check.
 - Verify Minecraft 1.12.2 command syntax, selectors, registry identifiers, fixture behavior, and cleanup commands before presenting them.
@@ -98,7 +102,7 @@ Keep headings and language stable across cards so the owner does not have to rel
 
 These fixture shapes have held up across sessions. Use them before inventing a new one.
 
-- **A sky platform at fixed coordinates.** A bundle teleports the operator to an absolute position high above any terrain (for example `201 151 201`), waits for the chunks, fills a stone platform under that position, teleports again, and builds the fixtures on the platform with name signs. Every later bundle then uses the same absolute coordinates, in any world, with no dependence on where the owner stands or what the terrain is. Build fixtures from blocks that do not fall.
+- **A sky platform at fixed coordinates.** A bundle teleports the operator to an absolute position high above any terrain (for example `201 151 201`), waits for the chunks, fills a stone platform under that position, teleports again, and builds the fixtures on the platform with name signs. Every later bundle then uses the same absolute coordinates, in any world, with no dependence on where the owner stands or what the terrain is. Build fixtures from blocks that do not fall. The development dedicated server has its own world, a different save from the client's: a scenario that runs there builds its platform there first, because fixtures built relative to the player break on ordinary terrain.
 - **A carved room in the Nether.** The same idea below the bedrock roof: teleport to an absolute position around y 100, fill a box of air, lay a floor, and build on the floor. The room needs no portal search once the operator is in the dimension.
 - **A platform far from the dragon in the End.** Around `301 151 301` there is only void: the dragon stays near the center and the outer islands start much farther out.
 - **Portals from a bundle.** An obsidian frame with a fire block inside lights a Nether portal; an `end_portal` block set in a floor sends the operator to the End from any dimension. Give a floor portal a sign or teleport the operator onto it.
@@ -119,6 +123,8 @@ Use **Owner checks** only for evidence the agent cannot reliably obtain, such as
 
 Use **I will verify** for accessible authoritative evidence. Do not ask the owner to transcribe it. A self-reported diagnostic still requires the independent corroboration defined by the issue's Manual Observability contract.
 
+Before recording a card result, compare the bundles that started since the previous card (the toolkit's `BUNDLE_START` records, sliced with `tools/session-log`) with the bundles the card's steps name. A step with no start record means the card's claim was not exercised: say so and rerun the step instead of scoring the card from the owner's `Done`.
+
 For stateful, failure-sensitive, or fixture-sensitive cards, inspect the planned evidence before sending the next card. For independent visual cards, a small batch may be completed before log inspection when the shared evidence remains attributable.
 
 ## Failure And Revision
@@ -131,6 +137,7 @@ When the owner reports a mismatch:
 - Ask only for the missing observation needed to distinguish plausible causes.
 - If the fixture, command, or expected result was wrong, correct the card and explain the material change.
 - Do not count a check as passed merely because the owner completed the actions.
+- A result that differs from the card's expected value is a deviation to record at once, never a pass with a new explanation.
 
 ## Completion And Cleanup
 
@@ -139,6 +146,6 @@ At the end of the session:
 - State which cards passed, failed, were deferred, or were waived.
 - Inspect the final accessible evidence and record it in the owning issue.
 - Disable temporary diagnostics and restore temporary configuration or world state.
-- Reset the test instance to its recorded baseline and remove this project's lock note (Test Instance and Shared Machine in `guidelines/project-defaults.md`): compare the `mods` folder with the template list rather than remembering what was copied.
+- Reset the test instance to its recorded baseline and remove this project's lock note (Test Instance and Shared Machine in `guidelines/project-defaults.md`): compare the `mods` folder with the template list rather than remembering what was copied, and restore changed configuration from the copy taken before the session.
 - State whether the owner may close the client/server or whether another approved session remains.
 - Do not make the owner restate successful observations already covered by `Done`.

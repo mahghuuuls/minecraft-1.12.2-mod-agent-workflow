@@ -459,7 +459,7 @@ Use these evidence tiers consistently:
 1. **Automated or static:** compilation, unit tests, static inspection, or artifact inspection.
 2. **Development client:** `runClient`, including its integrated server when applicable.
 3. **Development dedicated server:** `runServer`. Needs the server configuration described under Development Dedicated Server Setup in `stages/7-implementation.md`. Optional mods that carry Mixins may not load here even when they load in `runClient`; plan checks that need them on a server for tier 4 or 5.
-4. **Test instance:** the built jar in the agent-managed test instance (Test Instance in `guidelines/project-defaults.md`), reset to its template baseline before the session. This is the packaged check and the only Cleanroom launch the workflow gives a mod; plan at least one card here for every mod unless the owner declined the instance.
+4. **Test instance:** the built jar in the agent-managed test instance (Test Instance in `guidelines/project-defaults.md`), reset to its template baseline before the session. This is the packaged check and the only Cleanroom launch the workflow gives a mod; plan at least one card here for every mod unless the owner declined the instance. A mod that uses Mixins also gets a short discovery launch here with the first campaign that ships a Mixin, so the declared MixinBooter minimum meets Cleanroom early (Mixins in `guidelines/project-defaults.md`).
 5. **Target modpack:** the built jar in the owner's own pack, when the owner offers it.
 6. **External multiplayer:** a separately operated multiplayer environment.
 

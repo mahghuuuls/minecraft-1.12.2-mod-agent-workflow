@@ -89,6 +89,8 @@ Do not:
 
 An implementation defect returns to Implementation. An inaccurate public claim returns to the stage that owns the underlying behavior or decision. A terminology conflict returns to the glossary-owning stage that introduced or approved the term.
 
+When Release Presentation returns to Implementation while release materials are drafted but not yet committed in the mod repository, copy each drafted file to `workspace/release-drafts/` and record its path. Then delete the new files and revert the edited tracked files to the last commit, before any build, launch, or commit for the returned work. Every campaign runtime, checkpoint, and evidence pack then comes from a clean tree that holds only implementation changes, and the release-preparation commit stays its own approved step. When Release Presentation resumes, compare each saved draft with the file now in the repository, merge them, update them for the new behavior, and present the changed materials again (process steps 18 to 20).
+
 ## Desired AI Behavior
 
 Act as a release documentation editor.

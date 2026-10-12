@@ -348,6 +348,8 @@ Do not enable optional product or build capabilities unless the approved archite
 
 For every approved mod dependency applied during initialization, keep the exact inspected artifact or coordinate in development/build resolution and independently encode the shipping metadata constraint according to `guidelines/project-defaults.md`. Inspect the template's actual metadata syntax rather than copying the build version into the runtime relation.
 
+When Mixins are approved, the template's `mixin_booter_version` (ForgeDevEnv) is the build version only. Declare `required-after:mixinbooter@[<version>,)` with the version the target Cleanroom runtime reports, as Mixins in `guidelines/project-defaults.md` describes, and record that version and its source in `project-initialization.md`.
+
 Do not add gameplay implementation.
 
 When Project Setup selected the Agent Diagnostics Toolkit, follow `guidelines/agent-diagnostics-toolkit.md`. Prefer the template's verified development-runtime configuration and required deobfuscation path. Do not add the toolkit to compile API, implementation, shading, shipping metadata, or player dependency instructions. If the pinned artifact is not yet available, record installation as deferred before the first dependent validation card rather than inserting an unverified coordinate.
@@ -480,6 +482,7 @@ Verify:
 - Tests pass when present.
 - Processed mod metadata contains the approved values.
 - Processed mod metadata applies the canonical minimum-only policy to every declared mod dependency, while build resolution still identifies the exact inspected artifact.
+- A declared MixinBooter minimum is the version the target Cleanroom runtime reports for `mixinbooter`, never a higher one.
 - The main mod class and package compile.
 - The produced artifact is the expected normal distributable mod artifact for the selected loader.
 - The normal distributable mod artifact is produced under `<mod-repository>/build/libs/`; auxiliary classifier artifacts are distinguishable from it.

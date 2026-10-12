@@ -14,7 +14,7 @@ The tool is routed by `guidelines/coding-standards.md` (Running Builds And Tests
 
 - The tool writes only its own run folders under the operating-system temporary directory (or `MINECRAFT_MOD_AGENT_HOST_RUN_ROOT`). It never edits a repository, never runs Git, and never chooses the command for you.
 - The command runs with the user's own account and the user's profile environment. It does not inherit the agent shell's variables; pass what the command needs with `-Set`.
-- The command has no console to read from. Use it for commands that finish on their own, such as builds, tests, and checks.
+- The command has no console to read from. Use it for commands that finish on their own, such as builds, tests, and checks. The one long-running exception is the development dedicated server (`gradlew.bat runServer`), started in the background with a timeout above the session length; Development Dedicated Server Setup in `stages/7-implementation.md` owns how it is started, answered, and stopped.
 - Every run has its own folder and, for the Task Scheduler launcher, its own task name. Several agents on the same computer can use the tool at the same time. Do not start two builds of the same repository at once; Gradle serializes them, and the second one waits.
 - A timeout stops the whole command tree with `taskkill /T /F`. Choose `-TimeoutSeconds` above the longest expected build.
 

@@ -21,6 +21,7 @@
 - Existing nested repositories:
 - Other mod projects active on this computer (checkouts, agents, shared instances, ports taken):
 - Dedicated-server port for this project:
+- Owner's development-client launch (terminal, working folder, exact command), recorded at the first owner-run launch:
 
 ## Development Logs And Runtime Evidence
 
@@ -70,6 +71,7 @@
 - Instance name and path:
 - Template and version:
 - Baseline mod list (file names and sizes, captured after the template's first-launch steps):
+- Version the runtime reports for `mixinbooter`, with the template and Cleanroom versions it was read from (from `Client attempting to join with ... mods` in a log that entered a world, or not yet read):
 - Lock check result:
 
 ## Loader, Runtime, Template, And Distribution

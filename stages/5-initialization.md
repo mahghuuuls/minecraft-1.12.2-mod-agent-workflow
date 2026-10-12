@@ -12,7 +12,7 @@ Create a clean, independent final mod repository from the configured template an
 
 - `setup/initialize-project.md`
 - Every input declared by that procedure
-- `guidelines/project-defaults.md`, including its Mod Dependency Version Constraints
+- `guidelines/project-defaults.md`, including its Mixins and Mod Dependency Version Constraints sections
 - `guidelines/agent-diagnostics-toolkit.md` when Project Setup selected the toolkit
 - Approved prior-stage artifacts, including `workspace/documentation/requirements.md`
 
@@ -51,7 +51,7 @@ Act as a careful project initializer.
 - Follow `setup/initialize-project.md` as the authoritative operational procedure.
 - Inspect the fetched template rather than assuming its structure.
 - Use approved artifacts for project-specific values and property files for configured defaults.
-- When approved dependencies are present in the initialized baseline, keep the exact inspected artifact in build resolution and apply the canonical minimum-only policy to shipping metadata.
+- When approved dependencies are present in the initialized baseline, keep the exact inspected artifact in build resolution and apply the canonical minimum-only policy to shipping metadata. A MixinBooter dependency declares the minimum from Mixins in `guidelines/project-defaults.md`, not the template's build version.
 - Ask for missing repository or project identity values at the beginning of this stage.
 - Explain that technical identity changes after initialization can require package moves, saved-data/configuration migration, repository renaming, and compatibility decisions.
 - Do not treat missing repository URL, directory name, mod ID, description, root package, or main class as a reason to return to earlier design stages unless the missing value changes approved scope or behavior.
@@ -86,7 +86,7 @@ This stage is complete when:
 - The final repository has independent Git metadata, the configured branch, and the correct origin.
 - Owner-side `git status` succeeds, or the initialization record contains the exact repository path, observed ownership error, and owner-approved repository-specific remediation.
 - Shared defaults, approved project values, licensing, attribution, and the approved public mod description are applied.
-- Any initialized mod dependency metadata satisfies the canonical minimum-only policy, independently of exact development artifact resolution.
+- Any initialized mod dependency metadata satisfies the canonical minimum-only policy, independently of exact development artifact resolution, and a MixinBooter minimum is the version the target Cleanroom runtime reports, never a higher one.
 - The approved root package and main class are applied.
 - Selected Agent Diagnostics Toolkit configuration is development-only and excluded from the baseline distributable artifact, or its installation is explicitly deferred before the first dependent validation card.
 - No unresolved functional template placeholder remains.

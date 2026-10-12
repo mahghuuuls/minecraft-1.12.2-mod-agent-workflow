@@ -38,6 +38,8 @@ Current characteristics to verify:
 
 ForgeDevEnv is normally the most versatile choice because a conventional Forge mod has the broadest 1.12.2 runtime reach and Cleanroom is designed to run most Forge mods.
 
+Its `mixin_booter_version` property is the MixinBooter version the build compiles against. It is not the shipping minimum: Cleanroom's built-in MixinBooter can report a lower version, and the shipping minimum follows Mixins in `guidelines/project-defaults.md`.
+
 Initialization must disable or leave disabled any publishing automation.
 
 ## CleanroomModTemplate

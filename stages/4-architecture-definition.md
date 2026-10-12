@@ -17,7 +17,7 @@ The architecture should provide a clear map of where responsibilities belong and
 - `workspace/documentation/glossary.md`, when present
 - The active mod repository, when architecture must account for existing code
 - Approved dependency source reference checkouts under `workspace/dependencies/`, when Feasibility Research created or accepted them
-- `guidelines/project-defaults.md`, including its Mod Dependency Version Constraints
+- `guidelines/project-defaults.md`, including its Mixins and Mod Dependency Version Constraints sections
 - `guidelines/coding-standards.md`, whose General Design and Loader Integration sections are what the Architecture Quality criteria below resolve to in code
 - `guidelines/collaboration-guidelines.md`, for how decisions and their alternatives are recorded and approved
 - `procedures/cross-project-agent-consultation.md` when the owner authorizes a bounded consultation with an actively developed provider or consumer project
@@ -103,6 +103,7 @@ Act as a software architect collaborating with the project owner.
 - Evaluate candidate libraries identified during Feasibility Research.
 - Use approved dependency source checkouts as read-only evidence for integration decisions.
 - Select dependencies only when they provide meaningful value.
+- When the architecture uses Mixins, name MixinBooter as the loader and record its declared minimum as Mixins in `guidelines/project-defaults.md` sets it. Another Mixin loader needs the owner's explicit decision.
 - Record the exact artifact used by the build separately from the verified minimum encoded in shipping metadata; the compatibility policy itself is owned by `guidelines/project-defaults.md` and must not be replaced by a project-specific upper bound.
 - Explain important alternatives and their trade-offs.
 - For each complexity-bearing boundary, sketch at least two meaningfully different designs before selecting one. Compare common usage, interface knowledge, likely changes, special cases, dependency leakage, and Minecraft lifecycle constraints.

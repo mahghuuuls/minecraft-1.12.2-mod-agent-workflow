@@ -62,8 +62,9 @@ The owner often develops several mods at the same time on one computer, in separ
 Every mod gets its packaged checks in one agent-managed test instance: a modpack instance in the owner's launcher, outside every mod repository, that exists for testing and nothing else.
 
 - The owner creates it once, in Project Setup or earlier, from the BareBones Template (Cleanroom) modpack on CurseForge (`https://www.curseforge.com/minecraft/modpacks/barebones-template-cleanroom`) unless the owner chooses another template. That pack holds only performance, quality-of-life, and bugfix mods plus the Cleanroom relauncher, so a mod that launches there has met the base most 1.12.2 packs run on today, on Cleanroom, through the launcher players use, with no gameplay content in the way. The pack's own readme says to remove PackCompanion after the first launch; the recorded baseline is the instance after that step.
-- Project Setup records the launcher, the instance name and path, the template and its version, and the template mod list (the `mods` folder as created, file names and sizes). That list is the reset baseline. One instance serves every mod the owner develops; `owner-defaults.md` carries it to the next project.
+- Project Setup records the launcher, the instance name and path, the template and its version, and the template mod list (the `mods` folder as created, file names and sizes). That list is the reset baseline. It also records the version the instance's runtime reports for `mixinbooter` when a log that entered a world exists (Mixins below). One instance serves every mod the owner develops; `owner-defaults.md` carries it to the next project.
 - The agent may add and remove mods, change configuration, and create, reset, or delete worlds there. It records every change in the campaign results, and it resets the instance to the baseline at the end of every campaign and before a release check: the `mods` folder matches the recorded list, configuration files it changed are restored, and configuration files added mods generated are removed. The lock-note rules under Shared Machine apply, because another project may be using the same instance.
+- Before the first launch of a session, after the lock check confirms the instance matches its baseline, copy the instance `config` folder (it is small) into the session's staging folder, and restore changed files from that copy at reset. Hashes alone cannot restore a file, and the game itself rewrites some baseline files on every launch (for example `config/splash.properties`, Cleanroom's load timing data, and JEI's world settings); restore those from the copy too, unless `owner-defaults.md` lists them as exempt from the reset.
 - The instance is tier 4 of the verification environment plan (`stages/6-implementation-plan.md`): the packaged jar, a clean base, and the only Cleanroom launch the workflow gives a mod. The development client and server stay standard Forge.
 - Fallback: when the Cleanroom relauncher in the template fails on the owner's machine, the owner creates the same instance on standard Forge with the same mod list; record that the Cleanroom check then rests on the owner's own pack or is waived.
 - An owner may decline the instance. Record that as the validation waiver `Test instance testing was not performed by owner decision`; the mod then ships without a packaged or Cleanroom launch, and the release records say so.
@@ -77,6 +78,14 @@ Every mod gets its packaged checks in one agent-managed test instance: a modpack
 - A newer development JDK does not authorize a newer release target.
 - Record supported runtime environments explicitly rather than inferring them from the loader name.
 
+## Mixins
+
+- When an approved mechanism needs Mixins, use MixinBooter. Cleanroom, the runtime target, includes it; on standard Forge it is a separate mod. Use another Mixin loader only when the owner explicitly declines MixinBooter, and record that decision in Feasibility Research and Architecture.
+- Build against the template's MixinBooter version, but declare the shipping minimum as the version the target Cleanroom runtime reports for the `mixinbooter` mod id. FML resolves the dependency against Cleanroom's built-in MixinBooter, not against a newer MixinBooter jar in the `mods` folder, so a minimum above the reported version makes Cleanroom refuse the mod. Neither the development client nor the development dedicated server can show this; they run standard Forge with the build version.
+- Read the reported version from a test-instance log that entered a world: the line `Client attempting to join with <n> mods : ...` lists `mixinbooter@<version>`. Do not read it from files inside the Cleanroom jar; on Cleanroom 0.6.13-alpha its `mixinbooter.info` says 11.8 while the runtime reports 10.7, and a mod requiring 11.8 was refused. Project Setup records the version with the test instance, together with the template and Cleanroom versions it was read from; read it again when either changes. When no such log exists yet, have the owner launch the baseline instance (without this mod) into a world once, before Initialization declares the dependency. A launch that the minimum blocks cannot supply it: the refusal names only the required range.
+- Use only MixinBooter features that the declared minimum provides.
+- Meet the declared dependency string with Cleanroom early, as the Verification Environment Plan in `stages/6-implementation-plan.md` plans it. `tools/mod-jar/mod-jar.cmd check` cannot catch a minimum that is too high: an id given with `-Provided` carries no version, so no range is checked against it.
+
 ## Mod Dependency Version Constraints
 
 This policy is an invariant. A mod project must not override it through requirements, architecture, owner defaults, or release metadata.
@@ -87,6 +96,7 @@ Separate reproducible build resolution from player-facing runtime compatibility:
 - Every required mod dependency declared in shipping metadata must use an inclusive verified minimum version with no upper bound. For Forge 1.12.2 metadata, use the equivalent of `[minimum,)`.
 - When an optional mod integration declares a version constraint, use the same inclusive-minimum, no-upper-bound form. A resource-only or convention-based optional integration that does not need a declared dependency may remain undeclared.
 - Never ship an exact-only mod dependency version or a dependency range with an upper bound.
+- A required mod that the target runtime itself provides declares as its minimum the version that runtime reports for it, never a higher one, whatever version the build resolves. MixinBooter on Cleanroom is the known case; see Mixins.
 - Do not add an upper bound speculatively, copy one from another mod, or use one to protect against a possible future incompatibility. Another required mod may impose its own independent constraints; do not duplicate those constraints as this mod's policy.
 - If a later dependency release proves incompatible, preserve player choice instead of retroactively blocking that version in metadata. Document the known problem and release a compatibility correction. Raise the minimum version only when the corrected implementation genuinely requires a newer dependency API or behavior.
 - A minimum-only range permits players to try later versions; it does not claim those untested versions are verified compatible. Public documentation must distinguish the verified minimum and tested baseline from that permissive policy.
@@ -163,11 +173,11 @@ Release and publication defaults are:
 
 Validation ownership defaults are:
 
-- Dedicated server testing: owner-executed and expected by default
+- Dedicated server testing: owner-checked, agent-prepared, expected by default
 - Test instance testing (the packaged jar in the agent-managed test instance, on Cleanroom): owner-executed, agent-prepared, expected by default
 - External multiplayer testing: owner-managed
 
-A dedicated-server check is a normal part of validating a mod that loads on a server, not an exceptional request. The owner runs it; the agent prepares the recipe, supplies the server configuration it needs, and reads the resulting logs. Omit it only for a mod that never loads server-side, and record the reason.
+A dedicated-server check is a normal part of validating a mod that loads on a server, not an exceptional request. The agent prepares the recipe and the server configuration, starts the development dedicated server when it can (Development Dedicated Server Setup in `stages/7-implementation.md`), and reads the resulting logs; the owner connects and performs the checks. Omit it only for a mod that never loads server-side, and record the reason.
 
 Default release handoff mode is `agent-managed-release-validation`. A project may use `owner-managed-packaging` when the owner wants the agent to prepare only a lightweight handoff.
 
