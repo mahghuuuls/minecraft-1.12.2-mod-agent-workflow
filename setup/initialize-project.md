@@ -348,7 +348,7 @@ Do not enable optional product or build capabilities unless the approved archite
 
 For every approved mod dependency applied during initialization, keep the exact inspected artifact or coordinate in development/build resolution and independently encode the shipping metadata constraint according to `guidelines/project-defaults.md`. Inspect the template's actual metadata syntax rather than copying the build version into the runtime relation.
 
-When Mixins are approved, the template's `mixin_booter_version` (ForgeDevEnv) is the build version only. Declare `required-after:mixinbooter@[<version>,)` with the version the target Cleanroom runtime reports, as Mixins in `guidelines/project-defaults.md` describes, and record that version and its source in `project-initialization.md`.
+When Mixins are approved, the template's `mixin_booter_version` (ForgeDevEnv) is the build version only. Declare `required-after:mixinbooter@[<version>,)` with the version Mixins in `guidelines/project-defaults.md` selects (the reported version recorded in owner defaults, unless the mod needs a newer feature), and record that version and its source in `project-initialization.md`.
 
 Do not add gameplay implementation.
 
@@ -482,7 +482,7 @@ Verify:
 - Tests pass when present.
 - Processed mod metadata contains the approved values.
 - Processed mod metadata applies the canonical minimum-only policy to every declared mod dependency, while build resolution still identifies the exact inspected artifact.
-- A declared MixinBooter minimum is the version the target Cleanroom runtime reports for `mixinbooter`, never a higher one.
+- A declared MixinBooter minimum follows Mixins in `guidelines/project-defaults.md`, never higher than the version the target Cleanroom runtime reports for `mixinbooter`.
 - The main mod class and package compile.
 - The produced artifact is the expected normal distributable mod artifact for the selected loader.
 - The normal distributable mod artifact is produced under `<mod-repository>/build/libs/`; auxiliary classifier artifacts are distinguishable from it.

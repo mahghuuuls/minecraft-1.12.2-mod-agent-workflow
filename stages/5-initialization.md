@@ -86,7 +86,7 @@ This stage is complete when:
 - The final repository has independent Git metadata, the configured branch, and the correct origin.
 - Owner-side `git status` succeeds, or the initialization record contains the exact repository path, observed ownership error, and owner-approved repository-specific remediation.
 - Shared defaults, approved project values, licensing, attribution, and the approved public mod description are applied.
-- Any initialized mod dependency metadata satisfies the canonical minimum-only policy, independently of exact development artifact resolution, and a MixinBooter minimum is the version the target Cleanroom runtime reports, never a higher one.
+- Any initialized mod dependency metadata satisfies the canonical minimum-only policy, independently of exact development artifact resolution, and a MixinBooter minimum follows Mixins in `guidelines/project-defaults.md`, never higher than the version the target Cleanroom runtime reports.
 - The approved root package and main class are applied.
 - Selected Agent Diagnostics Toolkit configuration is development-only and excluded from the baseline distributable artifact, or its installation is explicitly deferred before the first dependent validation card.
 - No unresolved functional template placeholder remains.
