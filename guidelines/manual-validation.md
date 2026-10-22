@@ -97,6 +97,7 @@ Keep headings and language stable across cards so the owner does not have to rel
 - Do not advance from a toolkit-assisted card until the agent has checked bundle completion and readiness marks when later evidence depends on them.
 - Keep **Owner checks** limited to visual, audio, interaction-quality, real-multiplayer, or external-environment observations unavailable to the agent. Numeric state, command output, configuration, dimensions, registry state, and retained diagnostic records belong under **I will verify** whenever accessible.
 - Ask a specific owner-only question only when `Done` cannot capture a required inaccessible observation.
+- When the owner raises an idea, a request, or a question in the middle of a card, finish the card's remaining steps first, or defer the card openly: mark it deferred in the session map with the reason, and bring it back before the session's last launch or record it as not run. A card that is neither finished nor deferred is silently lost, and its gap surfaces only at the campaign closure, when another launch is the only way to fill it.
 
 ## Fixture Patterns
 

@@ -21,7 +21,7 @@ Do not use this mode merely because a feedback entry exists. During mod developm
 
 - The owner has explicitly requested process-repository changes.
 - The agent has stated that the session is switching out of mod-development work and into Process Maintenance mode.
-- The outer process repository status has been inspected.
+- The outer process repository status has been inspected, including whether the remote holds commits this checkout lacks.
 - Any active mod-development work is complete, paused, or summarized well enough to avoid losing state.
 
 ## Required Inputs
@@ -45,7 +45,7 @@ Do not use this mode merely because a feedback entry exists. During mod developm
 
 ## Sequence
 
-1. Inspect the outer process repository status.
+1. Inspect the outer process repository status: `git status`, then `git fetch` and compare the current branch with its remote (`git log --oneline HEAD..@{upstream}`). The same workflow repository is used from several mod projects on the same machine, so another checkout may have pushed process changes since this one was pulled. When the remote is ahead, report the commits and the files they touch, ask the owner before pulling (a pull is a Git action that needs authorization), and read the pulled changes to the files this task will edit before editing them, so the edits build on the current text and do not repeat or undo what another session already changed.
 2. Read the required inputs.
 3. Identify the requested process changes and the files that own those responsibilities.
 4. Apply focused edits to versioned process files.

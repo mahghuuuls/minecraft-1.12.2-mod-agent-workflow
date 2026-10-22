@@ -212,7 +212,7 @@ A freshly created `runServer` environment rejects the development client's login
 
 - `online-mode=false`. The development client authenticates with a placeholder session that Mojang cannot verify, so the default setting refuses it as an invalid session.
 - `server-port` set to the port recorded for this project in `project-setup.md` (Shared Machine in `guidelines/project-defaults.md`), so a development server of another project on the same computer does not block the launch.
-- `gamemode=1` with `force-gamemode=true`. Without creative access the owner must obtain every test item by hand, which turns a short check into a scavenger hunt.
+- `gamemode=1` with `force-gamemode=true`. Without creative access the owner must obtain every test item by hand, which turns a short check into a scavenger hunt. The forced mode puts the player back into creative at every join, and vanilla refuses to eat food and ignores most damage in creative, so a card that eats, takes damage, or checks survival-only behavior carries its own `/gamemode survival` step after each join (in the bundle when the toolkit runs the setup), and the session map says so.
 - Operator rights given from the server console after the first join (`op <name>`, with the name exactly as the join line prints it), when the check needs commands. Do not write an `ops.json` entry in advance: an offline-mode server derives the UUID from the exact name the client sends, which can differ in case from the singleplayer profile, so a precomputed entry misses and a later `deop` by name removes the wrong entry. Before a card that removes operator rights, make sure `ops.json` holds only the real entry.
 
 These values suit a throwaway local development server only. `online-mode=false` disables account verification entirely. Never recommend it for a server reachable from a network, never carry it into public documentation or a packaged environment, and never apply it to a server the owner actually runs.
@@ -282,6 +282,7 @@ Before capture:
 - Run the issue's required build, tests, runtime checks, and artifact generation. The packager does not run or interpret them.
 - Inspect the specification's exact source repository, output directory, JUnit groups, retained files, destinations, and source-cleanliness policy.
 - Keep the output outside the mod repository and use a new checkpoint directory. Never overwrite an earlier pack.
+- Capture a campaign pack directly into `workspace/validation/campaigns/<campaign>/` (the folder that holds `manifest.json`), and a pack that supersedes it into a sibling such as `workspace/validation/campaigns/<campaign>-2/`. `scripts/validate-workspace.ps1` resolves the folder an issue names one level under `campaigns/`; a nested checkpoint folder like the per-issue example in the tool's README is not found there and reports every issue of the campaign as missing its pack.
 - Use `requireClean: false` only when the approved checkpoint intentionally captures dirty pre-commit state; the manifest must remain truthful about that state.
 - State the runtime provenance honestly. A campaign often runs across several launches while fixes land, and the clean commit captured at the end is newer than the tree the owner played. List every retained runtime output's real source under `runtimeSources`; a jar in the pack that never ran in the session is only honest evidence when the manifest says so.
 
@@ -614,6 +615,8 @@ The reviewer should separate:
 - **Improvement suggestions:** nonblocking design improvements that may reduce complexity or future maintenance cost but are not required for the current issue.
 
 The reviewer should report findings before proposing broad improvements. Architectural suggestions should cite concrete evidence from the implementation, tests, dependency behavior, Minecraft 1.12.2 constraints, or maintainability risk. The reviewer must not expand the issue scope or judge the implementation according to undocumented preferences.
+
+A review suggestion that rests on a fact about vanilla or a dependency (an item's display name, a default value, an event order, a registry id) is a claim, not evidence. Check it against the game's or the dependency's own files (the language file, the source, the shipped configuration) before applying it, and record where it was checked. A suggestion applied on the reviewer's recall is as wrong as the original would have been, and it is corrected later at the cost of a launch or a screenshot.
 
 If the reviewer finds that an approved requirement, architecture decision, or scope boundary is flawed, treat that as a process finding rather than forcing code to comply blindly. Evaluate it against the approved evidence and route legitimate artifact problems through the backward-transition process.
 

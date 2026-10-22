@@ -22,6 +22,8 @@ tools\evidence-pack\evidence-pack.cmd inspect -Manifest workspace\validation\imp
 
 The launcher applies `ExecutionPolicy Bypass` only to that child process; it does not change machine policy. The tool explicitly imports its required standard PowerShell Utility and Management modules, so it does not depend on module autoload being enabled.
 
+The `IMP-014/final-abc123` layout above is for a per-issue pack. A campaign pack goes directly into `workspace/validation/campaigns/<campaign>/`, the folder named in the campaign's issues and resolved by `scripts/validate-workspace.ps1`; see Evidence Packs in `stages/7-implementation.md`.
+
 ## Specification
 
 ```json

@@ -43,6 +43,7 @@ Establish:
 - Public wording that uses approved glossary terms consistently when the glossary applies
 - An internal presentation record that separates public copy from technical evidence and unresolved limitations
 - A release handoff record when release JAR generation or validation is agent-managed
+- A platform listing packet: the few facts the distribution platform's project form asks for that are not in the mod page or the changelog
 
 ## In Scope
 
@@ -51,6 +52,7 @@ Establish:
 - Create or update `CHANGELOG.md` as repository release history
 - Draft the separate distribution-platform release changelog, retain its exact approved copy in `release-presentation.md`, and provide it directly in chat for the owner's publication form
 - Prepare a CurseForge-style project description or summary text when public copy is agent-managed
+- Prepare the platform listing packet: the one-sentence summary for the platform's summary field, the main category and up to three additional categories from the platform's current list with one line of reasoning each, the source repository URL, the issue tracker URL, and the license name
 - Include the default AI usage disclaimer in `MOD-PAGE.md` or equivalent player/download-facing copy unless the owner opts out
 - Summarize implemented features in player language
 - Summarize configuration at a high level when applicable
@@ -377,7 +379,7 @@ Do not use the internal record as public copy.
 21. If release validation is agent-managed, run the approved clean build from that clean committed revision, identify exactly one normal distributable JAR under `<mod-repository>/build/libs/`, inspect it, read its manifest and confirm every attribute resolves to content in the jar, confirm the in-mod logo the metadata names is in the jar (or that no logo is named and the record says the icon was deferred), calculate its checksum, leave it there as the canonical upload source, and record that path and identity in the handoff. Remove no auxiliary build output merely because it is not uploadable, but reject stale normal distributable JARs from older versions.
 22. If release packaging is owner-managed, record the approved source revision, expected command/artifact pattern, and owner-managed boundary instead of building.
 23. When the toolkit was used, review its feedback artifact and record which entries remain Candidate, Confirmed, or Reported; do not modify or report to the external toolkit project without separate authorization.
-24. Present the completed internal presentation record and release handoff for stage approval. In the same chat response, include the exact distribution-platform release changelog in a clearly labeled paste-ready block.
+24. Present the completed internal presentation record and release handoff for stage approval. In the same chat response, include the exact distribution-platform release changelog in a clearly labeled paste-ready block, and the platform listing packet: the summary sentence, the main category and the additional categories with their reasons, the source and issue tracker URLs, and the license. Read the platform's category list that session rather than from memory, and check that the issue tracker URL answers once the repository is pushed (an unpushed repository has no issues page yet; say so and give the URL it will have). The owner fills the project form from this packet; without it the summary, the categories, and the links are asked for one at a time after the workflow has completed.
 25. Revise until explicitly approved. If a revision changes the committed release source, obtain new commit authorization and repeat artifact validation before final approval.
 
 ## Output Artifacts
@@ -440,6 +442,7 @@ This stage is complete when:
 - `<artifact-root>/release-presentation.md` is generated and approved.
 - `<artifact-root>/release-handoff.md` is generated and approved when a release artifact is built, identified, or handed off.
 - The approved release version is recorded; first public releases default to `1.0.0` unless the owner chose otherwise.
+- The platform listing packet (summary sentence, main and additional categories with reasons, source and issue tracker URLs, license) is recorded in `release-presentation.md` and was given in chat with the final checkpoint.
 - Agent-managed release artifacts are built, inspected, and checksummed from the clean committed source revision recorded in the handoff.
 - The validated upload-ready JAR remains at its canonical `<mod-repository>/build/libs/` path, exactly one normal distributable JAR is identified there, and no stale normal distributable JAR from an older version remains.
 - Any retained artifact elsewhere is treated as an evidence copy rather than the owner-upload source.

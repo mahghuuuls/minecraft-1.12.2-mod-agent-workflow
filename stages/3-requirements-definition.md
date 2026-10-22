@@ -153,6 +153,7 @@ Each requirement should be:
 - **Feasible:** Respects the accepted feasibility findings.
 - **Observable:** Produces an outcome that can be evaluated.
 - **Testable:** Has objective completion conditions.
+- **Measurable by a named method:** A numeric performance or timing criterion names the measurement it will be judged by and that measurement's resolution, and its threshold is coarser than the resolution. `/forge tps` gives a running mean over 100 ticks with a within-session drift of about half a millisecond, so a criterion of 0.05 ms per tick cannot be met or failed by it; write the criterion as the comparison the method can resolve (idle against loaded, within the method's noise), or require a finer instrument in the Implementation Plan.
 - **Implementation-independent:** Does not prescribe internal code structure.
 - **Traceable:** Has an identifiable origin.
 

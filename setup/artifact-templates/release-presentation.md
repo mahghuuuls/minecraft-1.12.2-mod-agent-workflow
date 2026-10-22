@@ -52,6 +52,16 @@
 
 -
 
+## Platform Listing Packet
+
+- Summary field:
+- Main category:
+- Additional categories (with one reason each):
+- Source URL:
+- Issue tracker URL (checked after the push):
+- License:
+- Delivered directly in chat:
+
 ## Feature Summary
 
 -
