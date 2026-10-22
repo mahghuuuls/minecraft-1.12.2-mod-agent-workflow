@@ -212,7 +212,36 @@ try {
         throw "Validator did not warn about the missing pack path. Output: $($noPackResult.Output)"
     }
 
-    Write-Host 'Workspace validator tests passed: valid state, a plan without a status column (with the issue roll-up printed), and cycle-scoped identifiers accepted; evidence packs of Done issues checked; invalid status, missing stage artifacts, ledger or plan disagreement, and multiple active issues rejected.' -ForegroundColor Green
+    $campaignRoot = Join-Path $testRoot 'validation/work/campaign-x'
+    New-Item -ItemType Directory -Path $campaignRoot -Force | Out-Null
+    Write-Utf8 (Join-Path $campaignRoot 'campaign-x-session-map.md') @'
+# Campaign X Session Map
+
+1. First card.
+2. Second card.
+2b. Repeat of the second card.
+'@
+    Write-Utf8 (Join-Path $campaignRoot 'campaign-x-results.md') @'
+# Campaign X Results
+
+1. Passed.
+2. Passed.
+'@
+    $lostCardResult = Invoke-Validator
+    Assert-ExitCode 'session-map card with no results line' 1 $lostCardResult
+    if ($lostCardResult.Output -notlike '*card 2b of campaign-x-session-map.md has no line*') {
+        throw "Validator did not name the lost card. Output: $($lostCardResult.Output)"
+    }
+    Write-Utf8 (Join-Path $campaignRoot 'campaign-x-results.md') @'
+# Campaign X Results
+
+1. Passed.
+2. Passed.
+2b. Not run: deferred by the owner, reason recorded.
+'@
+    Assert-ExitCode 'every session-map card recorded' 0 (Invoke-Validator)
+
+    Write-Host 'Workspace validator tests passed: valid state, a plan without a status column (with the issue roll-up printed), and cycle-scoped identifiers accepted; evidence packs of Done issues checked; a session-map card without a results line rejected and a recorded one accepted; invalid status, missing stage artifacts, ledger or plan disagreement, and multiple active issues rejected.' -ForegroundColor Green
 } finally {
     $resolvedTestRoot = [System.IO.Path]::GetFullPath($testRoot)
     $resolvedTempRoot = [System.IO.Path]::GetFullPath([System.IO.Path]::GetTempPath())

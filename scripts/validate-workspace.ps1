@@ -306,6 +306,24 @@ if (Test-Path -LiteralPath $statePath -PathType Leaf) {
     }
 }
 
+# Every card of a campaign session map has a line in that campaign's results file once the results file exists.
+# A card that was deferred or not run still gets a line saying so; a card with no line was silently lost.
+$campaignWorkRoot = Join-Path $WorkspaceRoot 'validation/work'
+if (Test-Path -LiteralPath $campaignWorkRoot -PathType Container) {
+    foreach ($campaignDirectory in Get-ChildItem -LiteralPath $campaignWorkRoot -Directory) {
+        $sessionMap = Get-ChildItem -LiteralPath $campaignDirectory.FullName -File -Filter '*-session-map.md' | Select-Object -First 1
+        $resultsFile = Get-ChildItem -LiteralPath $campaignDirectory.FullName -File -Filter '*-results.md' | Select-Object -First 1
+        if ($null -eq $sessionMap -or $null -eq $resultsFile) { continue }
+        $mapCards = @([regex]::Matches((Get-Content -Raw -LiteralPath $sessionMap.FullName), '(?m)^(?<card>\d+[a-z]?)\. ') | ForEach-Object { $_.Groups['card'].Value } | Sort-Object -Unique)
+        $resultCards = @([regex]::Matches((Get-Content -Raw -LiteralPath $resultsFile.FullName), '(?m)^(?<card>\d+[a-z]?)\. ') | ForEach-Object { $_.Groups['card'].Value } | Sort-Object -Unique)
+        foreach ($card in $mapCards) {
+            if ($resultCards -notcontains $card) {
+                Add-ValidationError "Campaign $($campaignDirectory.Name): card $card of $($sessionMap.Name) has no line in $($resultsFile.Name); record it as passed, failed, deferred, or not run."
+            }
+        }
+    }
+}
+
 if ($rollupLines.Count -gt 0) {
     Write-Host 'Issue status roll-up (read from the issue files, the only place a status is written):' -ForegroundColor Cyan
     foreach ($line in $rollupLines) {
@@ -328,4 +346,4 @@ if ($errors.Count -gt 0) {
     exit 1
 }
 
-Write-Host "Workspace validation passed: workflow/stage statuses, issue statuses, active-item counts, structured paths, plan/issue agreement, evidence packs of Done issues, and resume references are mechanically consistent." -ForegroundColor Green
+Write-Host "Workspace validation passed: workflow/stage statuses, issue statuses, active-item counts, structured paths, plan/issue agreement, evidence packs of Done issues, campaign results covering every session-map card, and resume references are mechanically consistent." -ForegroundColor Green

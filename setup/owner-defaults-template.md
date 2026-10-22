@@ -75,6 +75,16 @@ Record only overrides or additions that are specific to this owner and not alrea
 - Placement of unverified-validation notes: Internal only | Repository documentation | Player/download page when installation-relevant
 - Other recurring public-copy preferences:
 
+## Chat Format Preferences
+
+How the owner wants the agent's messages shaped. These are about reading and copying, not about the project, so they apply to every mod and every stage.
+
+- Actions as a bullet list or one action per line, never in a paragraph: yes or no
+- Every command the owner must type (game chat commands and shell commands) in its own fenced code block, one command per block, repeated in the message that asks for them: yes or no
+- Shell command form on this machine (for example `./gradlew.bat <task>` in PowerShell):
+- Message length and tone (for example short replies, one thing at a time, two options at most with the agent's pick first):
+- Other reading preferences:
+
 ## Git Workflow Preferences
 
 - Preferred push prompt cadence: Each checkpoint | Stage completion | Release-ready handoff
