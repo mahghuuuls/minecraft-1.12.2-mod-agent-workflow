@@ -40,7 +40,7 @@ During a mod project, the agent may:
 
 During a mod project, the agent must not:
 
-- Modify versioned process files such as `AGENTS.md`, `README.md`, `guidelines/`, `stages/`, `workflows/`, `setup/`, `references/`, or `tools/`.
+- Modify versioned process files such as `AGENTS.md`, `README.md`, `guidelines/`, `stages/`, `workflows/`, `procedures/`, `setup/`, `references/`, `tools/`, `scripts/`, or `skills/`.
 - Treat `workflow-feedback.md` as approval to change this repository.
 - Switch into Process Maintenance mode unless the owner explicitly requests process-repository changes.
 - Commit or push changes to the outer process repository.
@@ -58,7 +58,7 @@ Enter this mode only when the owner explicitly asks to:
 
 - Apply workflow feedback to the process repository.
 - Improve, clarify, or refactor process instructions.
-- Update `AGENTS.md`, `README.md`, `guidelines/`, `stages/`, `workflows/`, `setup/`, `references/`, or `tools/`.
+- Update `AGENTS.md`, `README.md`, `guidelines/`, `stages/`, `workflows/`, `procedures/`, `setup/`, `references/`, `tools/`, `scripts/`, or `skills/`.
 
 Before editing process files:
 
@@ -85,6 +85,7 @@ During Process Maintenance mode, the agent must not:
 
 - **Process material:** versioned instructions, defaults, stages, workflows, and references. Read-only during mod development; editable only in explicit Process Maintenance mode.
 - **Bundled tools:** versioned utilities under `tools/`. Read-only during mod development; editable only in explicit Process Maintenance mode. A tool's presence does not by itself require its use in a mod project.
+- **Optional skills:** versioned agent skills under `skills/`. Read-only during mod development; editable only in explicit Process Maintenance mode. No stage, workflow, guideline, or procedure requires a skill; each skill points at the file that owns its rule, and a copy installed into an agent's own skills location is the owner's to change.
 - **Runtime workspace:** ignored project-specific state under `workspace/`.
 - **Template workspace:** an ignored clone under `workspace/template/`; never the development target.
 - **Dependency reference workspace:** optional ignored dependency source checkouts under `workspace/dependencies/`; never the active development target unless the owner explicitly changes the project.
@@ -175,6 +176,7 @@ Do not silently resolve contradictions between sources. Follow `guidelines/proce
 - `setup/workflow-feedback-template.md`: template for the project-specific feedback log.
 - `stages/*.md`: setup and reusable development-stage responsibilities.
 - `procedures/*.md`: callable operational procedures that do not create an additional reusable-stage approval lifecycle.
+- `skills/`: optional agent skills with their own README and guide. A skill owns no rule; it names the guideline or procedure that does. Where a skill and that file disagree, the file wins.
 - `tools/`: bundled standalone utilities and their own usage documentation, examples, and tests. A tool-local `AGENTS.md`, when present, owns instructions for agents invoking or maintaining that tool and must be read before use. Workflow routing must still be defined by the process file that owns the relevant task.
 - `scripts/validate-process.ps1`: lightweight consistency validation for versioned process files and artifact-template ownership.
 - `scripts/validate-workspace.ps1`: read-only mechanical consistency validation for the active runtime workspace; it reports but never decides approvals or rewrites project state.
