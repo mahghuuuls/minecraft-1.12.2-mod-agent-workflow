@@ -12,21 +12,11 @@ The user invoked this skill because code needs reviewing against the workflow's 
 
 The author of a change is the one person guaranteed to read it as intended rather than as written. Every rationalization that shaped the code will shape the self-review identically. This workflow requires independent review in `stages/7-implementation.md` for exactly that reason; this skill exists for agents that skip it or perform it as a formality.
 
-## What the reviewer gets
+## The brief
 
-Brief a fresh agent context (a subagent, or a second session) with exactly these, and nothing that presupposes the answer:
+Write the brief through `procedures/independent-review-brief.md` in the workflow repository, as it is on disk now. It names what the reviewer receives, the instruction to give, and the report shape, for a code review and for an evidence review alike. Find the workflow root by walking up from the working directory to the folder holding `guidelines/` and `workspace/`.
 
-1. **The diff under review**, or the file list when the change is new files.
-2. **The owning issue** from `workspace/documentation/issues/`, whole: objective, constraints, acceptance criteria, verification tiers.
-3. **`guidelines/coding-standards.md`**, whole. This is the standard being reviewed against. Do not summarize it into the prompt; the summary will contain your interpretation, which is part of what is under review.
-4. **The named requirement and architecture sections** the issue references, from `requirements.md` and `architecture.md`.
-5. The instruction below, verbatim.
-
-Do not include your own assessment, your test results as established facts, or any sentence of the form "this is believed correct because". The reviewer confirms or refutes; it must not start from your conclusions.
-
-## The instruction to the reviewer
-
-> Review this change against `guidelines/coding-standards.md` and the owning issue. For every finding, cite the file, the specific rule or issue constraint violated, and the concrete consequence. Verify claims instead of accepting them: for each test said to cover a behavior, name the implementation change that would make it fail, and treat a test that cannot fail as a finding. Check that evidence labels (observed / inspected / inferred) match how each fact was actually established. Check whether the change incorporates the behavior coherently or layers a tactical patch on the existing design, per the Strategic Modification section. A review that finds nothing must list what was checked and how each check could have failed; "looks good" with no record of what was examined is not a review result.
+Two rules from it bear repeating because they are the ones most often broken: brief a fresh agent context, never the one that wrote the change; and hand over documents and paths, never your own assessment or your test results as established facts. The reviewer confirms or refutes; it must not start from your conclusions.
 
 ## Handling the findings
 

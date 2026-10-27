@@ -28,6 +28,11 @@ the session; read them.
 Find the workflow root by walking up from the working directory to the folder holding `guidelines/`
 and `workspace/`.
 
+Read items 1 and 3 again before you write the session map, and again after any context loss (a
+compaction, a new session, a long break) before the next card. A card written from the memory of the
+guideline misses the rule added since, and a card written from the memory of the issue misses the
+observable the contract named.
+
 ## Which issue
 
 Take it from the argument (`/validation-session IMP-012`). With no argument, look for the issue at **Awaiting

@@ -26,6 +26,8 @@ Implementation includes coding, testing, in-game verification, defect correction
 - `tools/mod-jar/README.md` when a session loads jars copied from another instance or an issue names another mod's item ids
 - `tools/modelpreview/README.md` when the issue creates or materially revises a block model JSON with its own elements
 - `procedures/cross-project-agent-consultation.md` when implementation exposes an owner-authorized API-provider/API-consumer question that approved artifacts and source inspection cannot settle
+- `procedures/independent-review-brief.md` when an issue reaches **Review** or a campaign's evidence goes to its follow-up review
+- `procedures/close-campaign.md` when the last card of an owner-assisted validation campaign has a result
 
 ## Objectives
 
@@ -335,7 +337,7 @@ Do not start the owner session until the active runtime source matches the recor
 
 When every included issue reaches **Awaiting Validation**, present and execute the campaign through `guidelines/manual-validation.md`. Assign every card and evidence item to its owning issue. A passing card moves only its owning issue toward Done; campaign completion is not blanket proof for the group.
 
-After the campaign cards pass, submit the newly collected evidence to a focused independent follow-up review before marking issues Done. One reviewer may inspect the complete campaign evidence in one context, but must report whether each included issue's acceptance criteria are independently supported. The reviewer also compares each card's expected results with the criterion it claims to check, and names every criterion, or part of one, that no card reached (a craft never performed, an effect never applied, an item never looked at). Any post-review correction receives its own focused verification and follow-up.
+After the campaign cards pass, submit the newly collected evidence to a focused independent follow-up review, briefed through `procedures/independent-review-brief.md`, before marking issues Done. One reviewer may inspect the complete campaign evidence in one context, but must report whether each included issue's acceptance criteria are independently supported. The reviewer also compares each card's expected results with the criterion it claims to check, and names every criterion, or part of one, that no card reached (a craft never performed, an effect never applied, an item never looked at). Any post-review correction receives its own focused verification and follow-up.
 
 When a card fails:
 
@@ -352,18 +354,7 @@ After every included issue satisfies its Definition of Done, resolve the campaig
 
 ### Closing A Campaign
 
-Close a campaign in this order. Each step feeds the next, and a step done out of order is the usual source of a wrong path, a stale count, or a pack captured from the wrong tree.
-
-1. Save every runtime output the cards used (current and rotated logs, the configuration file as the game rewrote it, bundle files, owner screenshots) into the campaign staging folder before any launch, edit, or rename can change it.
-2. Write the campaign results file once, after the last launch, from the running notes kept per card during the session (`staging/results-notes.md`: the log lines, times, and owner words of each card as they happen) and from the records, with the deviations, the per-card lines, the errors read from the logs, and the automated checks after any correction. Every card of the session map gets a line, including a card that was deferred or not run, with its reason; `scripts/validate-workspace.ps1` reports a map card with no results line. Do not write the results file in pieces between launches and submit each piece to review: each piece costs a review pass, and the pieces disagree with each other by the end.
-3. Apply corrections the cards produced, rerun the automated checks, and submit the corrections and the results file to the follow-up review; take its findings before anything is committed. A criterion the review finds unreached is closed by one extra card in the same campaign, run while the instance is still prepared, or by a limitation the owner accepts and the issue records. It is never closed by a result line that says "met". Keep the instance prepared until this step is done; restoring it earlier means preparing it twice.
-4. Make the completion commit under the authorization that covers it, and confirm `git status --porcelain` is empty.
-5. Build from that clean tree when the pack retains the jar or the test results, using the launch path recorded in Project Setup (see Running Builds And Tests in `guidelines/coding-standards.md`); ask the owner only when Project Setup recorded that the agent cannot build.
-6. Write the pack specification with every retained file and every runtime source declared honestly, capture the pack, and run `verify` on its manifest.
-7. Record in each included issue: the in-game verification lines, the follow-up review, the completion commit, and the pack path with its manifest hash; move the issue to **Done**.
-8. Update `project-status.md` (commit list, next action, next approval, current issue line) and `project-state.md`.
-9. Run `scripts/validate-workspace.ps1`; it checks that every Done issue's pack exists and that its manifest still matches its recorded hash.
-10. Restore the runtime: the development configuration file, and the test instance reset to its recorded baseline (`mods` folder against the template list, changed configuration restored from the copy taken before the session, generated configuration of removed mods deleted, lock note removed); record what stays, such as a test world. This is the last step for the reason given in step 3.
+Close a campaign through `procedures/close-campaign.md`. It orders the closing work (staged evidence, pack specification, results file, follow-up review, completion commit, pack capture, issue and ledger records, instance reset) so that each step feeds the next; a step done out of order is the usual source of a wrong path, a stale count, or a pack captured from the wrong tree. The authorizations the commit needs are defined above and are not changed by the procedure.
 
 ## Testing Approach
 
@@ -475,7 +466,7 @@ After a clean committed checkpoint, confirm the repository is clean when checked
 17. Record completion evidence in the issue. When citing automated totals, state the production boundary those tests exercise and the important runtime behavior they do not establish; do not let suite or class names substitute for that capability statement.
 18. Perform the final implementation self-review and final-diff maintenance check required by `guidelines/coding-standards.md`.
 19. Change the issue status to **Review**.
-20. Submit the change to an independent review agent. If the owner gave standing approval for required review agents, including a valid recorded proportionate approval bundle, do not ask for repeated per-issue approval unless the review scope changes.
+20. Submit the change to an independent review agent, briefed through `procedures/independent-review-brief.md`. If the owner gave standing approval for required review agents, including a valid recorded proportionate approval bundle, do not ask for repeated per-issue approval unless the review scope changes.
 21. Address legitimate review findings.
 22. Repeat verification for affected behavior or record approved waiver updates.
 23. Mark the issue **Done** only when the Definition of Done is satisfied. When only approved campaign cards remain, mark it **Awaiting Validation** and follow the campaign procedure instead.
@@ -542,7 +533,7 @@ When a discovery leaves an open question that blocks other planned work, add a `
 
 ## Independent Implementation And Architecture Review
 
-Implementation and review must use separate agent contexts for behavioral and structural issues. Closely related editorial-only follow-ups may be independently reviewed as one approved batch.
+Implementation and review must use separate agent contexts for behavioral and structural issues. Closely related editorial-only follow-ups may be independently reviewed as one approved batch. Write the brief that starts a review through `procedures/independent-review-brief.md`; the lists below say what the reviewer must receive and examine, and the procedure says how to hand them over without the author's conclusions.
 
 Independent review is also required whenever the issue's deliverable is **evidence rather than code**. A compatibility confirmation, an add-on or dependency verification, a lifecycle investigation, or any issue closed largely on inspection produces little or no diff, and that is precisely the case where the implementing agent is most likely to mistake its own reasoning for observation. Do not skip review because there is nothing to read.
 

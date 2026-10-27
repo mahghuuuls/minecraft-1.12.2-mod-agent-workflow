@@ -14,6 +14,8 @@ Use it when an approved implementation issue requires the owner to interact with
 
 ## Before The Session
 
+Re-read this file and the Manual Observability section of every issue in the session before writing the session map, as they are on disk now and not as remembered. Re-read both again after any context loss (a compaction, a new session, a long break) before the next card. A card written from the memory of this file misses the rule added since; a card written from the memory of the issue misses the observable the contract named. An agent may use a reminder of its own, such as an installed skill, to trigger the re-read; the rule holds without one.
+
 Before the owner starts a shared game, server, or modpack session, present the complete known validation matrix for that runtime. Keep it compact, but disclose:
 
 - The runtime and environment tier.
@@ -154,3 +156,4 @@ At the end of the session:
 - Reset the test instance to its recorded baseline and remove this project's lock note (Test Instance and Shared Machine in `guidelines/project-defaults.md`): compare the `mods` folder with the template list rather than remembering what was copied, and restore changed configuration from the copy taken before the session.
 - State whether the owner may close the client/server or whether another approved session remains.
 - Do not make the owner restate successful observations already covered by `Done`.
+- When the session ends a campaign, close the campaign through `procedures/close-campaign.md`; the instance reset is its last step, not the session's.

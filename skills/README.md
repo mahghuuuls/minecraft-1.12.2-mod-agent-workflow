@@ -14,12 +14,18 @@ A skill does not fix the drift; the agent will do it again. What it replaces is 
 
 **If the agent is already following the workflow, adding these will not improve anything.** They are a remedy, not an upgrade.
 
+## Moment triggers
+
+Three skills are of a second kind. `validation-session`, `close-campaign`, and `release-check` add no rule of their own; each says "read this guideline or procedure now, then do it" at a moment where the right procedure is often skipped or started from memory: before the session map, after the last card, after the release commit. Install them when those moments keep going wrong. An agent may invoke a moment trigger itself when it reaches the moment, and it may re-invoke one after a context loss; the workflow neither requires nor forbids that.
+
 ## The Skills
 
 Start from the symptom:
 
 - Answers hard to follow: `plain-language`, then `bottom-line` if still too much.
 - Owner time being wasted in testing: `validation-session`.
+- Packs without a log, instances reset too early, issues Done before review: `close-campaign`.
+- Release jars built from a dirty tree or inspected from the build script: `release-check`.
 - Work merged without real review: `standards-review`.
 - Records that say more than anyone saw: `evidence-audit`.
 - Green tests you do not trust: `prove-it-can-fail`.
@@ -37,7 +43,13 @@ Install only what the observed problem calls for. The failure log, not the catal
 - **`validation-session/`** runs owner-assisted manual validation the way `guidelines/manual-validation.md` specifies: setup done before the game opens, one card at a time, logs read by the agent, the owner asked only for what a log cannot hold. Use it when in-game tests keep arriving without a starting state or a defined expected result.
   *Useful for Claude Opus 5.*
 
-- **`standards-review/`** briefs an independent reviewer against `guidelines/coding-standards.md` and the owning issue, then makes the findings get handled on the record. Use it when changes keep being marked done without a real review behind them.
+- **`close-campaign/`** closes an owner-assisted validation campaign in the order `procedures/close-campaign.md` specifies: staged evidence, pack specification, results file, follow-up review, commit, pack, records, instance reset last. Use it when the last card has a result, or when an agent reaches for the reset or the pack capture early.
+  *A moment trigger; the order it protects was learned on Claude Fable 5.1.*
+
+- **`release-check/`** builds the release jar from the committed revision, inspects it from the inside, and sees it discovered once in the test instance, in the order `procedures/release-build-and-discovery.md` specifies. Use it after the release-preparation commit.
+  *A moment trigger; the failures it protects against (daemon lock, stale jar, inferred inspection) were met on Claude Fable 5.1.*
+
+- **`standards-review/`** briefs an independent reviewer through `procedures/independent-review-brief.md` against `guidelines/coding-standards.md` and the owning issue, then makes the findings get handled on the record. Use it when changes keep being marked done without a real review behind them.
   *Useful for Gemini 3.1 Pro and Gemini 3.7 Flash.*
 
 - **`evidence-audit/`** re-verifies an issue's completion evidence claim by claim: labels checked against how each fact was actually established, every cited file and commit reopened. Use it before trusting records nobody has re-checked.

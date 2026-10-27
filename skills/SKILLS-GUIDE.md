@@ -4,6 +4,8 @@ What each optional skill does, the failure it remedies, when it earns its place,
 
 Every skill here is a **remedy**. Each one exists because a specific agent failure was observed while running this workflow, and correcting it in every message got tiresome. If your agent is following the workflow as written, none of these will improve anything.
 
+Three of them (`validation-session`, `close-campaign`, `release-check`) are also **moment triggers**: they carry no rule of their own and only put the owning guideline or procedure in front of the agent at the moment it is due. An agent may invoke one itself when it reaches that moment.
+
 The skills are also starting points, not finished products. If one almost fits, ask your agent to tweak it - the wording, the rules, the output shape - until it matches how you work.
 
 The model notes below record where each need was observed. They are not verdicts on those models, and a stronger model can fail the same way on a bad day - most of the evidence-discipline failures below were produced by a top-tier model and caught by review, not avoided by capability.
@@ -40,9 +42,25 @@ Runs an owner-assisted manual validation session the way `guidelines/manual-vali
 
 **Where observed:** Claude Opus 5 sessions, where card-writing defects were caught repeatedly by the owner (a card that named the wrong icon; a card that said to type a command without saying where, so it was run in the terminal).
 
+### `close-campaign`
+
+Runs the closing of an owner-assisted validation campaign through `procedures/close-campaign.md`: staged evidence first, the pack specification before the results file, the follow-up review before the commit, the instance reset last.
+
+**Failure it remedies:** closing steps done out of order. A pack captured without a launch log because the staging copy had silently failed; an instance reset before the follow-up review asked for one more card; a results file written in pieces that disagreed by the end.
+
+**Where observed:** Claude Fable 5.1, on a project in 2026-10, where each of those happened once and cost a relaunch or a second pack.
+
+### `release-check`
+
+Runs the first release build and its discovery launch through `procedures/release-build-and-discovery.md`: daemon stopped, clean build from the committed revision, one jar, inspection read from the archive, one launch in the test instance, reset, handoff.
+
+**Failure it remedies:** a clean build that fails on a build folder the daemon still holds, a stale jar from the previous version next to the new one, an inspection inferred from the build script instead of read from the jar, a borrowed instance left with the release jar in it.
+
+**Where observed:** Claude Fable 5.1, same project, at the release of version 1.0.0.
+
 ### `standards-review`
 
-Briefs an independent reviewer against `guidelines/coding-standards.md` and the owning issue, with an instruction that forbids rubber-stamping, then makes the findings get handled on the record.
+Briefs an independent reviewer through `procedures/independent-review-brief.md` against `guidelines/coding-standards.md` and the owning issue, with an instruction that forbids rubber-stamping, then makes the findings get handled on the record.
 
 **Failure it remedies:** skipping the independent review the workflow requires, or performing it as a formality by reviewing one's own work in the same context that wrote it.
 

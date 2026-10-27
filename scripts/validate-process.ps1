@@ -20,7 +20,10 @@ $requiredPaths = @(
     'workflows/existing-mod-assessment.md',
     'workflows/change-cycle.md',
     'workflows/process-maintenance.md',
+    'procedures/close-campaign.md',
     'procedures/cross-project-agent-consultation.md',
+    'procedures/independent-review-brief.md',
+    'procedures/release-build-and-discovery.md',
     'procedures/revalidate-release.md',
     'scripts/validate-workspace.ps1',
     'scripts/test-validate-workspace.ps1',
@@ -124,14 +127,20 @@ $requiredProcessText = [ordered]@{
     'guidelines/minecraft-pixel-art.md' = @('-Compose', '-Compare')
     'stages/2-feasibility-research.md' = @('tools/mod-jar/mod-jar.cmd find')
     'skills/validation-session/SKILL.md' = @('scripts/validate-workspace.ps1', 'tools/session-log/session-log.cmd', 'tools/mod-jar/mod-jar.cmd check')
+    'skills/close-campaign/SKILL.md' = @('procedures/close-campaign.md')
+    'skills/release-check/SKILL.md' = @('procedures/release-build-and-discovery.md')
+    'skills/standards-review/SKILL.md' = @('procedures/independent-review-brief.md')
+    'procedures/close-campaign.md' = @('scripts/validate-workspace.ps1', 'tools/evidence-pack/evidence-pack.cmd', 'procedures/independent-review-brief.md')
+    'procedures/independent-review-brief.md' = @('separate agent context', 'The review agent must receive')
+    'procedures/release-build-and-discovery.md' = @('gradlew.bat --stop', 'tools/host-run/host-run.cmd run', '<mod-repository>/build/libs/')
     'guidelines/process-control.md' = @('invalidates or materially challenges', 'avoidable tactical complexity')
     'stages/0-project-setup.md' = @('workspace/documentation/workflow-feedback.md', 'workspace/documentation/agent-diagnostics-toolkit-feedback.md', 'tools/host-run/host-run.cmd run')
     'setup/initialize-project.md' = @('## Freeze Project Identity', '## Verify Owner-Side Git Access')
     'stages/4-architecture-definition.md' = @('**Complexity Analysis:**', 'meaningfully different designs', 'authoritative owner', 'internal design freedom')
     'workflows/change-cycle.md' = @('smallest reliable reproduction', 'future regression could be detected')
     'stages/6-implementation-plan.md' = @('## Verification Environment Plan', '**Test now:**', '**Defer:**', '**Waive:**', '## Complexity Management', '## Existing-Code Design Fit', '## Defect Regression Protection')
-    'stages/7-implementation.md' = @('## Validation Environment Tiers', '## Generated Artifact Inspection', '## Small Follow-Up Path', '**Complexity argument**', 'pre-correction failure', 'Strategic Modification', 'Coherent fit / Justified tactical compromise', 'scripts/validate-workspace.ps1', 'tools/session-log/README.md', 'tools/mod-jar/README.md')
-    'stages/8-release-presentation.md' = @('https://github.com/mahghuuuls/minecraft-1.12.2-mod-agent-workflow', 'authoritative records for the current release artifact checksum', '<mod-repository>/build/libs/', 'canonical upload source', '## Distribution-Platform Release Changelog', 'use exactly `Initial release` by default', 'paste-ready block')
+    'stages/7-implementation.md' = @('## Validation Environment Tiers', '## Generated Artifact Inspection', '## Small Follow-Up Path', '**Complexity argument**', 'pre-correction failure', 'Strategic Modification', 'Coherent fit / Justified tactical compromise', 'scripts/validate-workspace.ps1', 'tools/session-log/README.md', 'tools/mod-jar/README.md', 'procedures/close-campaign.md', 'procedures/independent-review-brief.md')
+    'stages/8-release-presentation.md' = @('https://github.com/mahghuuuls/minecraft-1.12.2-mod-agent-workflow', 'authoritative records for the current release artifact checksum', '<mod-repository>/build/libs/', 'canonical upload source', '## Distribution-Platform Release Changelog', 'use exactly `Initial release` by default', 'paste-ready block', 'procedures/release-build-and-discovery.md')
     'setup/workflow-feedback-template.md' = @('## End Of Workflow Retrospective')
     'setup/template-defaults.properties' = @('release_owner_changelog=agent', 'release_owner_platform_changelog=agent')
     'guidelines/agent-diagnostics-toolkit.md' = @('development-runtime only', 'Do not clone the toolkit repository into every mod project', 'setup/agent-diagnostics-toolkit-feedback-template.md')

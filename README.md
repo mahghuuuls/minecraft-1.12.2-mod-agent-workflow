@@ -127,11 +127,11 @@ Rare API-provider/API-consumer questions between actively developed mods can use
 
 ## Working With Skills
 
-`skills/` holds optional agent skills. **They are not part of the workflow**: no stage references them, and the process behaves identically without them. Use one only when an agent keeps failing to follow the workflow as written; invoking it by name replaces typing the same correction out every time the problem recurs.
+`skills/` holds optional agent skills. **They are not part of the workflow**: no stage references them, and the process behaves identically without them. They serve two uses. A remedy is invoked by name when an agent keeps failing to follow the workflow as written, instead of typing the same correction out every time. A moment trigger is a thin skill that says "read this procedure, then do it" at a point where the right procedure is often skipped: the start of a validation session, the close of a campaign, the release build. An agent may invoke a moment trigger itself when the moment comes.
 
 Examples from real projects. Claude Opus 5 is known for the wall-of-text problem and the jargon problem; `plain-language` and `bottom-line` are the fix. Gemini 3.1 Pro and Gemini 3.7 Flash had trouble following `guidelines/coding-standards.md`; `standards-review` is the remedy. When in-game tests of a feature keep arriving badly prepared, without a starting state or a defined expected result, `validation-session` is the remedy.
 
-Eight skills are included. See [skills/README.md](skills/README.md) for which one fits which problem, how to install them, and which models needed them in practice.
+Ten skills are included. See [skills/README.md](skills/README.md) for which one fits which problem, how to install them, and which models needed them in practice.
 
 ## Updating Your Copy
 
@@ -181,4 +181,4 @@ Several ideas were adapted from the agent skills published at [AI Hero](https://
 - **Reported defect confirmation**, from `/triage`. Establishing that a reported bug is real, and where its cause actually lies, before planning a fix.
 - **Investigate before asking**, from the interview skills. Reading available code, artifacts, and dependency sources to answer what the agent can answer itself, instead of asking the owner.
 
-Each was adapted to this workflow's stage, approval, and evidence model rather than adopted directly. This repository does not use or ship agent skills; its instructions are plain Markdown so they work with any agent that can read files.
+Each was adapted to this workflow's stage, approval, and evidence model rather than adopted directly. The workflow's own instructions are plain Markdown so they work with any agent that can read files; the skills under `skills/` are optional and separate from them.
