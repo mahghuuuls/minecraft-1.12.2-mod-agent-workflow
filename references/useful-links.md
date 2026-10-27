@@ -10,6 +10,8 @@ Prefer version-specific and primary sources. These links are starting points for
 
 - [Agent Diagnostics Toolkit](https://github.com/mahghuuuls/agent-test-toolkit)
   Optional Minecraft 1.12.2 Forge development mod for repeatable command-bundle setup and structured log evidence during owner-assisted tests. Follow `guidelines/agent-diagnostics-toolkit.md`; do not treat it as a shipping dependency.
+- [Flare](https://www.curseforge.com/minecraft/mc-mods/flare) ([source](https://github.com/CleanroomMC/Flare))
+  Sampling profiler for Minecraft 1.12.2 on Forge and Cleanroom, derived from spark; CPU call graph, memory, and server health. GPLv3, development only, never shipped. It answers where the game spends time when a performance budget is missed; a mod's own timing summary stays the measure a requirement defines. Profiles open in an online viewer, so profile data leaves the machine; the owner runs its in-game commands and shares the result. The BareBones Template (Cleanroom) instance already carries it.
 
 ## CraftTweaker
 

@@ -177,7 +177,7 @@ Possible feedback mechanisms include:
 - Multiplayer testing
 - Log inspection
 - Compatibility testing
-- Profiling and performance measurements
+- Profiling and performance measurements (the mod's own timing summary for a budget; Flare, owner-run, to locate a hot spot)
 
 Verification must match the risk. A successful build does not verify gameplay behavior, networking, rendering, entity AI, persistence, or mod compatibility.
 
