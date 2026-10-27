@@ -542,7 +542,20 @@ function Invoke-Capture {
         $manifestHash = (Get-FileHash -LiteralPath $manifestPath -Algorithm SHA256).Hash.ToUpperInvariant()
         Write-Utf8File (Join-Path $temporaryDirectory 'manifest.sha256') "$manifestHash  manifest.json`r`n"
 
-        [IO.Directory]::Move($temporaryDirectory, $outputDirectory)
+        # The move into place has failed once on the first attempt with an access-denied exception (another
+        # process still had a handle on a just-written file); retry briefly before giving up.
+        $moveAttempt = 0
+        while ($true) {
+            try {
+                [IO.Directory]::Move($temporaryDirectory, $outputDirectory)
+                break
+            }
+            catch [System.IO.IOException], [System.UnauthorizedAccessException] {
+                $moveAttempt++
+                if ($moveAttempt -ge 5 -or (Test-Path -LiteralPath $outputDirectory)) { throw }
+                Start-Sleep -Milliseconds 500
+            }
+        }
         Write-Output "Created evidence pack $outputDirectory"
         Write-Output "Manifest SHA-256 $manifestHash"
         Write-Output "Source $commit (tree $tree, clean=$worktreeClean)"

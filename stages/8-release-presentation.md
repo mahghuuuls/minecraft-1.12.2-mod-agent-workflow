@@ -381,6 +381,7 @@ Do not use the internal record as public copy.
 23. When the toolkit was used, review its feedback artifact and record which entries remain Candidate, Confirmed, or Reported; do not modify or report to the external toolkit project without separate authorization.
 24. Present the completed internal presentation record and release handoff for stage approval. In the same chat response, include the exact distribution-platform release changelog in a clearly labeled paste-ready block, and the platform listing packet: the summary sentence, the main category and the additional categories with their reasons, the source and issue tracker URLs, and the license. Read the platform's category list that session rather than from memory, and check that the issue tracker URL answers once the repository is pushed (an unpushed repository has no issues page yet; say so and give the URL it will have). The owner fills the project form from this packet; without it the summary, the categories, and the links are asked for one at a time after the workflow has completed.
 25. Revise until explicitly approved. If a revision changes the committed release source, obtain new commit authorization and repeat artifact validation before final approval.
+26. When the owner reports the publication, record the project URL as the owner gives it. A new CurseForge project answers 404 to everyone but its owner until the platform's review passes, so a 404 right after the report is not a missing project; recheck the URL later and record the date it answered.
 
 ## Output Artifacts
 

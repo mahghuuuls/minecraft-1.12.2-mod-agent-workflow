@@ -11,6 +11,11 @@ Prefer version-specific and primary sources. These links are starting points for
 - [Agent Diagnostics Toolkit](https://github.com/mahghuuuls/agent-test-toolkit)
   Optional Minecraft 1.12.2 Forge development mod for repeatable command-bundle setup and structured log evidence during owner-assisted tests. Follow `guidelines/agent-diagnostics-toolkit.md`; do not treat it as a shipping dependency.
 
+## CraftTweaker
+
+- [CraftTweaker 4.1.20 (1.12.2) integration notes](crafttweaker-1-12-notes.md)
+  Verified facts for a mod that exposes a ZenScript surface: artifacts, mod-owned loaders and their events, parse-error scope, calls from scripts into the mod, overload and cast rules, item patterns, the shared development folder.
+
 ## Template Candidates
 
 See [Minecraft 1.12.2 Template Candidates](template-candidates.md) for selection guidance.
