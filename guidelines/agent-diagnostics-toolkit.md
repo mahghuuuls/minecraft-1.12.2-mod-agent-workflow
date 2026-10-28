@@ -167,7 +167,7 @@ From `1.3.0`. The pinned version's `AGENTS.md` owns the request lines, the resul
 
 **What it runs.** A named bundle, `reload`, `save`, `mark`, the read-only inspections, and a screenshot of the opener's client. No vanilla command and nothing else. Anything that changes the world goes in a project bundle the owner can read. Requests run as the player who opened the inbox, with that player's permissions, and the run's `BUNDLE_START` says `channel=inbox`.
 
-**How to send a request.** Write `<id>.tmp` in the inbox folder, rename it to `<id>.req`, and wait for `<id>.result.json`. Use a new id for every request: a reused id is refused and never run. Judge the run by the result file's outcome and counters, then read the log records it names. The toolkit never deletes files in the folder; tidy it only while the inbox is closed.
+**How to send a request.** Use `tools/devtool-inbox/devtool-inbox.cmd` (its README): `send` for one request, `batch` for a list with the answer each line expects, `status` to check the inbox is open. It follows the toolkit's protocol: write `<id>.tmp` in the inbox folder, rename it to `<id>.req`, and wait for `<id>.result.json`. Use a new id for every request: a reused id is refused and never run. Judge the run by the result file's outcome and counters, then read the log records it names. The toolkit never deletes files in the folder; tidy it only while the inbox is closed.
 
 **Single player.** A paused single-player game reads nothing. With the no-pause client default on, only an open menu pauses it; a request that waits longer than expected usually means a menu is open.
 

@@ -23,6 +23,7 @@ Implementation includes coding, testing, in-game verification, defect correction
 - `guidelines/minecraft-pixel-art.md` when the issue creates or materially revises pixel-art assets
 - `tools/evidence-pack/README.md` when the issue or campaign plans a retained evidence pack
 - `tools/session-log/README.md` when a validation session or campaign leaves runtime logs the agent must read
+- `tools/devtool-inbox/README.md` when the agent starts toolkit bundles through the command inbox
 - `tools/mod-jar/README.md` when a session loads jars copied from another instance or an issue names another mod's item ids
 - `tools/modelpreview/README.md` when the issue creates or materially revises a block model JSON with its own elements
 - `procedures/cross-project-agent-consultation.md` when implementation exposes an owner-authorized API-provider/API-consumer question that approved artifacts and source inspection cannot settle

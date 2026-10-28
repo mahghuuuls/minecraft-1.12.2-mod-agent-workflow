@@ -82,6 +82,10 @@ the evidence before sending the next card.
 the rotated files, slices records and lines between two marks or around one bundle run, and lists
 errors with their stack traces. Cite what you read by file and line.
 
+`tools/devtool-inbox/devtool-inbox.cmd` sends the bundles when the inbox is open: `send` for one,
+`batch` for a list with the answer each line expects. It refuses a used id and says when the inbox
+has closed, so you know to ask the owner to open it again.
+
 **Ask for one thing only: what the logs cannot hold.** Visual layout, animation, colour, sound,
 whether an input felt right, real multi-client behaviour, an environment whose files you cannot
 reach. Everything else — counts, occupancy, config, registry state, command output, diagnostic
