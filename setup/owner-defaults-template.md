@@ -54,6 +54,8 @@ The agent-managed test instance is shared by every mod this owner develops (Test
 - Use for owner-assisted runtime testing: Prefer | Ask each project | Do not use
 - Apply safe disposable-world baseline by default: Yes | Ask each project | No
 - Allow operator join automation for that baseline by default: Yes | Ask each project | No
+- Client defaults (toolkit 1.3.0 or later; default: brightness 1.0, music 0, master 0.5, weather 0, hostile 0, friendly 0, ambient 0, no pause on lost focus): Use the defaults | Use these values: | Do not set
+- Command inbox in development runtimes and the test instance (toolkit 1.3.0 or later): Yes | Ask each project | No
 - Other recurring toolkit preferences:
 
 ## Owner-Specific Overrides

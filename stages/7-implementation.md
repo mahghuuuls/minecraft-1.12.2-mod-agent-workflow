@@ -244,7 +244,7 @@ When Project Setup selected the toolkit, follow `guidelines/agent-diagnostics-to
 - Verify the exact JAR identity and that it is present only in the intended development runtimes.
 - Read the pinned version's `AGENTS.md` and confirm the live capabilities, environment, and mod list.
 - Keep the shipping mod independent of toolkit classes and inspect release artifacts when the build could leak the dependency.
-- Package every supported deterministic multi-command setup, reset, inspection, marker, and cleanup sequence into a project-owned bundle so the owner normally runs only reload, one bundle, and genuinely interactive steps. Keep the individual commands visible in bundle source and evidence documentation.
+- Package every supported deterministic multi-command setup, reset, inspection, marker, and cleanup sequence into a project-owned bundle. The agent starts bundles through the toolkit's command inbox when it is enabled and open, so the owner performs only genuinely interactive steps; otherwise the owner runs one bundle and those steps. Keep the individual commands visible in bundle source and evidence documentation.
 - Confirm the bundle end record, failures, readiness marks, enabled categories, and starting-state inspections before treating later records as evidence.
 - Preserve or hash the bundle and relevant log before a restart rotates or replaces them.
 - Use the mod's own narrow diagnostics for internal decisions the toolkit cannot expose.

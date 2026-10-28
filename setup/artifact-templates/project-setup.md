@@ -109,6 +109,7 @@
 - Runtime placement:
 - Safe disposable-world baseline:
 - Client defaults:
+- Command inbox:
 - Operator join automation:
 - Compatibility limitations:
 - Deferred artifact verification and due checkpoint:

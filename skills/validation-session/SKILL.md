@@ -46,8 +46,9 @@ Do all of this first. A session that stops because a bundle has a typo has waste
 - **Build and check.** Run the compile and the suite. Never open a session on code that does not
   build.
 - **Write the bundles.** Every deterministic sequence of commands — setup, reset, inspection, marks,
-  teardown — belongs in a project bundle, not in the owner's hands. A card should normally carry
-  only `/devtool reload`, one `/devtool run <name>`, and the gameplay.
+  teardown — belongs in a project bundle, not in the owner's hands. With the toolkit's command
+  inbox open, you start the bundles yourself and a card carries only the gameplay; without it, one
+  `/devtool run <name>` and the gameplay.
 - **Parse the bundle JSON before handing it over.** A bundle that fails to load costs a restart.
 - **Check every command against 1.12.2.** Syntax, selectors, registry names, NBT. A command that
   errors in game is a wasted round trip.
@@ -59,6 +60,8 @@ Do all of this first. A session that stops because a bundle has a typo has waste
   classpath already has>` and fix what it reports. A missing dependency or a duplicate costs the
   owner a launch.
 - **Preserve any log that a restart would rotate away.**
+- **Set the client defaults.** Quiet sound and no pause on lost focus, from
+  `guidelines/agent-diagnostics-toolkit.md` or the owner defaults, before the first launch.
 - **Present one session map**, then stop. The map is: the runtime, the ordered card titles and what
   each shows, the config groups and their values, every restart point, the shared setup and final
   cleanup, which bundles will be used, and which observations you will need from them. It is a map,
