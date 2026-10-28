@@ -37,6 +37,7 @@ During a mod project, the agent may:
 - Maintain `workspace/documentation/dependency-references.md` when dependency source repositories are used as reference material.
 - Modify mod source only in the active repository under `workspace/project/`.
 - Treat `workspace/template/` as disposable source material.
+- Fast-forward the outer process repository to its published remote with the owner's authorization, as the Workflow Repository Update Check in `guidelines/process-control.md` describes.
 
 During a mod project, the agent must not:
 
@@ -121,7 +122,7 @@ Select exactly one workflow:
 | An existing implementation has no approved process baseline | `workflows/existing-mod-assessment.md` |
 | An approved baseline exists and a change is requested | `workflows/change-cycle.md` |
 
-Present the selection and evidence before starting a new workflow. Do not classify an existing repository as empty initialization input or treat unapproved documents as a baseline. Ask when the state is ambiguous.
+Before presenting the selection of a new workflow, run the Workflow Repository Update Check in `guidelines/process-control.md`. Present the selection and evidence before starting a new workflow. Do not classify an existing repository as empty initialization input or treat unapproved documents as a baseline. Ask when the state is ambiguous.
 
 Record the approved workflow in `workspace/documentation/project-status.md`.
 

@@ -43,7 +43,7 @@ Reusable stages 1 through 8 are **Required**. Release Presentation includes rele
 
 ## Sequence
 
-1. Record this workflow as **In Progress** in `project-status.md` and update `project-state.md`.
+1. Run the Workflow Repository Update Check in `guidelines/process-control.md` before the workflow-start approval, then record this workflow as **In Progress** in `project-status.md` and update `project-state.md`.
 2. Execute Concept and Scope. The workflow-start approval may also approve starting Concept and Scope when the transition briefing clearly covers both.
 3. Execute Feasibility Research.
 4. Execute Requirements Definition.

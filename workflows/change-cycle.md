@@ -136,7 +136,7 @@ Present the complete intake and proposed route for explicit approval before revi
 
 ## Sequence
 
-1. Confirm the entry conditions and baseline. When the mod declares MixinBooter, read the version the test instance's Cleanroom reports again and apply Mixins in `guidelines/project-defaults.md`.
+1. Run the Workflow Repository Update Check in `guidelines/process-control.md`. Then confirm the entry conditions and baseline. When the mod declares MixinBooter, read the version the test instance's Cleanroom reports again and apply Mixins in `guidelines/project-defaults.md`.
 2. Create the cycle ID and artifact root.
 3. Mark the workflow **In Progress**.
 4. Determine the working branch from the baseline's publication record.

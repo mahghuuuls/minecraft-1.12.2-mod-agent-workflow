@@ -65,7 +65,7 @@ Record this route in `project-status.md`.
 
 ## Sequence
 
-1. Record this workflow as **In Progress** in `project-status.md` and update `project-state.md`.
+1. Run the Workflow Repository Update Check in `guidelines/process-control.md` before the workflow-start approval, then record this workflow as **In Progress** in `project-status.md` and update `project-state.md`.
 2. Clone or identify the existing repository without altering its history.
 3. Record its origin, branch, HEAD revision, tags, release evidence, and working-tree state.
 4. Inspect its build, source and processed metadata, source structure, resources, dependencies, configuration, and existing documentation, including dependency constraint forms.

@@ -111,7 +111,7 @@ Do not edit versioned process files during mod development because a feedback en
 
 Before a Git operation, identify the target repository and inspect its working tree. The process repository, runtime template, and mod repository have separate histories.
 
-During mod development, do not commit, push, or otherwise modify the outer process repository. Git changes belong only to the active mod repository unless the user is working in explicit Process Maintenance mode.
+During mod development, do not commit, push, or otherwise modify the outer process repository. Git changes belong only to the active mod repository unless the user is working in explicit Process Maintenance mode. The one exception is the authorized fast-forward of the Workflow Repository Update Check in `guidelines/process-control.md`.
 
 During Process Maintenance mode, the outer process repository is the active repository. Do not modify, commit, or push nested mod repositories while changing process files.
 
@@ -119,6 +119,7 @@ Explicit authorization is required for each of these actions:
 
 - Commit
 - Push
+- Pull or otherwise update a checkout from its remote
 - Create or merge a pull request
 - Change the configured template source or ref
 - Upload a file
