@@ -247,7 +247,7 @@ Before an asset issue is Done, record:
 - Use-specific inspection result, including tile, GUI-neighbor, model, animation, or in-game context where applicable.
 - Remaining limitations or accepted validation waiver.
 
-Only the approved final runtime asset belongs in the mod resource path. Candidate generation and owner selection do not authorize a commit, push, upload, or publication.
+Only the approved final runtime asset belongs in the mod resource path. Repository changes follow the routine Git policy in `guidelines/collaboration-guidelines.md`; candidate generation and owner selection do not authorize upload or publication.
 
 ## Version-Specific Technical Sources
 

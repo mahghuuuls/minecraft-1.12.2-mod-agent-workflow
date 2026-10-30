@@ -29,7 +29,7 @@ If source code, resources, version metadata, dependencies, configuration default
 ## Boundaries
 
 - Do not modify production source, resources, version metadata, dependencies, or public release files.
-- Do not commit, push, upload, or publish without the separately required authorization.
+- Apply the routine mod-repository Git policy in `guidelines/collaboration-guidelines.md`; upload and publication keep their separately required authorization.
 - Do not select a development, sources, Javadoc, or otherwise non-release artifact.
 - Treat the normal distributable JAR under `<mod-repository>/build/libs/` as the canonical upload source. Retained copies elsewhere are evidence only.
 - Do not claim compatibility or publication results that the evidence does not establish.

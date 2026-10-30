@@ -107,6 +107,14 @@ Do not edit versioned process files during mod development because a feedback en
 - Never run a text replacement over evidence, staging, or campaign folders. A log or configuration copy kept as evidence must stay exactly as it was recorded; a rename or wording change in the project does not reach into the evidence.
 - Write a multi-line or quote-heavy edit as a script file and run the file. Inline shell strings with nested quotes, pipes, or backticks break silently or apply a mangled edit; a script file can be read back before it runs.
 
+## Required Read-Only Review Agents
+
+Start required read-only independent reviews automatically once their owning stage's readiness conditions are met, without asking the owner for review-agent approval. This includes initial, pre-campaign, campaign follow-up and correction re-reviews within approved work. Announce the review in a progress update and record its findings and disposition through the owning stage.
+
+Use a separate reviewer context and brief it through `procedures/independent-review-brief.md`. The reviewer reads the approved scope and evidence and returns findings; it does not edit project files, start owner-assisted game sessions, approve artifacts or extend the task. Review findings that challenge scope, architecture or another owner decision follow the normal revision/approval route.
+
+This rule permits required review delegation only. It does not grant permission for unrelated delegation, implementation by a reviewer, external-service changes or contacting other projects. If an independent reviewer is unavailable, use the owning stage's review-unavailability procedure; automatic initiation does not waive review. Honor any explicit owner restriction. Historical notes that review-agent approval was not yet requested are not an owner restriction and do not require a new permission prompt.
+
 ## Git and External Actions
 
 Before a Git operation, identify the target repository and inspect its working tree. The process repository, runtime template, and mod repository have separate histories.
@@ -115,40 +123,40 @@ During mod development, do not commit, push, or otherwise modify the outer proce
 
 During Process Maintenance mode, the outer process repository is the active repository. Do not modify, commit, or push nested mod repositories while changing process files.
 
+### Routine Mod-Repository Commits And Pushes
+
+Routine commits and normal non-force pushes in the active mod repository do not require separate owner approval. This default applies throughout the approved mod workflow, including reviewed pre-test validation checkpoints. Do not offer a standing-authorization packet or ask again at each commit or push. The owner may restrict or defer either action; record and honor that instruction.
+
+Before a routine commit:
+
+- Confirm the repository, approved branch, exact diff and staged paths; preserve unrelated changes.
+- Complete the verification and review required for that increment. Stage 7 owns ordinary completion and pre-test validation-checkpoint readiness.
+- Re-read Commit Messages in `guidelines/project-defaults.md`, check the short-subject and no-internal-references rules, and use a repo-facing message.
+- Commit only the reviewed scope and report the resulting revision and worktree state. A commit does not approve a stage, complete an unvalidated issue, or authorize further scope.
+
+Push eligible committed work at the recorded cadence, defaulting to release-ready handoff. Before pushing, verify the configured remote URL, destination branch and outgoing commits; use only a normal non-force push to the agreed project destination. Do not push unrelated or unreviewed commits. A pre-test validation checkpoint remains local until its campaign's validation and follow-up review are satisfied. If the destination is unknown, history has diverged, or the push would require a merge, history rewrite or other excluded action, stop and resolve that condition. Report a failed push without claiming success or retrying through a destructive alternative.
+
+Project Setup records `routine_git_policy=automatic` and `preferred_push_cadence=release-ready-handoff` unless the owner chooses a different policy or cadence. `ask` requires specific permission for commits and pushes unless an applicable explicit standing permission covers them. When resuming a workspace without the new policy field, use the current automatic default unless the owner explicitly restricted it. Preserve explicit restrictions and the scope of earlier permissions; a cadence alone never overrides an owner restriction. A historical note that Git permission was not yet requested is not an owner restriction. The old `preferred_push_prompt_cadence` value may supply the cadence, but the old offer-standing-authorization preference does not itself grant or revoke permission.
+
+This default applies only to the active mod repository. Commits and pushes to the outer process repository in Process Maintenance mode still require explicit authorization. Do not infer that authorization from approval to edit process files.
+
+### Actions Requiring Separate Authorization
+
 Explicit authorization is required for each of these actions:
 
-- Commit
-- Push
 - Pull or otherwise update a checkout from its remote
 - Create or merge a pull request
+- Create, move or delete a tag
 - Change the configured template source or ref
 - Upload a file
-- Modify an external service
+- Modify an external service, except for routine pushes covered above
 - Publish a release
 
 Authorization for one action does not authorize another. Do not use destructive Git operations without explicit permission. Preserve unrelated changes and report which repository was inspected or changed.
 
 Before creating the first commit in an active repository, inspect the configured Git author name and email and show them to the owner. If the owner wants a different address, offer the applicable GitHub-provided `noreply` address or another owner-selected address. Do not change local or global Git identity configuration without explicit authorization.
 
-During Implementation, the owner may give bounded standing authorization for the series of local issue commits in that stage. The authorization must explicitly cover only commits that:
-
-- Contain one Done issue, one completed approved validation campaign, or one approved small-follow-up batch.
-- Have completed the required verification and independent review.
-- Include no unrelated file.
-- Use the repo-facing commit-message default.
-- Do not push, tag, publish, or change an external service.
-
-Standing implementation-commit authorization is optional, revocable, and does not carry into Release Presentation or a later workflow. Without it, request commit authorization at each issue checkpoint as usual.
-
-An approved owner-assisted validation campaign may require a clean, reproducible source tree before its issues can become Done. A **validation checkpoint commit** is permitted only under the bounded procedure in `stages/7-implementation.md` and only with explicit owner authorization naming the campaign and exact cumulative scope. Ordinary per-issue or campaign-completion standing authorization does not cover this earlier checkpoint unless it names the validation checkpoint specifically. The checkpoint is local, does not mark an issue Done, and does not authorize a push, tag, publication, or later completion commit.
-
-**The authorization removes the only point at which the owner would otherwise see a commit message before it lands.** Nothing else in the stage inspects message form, so a style rule the agent misremembers will drift silently for as long as the authorization holds, across every commit in the stage. Before each commit made under standing authorization, re-read the commit-message rules in `guidelines/project-defaults.md` rather than relying on recall of them, and confirm the message satisfies the length rule and the no-internal-references rule specifically. State that the check was performed when stating that the authorization is being applied.
-
-This is a known failure, not a hypothetical one. On a completed project the length rule was missed on roughly twenty-five consecutive commits under standing authorization, and the agent's recall of "repo-facing" satisfied the part it remembered while the rest went unchecked.
-
-The proportionate approval bundle defined in `guidelines/process-control.md` is one specific form of bounded standing implementation-commit authorization. It may cover only the named single issue in the active low-risk Change Cycle and only one local commit after that issue satisfies its Definition of Done. When the recorded conditions remain satisfied, apply the authorization without asking again. A changed issue, failed or materially altered verification, expanded review scope, unrelated working-tree changes, or any excluded action requires a new decision.
-
-A preferred push cadence records when the agent should offer a push, such as after each stage or only at release. It does not authorize any push. Every push still requires explicit authorization for the exact repository and branch.
+The proportionate approval bundle in `guidelines/process-control.md` combines plan approval and implementation start. Required read-only reviews and routine Git operations follow this guideline's respective policies. The bundle does not weaken source readiness, verification, review, issue-completion or publication gates.
 
 ### Branching Before And After Publication
 
@@ -162,13 +170,13 @@ At the start of a Change Cycle on a published mod:
 
 - State that the mod is published, and cite the publication record that establishes it.
 - Recommend creating `develop` from the current default-branch tip and doing the cycle's commits there.
-- Create the branch only with the owner's approval, like any other Git operation. If the owner prefers to stay on the default branch, record that decision in the change intake and continue without raising it again for that cycle.
+- Create the branch only with the owner's approval. If the owner prefers to stay on the default branch, record that decision in the change intake and continue without raising it again for that cycle.
 
 At the end of the cycle, once Release Presentation is approved and the release artifact is validated, offer the merge back into the default branch. The merge is a separate authorization from any commit, push, or publication. Do not merge partial work, and do not merge in order to tidy the repository before the cycle's own approvals are complete.
 
 This is a recommendation the owner can decline, not a gate on the work. Its purpose is to keep the branch that matches the published artifact free of half-finished changes, so a released version stays reproducible while the next one is being built.
 
-During Implementation, after each completed issue, approved vertical slice, approved validation campaign, or approved small-follow-up batch, resolve the commit checkpoint before moving to the next item. Ask for approval unless an applicable bounded standing authorization already covers that exact commit scope. Follow `stages/7-implementation.md`.
+During Implementation, resolve each issue, campaign or small-follow-up commit checkpoint under `stages/7-implementation.md`, applying the routine Git policy rather than adding a permission gate.
 
 Commit messages must be repo-facing by default. The rules are owned by the Commit Messages section of `guidelines/project-defaults.md`. Read them there before writing a message rather than working from recall, and note that they constrain message length as well as content.
 

@@ -115,8 +115,11 @@ function Start-DetachedCommand {
     $commandLine = 'cmd.exe /d /c "' + $CommandPath + '"'
     if ($Method -eq 'wmi') {
         # Win32_Process.Create starts the process from the WMI service, not from this process tree.
+        # Keep background command windows hidden so they do not interrupt the owner's active app.
+        $startup = ([wmiclass]'Win32_ProcessStartup').CreateInstance()
+        $startup.ShowWindow = [uint16]0
         $processClass = [wmiclass]'Win32_Process'
-        $result = $processClass.Create($commandLine, $Directory, $null)
+        $result = $processClass.Create($commandLine, $Directory, $startup)
         if ($result.ReturnValue -ne 0) {
             throw "Win32_Process.Create failed with return value $($result.ReturnValue). Try -Launcher task."
         }

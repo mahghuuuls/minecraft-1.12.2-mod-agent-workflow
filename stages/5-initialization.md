@@ -32,7 +32,7 @@ The preceding stages must be approved under `guidelines/process-control.md`. Mis
 - Preserve required licensing and attribution
 - Validate the initialized build and baseline artifact
 - Verify that the owner, not only the agent environment, can run `git status` in the final repository or record an exact repository-specific remediation
-- Obtain approval for and create the first local commit
+- Review and create the first local commit under the routine Git policy
 - Produce the initialization record
 
 ## Out of Scope
@@ -41,7 +41,7 @@ The preceding stages must be approved under `guidelines/process-control.md`. Mis
 - Changes to approved requirements or architecture
 - Speculative dependencies or infrastructure
 - Final user-facing documentation or release assets
-- Pushing, opening a pull request, uploading, or publishing
+- Opening a pull request, uploading, or publishing
 - Modifying the process repository or upstream template
 
 ## Desired AI Behavior
@@ -62,7 +62,7 @@ Act as a careful project initializer.
 - Prefer `THIRD-PARTY-NOTICES.md` for retained template or upstream notices when the root `LICENSE` should identify the new project owner/license.
 - Treat the template as disposable input and preserve repository independence.
 - Stop and report incompatible inputs, failed checks, or unsafe repository state.
-- Present verification evidence before requesting approval for the first local commit.
+- Present initialization verification evidence and apply the routine Git policy in `guidelines/collaboration-guidelines.md` to the first local commit.
 - Do not treat an agent-side successful Git command as proof that the owner's shell trusts or owns the repository.
 
 ## Output Artifact
@@ -92,8 +92,8 @@ This stage is complete when:
 - No unresolved functional template placeholder remains.
 - Automatic publication is disabled.
 - The initialized project builds and its baseline artifact is inspected.
-- The first local commit is explicitly approved, created, and recorded.
-- Nothing is pushed.
+- The first local commit is verified, created, and recorded under the applicable Git policy.
+- Pushes, if due, follow the recorded cadence and routine Git policy.
 - The project owner approves the stage.
 
 Completion makes the initialized codebase available to Implementation Plan.

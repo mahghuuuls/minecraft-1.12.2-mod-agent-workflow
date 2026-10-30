@@ -431,7 +431,7 @@ In the final repository, verify:
 - No template remote exists.
 - No template commits exist.
 - No template tags or branches were copied.
-- The repository has no commit before the approved initial commit.
+- The repository has no commit before the verified initial commit.
 - Git status includes only expected initialized files.
 
 Record the results.
@@ -509,7 +509,7 @@ Before staging or committing:
 - Present known limitations.
 - Propose the initial commit message.
 
-Do not stage or commit until the project owner explicitly approves the first local commit.
+After these checks pass, apply the routine mod-repository Git policy in `guidelines/collaboration-guidelines.md` to staging and the first local commit.
 
 ## Create the Initial Commit
 
@@ -526,7 +526,7 @@ Initialize <mod-name> from configured template
 
 5. Record the resulting commit SHA.
 
-Do not push.
+Apply the same Git policy and recorded cadence to any push; initialization does not require an early push.
 
 The final repository must have exactly one local commit when Initialization completes.
 

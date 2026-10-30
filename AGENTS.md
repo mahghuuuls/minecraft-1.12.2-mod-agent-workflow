@@ -165,7 +165,7 @@ Do not silently resolve contradictions between sources. Follow `guidelines/proce
 - `guidelines/project-defaults.md`: stable defaults for every mod.
 - `guidelines/workflow-glossary.md`: definitions of workflow vocabulary, read every session. It defines what terms mean and contains no behavioral rules; where it and an owning file disagree, the owning file wins.
 - `guidelines/process-control.md`: setup, workflow and stage status, approval, artifacts, project glossary, workflow feedback, and backward transitions.
-- `guidelines/collaboration-guidelines.md`: communication, editing, Git authorization, workflow feedback behavior, and completion reporting.
+- `guidelines/collaboration-guidelines.md`: communication, editing, required review-agent initiation, Git authorization, workflow feedback behavior, and completion reporting.
 - `guidelines/coding-standards.md`: implementation and verification conventions.
 - Specialized guideline files under `guidelines/`: task-specific instructions read only when referenced.
 - `workflows/*.md`: scenario-specific routing and behavior, including explicit process-maintenance routing.
@@ -197,3 +197,5 @@ Every bullet inside a marked block must appear verbatim in the named canonical s
 ## Execution
 
 Complete or carry forward Project Setup, then resume or obtain approval for the applicable workflow. Follow one checkpoint or stage at a time, keep authoritative status in `project-status.md`, refresh `project-state.md` only for resume/handoff needs, maintain the project glossary and dependency reference registry when relevant, record workflow feedback when relevant, and stop whenever owner approval is required. A checkpoint may explicitly combine approval of the current item with authorization to begin the already-briefed next item; never advance without that authorization.
+
+Delegate required read-only independent reviews to separate review agents under `guidelines/collaboration-guidelines.md#required-read-only-review-agents`, using `procedures/independent-review-brief.md` for the handoff.

@@ -36,8 +36,10 @@ template_repository_ref=
 # Documentation and collaboration preferences:
 public_documentation_style=split-repository-and-player-facing
 commit_message_style=repo-facing-no-workflow-issue-references
-preferred_push_prompt_cadence=release-ready-handoff
-offer_standing_implementation_commit_authorization=true
+# Routine mod-repository Git policy; see guidelines/collaboration-guidelines.md.
+# Allowed policies: automatic, ask. Explicit owner restrictions take precedence.
+routine_git_policy=automatic
+preferred_push_cadence=release-ready-handoff
 
 # Optional development-runtime diagnostic tool:
 # Allowed use values: true, false

@@ -264,7 +264,7 @@ After a Change Cycle Implementation Plan is complete, assess whether its remaini
 - The cycle contains exactly one Ready implementation issue.
 - The issue is local, bounded, and reversible.
 - Requirements, architecture, licensing, compatibility, ownership, and manual-validation decisions are resolved.
-- The planned work has no destructive action or external-state change.
+- The planned work has no destructive action or non-Git external-state change; routine Git operations follow `guidelines/collaboration-guidelines.md`.
 - Required verification, read-only independent-review scope, and commit conditions are fully briefed.
 
 Do not infer eligibility from labels such as *fix*, *small*, or *pre-release*. Base the decision on actual risk, reversibility, external effects, and resolved decisions.
@@ -273,10 +273,10 @@ When eligible, proactively offer one explicitly labeled packet that lets one own
 
 - Approve the Implementation Plan.
 - Authorize Implementation to begin for the named issue.
-- Authorize the required read-only independent review of that issue.
-- Authorize one local commit after the issue is Done, provided required verification and review pass and the commit contains no unrelated changes.
+- Identify the required read-only independent review scope; initiation follows `guidelines/collaboration-guidelines.md`.
+- Record the applicable routine Git policy from `guidelines/collaboration-guidelines.md`; no separate commit or push permission is requested under its automatic default.
 
-State that the packet does not authorize a push, tag, publication, upload, external-service change, destructive action, scope expansion, or an unbriefed or additional issue. Record the exact authorization and exclusions in both the Implementation Plan and `project-status.md`. A resumed agent must apply a still-valid recorded authorization without asking for it again.
+State that the packet does not authorize a tag, publication, upload, non-Git external-service change, destructive action, scope expansion, or an unbriefed or additional issue. Required read-only reviews and routine commits/pushes are governed separately by `guidelines/collaboration-guidelines.md`, including owner restrictions and the recorded push cadence. Record the exact stage authorization, review scope and exclusions in both the Implementation Plan and `project-status.md`. A resumed agent must apply still-valid recorded decisions without asking for them again.
 
 The bundle is invalidated when requirements, architecture, issue scope, review scope, verification outcome, repository condition, or external effects materially differ from the briefing. Stop and request a revised decision instead of stretching the authorization. Owner observations unavailable to the agent, failed or waived verification that changes risk, scope expansion, and final release-artifact approval remain separate checkpoints.
 

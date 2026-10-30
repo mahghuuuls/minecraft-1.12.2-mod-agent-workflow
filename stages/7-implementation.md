@@ -46,7 +46,7 @@ For each implementation issue:
 - Obtain an independent review
 - Correct legitimate review findings
 - Create, inspect, and obtain owner selection of pixel-art candidates when the issue includes artwork
-- Resolve the commit checkpoint after the issue is Done, using either specific approval or an applicable standing authorization
+- Resolve the commit checkpoint after the issue is Done under the routine Git policy in `guidelines/collaboration-guidelines.md`
 
 ## In Scope
 
@@ -130,12 +130,12 @@ Act as a focused implementation agent.
 - Use the planned evidence pack as the single source of volatile test totals, hashes, sizes, and retained-file identities. Record claim-specific interpretations in issue prose instead of copying the same changing values into several current-state documents.
 - Move the issue to Review only after implementation verification succeeds or accepted waivers are recorded.
 - Do not mark the issue Done until independent review is complete or an eligible review limitation is explicitly accepted.
-- After marking an issue Done, prepare a commit checkpoint and either ask the project owner whether to commit or apply an applicable standing implementation-commit authorization. For an approved validation campaign, wait until every included issue is Done and resolve the campaign's batch checkpoint instead.
-- Do not commit without explicit approval.
+- After marking an issue Done, resolve its commit checkpoint under `guidelines/collaboration-guidelines.md`. For an approved validation campaign, wait until every included issue is Done and resolve the campaign's batch checkpoint instead.
+- Do not ask for routine commit/push permission under the automatic policy. Owner restrictions and all verification/review gates still apply.
 
-At the start of Implementation, the owner may give standing, revocable approval for required independent review agents for every implementation issue in the stage. This standing approval is limited to read-only review of completed issue changes and evidence. It does not authorize commits, pushes, external-service access, non-review subagents, or changed review scope. If the scope changes, ask again.
+Required review-agent initiation follows `guidelines/collaboration-guidelines.md#required-read-only-review-agents`. This stage owns review readiness, scope, evidence and disposition; do not add a separate review-agent permission checkpoint.
 
-At the start of a Change Cycle Implementation stage, inspect the Implementation Plan and `project-status.md` for a recorded proportionate approval bundle. Honor its covered implementation start, review, and commit actions without repeated approval prompts while every recorded condition remains satisfied. If the records disagree, the issue changes, verification fails or materially changes, unrelated working-tree changes enter the proposed commit, or an excluded action becomes necessary, stop and obtain a revised decision.
+At the start of a Change Cycle Implementation stage, inspect the Implementation Plan and `project-status.md` for a recorded proportionate approval bundle and owner restrictions. Honor the covered implementation start without repeated prompts and apply the collaboration guideline's review/Git policies. If the records disagree, the issue changes, verification fails or materially changes, unrelated working-tree changes enter the proposed commit, or an excluded action becomes necessary, resolve that condition before proceeding. Those policies do not approve changed scope or failed checks.
 
 The agent may make ordinary implementation decisions that remain within the approved architecture. This includes the proportionate local design improvements authorized by `guidelines/coding-standards.md`, even when they touch multiple related methods or classes inside one approved responsibility. Decisions that alter component responsibilities, dependency directions, public behavior, or project scope require explicit approval.
 
@@ -329,9 +329,9 @@ The campaign runtime must come from one exact, clean, recoverable mod source tre
 Use the source strategy approved in the Implementation Plan:
 
 - When every campaign change is already present in ordinary reviewed commits, verify that exact tree and a clean worktree before the first card.
-- When reviewed **Awaiting Validation** changes are intentionally accumulated, inspect the exact cumulative scope and obtain explicit owner authorization for a local **validation checkpoint commit** naming the campaign. Create it only after every included issue has passed its non-campaign checks and pre-campaign independent review. Ordinary issue or campaign-completion standing authorization does not cover this checkpoint unless it names it specifically.
-- Before requesting that authorization, perform the repository-status, scope, verification-summary, unrelated-file, and repo-facing commit-message checks under **Commit Checkpoints**. Describe the implementation in the message; do not put workflow or validation-checkpoint terminology into repository history.
-- A validation checkpoint makes the implementation reproducible and the worktree clean; it does not mark any issue Done, satisfy owner-assisted cards, authorize a push, or represent campaign completion.
+- When reviewed **Awaiting Validation** changes are intentionally accumulated in an approved campaign, inspect and record the exact cumulative scope for a local **validation checkpoint commit**. Create it only after every included issue has passed its non-campaign checks and pre-campaign independent review. Apply the routine Git policy without a separate permission prompt unless the owner restricted it.
+- Before creating that checkpoint, perform the repository-status, scope, verification-summary, unrelated-file, and repo-facing commit-message checks under **Commit Checkpoints**. Describe the implementation in the message; do not put workflow or validation-checkpoint terminology into repository history.
+- A validation checkpoint makes the implementation reproducible and the worktree clean; it does not mark any issue Done, satisfy owner-assisted cards, or represent campaign completion. Its push timing follows `guidelines/collaboration-guidelines.md`.
 - A separately prepared validation worktree or retained tree object is acceptable only when the approved plan explains how the runtime is built from that exact tree, how attribution is retained, and how cleanup works. Do not improvise this route during the campaign.
 
 Do not start the owner session until the active runtime source matches the recorded tree and `git status --porcelain` is empty for the mod repository.
@@ -351,11 +351,11 @@ After every included issue satisfies its Definition of Done, resolve the campaig
 
 - If the mod repository is unchanged from the validation checkpoint, record that no additional commit is needed and identify the checkpoint commit that contains the completed implementation.
 - If validation or follow-up review required corrections, reverify and independently review them, then prepare one separate follow-up commit. Do not amend or rewrite the validation checkpoint merely to make the history look like one commit.
-- Any follow-up commit requires explicit authorization or standing authorization that specifically covers the named campaign completion. Authorization for the validation checkpoint does not cover it, and neither authorization permits a push.
+- Create any follow-up commit under the routine Git policy after the required checks and review. The earlier validation checkpoint does not satisfy those gates for later corrections.
 
 ### Closing A Campaign
 
-Close a campaign through `procedures/close-campaign.md`. It orders the closing work (staged evidence, pack specification, results file, follow-up review, completion commit, pack capture, issue and ledger records, instance reset) so that each step feeds the next; a step done out of order is the usual source of a wrong path, a stale count, or a pack captured from the wrong tree. The authorizations the commit needs are defined above and are not changed by the procedure.
+Close a campaign through `procedures/close-campaign.md`. It orders the closing work (staged evidence, pack specification, results file, follow-up review, completion commit, pack capture, issue and ledger records, instance reset) so that each step feeds the next; a step done out of order is the usual source of a wrong path, a stale count, or a pack captured from the wrong tree. The procedure does not change the routine Git policy or the readiness gates above.
 
 ## Testing Approach
 
@@ -393,9 +393,9 @@ Define expected results before performing any verification.
 
 After each implementation issue, approved vertical slice, approved validation campaign, or approved small-follow-up batch is marked **Done**, resolve a commit checkpoint before starting the next item. A campaign resolves one checkpoint only after every included issue is Done.
 
-The pre-campaign validation checkpoint described above is a separate reproducibility mechanism, not an early completion checkpoint. It has its own exact owner authorization and must be accounted for when the later campaign completion checkpoint is resolved.
+The pre-campaign validation checkpoint described above is a separate reproducibility mechanism, not an early completion checkpoint. Record its exact scope and account for it when the later campaign completion checkpoint is resolved.
 
-Before requesting commit approval:
+Before creating a commit, or requesting permission when the owner chose an ask policy:
 
 - Inspect the active mod repository status.
 - Summarize the completed code change in repository terms.
@@ -442,7 +442,7 @@ interior to air and returns the count. Both take a world and a record.
 
 The second is a defect even though it references nothing internal. It is the diff written out in prose, and it is the shape a long message takes by default when no one is checking.
 
-If the owner specifically approves the commit, or a bounded standing implementation-commit authorization from `guidelines/collaboration-guidelines.md` applies, create it in the active mod repository only. State when standing authorization is being applied. If neither applies, ask. If the owner declines or defers, record the decision and continue only if the owner approves moving to the next issue with uncommitted changes.
+Create the reviewed commit in the active mod repository under `guidelines/collaboration-guidelines.md`; its automatic default requires no separate prompt. Honor an owner ask policy or narrower restriction. If the owner declines or defers a commit, record the decision and continue only if the owner approves moving to the next issue with uncommitted changes.
 
 After a clean committed checkpoint, confirm the repository is clean when checked and end with a simple pause-state cue such as: `Ready to continue when you want.`
 
@@ -467,12 +467,12 @@ After a clean committed checkpoint, confirm the repository is clean when checked
 17. Record completion evidence in the issue. When citing automated totals, state the production boundary those tests exercise and the important runtime behavior they do not establish; do not let suite or class names substitute for that capability statement.
 18. Perform the final implementation self-review and final-diff maintenance check required by `guidelines/coding-standards.md`.
 19. Change the issue status to **Review**.
-20. Submit the change to an independent review agent, briefed through `procedures/independent-review-brief.md`. If the owner gave standing approval for required review agents, including a valid recorded proportionate approval bundle, do not ask for repeated per-issue approval unless the review scope changes.
+20. Submit the change to an independent review agent, briefed through `procedures/independent-review-brief.md`, under the required-review initiation policy in `guidelines/collaboration-guidelines.md`.
 21. Address legitimate review findings.
 22. Repeat verification for affected behavior or record approved waiver updates.
 23. Mark the issue **Done** only when the Definition of Done is satisfied. When only approved campaign cards remain, mark it **Awaiting Validation** and follow the campaign procedure instead.
-24. Prepare the issue or completed-campaign commit checkpoint: run `scripts/validate-workspace.ps1` from the workflow root and resolve its findings, then determine whether a specific authorization, standing implementation-commit authorization, or valid recorded proportionate approval bundle applies.
-25. Create the commit only under that authorization, otherwise request approval or record the approved deferral.
+24. Prepare the issue or completed-campaign commit checkpoint: run `scripts/validate-workspace.ps1` from the workflow root and resolve its findings, then check the routine Git policy and any owner restrictions.
+25. Create the reviewed commit without a separate prompt under the automatic policy; otherwise apply the recorded permission or deferral. Push timing remains governed by the collaboration guideline.
 26. Select the next Ready issue only after the commit checkpoint is resolved, except for the next explicitly named issue in an approved validation campaign.
 
 ### Executing A Decision Issue
@@ -636,7 +636,7 @@ Record an accepted exception under **Accepted Review Limitations** using:
 Accepted review limitation: <issue and scope> was not independently reviewed because <environment limitation>; <substitute evidence and residual risk> were explicitly accepted by the owner.
 ```
 
-An accepted review limitation satisfies only the review checkpoint for that exact eligible issue. It does not authorize a commit, weaken validation requirements, apply to later issues, or turn self-review into independent evidence. It also invalidates any standing commit authorization whose conditions require completed independent review; that commit needs a separate explicit decision. If later evidence raises the risk or expands the scope, the exception is invalid and independent review becomes blocking again.
+An accepted review limitation satisfies only the review checkpoint for that exact eligible issue. It does not weaken validation requirements, apply to later issues, or turn self-review into independent evidence. Once its substitute evidence and residual risk are explicitly accepted, the routine Git policy applies; honor any narrower owner permission that requires completed independent review. If later evidence raises the risk or expands the scope, the exception is invalid and independent review becomes blocking again.
 
 ## Completion Evidence
 

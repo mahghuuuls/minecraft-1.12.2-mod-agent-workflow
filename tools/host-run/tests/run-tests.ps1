@@ -64,6 +64,13 @@ try {
     Assert-Contains $probe.Lines 'probe OK' 'The probe did not report OK.'
     Assert-Contains $probe.Lines 'host-run probe ok' 'The probe did not print the launched command output.'
 
+    # Inspect the launched command's real console visibility, not just the requested startup flag.
+    $visibilityFixture = Join-Path $PSScriptRoot 'console-visibility.ps1'
+    $visibilityCommand = 'powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "' + $visibilityFixture + '"'
+    $hidden = Invoke-Tool @('run', '-Command', $visibilityCommand, '-WorkingDirectory', $TestDirectory)
+    Assert-Equal $hidden.ExitCode 0 'The WMI command had a visible console or its visibility probe failed.'
+    Assert-Contains $hidden.Lines 'host-run console hidden' 'The command did not confirm a hidden console.'
+
     # 2. A run keeps its files in its own folder under the configured store root.
     $folder = Get-RunFolder $probe.Lines
     Assert-Equal ($folder.StartsWith($StoreRoot, [StringComparison]::OrdinalIgnoreCase)) $true 'The run folder is not under the configured store root.'

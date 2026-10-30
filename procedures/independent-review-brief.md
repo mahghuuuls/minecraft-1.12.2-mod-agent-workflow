@@ -14,6 +14,8 @@ Use this procedure every time `stages/7-implementation.md` requires an independe
 - An evidence review of an evidence-only issue, where the deliverable is a confirmation, a verification, or an investigation rather than a diff.
 - The follow-up review of a campaign's results file and corrections, before any included issue moves to **Done**.
 
+Review-agent initiation is governed by `guidelines/collaboration-guidelines.md#required-read-only-review-agents`; the owning stage still determines when the review is ready and required.
+
 ## Required Inputs
 
 - The owning issue, whole.

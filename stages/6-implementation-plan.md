@@ -502,22 +502,22 @@ For each campaign, record:
 - The campaign evidence-pack specification, immutable output checkpoint, retained artifact groups, and manifest-reference policy.
 - Whether an earlier issue may reach **Awaiting Validation** and allow the next named issue to start despite the normal Done blocker.
 - The failure-isolation and rollback route.
-- The source-tree strategy that will make the campaign runtime clean and reproducible, including whether accumulated **Awaiting Validation** work needs an owner-authorized validation checkpoint commit.
-- The exact validation-checkpoint scope and required authorization when that strategy needs one.
-- The completion-commit scope and required authorization, including how it will account for a validation checkpoint: no additional commit when the mod tree is unchanged, or a separately authorized follow-up commit for reviewed corrections.
+- The source-tree strategy that will make the campaign runtime clean and reproducible, including whether accumulated **Awaiting Validation** work needs a reviewed local validation checkpoint commit.
+- The exact validation-checkpoint scope and Stage 7 readiness gates when that strategy needs one; apply the Git policy from `guidelines/collaboration-guidelines.md`.
+- The completion-commit scope, including how it will account for a validation checkpoint: no additional commit when the mod tree is unchanged, or a separate follow-up commit for reviewed corrections under that Git policy.
 
-Do not create a campaign for unrelated issues, high-risk migrations, destructive behavior, or checks whose failure would make later implementation unsafe or likely to target the wrong design. Keep the group as small as practical. A campaign is a testing schedule, not permission to weaken acceptance criteria, independent review, evidence attribution, or commit authorization.
+Do not create a campaign for unrelated issues, high-risk migrations, destructive behavior, or checks whose failure would make later implementation unsafe or likely to target the wrong design. Keep the group as small as practical. A campaign is a testing schedule, not permission to weaken acceptance criteria, independent review, evidence attribution, or the applicable Git policy.
 
 ## Approval And Authorization Packet
 
 After the plan and manual-validation decisions are complete, assess the active Change Cycle against the proportionate approval-bundle criteria in `guidelines/process-control.md`.
 
-For an eligible single-issue, low-risk cycle, present one bounded packet that explicitly requests:
+For an eligible single-issue, low-risk cycle, present one bounded packet that requests the following two decisions:
 
 - Approval of the completed Implementation Plan.
 - Authorization to begin Implementation of the named Ready issue.
-- Authorization for the required read-only independent review.
-- Authorization for one verified local issue commit after the issue is Done.
+
+Also record the required read-only review scope and applicable routine Git policy, including any explicit owner restrictions, by reference to `guidelines/collaboration-guidelines.md`. These are execution policies, not additional permission requests.
 
 Record the eligibility basis, each covered action, explicit exclusions, invalidating conditions, and owner response in the Implementation Plan and `project-status.md`. Do not describe the packet as general permission. If the cycle is ineligible, record the material reason and use normal approval checkpoints.
 

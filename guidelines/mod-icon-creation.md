@@ -223,4 +223,4 @@ After owner approval:
 4. Record final paths and reference provenance in `<artifact-root>/release-presentation.md`.
 5. Preserve rejected candidates only when the owner requests it.
 
-Icon approval does not authorize committing, uploading, or publishing.
+Icon approval settles the image selection. Repository changes follow the routine Git policy in `guidelines/collaboration-guidelines.md`; upload and publication retain their separate approval boundaries.

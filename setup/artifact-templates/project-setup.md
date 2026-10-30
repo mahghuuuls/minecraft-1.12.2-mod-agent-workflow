@@ -61,8 +61,9 @@
 
 ## Git Workflow Preferences
 
-- Preferred push prompt cadence:
-- Offer bounded standing implementation-commit authorization:
+- Routine mod-repository Git policy:
+- Preferred push cadence:
+- Explicit owner Git restrictions or deferrals:
 
 ## Test Instance
 

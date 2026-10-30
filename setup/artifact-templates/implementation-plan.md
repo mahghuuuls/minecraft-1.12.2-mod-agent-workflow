@@ -82,9 +82,9 @@ Apply the routing rules in `stages/7-implementation.md#evidence-pack-routing`; d
 - **Proportionate bundle eligibility:** Eligible / Ineligible, with reason
 - **Implementation Plan approval:** Requested / Approved / Not Approved
 - **Implementation start:** Named issue and authorization status
-- **Read-only independent review:** Scope and authorization status
-- **Verified local commit:** Conditions and authorization status
-- **Explicit exclusions:** Push, tag, publication, upload, external-service change, destructive action, scope expansion, and unbriefed or additional issues
+- **Read-only independent review:** Required scope; initiation under the collaboration guideline; any explicit owner restrictions
+- **Routine Git policy:** Applicable collaboration-guideline policy, push cadence and explicit owner restrictions
+- **Explicit exclusions:** Tag, publication, upload, non-Git external-service change, destructive action, scope expansion, and unbriefed or additional issues
 - **Invalidating conditions:** Material changes to requirements, architecture, issue or review scope, verification outcome, repository condition, or external effects
 - **Owner response:** Pending / Exact response and date
 

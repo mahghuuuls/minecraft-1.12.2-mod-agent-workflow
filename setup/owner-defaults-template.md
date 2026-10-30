@@ -89,8 +89,9 @@ How the owner wants the agent's messages shaped. These are about reading and cop
 
 ## Git Workflow Preferences
 
-- Preferred push prompt cadence: Each checkpoint | Stage completion | Release-ready handoff
-- Offer bounded standing implementation-commit authorization: Yes | No
+- Routine mod-repository Git policy (see `guidelines/collaboration-guidelines.md`): Automatic | Ask
+- Preferred push cadence: Each completed checkpoint | Stage completion | Release-ready handoff
+- Explicit restrictions or deferrals:
 - Other Git workflow preferences:
 
 ## Notes For Future Mods

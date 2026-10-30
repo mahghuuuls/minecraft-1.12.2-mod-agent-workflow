@@ -37,7 +37,7 @@ Establish:
 - Practical project identity values only when already known or immediately required
 - Public documentation style and commit-message style
 - Public-copy brevity, punctuation, AI-disclosure, and validation-note placement preferences
-- Preferred time to offer pushes and whether bounded standing implementation-commit authorization should be offered later
+- Routine Git policy, any explicit owner restrictions, and preferred push cadence
 - Client/server responsibility when the concept is known, or an explicit deferral to Concept and Scope / Feasibility Research when it is premature
 - A provisional loader, compatible-runtime, and template choice for Initial Development
 - The agent-managed test instance: recorded from `owner-defaults.md`, created now by the owner from the recommended template, or declined with a waiver
@@ -65,7 +65,7 @@ Establish:
 - Defer side/responsibility classification when the mod concept is not yet clear enough to answer it well
 - Apply approved default naming conventions instead of asking the owner to invent Java naming patterns from scratch
 - Record public documentation style and commit-message style
-- Record recurring owner-specific public-copy preferences and Git checkpoint preferences without treating them as push authorization
+- Record recurring owner-specific public-copy preferences and Git policy/cadence under `guidelines/collaboration-guidelines.md`
 - Explain the distinction between mod loader, compatible runtime, distribution platform, and installation side before asking about an override involving those concepts
 - Apply owner and shared defaults for provisional loader/runtime/template/distribution choices; research alternatives during Project Setup only when an already-known hard constraint prevents using the default
 - Record provisional loader, runtime, and template candidates or defer final validation to Feasibility Research
@@ -238,9 +238,9 @@ Public documentation style rules:
 
 Git workflow preference rules:
 
-- Record when the owner prefers to be offered pushes: each checkpoint, stage completion, or release-ready handoff.
-- Record whether the owner wants to be offered bounded standing implementation-commit authorization when Implementation begins.
-- A cadence preference is not authorization to commit or push.
+- Apply the routine mod-repository Git policy in `guidelines/collaboration-guidelines.md`; carry its defaults into setup without asking the owner to approve them again.
+- Record explicit owner restrictions and the preferred push cadence: each completed checkpoint, stage completion, or release-ready handoff.
+- Existing workspaces may retain the old preference keys; interpret them under that guideline rather than rewriting approved artifacts just to rename fields.
 
 Client/server responsibility values:
 
@@ -390,8 +390,8 @@ Relevant values may include:
 - `template_repository_ref`
 - `public_documentation_style`
 - `commit_message_style`
-- `preferred_push_prompt_cadence`
-- `offer_standing_implementation_commit_authorization`
+- `routine_git_policy`
+- `preferred_push_cadence`
 - `release_handoff_mode`
 - `test_instance_path`
 - `test_instance_template`

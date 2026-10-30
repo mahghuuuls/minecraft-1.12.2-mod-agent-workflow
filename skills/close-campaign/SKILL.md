@@ -22,4 +22,4 @@ Follow its steps in order, and say which step you are on. Do not skip ahead to t
 ## Boundaries
 
 - This skill adds nothing to the procedure and changes nothing in `stages/7-implementation.md`. Where they disagree, the stage document is correct.
-- It cannot authorize a commit, mark an issue Done on an unreviewed record, or waive a card. Those stay with the owner and the stage.
+- It grants no Git permission, marks no issue Done on an unreviewed record, and waives no card. Follow the procedure's stage and collaboration-guideline references for those decisions.

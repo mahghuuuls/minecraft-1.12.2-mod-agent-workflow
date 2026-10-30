@@ -15,6 +15,7 @@ The tool is routed by `guidelines/coding-standards.md` (Running Builds And Tests
 - The tool writes only its own run folders under the operating-system temporary directory (or `MINECRAFT_MOD_AGENT_HOST_RUN_ROOT`). It never edits a repository, never runs Git, and never chooses the command for you.
 - The command runs with the user's own account and the user's profile environment. It does not inherit the agent shell's variables; pass what the command needs with `-Set`.
 - The command has no console to read from. Use it for commands that finish on their own, such as builds, tests, and checks. The one long-running exception is the development dedicated server (`gradlew.bat runServer`), started in the background with a timeout above the session length; Development Dedicated Server Setup in `stages/7-implementation.md` owns how it is started, answered, and stopped.
+- The default WMI launcher passes `Win32_ProcessStartup.ShowWindow=0` to hide its background command window. This does not suppress windows a child application explicitly opens. Interactive apps that the owner needs to see should use their normal approved launch route. The Task Scheduler fallback retains its existing window behavior.
 - Every run has its own folder and, for the Task Scheduler launcher, its own task name. Several agents on the same computer can use the tool at the same time. Do not start two builds of the same repository at once; Gradle serializes them, and the second one waits.
 - A timeout stops the whole command tree with `taskkill /T /F`. Choose `-TimeoutSeconds` above the longest expected build.
 
@@ -81,4 +82,4 @@ Project Setup records which launch path builds the project: direct from the agen
 powershell -NoProfile -ExecutionPolicy Bypass -File tools\host-run\tests\run-tests.ps1
 ```
 
-The tests cover the probe, the run folder layout, exit-code and output pass-through from a batch file, `-Set`, `-TailLines`, the timeout kill, the Task Scheduler launcher and its cleanup, rejected input, and the batch launcher with module autoloading disabled.
+The tests cover the probe, real WMI-launched console visibility, the run folder layout, exit-code and output pass-through from a batch file, `-Set`, `-TailLines`, the timeout kill, the Task Scheduler launcher and its cleanup, rejected input, and the batch launcher with module autoloading disabled. The visibility check does not claim that arbitrary child applications cannot create their own windows or that game focus was visually observed.
