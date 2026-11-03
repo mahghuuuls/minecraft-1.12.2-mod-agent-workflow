@@ -56,7 +56,8 @@ The agent-managed test instance is shared by every mod this owner develops (Test
 - Allow operator join automation for that baseline by default: Yes | Ask each project | No
 - Client defaults (toolkit 1.3.0 or later; default: brightness 1.0, music 0, master 0.5, weather 0, hostile 0, friendly 0, ambient 0, no pause on lost focus): Use the defaults | Use these values: | Do not set
 - Command inbox in development runtimes and the test instance (toolkit 1.3.0 or later): Yes | Ask each project | No
-- Client actions (respawn, reconnect, close a screen) in development runtimes and the test instance (toolkit 1.4.0 or later): Yes | Ask each project | No
+- Client actions (respawn, reconnect, close a screen; from 1.5.0 also quit) in development runtimes and the test instance (toolkit 1.4.0 or later): Yes | Ask each project | No
+- Menu steps from the title screen (create or open a world, connect, quit) and the inbox opening by itself at your own join, in development runtimes and the test instance (toolkit 1.5.0 or later): Yes | Ask each project | No
 - Other recurring toolkit preferences:
 
 ## Owner-Specific Overrides

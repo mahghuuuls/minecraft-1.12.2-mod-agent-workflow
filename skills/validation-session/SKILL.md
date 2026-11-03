@@ -84,7 +84,10 @@ errors with their stack traces. Cite what you read by file and line.
 
 `tools/devtool-inbox/devtool-inbox.cmd` sends the bundles when the inbox is open: `send` for one,
 `batch` for a list with the answer each line expects. It refuses a used id and says when the inbox
-has closed, so you know to ask the owner to open it again.
+has closed, so you know to ask the owner to open it again. With toolkit 1.5.0 the same tool sends
+the menu steps to `client-inbox/` (create or open the world, connect, quit), and the inbox opens by
+itself at the owner's join: the owner only launches the game (`guidelines/agent-diagnostics-toolkit.md`,
+Client Request Channel).
 
 **Ask for one thing only: what the logs cannot hold.** Visual layout, animation, colour, sound,
 whether an input felt right, real multi-client behaviour, an environment whose files you cannot
@@ -120,7 +123,8 @@ make the reset observable when an unapplied reset could look like a pass.
 - Turn off temporary diagnostics. Restore temporary config and world state.
 - Run `scripts/validate-workspace.ps1` from the workflow root after writing the results, and fix
   what it reports.
-- Say whether they can close the game.
+- Say whether they can close the game, or close it yourself with `client quit` when the toolkit
+  allows it.
 - Do not make them restate anything they already reported.
 
 ## Reporting style

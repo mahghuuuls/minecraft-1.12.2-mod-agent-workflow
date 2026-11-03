@@ -2,7 +2,9 @@
 
 This dependency-free PowerShell tool sends requests to the command inbox of the Agent Diagnostics Toolkit (`1.3.0` or later) and waits for the answers, so the agent can start its own bundles during a validation session without the owner typing them. It follows the toolkit's file protocol: it checks `status.json`, writes `<id>.tmp`, renames it to `<id>.req`, waits for `<id>.result.json`, and never reuses an id.
 
-The tool does not open the inbox, judge whether a card passed, or change anything but the request files it writes. Only a person can open the inbox, by typing `/devtool inbox open` in game. When and how the workflow uses the inbox is owned by `guidelines/agent-diagnostics-toolkit.md` (Command Inbox); the request lines, result fields and refusal reasons are owned by the pinned toolkit's `AGENTS.md`.
+The tool does not open the inbox, judge whether a card passed, or change anything but the request files it writes. A person opens the inbox by typing `/devtool inbox open` in game, or, from toolkit `1.5.0` with `inbox.openOnLocalJoin`, it opens by itself at the owner's own join. When and how the workflow uses the inbox is owned by `guidelines/agent-diagnostics-toolkit.md` (Command Inbox); the request lines, result fields and refusal reasons are owned by the pinned toolkit's `AGENTS.md`.
+
+From toolkit `1.5.0` the same tool sends menu steps to the client request channel: point `-Inbox` at `config/devtool/client-inbox/` instead (`guidelines/agent-diagnostics-toolkit.md`, Client Request Channel). That channel's `status.json` means it is listening; wait for one with this launch's `startedAtMillis` before the first request.
 
 ## Commands
 

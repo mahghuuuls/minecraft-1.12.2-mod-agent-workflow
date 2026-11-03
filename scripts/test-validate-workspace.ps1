@@ -82,6 +82,58 @@ try {
 
     Assert-ExitCode 'valid workspace' 0 (Invoke-Validator)
 
+    # Stage-status cells: an exact status may lead a date and a note; Not Applicable needs none;
+    # only the active stage table fails on another word, earlier record tables warn.
+    $statusWithCycle = @'
+# Project Status
+
+## Active Workflow
+
+- Workflow: Initial Development
+- Status: **Approved**
+- Artifact root: `workspace/documentation/`
+- Active repository: `workspace/project/example/`
+
+| Stage | Disposition | Status |
+| --- | --- | --- |
+| Implementation | Required | All issues Done. Approved 2026-08-07 |
+
+## Active Cycle
+
+### Stage Dispositions, CYCLE-002
+
+| Stage | Disposition | Status |
+| --- | --- | --- |
+| Implementation Plan | **Revisit** | **Approved 2026-11-03** ("approve plan"). Six issues |
+| Project Initialization | Not Applicable | Never rerun |
+| Implementation | **Revisit** | In Progress. Campaign A closed |
+| Release Presentation | **Revisit** | Not Started |
+
+## CYCLE-001 Record
+
+| Stage | Disposition | Status |
+| --- | --- | --- |
+| Implementation | **Revisit** | Complete 2026-10-01 |
+| Release Presentation | **Revisit** | In Progress, left over |
+
+## Implementation
+
+- IMP-001 is **Ready**.
+'@
+    Write-Utf8 (Join-Path $documentationRoot 'project-status.md') $statusWithCycle
+    $cycleStatusResult = Invoke-Validator
+    Assert-ExitCode 'stage statuses with notes, Not Applicable, and earlier record tables' 0 $cycleStatusResult
+    if ($cycleStatusResult.Output -notlike "*Stage record 'Implementation' in an earlier stage table*") {
+        throw "Validator did not warn about the earlier record table. Output: $($cycleStatusResult.Output)"
+    }
+    Write-Utf8 (Join-Path $documentationRoot 'project-status.md') ($statusWithCycle.Replace('| Not Started |', '| Complete 2026-11-03 |'))
+    Assert-ExitCode 'unsupported word in the active stage table' 1 (Invoke-Validator)
+    Write-Utf8 (Join-Path $documentationRoot 'project-status.md') ($statusWithCycle.Replace('| Not Started |', '| Approvedish |'))
+    Assert-ExitCode 'a word that only starts like a status' 1 (Invoke-Validator)
+    Write-Utf8 (Join-Path $documentationRoot 'project-status.md') ($statusWithCycle.Replace('| Not Started |', '| In Progress |'))
+    Assert-ExitCode 'two In Progress stages in the active table' 1 (Invoke-Validator)
+    Write-Utf8 (Join-Path $documentationRoot 'project-status.md') $status
+
     $planNoStatus = @'
 # Implementation Plan
 
@@ -241,7 +293,7 @@ try {
 '@
     Assert-ExitCode 'every session-map card recorded' 0 (Invoke-Validator)
 
-    Write-Host 'Workspace validator tests passed: valid state, a plan without a status column (with the issue roll-up printed), and cycle-scoped identifiers accepted; evidence packs of Done issues checked; a session-map card without a results line rejected and a recorded one accepted; invalid status, missing stage artifacts, ledger or plan disagreement, and multiple active issues rejected.' -ForegroundColor Green
+    Write-Host 'Workspace validator tests passed: valid state, stage statuses with a date and a note, Not Applicable stages and earlier record tables accepted (the active table checked strictly), a plan without a status column (with the issue roll-up printed), and cycle-scoped identifiers accepted; evidence packs of Done issues checked; a session-map card without a results line rejected and a recorded one accepted; invalid status, missing stage artifacts, ledger or plan disagreement, and multiple active issues rejected.' -ForegroundColor Green
 } finally {
     $resolvedTestRoot = [System.IO.Path]::GetFullPath($testRoot)
     $resolvedTempRoot = [System.IO.Path]::GetFullPath([System.IO.Path]::GetTempPath())

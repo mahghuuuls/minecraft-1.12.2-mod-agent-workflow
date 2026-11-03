@@ -144,11 +144,13 @@ These names are exact. Use **Awaiting Approval** when stage or workflow work is 
 
 Record the disposition of each reusable stage for the active workflow. Dispositions explain routing and do not replace the status of an invoked stage. Each workflow defines its allowed disposition values.
 
+In a stage table, the status cell starts with the exact status and may go on with its date and a short note, for example `**Approved 2026-11-03** ("approve plan"). Six issues`. A stage whose disposition is **Not Applicable** needs no status. Keep the table of the active cycle under `## Active Cycle`; the tables of finished workflows and cycles stay below as records.
+
 Implementation issue statuses are defined by the Implementation Plan stage.
 
 `project-status.md` is the authoritative ledger for workflow, stage, cycle, baseline, and blocking-decision status. Implementation issue status is authoritative in the issue file alone; the plan table, the ledgers, and the resume snapshot point at issues by ID and never restate a status, and `scripts/validate-workspace.ps1` prints the roll-up from the issue files. When another project artifact or resume snapshot disagrees with an authority, stop and reconcile the evidence instead of silently choosing one.
 
-Run `scripts/validate-workspace.ps1` after material ledger changes, before a session handoff, and when resuming a long project. The script is read-only and checks only mechanical consistency, including exact status values, active-item counts, structured paths, issue-plan agreement, and resume references. A passing script does not prove that an approval occurred or that the recorded decision is correct. Warnings require inspection but do not fail the command; errors must be reconciled against `project-status.md` and the underlying evidence rather than repaired automatically.
+Run `scripts/validate-workspace.ps1` after material ledger changes, before a session handoff, and when resuming a long project. The script is read-only and checks only mechanical consistency, including exact status values (strictly in the active stage table; a record table of an earlier workflow or cycle that uses another word is a warning), active-item counts, structured paths, issue-plan agreement, and resume references. A passing script does not prove that an approval occurred or that the recorded decision is correct. Warnings require inspection but do not fail the command; errors must be reconciled against `project-status.md` and the underlying evidence rather than repaired automatically.
 
 ## Project State Snapshot
 

@@ -78,12 +78,26 @@ if (-not (Test-Path -LiteralPath $statusPath -PathType Leaf)) {
         }
     }
 
+    # A stage-status cell starts with an exact status and may go on with a date and a note:
+    # "**Approved 2026-11-03** ("approve plan"). Six issues ...". Only the leading status is checked.
+    $leadingStatusPattern = '^(?<status>' + (($workflowStageStatuses | ForEach-Object { [regex]::Escape($_) }) -join '|') + ')(?=$|[\s.,;:(])'
+
     $stageRows = [System.Collections.Generic.List[object]]::new()
     $statusLines = $statusText -split "`r?`n"
     $insideStageTable = $false
+    $section = ''
+    $tableIndex = -1
+    $activeTableIndex = -1
+    $firstTableIndex = -1
     foreach ($line in $statusLines) {
+        if ($line -match '^##\s+(?<heading>[^#].*?)\s*$') {
+            $section = $Matches['heading']
+        }
         if ($line -match '^\s*\|\s*Stage\s*\|\s*Disposition\s*\|\s*Status\s*\|') {
             $insideStageTable = $true
+            $tableIndex++
+            if ($firstTableIndex -lt 0) { $firstTableIndex = $tableIndex }
+            if ($activeTableIndex -lt 0 -and $section -match '^Active Cycle\b') { $activeTableIndex = $tableIndex }
             continue
         }
         if (-not $insideStageTable) { continue }
@@ -96,12 +110,24 @@ if (-not (Test-Path -LiteralPath $statusPath -PathType Leaf)) {
         $cells = @($rawCells | ForEach-Object { Normalize-MarkdownValue $_ })
         if ($cells.Count -lt 3) { continue }
         if ($rawCells.Count -ge 4) { $artifact = $rawCells[3] } else { $artifact = $null }
-        $stageRows.Add([pscustomobject]@{ Stage = $cells[0]; Status = $cells[2]; Artifact = $artifact })
+        $leading = [regex]::Match($cells[2], $leadingStatusPattern)
+        if ($leading.Success) { $leadingStatus = $leading.Groups['status'].Value } else { $leadingStatus = $null }
+        $stageRows.Add([pscustomobject]@{ Stage = $cells[0]; Disposition = $cells[1]; Status = $leadingStatus; Cell = $cells[2]; Artifact = $artifact; Table = $tableIndex })
     }
+    # The active stage table is the first one under "## Active Cycle", or else the first in the file.
+    # Later tables are records of finished workflows and cycles, which earlier workflow versions wrote
+    # in other words; they are reported, not failed.
+    if ($activeTableIndex -lt 0) { $activeTableIndex = $firstTableIndex }
 
     foreach ($row in $stageRows) {
-        if ($workflowStageStatuses -notcontains $row.Status) {
-            Add-ValidationError "Unsupported stage status '$($row.Status)' for '$($row.Stage)' in project-status.md."
+        if ($row.Disposition -eq 'Not Applicable') {
+            # A stage the workflow does not run needs no status.
+        } elseif ($null -eq $row.Status) {
+            if ($row.Table -eq $activeTableIndex) {
+                Add-ValidationError "Unsupported stage status '$($row.Cell)' for '$($row.Stage)' in project-status.md: the cell must start with one of $($workflowStageStatuses -join ', ')."
+            } else {
+                Add-ValidationWarning "Stage record '$($row.Stage)' in an earlier stage table of project-status.md does not start with an exact status: '$($row.Cell)'."
+            }
         }
         if (-not [string]::IsNullOrWhiteSpace($row.Artifact) -and $row.Artifact -match '`(?:workspace|[A-Za-z]:)[^`]+`') {
             try {
@@ -114,7 +140,7 @@ if (-not (Test-Path -LiteralPath $statusPath -PathType Leaf)) {
             }
         }
     }
-    $activeStages = @($stageRows | Where-Object { $_.Status -eq 'In Progress' })
+    $activeStages = @($stageRows | Where-Object { $_.Table -eq $activeTableIndex -and $_.Status -eq 'In Progress' })
     if ($activeStages.Count -gt 1) {
         Add-ValidationError "Multiple reusable stages are In Progress: $($activeStages.Stage -join ', ')."
     }
