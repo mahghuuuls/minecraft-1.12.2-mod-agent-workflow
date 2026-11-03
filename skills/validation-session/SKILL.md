@@ -139,9 +139,11 @@ The owner is tired. Treat every word you send during a session as a cost to them
 - Do not explain why. Not the design, not the bug, not the reasoning, not the history. You keep all
   of that; they do not need it to click a mouse.
 - Keep it small. A card should fit on one screen with room to spare.
-- Commands in their own code block, one command per block, exact.
+- Commands in their own code block, one command per block, exact, with the folder to run them in
+  and `./` before a program in that folder (`./gradlew.bat runClient`).
 - Say what they should see, in plain words, because they cannot report a mismatch without it. That
-  is not an explanation, it is the check.
+  is not an explanation, it is the check. When they must wait for something on screen, name the
+  exact text that will appear and how long they have.
 - Say what to do when they are done.
 
 Never send a wall of text mid-session. If you catch yourself writing a paragraph, cut it.

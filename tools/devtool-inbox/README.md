@@ -38,7 +38,7 @@ Without `-Inbox` the tool looks for `run\config\devtool\inbox` and then `config\
 
 ## Waiting
 
-A `run` is answered when its bundle ends, so set `-TimeoutSeconds` above the bundle's longest wait. A request still unclaimed when `status.json` disappears is never read, so the wait ends after `-ClosedGraceSeconds` (default 5) with exit 3: ask the owner to open the inbox again and send it with a new id. A request already claimed is still answered when the operator leaves or the server stops (`senderLost`, `serverStopped`), so that wait continues. In single player a paused game reads nothing; a timeout there usually means a menu is open.
+A `run` is answered when its bundle ends, so set `-TimeoutSeconds` above the bundle's longest wait. A request still unclaimed when `status.json` disappears is never read, so the wait ends after `-ClosedGraceSeconds` (default 5) with exit 3: ask the owner to open the inbox again and send it with a new id. A request already claimed is still answered when the operator leaves or the server stops (`senderLost`, `serverStopped`), so that wait continues. In single player a paused game reads nothing; a timeout there usually means a menu is open. From toolkit `1.4.0`, while the client is away on a reconnect the agent asked for, the inbox is suspended: `status.json` stays, and a request sent then waits and is answered after the return, so set `-TimeoutSeconds` above the away time plus a world load.
 
 `-SkipStatusCheck` sends without checking `status.json`. Use it only to exercise the toolkit's own handling of a request placed before the inbox opened: the toolkit refuses every such request with `placedBeforeOpen` when the inbox opens, and answers each.
 

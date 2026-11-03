@@ -2,7 +2,7 @@
 
 This file is the authoritative source for selecting and using the optional Agent Diagnostics Toolkit during mod development.
 
-The toolkit is a separate Minecraft 1.12.2 Forge mod. Its current repository is `https://github.com/mahghuuuls/agent-test-toolkit`, and its current release is `1.3.0` (tag `v1.3.0`). The mod and its jar are named **Agent Test Toolkit** and use the identifier `agenttesttoolkit`; its CurseForge page is titled **Agent Diagnostics Toolkit**. It prepares repeatable test environments from JSON command bundles and writes structured diagnostic records into the normal Minecraft log. From `1.3.0` it also has a command inbox through which the agent starts bundles itself (Command Inbox below).
+The toolkit is a separate Minecraft 1.12.2 Forge mod. Its current repository is `https://github.com/mahghuuuls/agent-test-toolkit`, and its current release is `1.4.0` (tag `v1.4.0`). The mod and its jar are named **Agent Test Toolkit** and use the identifier `agenttesttoolkit`; its CurseForge page is titled **Agent Diagnostics Toolkit**. It prepares repeatable test environments from JSON command bundles and writes structured diagnostic records into the normal Minecraft log. From `1.3.0` it also has a command inbox through which the agent starts bundles itself (Command Inbox below). From `1.4.0` the agent can also ask the owner's own client to reconnect, respawn, or close the open screen (Client Actions below).
 
 It is a development aid, not a library API for the mod under development.
 
@@ -60,7 +60,7 @@ Toolkit observation and commands execute on the logical server.
 
 - For singleplayer, install the toolkit in the development client runtime, which also hosts the integrated server.
 - For a dedicated-server check, install it in the dedicated server runtime.
-- Install it on the physical client when client defaults (Safe Baseline Environment) or screenshots on request are required. Everything else acts on the server.
+- Install it on the physical client when client defaults (Safe Baseline Environment), screenshots on request, or client actions are required. Everything else acts on the server.
 - From `1.3.0`, a client without the toolkit can join a server that has it (observed for `1.3.0`). For an earlier pinned version, do not assume that topology unless it is verified for that version.
 
 Start a toolkit-assisted session by confirming the live build and environment with its capability, environment, and mod-list commands. Exact commands and record shapes belong to the pinned toolkit version's `AGENTS.md`; read that file before authoring bundles. This workflow records how the toolkit is used, not a frozen duplicate of its entire command surface.
@@ -92,10 +92,11 @@ client {
     D:friendlyVolume=0.0
     D:ambientVolume=0.0
     B:noPauseOnLostFocus=true
+    B:allowActions=true
 }
 ```
 
-Check the key names and value types against the configuration file the pinned version writes before editing it. The client applies these once per launch, at the first world join, and saves them to `options.txt`, so they stay after the key is turned off; F3+P in game turns the pause back on. A volume key left at its default (`-1`) leaves that category alone. Before `1.3.0` only brightness and music are toolkit settings: set the rest in the development `run/options.txt` (`soundCategory_master:0.5`, `soundCategory_weather:0.0`, `soundCategory_hostile:0.0`, `soundCategory_neutral:0.0` for friendly creatures, `soundCategory_ambient:0.0`, and `pauseOnLostFocus:false`) with the game closed, or ask the owner to set them once.
+`allowActions` exists from `1.4.0` and lets the toolkit act on this client (Client Actions); set it only in the development runtimes and the agent-managed test instance, like the inbox. Unlike the other keys it does not need `applyOnJoin`. Check the key names and value types against the configuration file the pinned version writes before editing it. The client applies these once per launch, at the first world join, and saves them to `options.txt`, so they stay after the key is turned off; F3+P in game turns the pause back on. A volume key left at its default (`-1`) leaves that category alone. Before `1.3.0` only brightness and music are toolkit settings: set the rest in the development `run/options.txt` (`soundCategory_master:0.5`, `soundCategory_weather:0.0`, `soundCategory_hostile:0.0`, `soundCategory_neutral:0.0` for friendly creatures, `soundCategory_ambient:0.0`, and `pauseOnLostFocus:false`) with the game closed, or ask the owner to set them once.
 
 A reusable baseline bundle may use this shape after its commands have been checked against the pinned version:
 
@@ -163,15 +164,31 @@ From `1.3.0`. The pinned version's `AGENTS.md` owns the request lines, the resul
 
 **Where it may be enabled.** Set the toolkit's `inbox.enabled` key to true only in the development runtimes and the agent-managed test instance, and record that in the project setup. Never in an external server, a normal play world, or a modpack instance outside the approved test scope. Set it back to false in the test instance at its reset.
 
-**Who opens it.** Only a person, by typing `/devtool inbox open` in chat, once each time a world opens. A bundle cannot open it; do not try through a bundle or a join hook. Put the opening on the session's first card and again after anything that closes it: the owner leaving or reconnecting, a server stop or restart, another world. Before each request, check that `status.json` exists in the inbox folder; no file means the inbox is closed.
+**Who opens it.** Only a person, by typing `/devtool inbox open` in chat, once each time a world opens. A bundle cannot open it; do not try through a bundle or a join hook. Put the opening on the session's first card and again after anything that closes it: the owner leaving or reconnecting by hand, a server stop or restart, another world. From `1.4.0` a reconnect the agent asks for with `client reconnect` does not close it: the inbox is suspended while the client is away and resumes when it is back (Client Actions). Before each request, check that `status.json` exists in the inbox folder; no file means the inbox is closed.
 
-**What it runs.** A named bundle, `reload`, `save`, `mark`, the read-only inspections, and a screenshot of the opener's client. No vanilla command and nothing else. Anything that changes the world goes in a project bundle the owner can read. Requests run as the player who opened the inbox, with that player's permissions, and the run's `BUNDLE_START` says `channel=inbox`.
+**What it runs.** A named bundle, `reload`, `save`, `mark`, the read-only inspections, a screenshot of the opener's client, and from `1.4.0` the client actions for the opener's own client. No vanilla command and nothing else. Anything that changes the world goes in a project bundle the owner can read. Requests run as the player who opened the inbox, with that player's permissions, and the run's `BUNDLE_START` says `channel=inbox`.
 
 **How to send a request.** Use `tools/devtool-inbox/devtool-inbox.cmd` (its README): `send` for one request, `batch` for a list with the answer each line expects, `status` to check the inbox is open. It follows the toolkit's protocol: write `<id>.tmp` in the inbox folder, rename it to `<id>.req`, and wait for `<id>.result.json`. Use a new id for every request: a reused id is refused and never run. Judge the run by the result file's outcome and counters, then read the log records it names. The toolkit never deletes files in the folder; tidy it only while the inbox is closed.
 
 **Single player.** A paused single-player game reads nothing. With the no-pause client default on, only an open menu pauses it; a request that waits longer than expected usually means a menu is open.
 
 **Order on a card.** Run the setup bundle, confirm its result, then send the card; after the owner reports, run the check bundle. The owner never waits on a bundle the agent has not confirmed.
+
+## Client Actions
+
+From `1.4.0`. The pinned version's `AGENTS.md` owns the commands, the refusal keys and reasons, and the records; read its Client actions section first. This section says how the workflow uses them.
+
+**What they replace.** `devtool client respawn` presses Respawn on the death screen; `devtool client reconnect [awaySeconds]` leaves the world and comes back to the same save or server; `devtool client close` closes the open screen, the chat included. Use them, through the inbox or inside a bundle, instead of asking the owner to click Respawn, to Save and Quit and reopen, or to close a screen. A death card, a rejoin card, a scenario checkpoint across a world reopen, and a long run of reconnects then need nothing from the owner. Keep the owner for what only a person can do or see.
+
+**Where they may act.** They act only on the client of whoever runs them, and only when that client has `client.allowActions=true` (Safe Baseline Environment). The client reads the key when a world opens in single player, and at game start when it joins a dedicated server.
+
+**Reconnect and the inbox.** When the inbox operator's own reconnect takes the client away, the inbox is suspended and resumes when the client is back, and requests written meanwhile run after the return, so a batch can go on across it. A reconnect the client refuses (for example a world open to LAN) leaves the inbox listening. A manual leave still closes it.
+
+**Rules for bundles and cards.**
+
+- Put `client reconnect` last in a bundle: the client leaves about a second later, and the bundle's later steps are lost with it. Do the after-return work in the next request.
+- A single-player reconnect stops and restarts the integrated server inside the same game process, like Save and Quit: static state survives. It does not satisfy a restart card (`guidelines/manual-validation.md`); a criterion about a real restart still needs a process stop.
+- Judge a reconnect by its records, not by the request's `done`: the `done` says the request was sent; `CLIENT_ACTION ... result=done` with `awayMs` and `INBOX action=resumed` say the client came back.
 
 ## Other Capabilities To Plan Around
 

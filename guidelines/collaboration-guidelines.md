@@ -28,6 +28,7 @@ This file is the authoritative source for collaboration, file-editing discipline
 - Keep responses concise, direct, and technically precise.
 - Explain unfamiliar terminology when it affects a decision.
 - During troubleshooting, prefer short steps and wait for results.
+- Give every command the owner runs copy-paste ready: in its own code block, with the folder to run it in, and a program in that folder written with the `./` prefix (`./gradlew.bat runClient`), which PowerShell and Bash both need to run it from the current folder.
 - Periodically summarize shared understanding during alignment-heavy work.
 - Report mistakes, uncertainty, and failed checks plainly.
 - Do not claim completion while required work or verification remains.

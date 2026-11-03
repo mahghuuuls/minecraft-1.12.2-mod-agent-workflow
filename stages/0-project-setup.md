@@ -270,7 +270,7 @@ Default recommendations:
 - Use a pinned released JAR as development-runtime only.
 - Do not clone its repository for every mod.
 - Enable the safe disposable-world baseline only when the owner opts in.
-- With `1.3.0` or later, enable the command inbox in the development runtimes and the agent-managed test instance, so the agent starts bundles itself; never in an external server, normal world, or modpack instance.
+- With `1.3.0` or later, enable the command inbox in the development runtimes and the agent-managed test instance, so the agent starts bundles itself; never in an external server, normal world, or modpack instance. With `1.4.0` or later, allow client actions (`client.allowActions`) in the same places, so the agent respawns, reconnects and closes screens itself.
 - Keep operator join automation off in normal worlds, external multiplayer, and modpack instances unless separately authorized for that environment.
 - Create the toolkit feedback artifact when use is selected.
 
