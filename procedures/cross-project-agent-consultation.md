@@ -77,7 +77,7 @@ Do not paste entire requirements, architecture documents, source trees, logs, or
 4. Start the session with the initiating project's role, project identity, source revision when available, topic, participant limit, message limit, and expiration.
 5. Give the session code and tool location to the owner. Do not search for or message unrelated agent tasks.
 6. The owner supplies the code to the other agent, which inspects its own project before joining with its role and source revision.
-7. Exchange no more than the bounded messages needed to state the consumer need, provider constraint, alternatives, and consequences.
+7. Exchange no more than the bounded messages needed to state the consumer need, provider constraint, alternatives, and consequences. Each agent ends its turn by naming the participant to prompt next. For final positions in a session with more than one provider, the owner prompts the providers one after the other, so each final position can answer the earlier one.
 8. Keep facts, inferences, proposals, and owner decisions distinct. Agreement between agents is not evidence and does not approve a project decision.
 9. If the exchange exposes a scope, requirement, architecture, or compatibility change, stop the affected implementation and follow the normal backward-transition rules in `guidelines/process-control.md`.
 10. Close the session with all required outcome headings, even when a section says `None`.

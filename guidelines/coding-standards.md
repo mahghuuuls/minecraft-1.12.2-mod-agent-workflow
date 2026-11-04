@@ -66,7 +66,7 @@ Software design continues whenever existing code changes. Optimize for the small
 - Prefer explicit, readable types when inference would obscure domain meaning.
 - Handle nullable Minecraft and mod integration values defensively where absence is valid.
 - Use concise comments only when intent, constraints, or non-obvious behavior cannot be expressed clearly through code.
-- Do not reference workflow issue IDs, internal issue names, stage documents, or process-only context in source comments, and do not cite them as the justification for a decision. Explain the reason itself instead. A comment must stand for a reader who has the repository but not the workflow artifacts, which is the same standard commit messages are held to in `guidelines/project-defaults.md`.
+- Do not reference workflow issue IDs, internal issue names, stage documents, or process-only context in source comments, and do not cite them as the justification for a decision. Explain the reason itself instead. A comment must stand for a reader who has the repository but not the workflow artifacts, which is the same standard commit messages are held to in `guidelines/project-defaults.md`. This includes requirement, revision, and architecture IDs (such as `REQ-089`): the documents they name are not in the mod repository. Do not add them to new or changed comments. Existing ones stay until the code around them changes for another reason; then replace them with the reason in words. Do not remove them in a separate cleanup, and do not report an existing one as a review finding.
 
 ## Loader Integration and Sidedness
 

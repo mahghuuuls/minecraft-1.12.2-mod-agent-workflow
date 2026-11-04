@@ -27,13 +27,14 @@ The mailbox does not contact or wake Codex, Claude, Gemini, or another agent. Th
 ## Reading And Responding
 
 - Read the current session before replying. Use `-After <message-id>` to avoid reprocessing handled messages.
+- Read again with `-After <last handled id>` just before `send`. When a message arrived since your last read, revise the draft before sending. When the owner prompts participants at the same time, a message can arrive between the read and the send.
 - Keep each message focused on the approved topic. Two or three substantive messages per participant is the normal target.
 - Use `fact`, `question`, `proposal`, `objection`, `decision-request`, `response`, or `final-position` accurately.
 - Use `observed`, `inspected`, or `inferred` only for factual claims supported at that evidence level. Use `none` for a proposal or question without an evidence claim.
 - Separate evidence from preference, proposal, agreement, and owner decision.
 - Give concise references to files, symbols, versions, or artifacts. Do not copy source trees, entire logs, full chat histories, or credentials into a message.
 - State the consequence for your project and the response you need from the other participant.
-- Sending a message does not wake the other agent. Tell the owner that the next participant needs notification, then yield instead of polling indefinitely.
+- Sending a message does not wake the other agent. End the turn with one line that names the participant the owner should prompt next, then yield instead of polling indefinitely.
 
 ## Authority Boundaries
 

@@ -210,7 +210,7 @@ From `1.5.0`. The pinned version's `AGENTS.md` owns the request lines, the creat
 
 **Forge's startup questions.** A yes/no question while a world starts (missing blocks or items) holds the client until someone clicks, and the step gets no answer meanwhile. When a test world or instance may ask one, launch the game with `-Dfml.queryResult=cancel`; the step then fails `loadAborted` instead of waiting. A step with no answer long after its `started` record is most likely waiting on such a screen and needs the owner.
 
-**Order.** Before the owner launches: set the keys, write the bundles, and clear or note old files in `client-inbox/`. After the launch: wait for `status.json`, send the menu step, wait for `done`, check `INBOX action=opened reason=localJoin` (or ask for the typed opening where it cannot open by itself), run the cards through the command inbox, end with `client quit`.
+**Order.** Before the owner launches: set the keys, write the bundles, and clear or note old files in `client-inbox/`. After the launch: wait for `status.json`, send the menu step, wait for `done`, check `INBOX action=opened reason=localJoin` (or ask for the typed opening where it cannot open by itself; when the join writes no `INBOX` record at all, the toolkit did not take the player for the host, which 1.5.0 does when the launch name and the account name differ only in case, so ask for the typed opening once per launch and record it as toolkit feedback), run the cards through the command inbox, end with `client quit`.
 
 ## Other Capabilities To Plan Around
 

@@ -347,6 +347,8 @@ When a card fails:
 - Return the affected issue to **In Progress**.
 - Mark later campaign issues **Blocked** when the finding could invalidate their implementation or evidence; otherwise leave their recorded state unchanged.
 - Correct, reverify, and independently review the affected scope before resuming the campaign.
+- Review the correction as an uncommitted diff: retain a snapshot patch of the working tree and give it to the reviewer. Commit it only after its review findings are resolved, then build and relaunch from that commit. The relaunch then runs reviewed code from a clean, recorded tree. A correction committed and launched before its review puts every later card on code that may still change.
+- The same order applies to a correction that the follow-up review asks for while the campaign still needs another launch.
 
 After every included issue satisfies its Definition of Done, resolve the campaign completion checkpoint for the exact scope:
 
