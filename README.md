@@ -123,7 +123,7 @@ minecraft-1.12.2-mod-agent-workflow/
 
 Each mod under `workspace/project/` is an independent Git repository with its own commits and remote.
 
-Rare API-provider/API-consumer questions between actively developed mods can use the optional [Cross-Project Agent Consultation](procedures/cross-project-agent-consultation.md). It provides a short local exchange and closing report without adding another development stage or giving either agent authority over the other project.
+Rare API-provider/API-consumer questions between actively developed mods can use the optional [Cross-Project Agent Consultation](procedures/cross-project-agent-consultation.md). It can use Agent Relay for direct replies after one pasted invitation per invited chat, or the bundled mailbox. The procedure covers on-demand installation and participant closeout.
 
 ## Working With Skills
 

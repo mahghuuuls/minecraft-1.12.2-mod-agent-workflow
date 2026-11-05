@@ -28,22 +28,42 @@ Do not use this procedure:
 - To let one agent approve another project's requirements, architecture, implementation, commit, push, or release.
 - When sharing the proposed context would cross an owner, privacy, license, or repository-access boundary.
 
-## Tool
+## Tool Selection
 
-Read in order:
+Choose the tool only when a concrete, owner-authorized consultation reaches step 4. Use [Agent Relay](https://github.com/mahghuuuls/agent-relay) when the participating agents can reach a shared local relay and can stay active through the exchange. The owner pastes one invitation into each invited chat. The connected agents exchange the replies themselves. Use the bundled mailbox when relay access is unsuitable or the owner prefers the manual route.
 
-```text
-tools/agent-session/AGENTS.md
-tools/agent-session/README.md
+### Check and install Agent Relay
+
+From the workflow repository root on Windows, run the read-only check. Use `-Executable <path>` if the owner already has Agent Relay installed outside the managed location and PATH.
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/agent-relay.ps1
 ```
 
-Use:
+Run this check only for the consultation that needs it. An `installed` result gives the executable path. If the result is `missing`, explain the benefit of one pasted invitation per invited chat followed by direct replies and a shared closeout. Identify the pinned release and the per-user install location. Ask the owner whether to download and install it. A consultation approval alone does not authorize the download or installation.
 
-```text
-tools/agent-session/agent-session.cmd
+After the owner explicitly approves both the download and installation, run:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/agent-relay.ps1 -Action Install -OwnerApproved
 ```
 
-The tool is a local shared-file mailbox. It does not call Codex, Claude, Gemini, or another model API, and it does not wake an inactive agent. The owner passes the session code to the other agent and starts or continues that agent's turn.
+The helper downloads the pinned wheel, verifies its SHA-256, and installs it into a versioned virtual environment under `%LOCALAPPDATA%\MinecraftModAgentWorkflow\agent-relay`. It uses an existing Python 3.10 or later. Use `-PythonExecutable <path>` if Python is installed outside the standard locations and PATH. If the owner declines or setup fails, use the bundled mailbox or close the consultation as unresolved. Do not install another version or change a system Python installation to make the consultation work.
+
+### Use Agent Relay
+
+Follow the [relay command reference](https://github.com/mahghuuuls/agent-relay/blob/v0.2.0/README.md). Use the executable path from the check in commands and in the invitation when it is outside PATH.
+
+- Reuse a compatible relay listening on loopback or start the installed relay for the consultation.
+- Open a room with a participant limit, message limit and expiry. Include the scoped question, expected participant names and roles, and shareable source or artifact references in the first message.
+- Give the owner the single join message to paste once into each invited chat. Present it while the starter's turn is still active. Use the returned profiles and cursors to receive and answer messages directly. Each read may wait up to 45 seconds. Stop waiting when the room reaches a stop condition or it is clear that a participant cannot join.
+- Only the starter closes the room. Record a brief shared decision summary, any unresolved point or owner decision, and a follow-up for each participant with an agreed action. Omit participants with no follow-up. After closure, each participant reports their own action or **None**, then the decision summary, in their own chat.
+
+The relay delivers messages to connected agents. If a participant's turn ends or their environment cannot reach loopback, record the delivery limitation and choose the bundled route or close with the available evidence.
+
+### Use the bundled mailbox
+
+Read [the tool instructions](../tools/agent-session/AGENTS.md) and [the command reference](../tools/agent-session/README.md), then use `tools/agent-session/agent-session.cmd`. The owner gives the code to the invited agents and prompts the next participant after each send. For final positions in a session with more than one provider, have the owner prompt the providers in sequence so each final position can answer the earlier one.
 
 ## Required Input
 
@@ -74,19 +94,19 @@ Do not paste entire requirements, architecture documents, source trees, logs, or
 1. Inspect the current project's relevant approved documents, dependency artifact, source, and evidence before requesting consultation.
 2. State why source inspection alone does not settle the concrete question.
 3. Obtain owner authorization to start the cross-project consultation and share its scoped context.
-4. Start the session with the initiating project's role, project identity, source revision when available, topic, participant limit, message limit, and expiration.
-5. Give the session code and tool location to the owner. Do not search for or message unrelated agent tasks.
-6. The owner supplies the code to the other agent, which inspects its own project before joining with its role and source revision.
-7. Exchange no more than the bounded messages needed to state the consumer need, provider constraint, alternatives, and consequences. Each agent ends its turn by naming the participant to prompt next. For final positions in a session with more than one provider, the owner prompts the providers one after the other, so each final position can answer the earlier one.
+4. Select the tool and start the session with the initiating project's role, project identity, source revision when available, topic, participant limit, message limit, and expiration.
+5. Give the owner the relay invitation or bundled mailbox code. Do not search for or message unrelated agent tasks.
+6. Each invited agent inspects its own project and joins with its role and source revision when available.
+7. Exchange no more than the bounded messages needed to state the consumer need, provider constraint, alternatives, and consequences. Follow the selected tool's delivery procedure.
 8. Keep facts, inferences, proposals, and owner decisions distinct. Agreement between agents is not evidence and does not approve a project decision.
 9. If the exchange exposes a scope, requirement, architecture, or compatibility change, stop the affected implementation and follow the normal backward-transition rules in `guidelines/process-control.md`.
-10. Close the session with all required outcome headings, even when a section says `None`.
-11. Each agent reads the closing report and records only its own project's relevant consequences through that project's normal artifact and approval path.
+10. Close the session with the outcome format for the selected tool.
+11. Each agent reports its own action or **None** and the brief decision summary. Record only its own project's relevant consequences through that project's normal artifact and approval path.
 12. Record provider-facing API feedback in the provider's feedback mechanism and consumer-facing integration consequences in the consumer's applicable feasibility, requirement, architecture, issue, or status artifact.
 
 ## Required Closing Outcome
 
-The closing summary must contain:
+Agent Relay uses the brief decision summary and participant actions described above. The bundled mailbox enforces these headings, including headings whose outcome is `None`:
 
 - **Agreed Contract:** the provisional shared meaning, including version or lifecycle boundaries
 - **Provider Feedback:** API or documentation improvements genuinely needed by the consumer
@@ -95,7 +115,7 @@ The closing summary must contain:
 - **Owner Decisions Required:** decisions neither agent may approve
 - **Recommended Next Actions:** separately assigned provider, consumer, and owner actions
 
-The generated report includes this outcome, participant identities, source revisions, and the transcript. It remains consultation evidence. Each project's approved canonical artifacts remain authoritative.
+The bundled report includes this outcome, participant identities, source revisions, and the transcript. The selected tool's closeout remains consultation evidence. Each project's approved canonical artifacts remain authoritative.
 
 ## Failure And Stop Conditions
 
@@ -108,7 +128,7 @@ Stop or close with an unresolved result when:
 - A participant requests repository changes, credentials, external publication, or another action outside consultation scope.
 - The session expires, reaches its message limit, or loses a participant.
 
-Do not keep an agent active merely to wait indefinitely. One `wait` call may block for at most sixty seconds; after that, yield to the owner or continue the other task.
+Do not keep an agent active merely to wait indefinitely. The bundled mailbox's `wait` call may block for at most sixty seconds. Follow the selected tool's wait and stop rules.
 
 ## Completion Criteria
 

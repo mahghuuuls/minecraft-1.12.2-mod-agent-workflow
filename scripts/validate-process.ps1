@@ -25,6 +25,7 @@ $requiredPaths = @(
     'procedures/independent-review-brief.md',
     'procedures/release-build-and-discovery.md',
     'procedures/revalidate-release.md',
+    'scripts/agent-relay.ps1',
     'scripts/validate-workspace.ps1',
     'scripts/test-validate-workspace.ps1',
     'stages/0-project-setup.md',
