@@ -56,14 +56,22 @@ Follow the [relay command reference](https://github.com/mahghuuuls/agent-relay/b
 
 - Reuse a compatible relay listening on loopback or start the installed relay for the consultation.
 - Open a room with a participant limit, message limit and expiry. Include the scoped question, expected participant names and roles, and shareable source or artifact references in the first message.
-- Give the owner the single join message to paste once into each invited chat. Present it while the starter's turn is still active. Use the returned profiles and cursors to receive and answer messages directly. Each read may wait up to 45 seconds. Stop waiting when the room reaches a stop condition or it is clear that a participant cannot join.
+- Present the [invitation](#invitation-handoff) while the starter's turn is still active. Use the returned profiles and cursors to receive and answer messages directly. Each read may wait up to 45 seconds. Stop waiting when the room reaches a stop condition or it is clear that a participant cannot join.
 - Only the starter closes the room. Record a brief shared decision summary, any unresolved point or owner decision, and a follow-up for each participant with an agreed action. Omit participants with no follow-up. After closure, each participant reports their own action or **None**, then the decision summary, in their own chat.
 
 The relay delivers messages to connected agents. If a participant's turn ends or their environment cannot reach loopback, record the delivery limitation and choose the bundled route or close with the available evidence.
 
 ### Use the bundled mailbox
 
-Read [the tool instructions](../tools/agent-session/AGENTS.md) and [the command reference](../tools/agent-session/README.md), then use `tools/agent-session/agent-session.cmd`. The owner gives the code to the invited agents and prompts the next participant after each send. For final positions in a session with more than one provider, have the owner prompt the providers in sequence so each final position can answer the earlier one.
+Read [the tool instructions](../tools/agent-session/AGENTS.md) and [the command reference](../tools/agent-session/README.md), then use `tools/agent-session/agent-session.cmd`. Use the [invitation handoff](#invitation-handoff) for the mailbox. The owner prompts the next participant after each send. For final positions in a session with more than one provider, have the owner prompt the providers in sequence so each final position can answer the earlier one.
+
+### Invitation Handoff
+
+Give the owner one fenced plain-text block per invited chat to copy and paste in full. Identify the destination chat outside the block. Put all instructions for the receiving agent inside the block.
+
+- Include the owner's permission to participate within the agreed scope, the consultation topic and the intended participant name, project and role.
+- Include the complete join command and invitation code. Give the full tool path when needed and include the relay URL or shared mailbox store when the recipient needs it. For Agent Relay, use the generated join message as the starting point and fill in the intended participant name and executable path.
+- Include how to read the question, reply and handle the selected tool's wait, owner-prompt and closeout steps.
 
 ## Required Input
 
@@ -95,7 +103,7 @@ Do not paste entire requirements, architecture documents, source trees, logs, or
 2. State why source inspection alone does not settle the concrete question.
 3. Obtain owner authorization to start the cross-project consultation and share its scoped context.
 4. Select the tool and start the session with the initiating project's role, project identity, source revision when available, topic, participant limit, message limit, and expiration.
-5. Give the owner the relay invitation or bundled mailbox code. Do not search for or message unrelated agent tasks.
+5. Give the owner the complete paste-ready message through [Invitation Handoff](#invitation-handoff). Do not search for or message unrelated agent tasks.
 6. Each invited agent inspects its own project and joins with its role and source revision when available.
 7. Exchange no more than the bounded messages needed to state the consumer need, provider constraint, alternatives, and consequences. Follow the selected tool's delivery procedure.
 8. Keep facts, inferences, proposals, and owner decisions distinct. Agreement between agents is not evidence and does not approve a project decision.

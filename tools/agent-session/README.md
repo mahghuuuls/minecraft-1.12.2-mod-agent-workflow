@@ -42,7 +42,7 @@ tools\agent-session\agent-session.cmd start `
 
 `-Revision` is optional for both `start` and `join`. Supply it when a current source revision is available; otherwise leave it out rather than inventing one.
 
-Give only the returned session code and the tool location to the owner. The owner provides them to the other agent.
+Include the returned session code and tool location in the complete message the owner will paste into the other agent's chat. Follow the [invitation handoff](../../procedures/cross-project-agent-consultation.md#invitation-handoff).
 
 Join from the provider project:
 

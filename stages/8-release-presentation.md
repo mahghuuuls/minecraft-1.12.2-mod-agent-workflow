@@ -161,6 +161,10 @@ Draft the smallest useful mod page first and expand it only when a normal player
 6. Only limitations that materially affect normal installation or use.
 7. A useful source or companion-project link when applicable.
 
+For each player-facing bullet, identify what players will see, do, or need to know to decide, install, configure, or play. Put implementation and API contracts in technical documentation. Include details already apparent in the game only when they affect how players use the mod.
+
+Carry forward the approved mod page when its player-facing claims are still accurate and useful. Use the distribution-platform release changelog for release-specific changes players are likely to notice.
+
 For a content mod with several integrations (content per supported mod), the default shape after the disclaimer is one section per integration, one line per item it adds, and no totals anywhere, so a later release adds a section without rewriting the page. Hyperlink every other mod named, on its first mention or in its section heading, to its page on the selected distribution platform after checking that the page exists.
 
 Before expanding that first draft, remove facts already supplied by the distribution page's title and metadata. Normally do not repeat the mod name as a heading or in the opening sentence, restate the game or Minecraft version, list loader/runtime test results, or announce that there are no dependencies. State a dependency only when one exists or its absence resolves a real installation ambiguity. Keep required-side installation to one plain sentence unless the topology is unusual. Translate lifecycle terminology into player language, for example `Changes require a restart.` rather than `server or integrated-server restart.`
@@ -363,7 +367,7 @@ Do not use the internal record as public copy.
 4. Review completed issues, approved behavior, and known limitations.
 5. Identify which public materials are agent-managed.
 6. Draft or update repository-facing README content when agent-managed.
-7. Draft or update player/download-facing mod-page copy when agent-managed, including the default AI usage disclaimer unless the owner opts out.
+7. Review agent-managed player/download-facing mod-page copy under [Mod Page Copy Guidance](#mod-page-copy-guidance). Draft, update, or carry it forward as appropriate, including the default AI usage disclaimer unless the owner opts out.
 8. Draft or update repository `CHANGELOG.md` when agent-managed, then draft the separate distribution-platform release changelog for its narrower player audience. For a first public release, default the platform text to `Initial release`.
 9. Prepare a CurseForge-style summary or description only as reusable public copy, not as platform-field research.
 10. Add high-level configuration and player-facing multiplayer/client/server notes when applicable.
