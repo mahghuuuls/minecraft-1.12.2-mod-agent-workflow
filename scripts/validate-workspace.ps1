@@ -56,6 +56,10 @@ function Resolve-ProcessPath([string]$value) {
 function Get-IssueStatus([string]$path) {
     $text = Get-Content -Raw -LiteralPath $path
     $match = [regex]::Match($text, '(?m)^\*\*Status:\*\*\s*(?<status>[^\r\n]+?)\s*$')
+    if (-not $match.Success) {
+        # The older form puts the status inside the bold label: "**Status: Done** 2026-08-10."
+        $match = [regex]::Match($text, '(?m)^\*\*Status:\s*(?<status>[^*\r\n]+?)\*\*')
+    }
     if (-not $match.Success) { return $null }
     return Normalize-MarkdownValue $match.Groups['status'].Value
 }
@@ -160,12 +164,18 @@ if (-not (Test-Path -LiteralPath $statusPath -PathType Leaf)) {
 }
 
 $issueStatuses = @('Backlog', 'Ready', 'In Progress', 'Awaiting Validation', 'Review', 'Blocked', 'Done', 'Deferred')
-$issueFiles = @(Get-ChildItem -LiteralPath $documentationRoot -Recurse -File -Filter 'IMP-*.md' -ErrorAction SilentlyContinue | Where-Object { $_.Directory.Name -eq 'issues' })
+# An issue id is a prefix and three digits: IMP-001 in Initial Development, CYC7-001 and the like in a change cycle.
+$issueIdPattern = '[A-Z][A-Z0-9]*-\d{3}'
+# An issue's status line may go on after the status with its date and a note: "Done, 2026-11-04. The campaign passed".
+$leadingIssueStatusPattern = '^(?<status>' + (($issueStatuses | ForEach-Object { [regex]::Escape($_) }) -join '|') + ')(?=$|[\s.,;:(])'
+$issueFiles = @(Get-ChildItem -LiteralPath $documentationRoot -Recurse -File -Filter '*.md' -ErrorAction SilentlyContinue | Where-Object { $_.Directory.Name -eq 'issues' })
 $issueRecords = [System.Collections.Generic.List[object]]::new()
 foreach ($file in $issueFiles) {
-    $idMatch = [regex]::Match($file.BaseName, '^(?<id>IMP-\d{3})(?:-|$)')
+    $idMatch = [regex]::Match($file.BaseName, "^(?<id>$issueIdPattern)(?:-|$)")
     if (-not $idMatch.Success) { continue }
     $status = Get-IssueStatus $file.FullName
+    $leadingStatus = [regex]::Match([string]$status, $leadingIssueStatusPattern)
+    if ($leadingStatus.Success) { $status = $leadingStatus.Groups['status'].Value }
     if ([string]::IsNullOrWhiteSpace($status)) {
         Add-ValidationError "Issue file has no parseable Status field: $($file.FullName)"
         continue
@@ -233,7 +243,7 @@ foreach ($plan in $planFiles) {
     $lineNumber = 0
     foreach ($line in Get-Content -LiteralPath $plan.FullName) {
         $lineNumber++
-        if ($line -notmatch '^\s*\|\s*(?<id>IMP-\d{3})\s*\|') { continue }
+        if ($line -notmatch "^\s*\|\s*(?<id>$issueIdPattern)\s*\|") { continue }
         $id = $Matches['id']
         $cells = @($line.Trim().Trim('|').Split('|') | ForEach-Object { Normalize-MarkdownValue $_ })
         $planStatus = $null
@@ -264,7 +274,7 @@ if (Test-Path -LiteralPath $statusPath -PathType Leaf) {
             $activeArtifactRoot = $null
         }
         if ($null -ne $activeArtifactRoot) {
-            foreach ($match in [regex]::Matches($statusText, '(?m)^\s*-\s*(?<id>IMP-\d{3})\b[^\r\n]*?\*\*(?<status>Backlog|Ready|In Progress|Awaiting Validation|Review|Blocked|Done|Deferred)\*\*')) {
+            foreach ($match in [regex]::Matches($statusText, "(?m)^\s*-\s*(?<id>$issueIdPattern)\b[^\r\n]*?\*\*(?<status>Backlog|Ready|In Progress|Awaiting Validation|Review|Blocked|Done|Deferred)\*\*")) {
                 $id = $match.Groups['id'].Value
                 $recordedStatus = $match.Groups['status'].Value
                 $matchingIssues = @($issueRecords | Where-Object { $_.Scope -eq $activeArtifactRoot -and $_.Id -eq $id })
@@ -296,7 +306,7 @@ if (Test-Path -LiteralPath $statePath -PathType Leaf) {
 
     $currentIssue = Get-BulletValue $stateText 'Current implementation issue'
     if (-not [string]::IsNullOrWhiteSpace($currentIssue) -and $currentIssue -notmatch '^(None|Not applicable|Pending)\b') {
-        $idMatch = [regex]::Match($currentIssue, 'IMP-\d{3}')
+        $idMatch = [regex]::Match($currentIssue, $issueIdPattern)
         $stateArtifactValue = Get-BulletValue $stateText 'Artifact root'
         try {
             $stateArtifactRoot = Resolve-ProcessPath $stateArtifactValue
@@ -334,12 +344,37 @@ if (Test-Path -LiteralPath $statePath -PathType Leaf) {
 
 # Every card of a campaign session map has a line in that campaign's results file once the results file exists.
 # A card that was deferred or not run still gets a line saying so; a card with no line was silently lost.
+# A session map anywhere under the documentation names its results file on a "Results file:" line, and starts
+# each card with a bold identifier ("1. **G1 Create.**") that the results file repeats.
+$checkedMaps = 0
+$mapsWithoutResults = 0
+foreach ($sessionMap in @(Get-ChildItem -LiteralPath $documentationRoot -Recurse -File -Filter '*session-map.md' -ErrorAction SilentlyContinue)) {
+    $mapText = Get-Content -Raw -LiteralPath $sessionMap.FullName
+    $link = [regex]::Match($mapText, '(?m)^\s*Results file:\s*`?(?<path>[^`\r\n]+?)`?\s*$')
+    if (-not $link.Success) {
+        $mapsWithoutResults++
+        continue
+    }
+    $resultsPath = Resolve-ProcessPath $link.Groups['path'].Value
+    if (-not (Test-Path -LiteralPath $resultsPath -PathType Leaf)) { continue }
+    $checkedMaps++
+    $resultsText = Get-Content -Raw -LiteralPath $resultsPath
+    foreach ($card in @([regex]::Matches($mapText, '(?m)^\d+[a-z]?\.\s+\*\*(?<id>[A-Z]+\d+[a-z]?)\b') | ForEach-Object { $_.Groups['id'].Value } | Sort-Object -Unique)) {
+        if ($resultsText -notmatch ('(?<![A-Za-z0-9])' + [regex]::Escape($card) + '(?![A-Za-z0-9])')) {
+            Add-ValidationError "Session map $($sessionMap.Name): card $card has no line in $($link.Groups['path'].Value); record it as passed, failed, deferred, or not run."
+        }
+    }
+}
+if ($mapsWithoutResults -gt 0) {
+    Add-ValidationWarning "$mapsWithoutResults session map(s) under the documentation name no 'Results file:'; their cards were not checked."
+}
 $campaignWorkRoot = Join-Path $WorkspaceRoot 'validation/work'
 if (Test-Path -LiteralPath $campaignWorkRoot -PathType Container) {
     foreach ($campaignDirectory in Get-ChildItem -LiteralPath $campaignWorkRoot -Directory) {
         $sessionMap = Get-ChildItem -LiteralPath $campaignDirectory.FullName -File -Filter '*-session-map.md' | Select-Object -First 1
         $resultsFile = Get-ChildItem -LiteralPath $campaignDirectory.FullName -File -Filter '*-results.md' | Select-Object -First 1
         if ($null -eq $sessionMap -or $null -eq $resultsFile) { continue }
+        $checkedMaps++
         $mapCards = @([regex]::Matches((Get-Content -Raw -LiteralPath $sessionMap.FullName), '(?m)^(?<card>\d+[a-z]?)\. ') | ForEach-Object { $_.Groups['card'].Value } | Sort-Object -Unique)
         $resultCards = @([regex]::Matches((Get-Content -Raw -LiteralPath $resultsFile.FullName), '(?m)^(?<card>\d+[a-z]?)\. ') | ForEach-Object { $_.Groups['card'].Value } | Sort-Object -Unique)
         foreach ($card in $mapCards) {
@@ -372,4 +407,5 @@ if ($errors.Count -gt 0) {
     exit 1
 }
 
-Write-Host "Workspace validation passed: workflow/stage statuses, issue statuses, active-item counts, structured paths, plan/issue agreement, evidence packs of Done issues, campaign results covering every session-map card, and resume references are mechanically consistent." -ForegroundColor Green
+if ($checkedMaps -eq 0) { $campaignNote = 'no session map with a results file was found, so no campaign cards were checked' } else { $campaignNote = "campaign results covering every card of $checkedMaps session map(s)" }
+Write-Host "Workspace validation passed: workflow/stage statuses, issue statuses, active-item counts, structured paths, plan/issue agreement, evidence packs of Done issues, $campaignNote, and resume references are mechanically consistent." -ForegroundColor Green
