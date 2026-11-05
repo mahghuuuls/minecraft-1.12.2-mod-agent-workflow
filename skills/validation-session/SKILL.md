@@ -120,7 +120,11 @@ make the reset observable when an unapplied reset could look like a pass.
 - Read the final evidence and write the result into the owning issue, including anything that went
   unobserved. An unobserved card is not a passed card, and recording the gap is how it gets picked
   up by the next session instead of being lost.
-- Turn off temporary diagnostics. Restore temporary config and world state.
+- Turn off temporary diagnostics. Restore temporary config and world state, unless the session ends
+  a campaign: then the campaign close owns the order, `procedures/close-campaign.md` (the
+  `close-campaign` skill triggers it). Leave the test instance, the session's configuration, and any
+  borrowed runtime prepared until its follow-up review is done; it restores and resets them after
+  that, so a criterion the review finds unreached can still get its card.
 - Run `scripts/validate-workspace.ps1` from the workflow root after writing the results, and fix
   what it reports.
 - Say whether they can close the game, or close it yourself with `client quit` when the toolkit
