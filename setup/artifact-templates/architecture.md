@@ -29,6 +29,7 @@
 ## Dependency Rules
 
 -
+- Enforcement: a test that fails on a forbidden import (name it) / review alone (stated choice, with its reason)
 
 ## Important Classes And Interfaces
 

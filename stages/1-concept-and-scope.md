@@ -103,6 +103,8 @@ Ask for as much detail as they already know, such as:
 
 For small mods, a paragraph may be enough. For complex mods, recommend a rough design note before the interview continues.
 
+An owner may instead arrive with material well past concept level: a full specification with command syntax, file formats, record fields, or configuration keys. Do not push it back, and do not approve its details as concept. Read it at concept level (Decision Level in `guidelines/process-control.md`): take from it what the mod is, who it serves, and its boundaries; record every detail as carried forward to the stage that owns it, citing the owner's section, so Requirements and Architecture start from it; and do not ask the owner again about what the document already settles. A contradiction or a gap inside the document is a concept-level finding: bring it to the owner as a focused question.
+
 Do not critique the draft as an implementation plan. Use it to choose the first focused interview question.
 
 ## Glossary Handling

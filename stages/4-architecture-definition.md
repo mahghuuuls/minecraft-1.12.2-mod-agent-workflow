@@ -201,7 +201,7 @@ Minor and self-evident choices do not require separate decision records or two d
 5. Identify major components, ownership boundaries, complexity-bearing decisions, and the design knowledge each component owns.
 6. Evaluate relevant libraries, integration approaches, exact build artifacts, and verified minimum shipping versions.
 7. Review approved dependency source reference findings when they affect integration design.
-8. Define package organization and dependency directions.
+8. Define package organization and dependency directions, and record how the dependency rules are enforced: a test that fails when a package imports one it may not (a source scan in the unit suite is enough), or review alone, written down as a choice. Rules that only a reviewer checks are missed by green builds, so leave neither the choice nor its reason implicit.
 9. Define loader lifecycle and event integration.
 10. Define client, server, and shared-code boundaries.
 11. Define configuration, networking, persistence, and external integrations where applicable.
@@ -226,7 +226,7 @@ Use compact Mermaid diagrams when they make component relationships or runtime f
 This stage is complete when:
 
 - Major components and their responsibilities are defined.
-- Package boundaries and dependency directions are clear.
+- Package boundaries and dependency directions are clear, and their enforcement (a test or review alone) is recorded.
 - Relevant libraries and dependencies have been selected with reasons.
 - Dependency integration records exact build artifacts separately from minimum-only shipping metadata.
 - Loader lifecycle and integration points are identified.
