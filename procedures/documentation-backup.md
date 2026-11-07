@@ -21,3 +21,10 @@ For files outside the default allowlist, use the manual flow to get approval for
 Manual approval covers the project's directory and the exact proposed paths and contents. A forward branch advance affecting only other directories can be refreshed and pushed under the same receipt. Request a new preview approval if the project's directory or planned upload changes. Stop on a branch rewind or loss of previously verified history.
 
 Report the outcome separately from project approvals. The checkpoint result is recorded in ignored `workspace/documentation-sync/checkpoint-result.json` when a configured run starts. The per-file bases and confirmed remote revision live in `workspace/documentation-sync/state.json`. If the runner could not start or record an outcome, carry the pending backup in the handoff and retry at the next eligible trigger.
+
+## Optional Artwork Backup
+
+- Save `- Artwork backup: Approved.` in the Shared Documentation Backup section of the owner defaults when the owner separately opts in. Automatic artwork backup also requires the documentation backup approval and uses its pinned private destination.
+- Show the owner the exact versions to back up. Record approved final exports and editable sources under their asset's `final/` folder. Keep candidates, previews, and working drafts local. Record a reference image only after the owner explicitly approves storing that exact copy in the private backup. Keep reference provenance in the project's usual records.
+- Record each approved path and SHA-256 in the local `workspace/artwork/backup-manifest.json` using [the tool format](../tools/documentation-sync/README.md#artwork-selection). Hash the version the owner reviewed. Ask the owner to approve a changed version before replacing its hash. Never refresh hashes automatically.
+- At the usual checkpoint and handoff triggers, the runner backs up the manifest's verified files under `<projectId>/.artwork/`. Report missing files, mismatched hashes, and conflicts as pending. Removing a path from the manifest or pausing artwork backup stops future uploads for that path. Existing remote copies and history are retained.

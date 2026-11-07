@@ -18,6 +18,7 @@ param(
     [string]$AdoptBindingId,
     [string[]]$IncludePath = @(),
     [string[]]$SetRememberedIncludes,
+    [switch]$IncludeArtwork,
     [string[]]$DeletePath = @(),
     [string]$ApproveBulkDeletionAt,
     [string]$ApprovedPlan
@@ -33,6 +34,14 @@ $objectIdPattern = '\A(?:[a-f0-9]{40}|[a-f0-9]{64})\z'
 $bindingIdPattern = '\A[a-f0-9]{32}\z'
 $identityPath = '.documentation-project.json'
 $maxDocumentBytes = 2MB
+$maxArtworkBytes = 10MB
+$artworkPrefix = '.artwork/'
+$imageSignatures = @{
+    '.png' = '^89504E470D0A1A0A'
+    '.jpg' = '^FFD8FF'
+    '.jpeg' = '^FFD8FF'
+    '.webp' = '^52494646.{8}57454250'
+}
 $workflowRoot = [DirectoryInfo]::new($PSScriptRoot).Parent.Parent.FullName
 $githubPilot = $PSCmdlet.ParameterSetName -eq 'GitHub'
 
@@ -126,6 +135,14 @@ function Test-CredentialText([string]$Text) {
         $Text -match '\b(?:access[-_ ]?token|api[-_ ]?key|password|client[-_ ]?secret)\s*["'']?\s*[:=]\s*["'']?[^\s"''<>]{8,}'
 }
 
+function Test-EligibleArtwork([string]$Path) {
+    if (-not (Test-SafeRelativePath $Path) -or (Test-ExcludedPath $Path) -or (Test-CredentialText $Path) -or
+        $Path -match '(?:^|/)(?:candidates?|working|drafts?|previews?|reviews?|[^/]+-review)/') { return $false }
+    $extension = [Path]::GetExtension($Path)
+    if ($Path -match '(?:^|/)references/') { return $imageSignatures.ContainsKey($extension) }
+    return $Path -match '(?:^|/)final/' -and ($extension -eq '.pixelart' -or $imageSignatures.ContainsKey($extension))
+}
+
 function Get-ValidatedIncludes($Paths) {
     $validated = [HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
     foreach ($path in $Paths) {
@@ -208,6 +225,35 @@ function Write-Blob([byte[]]$Bytes) {
     return (Invoke-Git @('hash-object', '-w', '--stdin') -InputBytes $Bytes).Output.Trim()
 }
 
+function Read-BackupBytes([string]$Path, [long]$Limit) {
+    $parent = [Path]::GetDirectoryName($Path)
+    Assert-PlainDirectory $parent
+    $attributes = [File]::GetAttributes($Path)
+    if ($attributes -band [FileAttributes]::ReparsePoint) { return @{ blocked = 'link_or_reparse_point' } }
+    if ($attributes -band [FileAttributes]::Directory) { return @{ blocked = 'not_a_file' } }
+    $stream = [File]::Open($Path, [FileMode]::Open, [FileAccess]::Read, [FileShare]::Read)
+    try {
+        Assert-PlainDirectory $parent
+        if ([File]::GetAttributes($Path) -band [FileAttributes]::ReparsePoint) { return @{ blocked = 'link_or_reparse_point' } }
+        $blocked = [DocumentationSync.WindowsFile]::GetBlockReason($stream.SafeFileHandle, $Path)
+        if ($blocked) { return @{ blocked = $blocked } }
+        if ($stream.Length -gt $Limit) { return @{ blocked = 'document_too_large' } }
+        $bytes = [byte[]]::new($stream.Length)
+        $stream.ReadExactly($bytes, 0, $bytes.Length)
+        if ($stream.ReadByte() -ne -1) { throw "Backup file '$Path' changed while it was read." }
+        return @{ bytes = $bytes; blocked = $null }
+    }
+    finally { $stream.Dispose() }
+}
+
+function Get-TextBlockReason([byte[]]$Bytes) {
+    try { $decoded = $utf8.GetString($Bytes) }
+    catch [System.Text.DecoderFallbackException] { return 'non_text_document' }
+    if ($decoded -match '[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]') { return 'non_text_document' }
+    if (Test-CredentialText $decoded) { return 'possible_credential' }
+    return $null
+}
+
 function Get-LocalDocuments {
     Assert-PlainDirectory $documentationRoot
     $files = @{}
@@ -244,46 +290,69 @@ function Get-LocalDocuments {
 
             $document = @{ path = $relativePath; blob = $null; blocked = $null }
             $files.Add($relativePath, $document)
-            if ($entry.Length -gt $maxDocumentBytes) {
-                $document.blocked = 'document_too_large'
-                continue
-            }
-            $stream = [File]::Open($entry.FullName, [FileMode]::Open, [FileAccess]::Read, [FileShare]::Read)
-            try {
-                Assert-PlainDirectory $directory.FullName
-                if ([File]::GetAttributes($entry.FullName) -band [FileAttributes]::ReparsePoint) {
-                    $document.blocked = 'link_or_reparse_point'
-                    continue
-                }
-                $document.blocked = [DocumentationSync.WindowsFile]::GetBlockReason($stream.SafeFileHandle, $entry.FullName)
-                if ($document.blocked) { continue }
-                if ($stream.Length -gt $maxDocumentBytes) {
-                    $document.blocked = 'document_too_large'
-                    continue
-                }
-                $bytes = [byte[]]::new($stream.Length)
-                $stream.ReadExactly($bytes, 0, $bytes.Length)
-                if ($stream.ReadByte() -ne -1) { throw "Document '$relativePath' changed while it was read." }
-            }
-            finally { $stream.Dispose() }
-
-            try { $text = $utf8.GetString($bytes) }
-            catch [System.Text.DecoderFallbackException] {
-                $document.blocked = 'non_text_document'
-                continue
-            }
-            if ($text -match '[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]') {
-                $document.blocked = 'non_text_document'
-                continue
-            }
-            if (Test-CredentialText $text) {
-                $document.blocked = 'possible_credential'
-                continue
-            }
-            $document.blob = Write-Blob $bytes
+            $file = Read-BackupBytes $entry.FullName $maxDocumentBytes
+            $document.blocked = $file.blocked
+            if (-not $document.blocked) { $document.blocked = Get-TextBlockReason $file.bytes }
+            if (-not $document.blocked) { $document.blob = Write-Blob $file.bytes }
         }
     }
     return $files
+}
+
+function Read-ArtworkApprovals {
+    $approved = @{}
+    if ([DirectoryInfo]::new($workspacePath).GetFileSystemInfos('artwork').Count -eq 0) { return $approved }
+    Assert-PlainDirectory $artworkRoot
+    if ([DirectoryInfo]::new($artworkRoot).GetFileSystemInfos('backup-manifest.json').Count -eq 0) { return $approved }
+    $file = Read-BackupBytes (Join-Path $artworkRoot 'backup-manifest.json') 128KB
+    if ($file.blocked) { throw "Artwork approval manifest is blocked ($($file.blocked))." }
+    try { $manifest = $utf8.GetString($file.bytes) | ConvertFrom-Json -AsHashtable -NoEnumerate }
+    catch { throw 'Artwork approval manifest must be valid UTF-8 JSON.' }
+    if ($manifest -isnot [System.Collections.IDictionary] -or $manifest['schemaVersion'] -ne 1 -or
+        $manifest['files'] -isnot [array]) { throw 'Invalid artwork approval manifest.' }
+
+    foreach ($entry in $manifest.files) {
+        if ($entry -isnot [System.Collections.IDictionary] -or $entry['path'] -isnot [string] -or
+            -not (Test-EligibleArtwork $entry.path) -or $entry['sha256'] -isnot [string] -or
+            $entry.sha256 -notmatch '\A[a-f0-9]{64}\z') { throw 'Invalid path or SHA-256 in artwork approval manifest.' }
+        $key = $artworkPrefix + $entry.path
+        if ($approved.ContainsKey($key)) { throw 'Duplicate path in artwork approval manifest.' }
+        $approved.Add($key, $entry.sha256.ToLowerInvariant())
+    }
+    return $approved
+}
+
+function Add-LocalArtwork([hashtable]$Files, [hashtable]$Approved) {
+    foreach ($key in $Approved.Keys) {
+        $relative = $key.Substring($artworkPrefix.Length)
+        $path = Join-Path $artworkRoot $relative
+        $document = @{ path = $key; blob = $null; blocked = $null }
+        $Files.Add($key, $document)
+        try { $file = Read-BackupBytes $path $maxArtworkBytes }
+        catch [FileNotFoundException], [DirectoryNotFoundException] {
+            $document.blocked = 'approved_artwork_missing'
+            continue
+        }
+        catch [IOException], [UnauthorizedAccessException] {
+            $document.blocked = 'artwork_unreadable'
+            continue
+        }
+        $document.blocked = $file.blocked
+        if ($document.blocked) { continue }
+        $digest = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($file.bytes)).ToLowerInvariant()
+        if ($digest -cne $Approved[$key]) {
+            $document.blocked = 'artwork_version_not_approved'
+            continue
+        }
+        $extension = [Path]::GetExtension($relative)
+        if ($extension -eq '.pixelart') { $document.blocked = Get-TextBlockReason $file.bytes }
+        else {
+            $signature = [Convert]::ToHexString($file.bytes, 0, [Math]::Min(12, $file.bytes.Length))
+            if ($signature -cnotmatch $imageSignatures[$extension]) { $document.blocked = 'unexpected_artwork_format' }
+            elseif (Test-CredentialText ([Text.Encoding]::Latin1.GetString($file.bytes))) { $document.blocked = 'possible_credential' }
+        }
+        if (-not $document.blocked) { $document.blob = Write-Blob $file.bytes }
+    }
 }
 
 function Assert-FileOrMissing([string]$Path) {
@@ -298,7 +367,12 @@ function ConvertTo-BaseFiles($Files) {
     if ($Files -isnot [System.Collections.IDictionary]) { throw 'Invalid file baselines in sync state.' }
     $validated = @{}
     foreach ($path in $Files.Keys) {
-        if (-not (Test-SafeRelativePath $path) -or (Test-ExcludedPath $path) -or
+        $eligible = if ($path.StartsWith($artworkPrefix, [StringComparison]::Ordinal)) {
+            Test-EligibleArtwork $path.Substring($artworkPrefix.Length)
+        } else {
+            (Test-SafeRelativePath $path) -and -not (Test-ExcludedPath $path)
+        }
+        if (-not $eligible -or
             ($null -ne $Files[$path] -and $Files[$path] -cnotmatch $objectIdPattern)) {
             throw 'Invalid document path or blob ID in sync state.'
         }
@@ -515,17 +589,18 @@ function Get-SyncPlan([hashtable]$Local, [hashtable]$Remote, [string]$Tip) {
     $baseFiles = $state.files.Clone()
     $paths = [HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
     foreach ($path in @($baseFiles.Keys) + @($Remote.entries.Keys) + @($Local.Keys) + @($DeletePath)) {
-        if (Test-IncludedDocument $path) { [void]$paths.Add($path) }
+        if ($approvedArtwork.ContainsKey($path) -or (Test-IncludedDocument $path)) { [void]$paths.Add($path) }
     }
     $missingCount = @($baseFiles.Keys | Where-Object {
         $null -ne $baseFiles[$_] -and -not $Local.ContainsKey($_) -and (Test-IncludedDocument $_)
     }).Count
-    $hasReadableDocument = @($Local.Values | Where-Object { $_['blob'] }).Count -gt 0
+    $hasReadableDocument = @($Local.Values | Where-Object { $_['blob'] -and (Test-IncludedDocument $_.path) }).Count -gt 0
     $changes = [List[object]]::new()
     $pending = [List[object]]::new()
 
     foreach ($path in ($baseFiles.Keys | Sort-Object)) {
-        if ($baseFiles[$path] -and -not (Test-IncludedDocument $path)) {
+        if ($baseFiles[$path] -and -not $path.StartsWith($artworkPrefix, [StringComparison]::Ordinal) -and
+            -not (Test-IncludedDocument $path)) {
             $pending.Add(@{ path = $path; reason = 'tracked_path_outside_allowlist'; baseBlob = $baseFiles[$path] })
         }
     }
@@ -631,6 +706,7 @@ function Get-PlanDigest($ProjectTree, [string]$Anchor) {
         $snapshot.rememberedIncludes = $result.rememberedIncludes
     }
     if ($replaceRememberedIncludes) { $snapshot.previousRememberedIncludes = $previousRememberedIncludes }
+    if ($IncludeArtwork) { $snapshot.approvedArtwork = $result.approvedArtwork }
     $json = ConvertTo-Json -InputObject $snapshot -Depth 6 -Compress
     $digest = [Security.Cryptography.SHA256]::HashData($utf8.GetBytes($json))
     return [Convert]::ToHexString($digest).ToLowerInvariant()
@@ -687,6 +763,8 @@ $result = [ordered]@{
     pushedRevision = $null
     approval = $null
     rememberedIncludes = @()
+    artworkEnabled = [bool]$IncludeArtwork
+    approvedArtwork = @()
     changes = @()
     pending = @()
     excluded = [List[object]]::new()
@@ -720,6 +798,7 @@ try {
     Assert-PlainDirectory $workspacePath
     if ([Path]::GetFileName($workspacePath) -ine 'workspace') { throw 'Point -Workspace at the workspace directory.' }
     $documentationRoot = Join-Path $workspacePath 'documentation'
+    $artworkRoot = Join-Path $workspacePath 'artwork'
     $stateDirectory = Join-Path $workspacePath 'documentation-sync'
     $statePath = Join-Path $stateDirectory 'state.json'
     $branchRef = "refs/heads/$Branch"
@@ -804,7 +883,16 @@ try {
         }
         $remoteProject = Get-RemoteProject $tip
         $result.excluded.Clear()
-        $plan = Get-SyncPlan (Get-LocalDocuments) $remoteProject $tip
+        $localFiles = Get-LocalDocuments
+        $approvedArtwork = @{}
+        if ($IncludeArtwork) {
+            $approvedArtwork = Read-ArtworkApprovals
+            Add-LocalArtwork $localFiles $approvedArtwork
+            $result.approvedArtwork = @($approvedArtwork.Keys | Sort-Object -CaseSensitive | ForEach-Object {
+                [ordered]@{ path = $_; sha256 = $approvedArtwork[$_] }
+            })
+        }
+        $plan = Get-SyncPlan $localFiles $remoteProject $tip
         $result.changes = @($plan.changes | ForEach-Object {
             $previousBlob = $null
             if ($remoteProject.entries.ContainsKey($_.path)) { $previousBlob = $remoteProject.entries[$_.path].blob }

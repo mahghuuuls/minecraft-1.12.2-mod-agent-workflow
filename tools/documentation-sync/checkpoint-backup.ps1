@@ -47,12 +47,16 @@ function Read-BackupApproval([string]$Path) {
     # Existing owner defaults can spell the rollout approval with a lowercase initial.
     if ($value -notin 'Approved', 'Approved.', $savedRolloutApproval) { return $null }
 
+    $artwork = [regex]::Matches($body, '(?im)^- Artwork backup:[ \t]*(?<value>[^\r\n]*)\r?$')
+    if ($artwork.Count -gt 1) { throw 'Multiple artwork backup preferences in owner defaults.' }
+    $includeArtwork = $artwork.Count -eq 1 -and $artwork[0].Groups['value'].Value.Trim() -in 'Approved', 'Approved.'
+
     $destinationLines = [regex]::Matches($body, '(?im)^- Destination:[ \t]*(?<value>[^\r\n]+)\r?$')
     $pattern = '\Aprivate GitHub repository `(?<repository>[A-Za-z0-9-]+/[A-Za-z0-9_.-]+)`, repository ID `(?<id>[1-9][0-9]*)`, branch `(?<branch>[A-Za-z0-9._/-]+)`\.?\z'
     if ($destinationLines.Count -ne 1 -or $destinationLines[0].Groups['value'].Value.Trim() -cnotmatch $pattern) {
         throw 'Automatic sync approval requires one private repository name, numeric ID, and branch in owner defaults.'
     }
-    return @{ Repository = $Matches.repository; RepositoryId = [long]$Matches.id; Branch = $Matches.branch }
+    return @{ Repository = $Matches.repository; RepositoryId = [long]$Matches.id; Branch = $Matches.branch; IncludeArtwork = $includeArtwork }
 }
 
 function New-GitHubMetadataReader {
@@ -109,6 +113,7 @@ function Invoke-DocumentationBackup($Destination, [scriptblock]$Reader) {
         Branch = $Destination.Branch; ReadGitHubMetadata = $Reader
     }
     if ($ProjectId) { $arguments.ProjectId = $ProjectId }
+    if ($Destination.IncludeArtwork) { $arguments.IncludeArtwork = $true }
     $tool = Join-Path $PSScriptRoot 'documentation-sync.ps1'
     for ($attempt = 1; $attempt -le 3; $attempt++) {
         $preview = & $tool preview @arguments | ConvertFrom-Json -AsHashtable

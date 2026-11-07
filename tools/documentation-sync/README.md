@@ -1,6 +1,6 @@
 # Documentation Sync
 
-This tool backs up selected files from `workspace/documentation/` into a private GitHub repository or a disposable local bare Git repository. Each project has a permanent directory with its own identity manifest. The workspace files and approval ledger remain authoritative, including when a draft is backed up.
+This tool backs up selected documentation and separately approved artwork into a private GitHub repository or a disposable local bare Git repository. Each project has a permanent directory with its own identity manifest. The workspace files and approval ledger remain authoritative, including when a documentation draft is backed up.
 
 This pilot requires Windows, Git 2.29 or later, and PowerShell 7.4 or later. The document boundary is checked on Windows file handles. Local mode uses file transport to a bare repository. GitHub mode uses SSH to the verified repository on `github.com`.
 
@@ -28,6 +28,28 @@ The built-in allowlist covers standard planning and release documents, project s
 For a one-time extra Markdown, text, or CSV file, pass its exact documentation-relative path with `-IncludePath`. For recurring backups, preview with `-SetRememberedIncludes` and the complete list of approved extra paths. Review the preview's `rememberedIncludes` list and any planned file changes with the owner. Apply the approved receipt with the same arguments. Sync records the list in the local binding after verifying the receipt, even if no file changes or the upload is pending. Later automatic and manual runs use the remembered paths. Existing one-time extras require separate recurring approval. To remove entries, submit the remaining list, or pass `-SetRememberedIncludes @()` to clear it. Previously backed-up files outside the effective allowlist are reported as pending and remain in the remote.
 
 Hard exclusions cover owner defaults, common evidence and diagnostic paths, logs, screenshots, build outputs, temporary and conflict paths, and credential filenames. Before reading, the tool checks the opened handle for the expected path and a single filesystem link. It also excludes files over 2 MiB, invalid UTF-8, binary control characters, and recognized credential patterns. Credential detection is heuristic. Review custom documents and pending exclusions before authorizing them for any eventual shared destination.
+
+## Artwork Selection
+
+Artwork is off by default. The checkpoint wrapper enables it only when the owner defaults have both automatic documentation approval and `- Artwork backup: Approved.`. Manual runs can use `-IncludeArtwork` in both preview and sync with the owner's approval. Artwork shares the documentation binding, conflict checks, and guarded push. It goes under `<projectId>/.artwork/`.
+
+Create `workspace/artwork/backup-manifest.json` locally with `schemaVersion` set to `1` and a `files` array. Each entry has a `path` relative to `workspace/artwork/`, written with forward slashes, and the `sha256` of the exact approved bytes. Use `Get-FileHash -Algorithm SHA256` on the reviewed file. The tool accepts uppercase or lowercase hash digits.
+
+```json
+{
+  "schemaVersion": 1,
+  "files": [
+    {
+      "path": "pixelart/example/final/example.pixelart",
+      "sha256": "<64 hex digits from the approved file>"
+    }
+  ]
+}
+```
+
+Eligible final files are PNG, JPEG, WebP, and editable `.pixelart` files under a `final/` directory. Individually approved PNG, JPEG, and WebP images under a `references/` directory use the same manifest. Keep candidate, working, draft, and review directories local. The artwork file limit is 10 MiB per file and the manifest limit is 128 KiB. The tool checks image signatures, text and credential heuristics, and opened-file safety. Review the asset and its embedded metadata before approving the copy.
+
+Only listed paths are read. The local manifest stays in the workspace. A changed or missing listed file stays pending until resolved. To stop backing up a file, remove its entry. Remote artwork is retained and the tool accepts deletion requests only for documentation paths.
 
 ## Conflicts, Deletions, and Retries
 

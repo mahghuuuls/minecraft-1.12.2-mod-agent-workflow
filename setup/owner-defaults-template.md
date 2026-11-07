@@ -102,6 +102,9 @@ Use `Approved` in Automatic sync to authorize routine backups under `procedures/
 
 - Automatic sync: Disabled.
 - Destination: private GitHub repository `<owner>/<repo>`, repository ID `<id>`, branch `<branch>`.
+- Artwork backup: Disabled.
+
+Set Artwork backup to `Approved` separately to allow routine backup of artwork versions the owner approves and the workspace records under the [artwork backup procedure](../procedures/documentation-backup.md#optional-artwork-backup).
 
 ## Notes For Future Mods
 

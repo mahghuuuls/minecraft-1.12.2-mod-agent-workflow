@@ -7,6 +7,7 @@ $tool = Join-Path (Split-Path -Parent $PSScriptRoot) 'documentation-sync.ps1'
 $workflowRoot = [DirectoryInfo]::new($PSScriptRoot).Parent.Parent.Parent.FullName
 $git = (Get-Command git -CommandType Application | Select-Object -First 1).Source
 $utf8 = [Text.UTF8Encoding]::new($false)
+$png = [Convert]::FromBase64String('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aC1sAAAAASUVORK5CYII=')
 $tempParent = [Path]::TrimEndingDirectorySeparator([Path]::GetFullPath([Path]::GetTempPath()))
 $testRoot = Join-Path $tempParent ('documentation-sync-tests-' + [Guid]::NewGuid().ToString('N'))
 $testCount = 0
@@ -47,6 +48,21 @@ function Write-Document([string]$Workspace, [string]$Path, [string]$Content) {
     $file = Join-Path $Workspace "documentation/$Path"
     [void][Directory]::CreateDirectory([Path]::GetDirectoryName($file))
     [File]::WriteAllText($file, $Content, $utf8)
+}
+
+function Write-Artwork([string]$Workspace, [string]$Path, [byte[]]$Bytes) {
+    $file = Join-Path $Workspace "artwork/$Path"
+    [void][Directory]::CreateDirectory([Path]::GetDirectoryName($file))
+    [File]::WriteAllBytes($file, $Bytes)
+    return $file
+}
+
+function Set-ArtworkManifest([string]$Workspace, [string[]]$Paths) {
+    $files = @($Paths | ForEach-Object {
+        @{ path = $_; sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $Workspace "artwork/$_")).Hash }
+    })
+    $manifest = ConvertTo-Json -InputObject @{ schemaVersion = 1; files = $files } -Depth 4
+    [File]::WriteAllText((Join-Path $Workspace 'artwork/backup-manifest.json'), $manifest, $utf8)
 }
 
 function Get-State([string]$Workspace) {
@@ -778,6 +794,90 @@ exit 0
         Assert-Equal $rewound.lastVerifiedRevision $blocked.pushedRevision 'Rewound destination changed the saved base.'
     }
 
+    Invoke-Test 'opted-in artwork uses exact approved bytes and preserves the existing documentation binding' {
+        $workspace = New-Workspace 'approved artwork'
+        $remote = New-Destination 'approved artwork'
+        $icon = 'icon/final/mod-icon.png'
+        $source = 'pixelart/gem/final/gem.pixelart'
+        $reference = 'icon/references/palette.png'
+        $iconFile = Write-Artwork $workspace $icon $png
+        [void](Write-Artwork $workspace $source ($utf8.GetBytes('@preset item')))
+        $referenceFile = Write-Artwork $workspace $reference $png
+        [void](Write-Artwork $workspace 'icon/references/private.png' $png)
+        [void](Write-Artwork $workspace 'icon/candidates/draft.png' $png)
+        [void](Write-Artwork $workspace 'icon/working/working.png' $png)
+        [void](Write-Artwork $workspace 'icon/final/unapproved.png' $png)
+        Set-ArtworkManifest $workspace @($icon, $source, $reference)
+        Write-Document $workspace 'project-status.md' 'Document remains authoritative.'
+        Write-Document $workspace 'artwork/notes.md' 'Existing custom documentation.'
+        [void](Invoke-Sync $workspace $remote @{ ProjectId = 'gallery'; IncludePath = @('artwork/notes.md') })
+        $options = @{ IncludeArtwork = $true; IncludePath = @('artwork/notes.md') }
+        Assert-Equal (Get-RemotePaths $remote).Count 3 'Documentation approval backed up artwork.'
+        $applied = Invoke-Sync $workspace $remote $options
+        Assert-Equal $applied.approvedArtwork.Count 3 'Artwork preview omitted an approved file.'
+        Assert-Equal (Get-RemotePaths $remote).Count 6 'An unapproved file or the manifest reached the backup.'
+        Assert-Equal (Read-Remote $remote 'gallery/artwork/notes.md') 'Existing custom documentation.' 'Artwork collided with an existing documentation path.'
+        foreach ($item in $icon, $source, $reference) {
+            $expected = Invoke-FixtureGit @('hash-object', '--no-filters', '--', (Join-Path $workspace "artwork/$item"))
+            $backedUp = Invoke-FixtureGit @("--git-dir=$remote", 'rev-parse', "main:gallery/.artwork/$item")
+            Assert-Equal $backedUp $expected "Backup altered bytes for $item."
+        }
+
+        $preview = Invoke-Sync $workspace $remote ($options + @{ Action = 'preview' })
+        $altered = [byte[]]($png + @(1))
+        [File]::WriteAllBytes($iconFile, $altered)
+        $mismatch = Invoke-Sync $workspace $remote $options -ExpectExit 2
+        Assert-Pending $mismatch ".artwork/$icon" 'artwork_version_not_approved'
+        Assert-Equal (Get-Tip $remote) $applied.pushedRevision 'Unapproved bytes changed the backup.'
+        Set-ArtworkManifest $workspace @($icon, $source, $reference)
+        $stale = Invoke-Sync $workspace $remote ($options + @{ ApprovedPlan = $preview.approval }) -ExpectExit 2
+        Assert-True ($stale.error -like '*stale*') 'An old preview approved an altered image.'
+        [File]::Delete($referenceFile)
+        $changed = Invoke-Sync $workspace $remote $options -ExpectExit 2
+        Assert-Pending $changed ".artwork/$reference" 'approved_artwork_missing'
+        Assert-True ($changed.pushedRevision -ne $applied.pushedRevision) 'A missing reference prevented the approved update.'
+        Set-ArtworkManifest $workspace @($icon, $source)
+        $revoked = Invoke-Sync $workspace $remote $options
+        Assert-Equal $revoked.status 'unchanged' 'Removing approval left an artwork path pending.'
+        $paused = Invoke-Sync $workspace $remote @{ IncludePath = @('artwork/notes.md') }
+        Assert-Equal $paused.status 'unchanged' 'Pausing artwork disturbed normal backup.'
+        Assert-True ("gallery/.artwork/$reference" -in (Get-RemotePaths $remote)) 'The backup removed an existing reference.'
+    }
+
+    Invoke-Test 'artwork rejects draft paths, duplicate approvals, disguised files, and filesystem links' {
+        $workspace = New-Workspace 'blocked artwork'
+        $remote = New-Destination 'blocked artwork'
+        $options = @{ ProjectId = 'gallery'; IncludeArtwork = $true }
+        Write-Document $workspace 'project-status.md' 'Eligible documentation.'
+        $draft = 'icon/final/drafts/unfinished.png'
+        [void](Write-Artwork $workspace $draft $png)
+        Set-ArtworkManifest $workspace @($draft)
+        $invalid = Invoke-Sync $workspace $remote ($options + @{ Action = 'preview' }) -ExpectExit 2
+        Assert-True ($invalid.error -like '*Invalid path*') 'A draft could be approved for backup.'
+        Assert-EmptyRemote $remote
+
+        $bad = 'icon/final/renamed.png'
+        [void](Write-Artwork $workspace $bad ($utf8.GetBytes('Not an image.')))
+        Set-ArtworkManifest $workspace @($bad, $bad.ToUpperInvariant())
+        $duplicate = Invoke-Sync $workspace $remote ($options + @{ Action = 'preview' }) -ExpectExit 2
+        Assert-True ($duplicate.error -like '*Duplicate path*') 'Case variants could bypass manifest identity.'
+
+        $linked = 'icon/references/linked.png'
+        $linkedFile = Write-Artwork $workspace $linked $png
+        $outside = Join-Path $testRoot 'outside-artwork.png'
+        [File]::WriteAllBytes($outside, $png)
+        [File]::Delete($linkedFile)
+        New-Item -ItemType HardLink -Path $linkedFile -Target $outside | Out-Null
+        $oversize = 'icon/final/large.png'
+        [void](Write-Artwork $workspace $oversize ([byte[]]::new(10MB + 1)))
+        Set-ArtworkManifest $workspace @($bad, $linked, $oversize)
+        $blocked = Invoke-Sync $workspace $remote $options -ExpectExit 2
+        Assert-Pending $blocked ".artwork/$bad" 'unexpected_artwork_format'
+        Assert-Pending $blocked ".artwork/$linked" 'hard_link_or_unverified_link_count'
+        Assert-Pending $blocked ".artwork/$oversize" 'document_too_large'
+        Assert-Equal (Get-RemotePaths $remote).Count 2 'Blocked artwork changed the backup.'
+    }
+
     Invoke-Test 'checkpoint approval backs up standard and remembered documents and leaves deletions pending' {
         $workspace = New-Workspace 'checkpoint workspace'
         $remote = New-Destination 'checkpoint destination'
@@ -787,10 +887,11 @@ exit 0
         [File]::Copy((Join-Path (Split-Path -Parent $tool) 'checkpoint-backup.ps1'), $wrapper)
         $bridge = Join-Path $fixtureTools 'documentation-sync.ps1'
         [File]::WriteAllText($bridge, @'
-param($Action, $Workspace, $Repository, $RepositoryId, $Branch, $ReadGitHubMetadata, $ProjectId, $ApprovedPlan)
+param($Action, $Workspace, $Repository, $RepositoryId, $Branch, $ReadGitHubMetadata, $ProjectId, $ApprovedPlan, $IncludeArtwork)
 if ($Repository -cne 'fixture-owner/private-docs' -or $RepositoryId -ne 42 -or $Branch -cne 'main') { throw 'Wrong fixture destination.' }
 $arguments = @{ Workspace = $Workspace; Destination = $env:CHECKPOINT_FIXTURE_REPO }
 if ($ProjectId) { $arguments.ProjectId = $ProjectId }
+if ($IncludeArtwork) { $arguments.IncludeArtwork = $true }
 if ($Action -eq 'sync') {
     if ($env:CHECKPOINT_FIXTURE_RACE -eq 'once') {
         $env:CHECKPOINT_FIXTURE_RACE = ''
@@ -816,7 +917,7 @@ exit $LASTEXITCODE
 - Automatic sync: Disabled.
 - Destination: private GitHub repository `fixture-owner/private-docs`, repository ID `42`, branch `main`.
 '@
-            [File]::WriteAllText($defaults, $configuration, $utf8)
+            [File]::WriteAllText($defaults, ($configuration + "`n- Artwork backup: Approved.`n"), $utf8)
             [File]::WriteAllText((Join-Path $workspace 'project.properties'), 'documentation_project_id=checkpoint-fixture', $utf8)
             Write-Document $workspace 'project-status.md' 'Awaiting Approval'
             Write-Document $workspace 'requirements.md' 'Draft requirements.'
@@ -827,6 +928,9 @@ exit $LASTEXITCODE
             $extraPath = 'notes/design decisions.md'
             Write-Document $workspace $extraPath 'Approved custom draft.'
             Write-Document $workspace 'notes/other.md' 'Unapproved sibling.'
+            $icon = 'icon/final/icon.png'
+            [void](Write-Artwork $workspace $icon $png)
+            Set-ArtworkManifest $workspace @($icon)
             $arguments = @{ Workspace = $workspace; OwnerDefaults = $defaults; ReadGitHubMetadata = { throw 'Offline fixture.' } }
             $disabled = & $wrapper @arguments -Trigger checkpoint | ConvertFrom-Json -AsHashtable
             Assert-Equal $disabled.status 'disabled' 'Automatic backup should require opt-in.'
@@ -845,6 +949,13 @@ exit $LASTEXITCODE
             }
             Assert-True ("checkpoint-fixture/$extraPath" -notin (Get-RemotePaths $remote)) 'An unapproved custom path was uploaded.'
             Assert-True ('checkpoint-fixture/revisions/archive/private-draft.md' -notin (Get-RemotePaths $remote)) 'The revisions rule included nested files.'
+            Assert-True ("checkpoint-fixture/.artwork/$icon" -notin (Get-RemotePaths $remote)) 'Artwork was backed up without its own opt-in.'
+
+            $withArtwork = $configuration.Replace('Disabled.', $savedApproval) + "`n- Artwork backup: Approved.`n"
+            [File]::WriteAllText($defaults, $withArtwork, $utf8)
+            $optedIn = & $wrapper @arguments -Trigger checkpoint | ConvertFrom-Json -AsHashtable
+            Assert-Equal $optedIn.status 'synced' "Artwork opt-in did not sync. $($optedIn.error)"
+            Assert-True ("checkpoint-fixture/.artwork/$icon" -in (Get-RemotePaths $remote)) 'Wrapper omitted the approved artwork.'
 
             [void](Invoke-Sync $workspace $remote @{ SetRememberedIncludes = @($extraPath) })
             Write-Document $workspace $extraPath 'Updated custom draft.'

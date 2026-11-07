@@ -145,6 +145,8 @@ This default applies only to the active mod repository. Commits and pushes to th
 
 An explicit saved automatic-sync approval in owner defaults authorizes routine backup commits and normal pushes of eligible documentation, including drafts, only within the active project's assigned directory in the pinned private repository. Apply current owner restrictions and use `procedures/documentation-backup.md` for the scope and tool. Treat destination changes, identity conflicts, and work outside the routine backup scope as separate decisions. This authorization is independent of source Git and publication permissions.
 
+Artwork backups require a separate saved opt-in and owner approval of the exact artwork versions under `procedures/documentation-backup.md#optional-artwork-backup`. Apply the same destination and project boundaries.
+
 ### Actions Requiring Separate Authorization
 
 Explicit authorization is required for each of these actions:
