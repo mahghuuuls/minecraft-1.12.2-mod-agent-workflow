@@ -20,6 +20,8 @@ Owner defaults reduce repeated setup questions. They are workspace-specific and 
 
 Owner defaults may be supplied either as `workspace/documentation/owner-defaults.md` or directly in chat/attachments. Chat-provided owner defaults are valid setup input. When useful, persist them to `workspace/documentation/owner-defaults.md` as an ignored runtime artifact so later agent contexts can reuse them.
 
+For an owner with a pinned private documentation destination, refresh [Shared Owner Defaults](../procedures/shared-owner-defaults.md) before planning a new Change Cycle or whenever the owner asks. Keep local settings and permissions in the local defaults.
+
 ## Project Setup
 
 Before the first workflow, execute:

@@ -35,6 +35,7 @@ If the repository has no approved baseline, use Existing Mod Assessment first.
 
 Act as a change-impact coordinator before acting as an implementer.
 
+- Refresh [Shared Owner Defaults](../procedures/shared-owner-defaults.md) for an owner with a configured private documentation destination before planning this cycle.
 - Verify the baseline version and source revision before planning the change.
 - Treat a reported defect as a claim to confirm, not as an established fact, before proposing any route.
 - Determine whether the baseline records a reported publication, and apply the branching recommendation in `guidelines/collaboration-guidelines.md` before the cycle's first commit.

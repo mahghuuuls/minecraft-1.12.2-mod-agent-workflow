@@ -83,6 +83,8 @@ Record the preference at the scope the owner stated, not the scope of the moment
 
 Do not promote a durable owner preference into a committed guideline, stage, or workflow file. Those apply to every user of this repository. Personal preference belongs in `owner-defaults.md`.
 
+When the owner wants a portable preference shared across mods, use [Shared Owner Defaults](../procedures/shared-owner-defaults.md) to propose a root-level edit. Publish only the exact edit the owner approves. Local settings and permissions stay in the local defaults.
+
 ## Workflow Feedback
 
 When the project owner corrects the agent, identifies friction, rejects a default, asks why the process is doing something, or points out a better way to run future mods, consider whether the interaction should be recorded in:

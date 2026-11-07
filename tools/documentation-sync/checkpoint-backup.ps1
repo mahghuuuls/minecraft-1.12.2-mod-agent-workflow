@@ -59,35 +59,6 @@ function Read-BackupApproval([string]$Path) {
     return @{ Repository = $Matches.repository; RepositoryId = [long]$Matches.id; Branch = $Matches.branch; IncludeArtwork = $includeArtwork }
 }
 
-function New-GitHubMetadataReader {
-    $gh = Get-Command gh -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty Source
-    if (-not $gh -and $IsWindows) {
-        $installed = Join-Path ([Environment]::GetFolderPath('ProgramFiles')) 'GitHub CLI/gh.exe'
-        if ([File]::Exists($installed)) { $gh = $installed }
-    }
-    if (-not $gh) { throw 'Authenticated GitHub metadata is unavailable. Use an authenticated GitHub CLI or supply a live metadata reader.' }
-    $credential = @(& $gh auth token --hostname github.com 2>$null)
-    if ($LASTEXITCODE -ne 0 -or $credential.Count -ne 1 -or $credential[0] -notmatch '\A[A-Za-z0-9_]+\z') {
-        throw 'GitHub CLI authentication is unavailable for github.com.'
-    }
-    $token = ConvertTo-SecureString -String $credential[0] -AsPlainText -Force
-    return {
-        param([string]$Path)
-        if ($Path -cnotmatch '\A/repos/[A-Za-z0-9-]+/[A-Za-z0-9_.-]+(?:/(?:branches|git/ref/heads)/[A-Za-z0-9_.%/-]+)?\z') {
-            throw 'Unexpected GitHub metadata route.'
-        }
-        $request = @{
-            Uri = "https://api.github.com$Path"
-            Method = 'Get'; Authentication = 'Bearer'; Token = $token
-            Headers = @{ Accept = 'application/vnd.github+json' }
-            MaximumRedirection = 0; SkipHttpErrorCheck = $true
-            ConnectionTimeoutSeconds = 10; OperationTimeoutSeconds = 15
-        }
-        $response = Invoke-WebRequest @request -Verbose:$false -Debug:$false
-        return @{ statusCode = [int]$response.StatusCode; body = ($response.Content | ConvertFrom-Json -AsHashtable -NoEnumerate) }
-    }.GetNewClosure()
-}
-
 function Save-CheckpointResult($Value) {
     Assert-PlainDirectory $workspacePath
     if ([DirectoryInfo]::new($workspacePath).GetFileSystemInfos('documentation-sync').Count -eq 0) {
@@ -148,7 +119,10 @@ try {
             }
             if (-not $ProjectId) { throw 'Set the stable documentation project ID before the first checkpoint backup.' }
         }
-        if (-not $ReadGitHubMetadata) { $ReadGitHubMetadata = New-GitHubMetadataReader }
+        if (-not $ReadGitHubMetadata) {
+            Import-Module (Join-Path $PSScriptRoot 'github-preflight.psm1')
+            $ReadGitHubMetadata = New-GitHubMetadataReader
+        }
         $result = Invoke-DocumentationBackup $destination $ReadGitHubMetadata
         if ($result.error -or $result.cleanupWarning -or $result.status -eq 'preview') { $result.status = 'pending' }
     }

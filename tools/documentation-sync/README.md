@@ -82,6 +82,10 @@ pwsh -NoProfile -File tools/documentation-sync/checkpoint-backup.ps1 -Workspace 
 
 The wrapper reads the pinned destination directly from owner defaults and uses the same preview, receipt, and guarded push as the manual tool. It accepts the saved rollout approval wording or `Approved` and backs up eligible additions and updates from the built-in allowlist and the binding's remembered paths. It uses the existing GitHub CLI login or a supplied live metadata reader. On Windows, it also checks the standard GitHub CLI installation under Program Files if `gh` is missing from `PATH`. It never sets up credentials during a backup. An unresolved backup returns `pending` and records its outcome under `workspace/documentation-sync/`.
 
+## Shared Owner Defaults
+
+[Shared Owner Defaults](../../procedures/shared-owner-defaults.md) uses the separate `-SharedOwnerDefaults` mode to read or publish the root `owner-defaults.md`. It verifies the same pinned private destination. The GitHub CLI reader is available by default, with `-ReadGitHubMetadata` available for a trusted caller-provided reader. The shared mode takes an exact candidate and reviewed receipt for writes and cannot be combined with project backup options. Portable fields are validated on both read and write.
+
 ## Tests
 
 ```powershell

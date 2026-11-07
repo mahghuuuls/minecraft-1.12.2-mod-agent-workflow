@@ -2,6 +2,8 @@
 
 Use this procedure only for the active mod workspace. The local `workspace/documentation/` files and approval ledger remain authoritative. A backup can include drafts and preserves their approval status.
 
+The root preference file follows the separate [Shared Owner Defaults procedure](shared-owner-defaults.md).
+
 ## Setup
 
 - Read the owner-supplied defaults file or `workspace/documentation/owner-defaults.md`. Automatic backups require an explicit saved approval in its Shared Documentation Backup section and a pinned private GitHub repository name, numeric ID, and branch. Read the owner's current restrictions before invoking the tool. Keep manual operation when approval is absent or the owner has paused automatic backups.

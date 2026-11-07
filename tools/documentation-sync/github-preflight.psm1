@@ -2,6 +2,35 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+function New-GitHubMetadataReader {
+    $gh = Get-Command gh -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty Source
+    if (-not $gh -and $IsWindows) {
+        $installed = Join-Path ([Environment]::GetFolderPath('ProgramFiles')) 'GitHub CLI/gh.exe'
+        if ([IO.File]::Exists($installed)) { $gh = $installed }
+    }
+    if (-not $gh) { throw 'Authenticated GitHub metadata is unavailable. Use an authenticated GitHub CLI or supply a live metadata reader.' }
+    $credential = @(& $gh auth token --hostname github.com 2>$null)
+    if ($LASTEXITCODE -ne 0 -or $credential.Count -ne 1 -or $credential[0] -notmatch '\A[A-Za-z0-9_]+\z') {
+        throw 'GitHub CLI authentication is unavailable for github.com.'
+    }
+    $token = ConvertTo-SecureString -String $credential[0] -AsPlainText -Force
+    return {
+        param([string]$Path)
+        if ($Path -cnotmatch '\A/repos/[A-Za-z0-9-]+/[A-Za-z0-9_.-]+(?:/(?:branches|git/ref/heads)/[A-Za-z0-9_.%/-]+)?\z') {
+            throw 'Unexpected GitHub metadata route.'
+        }
+        $request = @{
+            Uri = "https://api.github.com$Path"
+            Method = 'Get'; Authentication = 'Bearer'; Token = $token
+            Headers = @{ Accept = 'application/vnd.github+json' }
+            MaximumRedirection = 0; SkipHttpErrorCheck = $true
+            ConnectionTimeoutSeconds = 10; OperationTimeoutSeconds = 15
+        }
+        $response = Invoke-WebRequest @request -Verbose:$false -Debug:$false
+        return @{ statusCode = [int]$response.StatusCode; body = ($response.Content | ConvertFrom-Json -AsHashtable -NoEnumerate) }
+    }.GetNewClosure()
+}
+
 function Get-GitHubMetadata([scriptblock]$ReadMetadata, [string]$Path, [int[]]$ExpectedStatus = @(200)) {
     # The caller supplies an authenticated GET provider. It must reject redirects
     # and return the HTTP status and parsed JSON without logging credentials.
@@ -26,7 +55,8 @@ function Test-GitHubPilotDestination {
         [Parameter(Mandatory)] [string]$Repository,
         [Parameter(Mandatory)] [long]$RepositoryId,
         [Parameter(Mandatory)] [string]$Branch,
-        [Parameter(Mandatory)] [scriptblock]$ReadMetadata
+        [Parameter(Mandatory)] [scriptblock]$ReadMetadata,
+        [switch]$ReadOnly
     )
 
     try {
@@ -50,9 +80,10 @@ function Test-GitHubPilotDestination {
             throw 'repository_not_private'
         }
         $permissions = $repositoryInfo['permissions']
-        if ($permissions -isnot [System.Collections.IDictionary] -or $permissions['push'] -isnot [bool] -or
-            -not $permissions['push'] -or $repositoryInfo['archived'] -isnot [bool] -or $repositoryInfo['archived'] -or
-            $repositoryInfo['disabled'] -isnot [bool] -or $repositoryInfo['disabled']) {
+        if ($repositoryInfo['disabled'] -isnot [bool] -or $repositoryInfo['disabled'] -or
+            (-not $ReadOnly -and ($permissions -isnot [System.Collections.IDictionary] -or
+                $permissions['push'] -isnot [bool] -or -not $permissions['push'] -or
+                $repositoryInfo['archived'] -isnot [bool] -or $repositoryInfo['archived']))) {
             throw 'write_access_unverified'
         }
 
@@ -96,4 +127,4 @@ function Test-GitHubPilotDestination {
     }
 }
 
-Export-ModuleMember -Function Test-GitHubPilotDestination
+Export-ModuleMember -Function Test-GitHubPilotDestination, New-GitHubMetadataReader

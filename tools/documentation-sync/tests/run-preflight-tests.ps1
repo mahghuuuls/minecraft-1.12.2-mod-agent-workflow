@@ -39,12 +39,12 @@ function New-MetadataFixture([string]$Repository, [long]$Id, [string]$Branch) {
     }
 }
 
-function Invoke-Preflight($Fixture) {
+function Invoke-Preflight($Fixture, [switch]$ReadOnly) {
     $options = @{
         Repository = $Fixture.Repository; RepositoryId = $Fixture.RepositoryId
         Branch = $Fixture.Branch; ReadMetadata = $Fixture.ReadMetadata
     }
-    return Test-GitHubPilotDestination @options
+    return Test-GitHubPilotDestination @options -ReadOnly:$ReadOnly
 }
 
 $count = 0
@@ -60,6 +60,16 @@ foreach ($repository in 'first-owner/docs', 'second-owner/team-notes') {
     $count++
     Write-Host "PASS independent configured destination $repository"
 }
+
+$fixture = New-MetadataFixture 'example-owner/docs' 789 'main'
+$fixture.repo.permissions = @{ push = $false }
+$readOnly = Invoke-Preflight $fixture -ReadOnly
+Assert-Equal $readOnly.status 'verified' 'Reading shared preferences required write access.'
+Assert-Equal (Invoke-Preflight $fixture).reason 'write_access_unverified' 'Write preflight accepted a read-only credential.'
+$fixture.repo.private = $false
+Assert-Equal (Invoke-Preflight $fixture -ReadOnly).reason 'repository_not_private' 'Reading shared preferences accepted a public repository.'
+$count++
+Write-Host 'PASS private shared-defaults read with read-only access'
 
 $fixture = New-MetadataFixture 'example-owner/docs' 789 'main'
 $fixture.responses[$fixture.paths[1]].statusCode = 404

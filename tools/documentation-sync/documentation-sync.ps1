@@ -5,14 +5,14 @@ using namespace System.Collections.Generic
 [CmdletBinding(DefaultParameterSetName = 'Local')]
 param(
     [Parameter(Position = 0)]
-    [ValidateSet('preview', 'sync')]
+    [ValidateSet('read', 'preview', 'sync')]
     [string]$Action = 'preview',
 
     [Parameter(Mandatory)] [string]$Workspace,
     [Parameter(Mandatory, ParameterSetName = 'Local')] [string]$Destination,
     [Parameter(Mandatory, ParameterSetName = 'GitHub')] [string]$Repository,
     [Parameter(Mandatory, ParameterSetName = 'GitHub')] [long]$RepositoryId,
-    [Parameter(Mandatory, ParameterSetName = 'GitHub')] [scriptblock]$ReadGitHubMetadata,
+    [Parameter(ParameterSetName = 'GitHub')] [scriptblock]$ReadGitHubMetadata,
     [string]$Branch = 'main',
     [string]$ProjectId,
     [string]$AdoptBindingId,
@@ -21,7 +21,9 @@ param(
     [switch]$IncludeArtwork,
     [string[]]$DeletePath = @(),
     [string]$ApproveBulkDeletionAt,
-    [string]$ApprovedPlan
+    [string]$ApprovedPlan,
+    [switch]$SharedOwnerDefaults,
+    [string]$OwnerDefaultsCandidate
 )
 
 Set-StrictMode -Version Latest
@@ -449,7 +451,7 @@ function Save-SyncState {
 
 function Get-RemoteTip {
     if ($githubPilot) {
-        $preflight = Test-GitHubPilotDestination -Repository $Repository -RepositoryId $RepositoryId -Branch $Branch -ReadMetadata $ReadGitHubMetadata
+        $preflight = Test-GitHubPilotDestination -Repository $Repository -RepositoryId $RepositoryId -Branch $Branch -ReadMetadata $ReadGitHubMetadata -ReadOnly:($Action -eq 'read')
         if ($preflight.status -cne 'verified') { throw "GitHub preflight is pending ($($preflight.reason))." }
         if ($preflight.gitUri -cne $destinationUri -or $preflight.branchRef -cne $branchRef) {
             throw 'GitHub preflight returned an unexpected destination.'
@@ -712,7 +714,21 @@ function Get-PlanDigest($ProjectTree, [string]$Anchor) {
     return [Convert]::ToHexString($digest).ToLowerInvariant()
 }
 
-function New-BackupCommit([hashtable]$Plan, [string]$Tip) {
+function Initialize-PushGuard {
+    $hooks = Join-Path $scratch 'hooks'
+    [void][Directory]::CreateDirectory($hooks)
+    $hook = [File]::ReadAllText((Join-Path $PSScriptRoot 'pre-push'), $utf8).Replace("`r`n", "`n")
+    [File]::WriteAllText((Join-Path $hooks 'pre-push'), $hook, $utf8)
+}
+
+function Invoke-GuardedPush([string]$Commit, [string]$Tip) {
+    $pushParent = $Tip
+    if (-not $pushParent) { $pushParent = $zeroObjectId }
+    $arguments = @('push', '--porcelain', '--no-follow-tags', '--', $destinationUri, "${Commit}:${branchRef}")
+    return Invoke-Git $arguments -PushGuard @{ commit = $Commit; parent = $pushParent } -AllowFailure
+}
+
+function New-BackupCommit([hashtable]$Plan, [string]$Tip, [string]$PathPrefix, [string]$Message) {
     # The temporary index starts at the fetched tree. No remote file is checked out.
     $previousTree = $Tip
     if ($Tip) { [void](Invoke-Git @('read-tree', $Tip)) }
@@ -723,7 +739,7 @@ function New-BackupCommit([hashtable]$Plan, [string]$Tip) {
     $indexRecords = [List[string]]::new()
     $expected = [HashSet[string]]::new([StringComparer]::Ordinal)
     foreach ($change in $Plan.changes) {
-        $remotePath = "$($state.projectId)/$($change.path)"
+        $remotePath = "$PathPrefix$($change.path)"
         if ($change.action -eq 'delete') {
             $indexRecords.Add("0 $zeroObjectId`t$remotePath`0")
             [void]$expected.Add("D`t$remotePath")
@@ -745,7 +761,7 @@ function New-BackupCommit([hashtable]$Plan, [string]$Tip) {
             throw 'The backup commit differs from the planned paths.'
         }
     }
-    $commitArguments = @('commit-tree', $tree, '-m', "Back up documentation for $($state.projectId)")
+    $commitArguments = @('commit-tree', $tree, '-m', $Message)
     if ($Tip) { $commitArguments += '-p', $Tip }
     return (Invoke-Git $commitArguments).Output.Trim()
 }
@@ -781,6 +797,19 @@ $legacyApproval = $false
 $replaceRememberedIncludes = $PSBoundParameters.ContainsKey('SetRememberedIncludes')
 try {
     if (-not $IsWindows) { throw 'The local pilot requires Windows for opened-file identity checks.' }
+    if ($SharedOwnerDefaults) {
+        if ($ProjectId -or $AdoptBindingId -or $IncludePath.Count -or $replaceRememberedIncludes -or
+            $IncludeArtwork -or $DeletePath.Count -or $ApproveBulkDeletionAt) {
+            throw 'Shared owner defaults use a separate operation from project backup options.'
+        }
+        if ($Action -eq 'read' -and ($OwnerDefaultsCandidate -or $ApprovedPlan)) {
+            throw 'Reading shared owner defaults takes no candidate or approval receipt.'
+        }
+        if ($Action -ne 'read' -and -not $OwnerDefaultsCandidate) { throw 'Provide the proposed shared owner-defaults file.' }
+    }
+    elseif ($Action -eq 'read' -or $OwnerDefaultsCandidate) {
+        throw 'Use -SharedOwnerDefaults to read or propose shared owner defaults.'
+    }
     $workspacePath = Resolve-LocalPath $Workspace
     if ($githubPilot) {
         $destinationKey = "github:$RepositoryId/$($Repository.ToLowerInvariant())"
@@ -788,6 +817,7 @@ try {
         $result.destination = "https://github.com/$Repository"
         $result.repositoryId = $RepositoryId
         Import-Module (Join-Path $PSScriptRoot 'github-preflight.psm1')
+        if (-not $ReadGitHubMetadata) { $ReadGitHubMetadata = New-GitHubMetadataReader }
     }
     else {
         $destinationPath = Resolve-LocalPath $Destination
@@ -802,47 +832,49 @@ try {
     $stateDirectory = Join-Path $workspacePath 'documentation-sync'
     $statePath = Join-Path $stateDirectory 'state.json'
     $branchRef = "refs/heads/$Branch"
-    if ($AdoptBindingId -and $AdoptBindingId -cnotmatch $bindingIdPattern) { throw 'Invalid adoption binding ID.' }
-    if ($ApproveBulkDeletionAt -and ($ApproveBulkDeletionAt -cnotmatch $objectIdPattern -or $DeletePath.Count -eq 0)) {
-        throw 'Bulk deletion approval requires the exact remote revision and named deletion paths.'
-    }
-    if ($ApprovedPlan) {
-        if ($Action -ne 'sync' -or $ApprovedPlan -cnotmatch '\A(?<binding>[a-f0-9]{32})\.(?:(?<anchor>unborn|[a-f0-9]{40}|[a-f0-9]{64})\.)?[a-f0-9]{64}\z') {
-            throw 'Use the approval receipt from a preview with the sync command.'
+    if (-not $SharedOwnerDefaults) {
+        if ($AdoptBindingId -and $AdoptBindingId -cnotmatch $bindingIdPattern) { throw 'Invalid adoption binding ID.' }
+        if ($ApproveBulkDeletionAt -and ($ApproveBulkDeletionAt -cnotmatch $objectIdPattern -or $DeletePath.Count -eq 0)) {
+            throw 'Bulk deletion approval requires the exact remote revision and named deletion paths.'
         }
-        $approvalBinding = $Matches.binding
-        $approvalAnchor = $Matches['anchor']
-        $legacyApproval = -not $approvalAnchor
-    }
+        if ($ApprovedPlan) {
+            if ($Action -ne 'sync' -or $ApprovedPlan -cnotmatch '\A(?<binding>[a-f0-9]{32})\.(?:(?<anchor>unborn|[a-f0-9]{40}|[a-f0-9]{64})\.)?[a-f0-9]{64}\z') {
+                throw 'Use the approval receipt from a preview with the sync command.'
+            }
+            $approvalBinding = $Matches.binding
+            $approvalAnchor = $Matches['anchor']
+            $legacyApproval = -not $approvalAnchor
+        }
 
-    if ($Action -eq 'sync') {
-        if ([DirectoryInfo]::new($workspacePath).GetFileSystemInfos('documentation-sync').Count -gt 0) {
+        if ($Action -eq 'sync') {
+            if ([DirectoryInfo]::new($workspacePath).GetFileSystemInfos('documentation-sync').Count -gt 0) {
+                Assert-PlainDirectory $stateDirectory
+            }
+            [void][Directory]::CreateDirectory($stateDirectory)
             Assert-PlainDirectory $stateDirectory
+            $lockPath = Join-Path $stateDirectory 'sync.lock'
+            Assert-FileOrMissing $lockPath
+            $lock = [File]::Open($lockPath, [FileMode]::OpenOrCreate, [FileAccess]::ReadWrite, [FileShare]::None)
         }
-        [void][Directory]::CreateDirectory($stateDirectory)
-        Assert-PlainDirectory $stateDirectory
-        $lockPath = Join-Path $stateDirectory 'sync.lock'
-        Assert-FileOrMissing $lockPath
-        $lock = [File]::Open($lockPath, [FileMode]::OpenOrCreate, [FileAccess]::ReadWrite, [FileShare]::None)
+        $state = Read-SyncState
+        $existingState = [File]::Exists($statePath)
+        $previousRememberedIncludes = $state.rememberedIncludes
+        $result.rememberedIncludes = $previousRememberedIncludes
+        if ($replaceRememberedIncludes) {
+            $remembered = Get-ValidatedIncludes $SetRememberedIncludes
+            $result.rememberedIncludes = @($remembered | Sort-Object -CaseSensitive)
+        }
+        $includePaths = Get-ValidatedIncludes ($result.rememberedIncludes + $IncludePath)
+        foreach ($path in $DeletePath) {
+            if (-not (Test-IncludedDocument $path)) { throw 'A deletion must name an included document by its relative path.' }
+        }
+        if ($state.projectId -cnotmatch '\A[a-z0-9][a-z0-9_-]{0,62}\z' -or
+            -not (Test-SafeRelativePath $state.projectId) -or (Test-CredentialText $state.projectId)) {
+            throw 'The project ID must be a portable lowercase directory name of at most 63 characters.'
+        }
+        $result.projectId = $state.projectId
+        $canSaveState = $Action -eq 'sync' -and $existingState
     }
-    $state = Read-SyncState
-    $existingState = [File]::Exists($statePath)
-    $previousRememberedIncludes = $state.rememberedIncludes
-    $result.rememberedIncludes = $previousRememberedIncludes
-    if ($replaceRememberedIncludes) {
-        $remembered = Get-ValidatedIncludes $SetRememberedIncludes
-        $result.rememberedIncludes = @($remembered | Sort-Object -CaseSensitive)
-    }
-    $includePaths = Get-ValidatedIncludes ($result.rememberedIncludes + $IncludePath)
-    foreach ($path in $DeletePath) {
-        if (-not (Test-IncludedDocument $path)) { throw 'A deletion must name an included document by its relative path.' }
-    }
-    if ($state.projectId -cnotmatch '\A[a-z0-9][a-z0-9_-]{0,62}\z' -or
-        -not (Test-SafeRelativePath $state.projectId) -or (Test-CredentialText $state.projectId)) {
-        throw 'The project ID must be a portable lowercase directory name of at most 63 characters.'
-    }
-    $result.projectId = $state.projectId
-    $canSaveState = $Action -eq 'sync' -and $existingState
 
     if (-not $githubPilot) {
         Assert-PlainDirectory $destinationPath
@@ -874,101 +906,101 @@ try {
     if (-not ('DocumentationSync.WindowsFile' -as [type])) {
         Add-Type -Path (Join-Path $PSScriptRoot 'WindowsFile.cs')
     }
-    for ($attempt = 1; $attempt -le 3; $attempt++) {
-        $result.attempts = $attempt
-        $result.remoteRevision = $tip
-        Resolve-PendingPush $tip
-        if ($approvalAnchor -and $approvalAnchor -cne 'unborn' -and -not (Test-GitAncestor $approvalAnchor $tip)) {
-            throw 'The destination branch no longer contains the approved preview revision.'
-        }
-        $remoteProject = Get-RemoteProject $tip
-        $result.excluded.Clear()
-        $localFiles = Get-LocalDocuments
-        $approvedArtwork = @{}
-        if ($IncludeArtwork) {
-            $approvedArtwork = Read-ArtworkApprovals
-            Add-LocalArtwork $localFiles $approvedArtwork
-            $result.approvedArtwork = @($approvedArtwork.Keys | Sort-Object -CaseSensitive | ForEach-Object {
-                [ordered]@{ path = $_; sha256 = $approvedArtwork[$_] }
+    if ($SharedOwnerDefaults) {
+        . (Join-Path $PSScriptRoot 'shared-owner-defaults.ps1')
+        Invoke-SharedOwnerDefaults $tip
+    }
+    else {
+        for ($attempt = 1; $attempt -le 3; $attempt++) {
+            $result.attempts = $attempt
+            $result.remoteRevision = $tip
+            Resolve-PendingPush $tip
+            if ($approvalAnchor -and $approvalAnchor -cne 'unborn' -and -not (Test-GitAncestor $approvalAnchor $tip)) {
+                throw 'The destination branch no longer contains the approved preview revision.'
+            }
+            $remoteProject = Get-RemoteProject $tip
+            $result.excluded.Clear()
+            $localFiles = Get-LocalDocuments
+            $approvedArtwork = @{}
+            if ($IncludeArtwork) {
+                $approvedArtwork = Read-ArtworkApprovals
+                Add-LocalArtwork $localFiles $approvedArtwork
+                $result.approvedArtwork = @($approvedArtwork.Keys | Sort-Object -CaseSensitive | ForEach-Object {
+                    [ordered]@{ path = $_; sha256 = $approvedArtwork[$_] }
+                })
+            }
+            $plan = Get-SyncPlan $localFiles $remoteProject $tip
+            $result.changes = @($plan.changes | ForEach-Object {
+                $previousBlob = $null
+                if ($remoteProject.entries.ContainsKey($_.path)) { $previousBlob = $remoteProject.entries[$_.path].blob }
+                [ordered]@{ path = $_.path; action = $_.action; beforeBlob = $previousBlob; afterBlob = $_.blob }
             })
-        }
-        $plan = Get-SyncPlan $localFiles $remoteProject $tip
-        $result.changes = @($plan.changes | ForEach-Object {
-            $previousBlob = $null
-            if ($remoteProject.entries.ContainsKey($_.path)) { $previousBlob = $remoteProject.entries[$_.path].blob }
-            [ordered]@{ path = $_.path; action = $_.action; beforeBlob = $previousBlob; afterBlob = $_.blob }
-        })
-        $result.pending = $plan.pending
-        $anchor = $approvalAnchor
-        if ($Action -eq 'preview') {
-            $anchor = 'unborn'
-            if ($tip) { $anchor = $tip }
-        }
-        $digest = Get-PlanDigest $remoteProject.tree $anchor
-        if ($Action -eq 'preview') {
-            $result.approval = "$($state.bindingId).$anchor.$digest"
-            $result.status = 'preview'
-            break
-        }
-        $receipt = "$($state.bindingId).$approvalAnchor.$digest"
-        if ($legacyApproval) { $receipt = "$($state.bindingId).$digest" }
-        if ($ApprovedPlan -cne $receipt) { throw 'The reviewed plan is missing or stale. Run a fresh preview before applying.' }
-        $canSaveState = $true
-        if ($replaceRememberedIncludes) { $state.rememberedIncludes = $result.rememberedIncludes }
-        if ($plan.changes.Count -eq 0) {
-            $state.files = $plan.files
-            if ($remoteProject.bound) { $state.lastVerifiedRevision = $tip }
-            $result.status = 'unchanged'
-            break
-        }
-        else {
-            $hooks = Join-Path $scratch 'hooks'
-            [void][Directory]::CreateDirectory($hooks)
-            $hook = [File]::ReadAllText((Join-Path $PSScriptRoot 'pre-push'), $utf8).Replace("`r`n", "`n")
-            [File]::WriteAllText((Join-Path $hooks 'pre-push'), $hook, $utf8)
-            $candidate = New-BackupCommit $plan $tip
-            foreach ($change in $plan.changes) {
-                if ($change.action -eq 'delete' -and -not (Test-ConfirmedAbsent $change.path)) {
-                    throw 'A planned deletion is no longer confirmed absent. Run a fresh preview.'
-                }
+            $result.pending = $plan.pending
+            $anchor = $approvalAnchor
+            if ($Action -eq 'preview') {
+                $anchor = 'unborn'
+                if ($tip) { $anchor = $tip }
             }
-            if ($githubPilot) {
-                $observedTip = Get-RemoteTip
-                if ($observedTip -cne $tip) {
-                    if ($tip -and -not (Test-GitAncestor $tip $observedTip)) { throw 'The GitHub branch rewound during sync.' }
-                    $tip = $observedTip
-                    continue
-                }
+            $digest = Get-PlanDigest $remoteProject.tree $anchor
+            if ($Action -eq 'preview') {
+                $result.approval = "$($state.bindingId).$anchor.$digest"
+                $result.status = 'preview'
+                break
             }
-            else { Assert-PlainDirectory $destinationPath }
-            $state.pendingPush = @{ commit = $candidate; files = $plan.files }
-            Save-SyncState
-            $pushParent = $tip
-            if (-not $pushParent) { $pushParent = $zeroObjectId }
-            $pushArguments = @('push', '--porcelain', '--no-follow-tags', '--', $destinationUri, "${candidate}:${branchRef}")
-            $pushed = Invoke-Git $pushArguments -PushGuard @{ commit = $candidate; parent = $pushParent } -AllowFailure
-            if ($pushed.ExitCode -ne 0) {
-                $observedTip = Get-RemoteTip
-                Resolve-PendingPush $observedTip
-                if ($result.pushedRevision -cne $candidate) {
+            $receipt = "$($state.bindingId).$approvalAnchor.$digest"
+            if ($legacyApproval) { $receipt = "$($state.bindingId).$digest" }
+            if ($ApprovedPlan -cne $receipt) { throw 'The reviewed plan is missing or stale. Run a fresh preview before applying.' }
+            $canSaveState = $true
+            if ($replaceRememberedIncludes) { $state.rememberedIncludes = $result.rememberedIncludes }
+            if ($plan.changes.Count -eq 0) {
+                $state.files = $plan.files
+                if ($remoteProject.bound) { $state.lastVerifiedRevision = $tip }
+                $result.status = 'unchanged'
+                break
+            }
+            else {
+                Initialize-PushGuard
+                $candidate = New-BackupCommit $plan $tip "$($state.projectId)/" "Back up documentation for $($state.projectId)"
+                foreach ($change in $plan.changes) {
+                    if ($change.action -eq 'delete' -and -not (Test-ConfirmedAbsent $change.path)) {
+                        throw 'A planned deletion is no longer confirmed absent. Run a fresh preview.'
+                    }
+                }
+                if ($githubPilot) {
+                    $observedTip = Get-RemoteTip
                     if ($observedTip -cne $tip) {
-                        if ($tip -and -not (Test-GitAncestor $tip $observedTip)) { throw 'The destination branch rewound during the push.' }
+                        if ($tip -and -not (Test-GitAncestor $tip $observedTip)) { throw 'The GitHub branch rewound during sync.' }
                         $tip = $observedTip
                         continue
                     }
-                    throw "Destination rejected the backup push (Git exit $($pushed.ExitCode))."
                 }
+                else { Assert-PlainDirectory $destinationPath }
+                $state.pendingPush = @{ commit = $candidate; files = $plan.files }
+                Save-SyncState
+                $pushed = Invoke-GuardedPush $candidate $tip
+                if ($pushed.ExitCode -ne 0) {
+                    $observedTip = Get-RemoteTip
+                    Resolve-PendingPush $observedTip
+                    if ($result.pushedRevision -cne $candidate) {
+                        if ($observedTip -cne $tip) {
+                            if ($tip -and -not (Test-GitAncestor $tip $observedTip)) { throw 'The destination branch rewound during the push.' }
+                            $tip = $observedTip
+                            continue
+                        }
+                        throw "Destination rejected the backup push (Git exit $($pushed.ExitCode))."
+                    }
+                }
+                $state.files = $plan.files
+                $state.lastVerifiedRevision = $candidate
+                $state.lastPushedRevision = $candidate
+                $state.pendingPush = $null
+                $result.pushedRevision = $candidate
+                $result.status = 'synced'
+                break
             }
-            $state.files = $plan.files
-            $state.lastVerifiedRevision = $candidate
-            $state.lastPushedRevision = $candidate
-            $state.pendingPush = $null
-            $result.pushedRevision = $candidate
-            $result.status = 'synced'
-            break
         }
+        if ($result.status -eq 'pending') { throw 'The destination kept moving during sync. Retry at the next checkpoint.' }
     }
-    if ($result.status -eq 'pending') { throw 'The destination kept moving during sync. Retry at the next checkpoint.' }
 }
 catch {
     $result.status = 'pending'

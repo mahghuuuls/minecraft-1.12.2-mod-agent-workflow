@@ -52,6 +52,7 @@ $requiredPaths = @(
     'tools/documentation-sync/checkpoint-backup.ps1',
     'tools/documentation-sync/documentation-sync.ps1',
     'tools/documentation-sync/github-preflight.psm1',
+    'tools/documentation-sync/shared-owner-defaults.ps1',
     'tools/documentation-sync/pre-push',
     'tools/documentation-sync/tests/run-preflight-tests.ps1',
     'tools/documentation-sync/tests/run-tests.ps1',

@@ -142,6 +142,58 @@ try {
     $workflowHead = Invoke-FixtureGit @('-C', $workflowRoot, 'rev-parse', 'HEAD')
     $workflowStatus = (Invoke-FixtureGit @('-C', $workflowRoot, 'status', '--porcelain')) -join "`n"
 
+    Invoke-Test 'shared defaults publish only reviewed root bytes and survive unrelated backups' {
+        $workspace = New-Workspace 'shared defaults'
+        $remote = New-Destination 'shared defaults'
+        $candidate = Join-Path $workspace 'proposed.md'
+        $portable = "# Shared Owner Defaults`n`n## Chat Format Preferences`n`n- Message length: Short`n"
+        $options = @{ SharedOwnerDefaults = $true; OwnerDefaultsCandidate = $candidate }
+        $reader = @{ SharedOwnerDefaults = $true; Action = 'read' }
+        $missing = Invoke-Sync $workspace $remote $reader
+        Assert-Equal $missing.status 'missing' 'An absent shared file did not use the local fallback state.'
+        Assert-EmptyRemote $remote
+
+        [File]::WriteAllText($candidate, ($portable + "`n## Shared Documentation Backup`n`n- Automatic sync: Approved.`n"), $utf8)
+        $forbidden = Invoke-Sync $workspace $remote ($options + @{ Action = 'preview' }) -ExpectExit 2
+        Assert-True ($forbidden.error -like '*Unsupported*') 'Shared defaults accepted a permission.'
+        [File]::WriteAllText($candidate, ($portable + "`n- Instance name and path: C:\Local\Instance`n"), $utf8)
+        $machine = Invoke-Sync $workspace $remote ($options + @{ Action = 'preview' }) -ExpectExit 2
+        Assert-True ($machine.error -like '*Unsupported*') 'Shared defaults accepted machine configuration.'
+        Assert-EmptyRemote $remote
+        [File]::WriteAllText($candidate, $portable, $utf8)
+        $preview = Invoke-Sync $workspace $remote ($options + @{ Action = 'preview' })
+        Assert-Equal $preview.changes[0].path 'owner-defaults.md' 'Preview did not target the root file.'
+        Assert-Equal $preview.proposedContent $portable 'Preview lost the exact candidate.'
+        $noReceipt = Invoke-Sync $workspace $remote ($options + @{ ApprovedPlan = '' }) -ExpectExit 2
+        Assert-True ($noReceipt.error -like '*receipt*') 'Root write accepted no receipt.'
+        $mixed = Invoke-Sync $workspace $remote ($options + @{ Action = 'preview'; ProjectId = 'sample' }) -ExpectExit 2
+        Assert-True ($mixed.error -like '*separate*') 'Shared operation accepted a project backup option.'
+        Assert-EmptyRemote $remote
+
+        Write-Document $workspace 'requirements.md' 'Ordinary project backup.'
+        $project = Invoke-Sync $workspace $remote @{ ProjectId = 'sample' }
+        [File]::WriteAllText($candidate, $portable.Replace('Short', 'Balanced'), $utf8)
+        $changed = Invoke-Sync $workspace $remote ($options + @{ ApprovedPlan = $preview.approval }) -ExpectExit 2
+        Assert-True ($changed.error -like '*stale*') 'A change to the candidate passed the receipt.'
+        [File]::WriteAllText($candidate, $portable, $utf8)
+        $applied = Invoke-Sync $workspace $remote ($options + @{ ApprovedPlan = $preview.approval })
+        Assert-Equal $applied.status 'synced' 'An unrelated project backup invalidated the shared receipt.'
+        Assert-Equal (Invoke-FixtureGit @("--git-dir=$remote", 'rev-parse', 'main^')) $project.pushedRevision 'Shared commit lost a project backup.'
+        Assert-Equal (Invoke-FixtureGit @("--git-dir=$remote", 'diff-tree', '--no-commit-id', '--name-only', '-r', 'main')) 'owner-defaults.md' 'Shared commit changed another path.'
+        $read = Invoke-Sync $workspace $remote $reader
+        Assert-Equal $read.preferences['Chat Format Preferences']['Message length'] 'Short' 'Read did not return the validated preference.'
+
+        [File]::WriteAllText($candidate, $portable.Replace('Short', 'Detailed'), $utf8)
+        $next = Invoke-Sync $workspace $remote ($options + @{ Action = 'preview' })
+        $competingFile = Join-Path $workspace 'competing.md'
+        [File]::WriteAllText($competingFile, $portable.Replace('Short', 'Balanced'), $utf8)
+        $competing = Invoke-Sync $workspace $remote @{ SharedOwnerDefaults = $true; OwnerDefaultsCandidate = $competingFile }
+        $stale = Invoke-Sync $workspace $remote ($options + @{ ApprovedPlan = $next.approval }) -ExpectExit 2
+        Assert-True ($stale.error -like '*stale*') 'Another root edit did not invalidate the older receipt.'
+        Assert-Equal (Get-Tip $remote) $competing.pushedRevision 'A stale receipt changed the root file.'
+        Assert-Equal (Read-Remote $remote 'sample/requirements.md') 'Ordinary project backup.' 'The project content changed.'
+    }
+
     Invoke-Test 'preview and first import before source setup, exact draft bytes, and idempotence' {
         $workspace = New-Workspace 'first import'
         $remote = New-Destination 'first import'
