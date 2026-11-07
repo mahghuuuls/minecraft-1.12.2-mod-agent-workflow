@@ -23,9 +23,11 @@ The first approved sync saves its binding after verifying the destination direct
 
 ## File Selection
 
-The built-in allowlist covers standard planning and release documents, project status and state, glossaries and feedback, issue files with workflow IDs, and the matching documents in named change cycles. Review `rootDocuments`, `cycleDocuments`, and `Test-IncludedDocument` in `documentation-sync.ps1` when changing that policy. Filename and content checks run before files are hashed into the scratch repository. Status words and draft content pass through as bytes.
+The built-in allowlist covers standard planning and release documents, project status and state, glossaries and feedback, issue files with workflow IDs, Markdown revision records directly in `revisions/`, and requirements decision records at the root and in named change cycles. Review `rootDocuments`, `cycleDocuments`, and `Test-IncludedDocument` in `documentation-sync.ps1` when changing that policy. Filename and content checks run before files are hashed into the scratch repository. Status words and draft content pass through as bytes.
 
-An intentionally retained extra Markdown, text, or CSV file can be supplied by its exact documentation-relative path on each run, for example `-IncludePath 'notes/design decisions.md'`. An omitted include for a previously backed-up file is reported as pending. The result lists unrecognized files. Hard exclusions cover owner defaults, common evidence and diagnostic paths, logs, screenshots, build outputs, temporary and conflict paths, and credential filenames. Before reading, the tool checks the opened handle for the expected path and a single filesystem link. It also excludes files over 2 MiB, invalid UTF-8, binary control characters, and recognized credential patterns. Credential detection is heuristic. Review custom documents and pending exclusions before authorizing them for any eventual shared destination.
+For a one-time extra Markdown, text, or CSV file, pass its exact documentation-relative path with `-IncludePath`. For recurring backups, preview with `-SetRememberedIncludes` and the complete list of approved extra paths. Review the preview's `rememberedIncludes` list and any planned file changes with the owner. Apply the approved receipt with the same arguments. Sync records the list in the local binding after verifying the receipt, even if no file changes or the upload is pending. Later automatic and manual runs use the remembered paths. Existing one-time extras require separate recurring approval. To remove entries, submit the remaining list, or pass `-SetRememberedIncludes @()` to clear it. Previously backed-up files outside the effective allowlist are reported as pending and remain in the remote.
+
+Hard exclusions cover owner defaults, common evidence and diagnostic paths, logs, screenshots, build outputs, temporary and conflict paths, and credential filenames. Before reading, the tool checks the opened handle for the expected path and a single filesystem link. It also excludes files over 2 MiB, invalid UTF-8, binary control characters, and recognized credential patterns. Credential detection is heuristic. Review custom documents and pending exclusions before authorizing them for any eventual shared destination.
 
 ## Conflicts, Deletions, and Retries
 
@@ -56,7 +58,7 @@ The tool works on GitHub Free. Someone with sufficient repository access can sti
 pwsh -NoProfile -File tools/documentation-sync/checkpoint-backup.ps1 -Workspace $workspace -OwnerDefaults $ownerDefaults -Trigger checkpoint
 ```
 
-The wrapper reads the pinned destination directly from owner defaults and uses the same preview, receipt, and guarded push as the manual tool. It accepts the saved rollout approval wording or `Approved` and keeps automatic runs limited to standard eligible additions and updates. It uses the existing GitHub CLI login or a supplied live metadata reader. It never sets up credentials during a backup. An unresolved backup returns `pending` and records its outcome under `workspace/documentation-sync/`.
+The wrapper reads the pinned destination directly from owner defaults and uses the same preview, receipt, and guarded push as the manual tool. It accepts the saved rollout approval wording or `Approved` and backs up eligible additions and updates from the built-in allowlist and the binding's remembered paths. It uses the existing GitHub CLI login or a supplied live metadata reader. On Windows, it also checks the standard GitHub CLI installation under Program Files if `gh` is missing from `PATH`. It never sets up credentials during a backup. An unresolved backup returns `pending` and records its outcome under `workspace/documentation-sync/`.
 
 ## Tests
 
@@ -65,4 +67,4 @@ pwsh -NoProfile -ExecutionPolicy Bypass -File tools/documentation-sync/tests/run
 pwsh -NoProfile -ExecutionPolicy Bypass -File tools/documentation-sync/tests/run-preflight-tests.ps1
 ```
 
-The local suite uses disposable workspaces and bare repositories. It exercises stale approvals, hard links, lost includes, retired IDs, branch advances and rewinds, conflict handling, deletion gates, and interrupted state recovery. The preflight suite checks multiple owner destinations, visibility, repository and branch identity, access failures, and confirmation of an empty repository with mocks.
+The local suite uses disposable workspaces and bare repositories. It exercises stale approvals, hard links, remembered and one-time includes, retired IDs, branch advances and rewinds, conflict handling, deletion gates, and interrupted state recovery. The preflight suite checks multiple owner destinations, visibility, repository and branch identity, access failures, and confirmation of an empty repository with mocks.

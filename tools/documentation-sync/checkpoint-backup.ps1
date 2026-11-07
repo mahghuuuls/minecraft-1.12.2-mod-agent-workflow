@@ -44,6 +44,7 @@ function Read-BackupApproval([string]$Path) {
     if ($approval.Count -ne 1) { throw 'Multiple automatic sync preferences in owner defaults.' }
     $value = $approval[0].Groups['value'].Value.Trim()
     $savedRolloutApproval = "Approved for this owner's projects once the workflow supports automatic backups. Until then, use the manual preview and approval flow."
+    # Existing owner defaults can spell the rollout approval with a lowercase initial.
     if ($value -notin 'Approved', 'Approved.', $savedRolloutApproval) { return $null }
 
     $destinationLines = [regex]::Matches($body, '(?im)^- Destination:[ \t]*(?<value>[^\r\n]+)\r?$')
@@ -55,9 +56,13 @@ function Read-BackupApproval([string]$Path) {
 }
 
 function New-GitHubMetadataReader {
-    $gh = Get-Command gh -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
+    $gh = Get-Command gh -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty Source
+    if (-not $gh -and $IsWindows) {
+        $installed = Join-Path ([Environment]::GetFolderPath('ProgramFiles')) 'GitHub CLI/gh.exe'
+        if ([File]::Exists($installed)) { $gh = $installed }
+    }
     if (-not $gh) { throw 'Authenticated GitHub metadata is unavailable. Use an authenticated GitHub CLI or supply a live metadata reader.' }
-    $credential = @(& $gh.Source auth token --hostname github.com 2>$null)
+    $credential = @(& $gh auth token --hostname github.com 2>$null)
     if ($LASTEXITCODE -ne 0 -or $credential.Count -ne 1 -or $credential[0] -notmatch '\A[A-Za-z0-9_]+\z') {
         throw 'GitHub CLI authentication is unavailable for github.com.'
     }

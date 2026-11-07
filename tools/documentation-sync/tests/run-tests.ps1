@@ -297,13 +297,17 @@ try {
         finally { $stream.Dispose() }
     }
 
-    Invoke-Test 'a forgotten extra include stays pending and preserves the last pushed revision' {
+    Invoke-Test 'one-time extras in an existing binding require separate approval to remember' {
         $workspace = New-Workspace 'forgotten include'
         $remote = New-Destination 'forgotten include'
         $extraPath = 'notes/project decisions.md'
         Write-Document $workspace 'project-status.md' '# Status'
         Write-Document $workspace $extraPath 'Previously backed-up extra.'
         $first = Invoke-Sync $workspace $remote @{ ProjectId = 'extras'; IncludePath = @($extraPath) }
+        $state = Get-State $workspace
+        $state.Remove('rememberedIncludes')
+        $statePath = Join-Path $workspace 'documentation-sync/state.json'
+        [File]::WriteAllText($statePath, (ConvertTo-Json $state -Depth 12), $utf8)
 
         $other = New-Workspace 'forgotten include peer'
         Write-Document $other 'project-status.md' 'Independent remote advance.'
@@ -318,6 +322,29 @@ try {
         $restored = Invoke-Sync $workspace $remote @{ IncludePath = @($extraPath) }
         Assert-Equal $restored.status 'synced' 'Reinstating the include did not back up the note.'
         Assert-Equal (Read-Remote $remote "extras/$extraPath") 'Newer local extra.' 'The restored include still backed up stale content.'
+
+        $oneTime = Invoke-Sync $workspace $remote @{ Action = 'preview'; IncludePath = @($extraPath) }
+        $promoted = Invoke-Sync $workspace $remote @{ ApprovedPlan = $oneTime.approval; SetRememberedIncludes = @($extraPath) } -ExpectExit 2
+        Assert-True ($promoted.error -like '*stale*') 'A one-time receipt could authorize future backups.'
+        Assert-Equal (Get-State $workspace).rememberedIncludes.Count 0 'A stale receipt saved a recurring path.'
+
+        $review = Invoke-Sync $workspace $remote @{ Action = 'preview'; SetRememberedIncludes = @($extraPath) }
+        Assert-Equal $review.rememberedIncludes[0] $extraPath 'Preview did not show the recurring path.'
+        Assert-Equal (Get-State $workspace).rememberedIncludes.Count 0 'Preview saved a recurring path.'
+        $remembered = Invoke-Sync $workspace $remote @{ ApprovedPlan = $review.approval; SetRememberedIncludes = @($extraPath) }
+        Assert-Equal $remembered.status 'unchanged' 'Remembering an already backed-up file should not create a commit.'
+        Assert-Equal (Get-Tip $remote) $restored.pushedRevision 'Changing the remembered list created an empty commit.'
+        Assert-Equal (Get-State $workspace).rememberedIncludes[0] $extraPath 'Approved recurring path was lost.'
+
+        $unsafe = Invoke-Sync $workspace $remote @{ Action = 'preview'; SetRememberedIncludes = @('owner-defaults.md') } -ExpectExit 2
+        Assert-True ($unsafe.error -like '*hard exclusions*') 'A hard-excluded path could be remembered.'
+        $beforeClearing = Invoke-Sync $workspace $remote @{ Action = 'preview'; SetRememberedIncludes = @($extraPath) }
+        $forgotten = Invoke-Sync $workspace $remote @{ SetRememberedIncludes = @() } -ExpectExit 2
+        Assert-Pending $forgotten $extraPath 'tracked_path_outside_allowlist'
+        $replayed = Invoke-Sync $workspace $remote @{ ApprovedPlan = $beforeClearing.approval; SetRememberedIncludes = @($extraPath) } -ExpectExit 2
+        Assert-True ($replayed.error -like '*stale*') 'An older receipt overrode a newer remembered list.'
+        Assert-Equal (Get-State $workspace).rememberedIncludes.Count 0 'Clearing the remembered list did not take effect.'
+        Assert-Equal (Get-Tip $remote) $restored.pushedRevision 'Clearing the remembered list changed the backup.'
     }
 
     Invoke-Test 'stable bindings, cross-project isolation, and unbased import conflicts' {
@@ -751,7 +778,7 @@ exit 0
         Assert-Equal $rewound.lastVerifiedRevision $blocked.pushedRevision 'Rewound destination changed the saved base.'
     }
 
-    Invoke-Test 'checkpoint approval backs up drafts, replans once, and leaves deletions pending' {
+    Invoke-Test 'checkpoint approval backs up standard and remembered documents and leaves deletions pending' {
         $workspace = New-Workspace 'checkpoint workspace'
         $remote = New-Destination 'checkpoint destination'
         $fixtureTools = Join-Path $testRoot 'checkpoint tools'
@@ -794,6 +821,12 @@ exit $LASTEXITCODE
             Write-Document $workspace 'project-status.md' 'Awaiting Approval'
             Write-Document $workspace 'requirements.md' 'Draft requirements.'
             Write-Document $workspace 'owner-defaults.md' 'Local owner data.'
+            $standardPaths = @('revisions/rev-001-review.md', 'requirements-decisions.md', 'cycles/CYCLE-001-hud-effect-groups/requirements-decisions.md')
+            foreach ($path in $standardPaths) { Write-Document $workspace $path 'Draft decision record.' }
+            Write-Document $workspace 'revisions/archive/private-draft.md' 'Unapproved nested file.'
+            $extraPath = 'notes/design decisions.md'
+            Write-Document $workspace $extraPath 'Approved custom draft.'
+            Write-Document $workspace 'notes/other.md' 'Unapproved sibling.'
             $arguments = @{ Workspace = $workspace; OwnerDefaults = $defaults; ReadGitHubMetadata = { throw 'Offline fixture.' } }
             $disabled = & $wrapper @arguments -Trigger checkpoint | ConvertFrom-Json -AsHashtable
             Assert-Equal $disabled.status 'disabled' 'Automatic backup should require opt-in.'
@@ -807,6 +840,18 @@ exit $LASTEXITCODE
             Assert-Equal $first.checkpointAttempts 2 'Checkpoint did not replan a stale attempt.'
             Assert-Equal (Read-Remote $remote 'checkpoint-fixture/project-status.md') 'Awaiting Approval' 'Draft status was lost.'
             Assert-True ('checkpoint-fixture/owner-defaults.md' -notin (Get-RemotePaths $remote)) 'Owner defaults were uploaded.'
+            foreach ($path in $standardPaths) {
+                Assert-Equal (Read-Remote $remote "checkpoint-fixture/$path") 'Draft decision record.' 'Standard artifact was omitted.'
+            }
+            Assert-True ("checkpoint-fixture/$extraPath" -notin (Get-RemotePaths $remote)) 'An unapproved custom path was uploaded.'
+            Assert-True ('checkpoint-fixture/revisions/archive/private-draft.md' -notin (Get-RemotePaths $remote)) 'The revisions rule included nested files.'
+
+            [void](Invoke-Sync $workspace $remote @{ SetRememberedIncludes = @($extraPath) })
+            Write-Document $workspace $extraPath 'Updated custom draft.'
+            $updated = & $wrapper @arguments -Trigger checkpoint | ConvertFrom-Json -AsHashtable
+            Assert-Equal $updated.status 'synced' 'An approved custom edit left the checkpoint pending.'
+            Assert-Equal (Read-Remote $remote "checkpoint-fixture/$extraPath") 'Updated custom draft.' 'The checkpoint missed an approved custom edit.'
+            Assert-True ('checkpoint-fixture/notes/other.md' -notin (Get-RemotePaths $remote)) 'Approval spilled over into the containing directory.'
 
             [File]::Delete((Join-Path $workspace 'documentation/requirements.md'))
             Write-Document $workspace 'project-status.md' 'Draft updated at handoff'

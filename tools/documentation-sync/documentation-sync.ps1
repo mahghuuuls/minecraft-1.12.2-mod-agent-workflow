@@ -17,6 +17,7 @@ param(
     [string]$ProjectId,
     [string]$AdoptBindingId,
     [string[]]$IncludePath = @(),
+    [string[]]$SetRememberedIncludes,
     [string[]]$DeletePath = @(),
     [string]$ApproveBulkDeletionAt,
     [string]$ApprovedPlan
@@ -40,11 +41,11 @@ $rootDocuments = @(
     'dependency-references.md', 'feasibility-research.md', 'glossary.md', 'icon-design-brief.md',
     'implementation-plan.md', 'project-baseline.md', 'project-initialization.md', 'project-setup.md',
     'project-state.md', 'project-status.md', 'release-handoff.md', 'release-presentation.md',
-    'requirements.md', 'workflow-feedback.md'
+    'requirements.md', 'requirements-decisions.md', 'workflow-feedback.md'
 )
 $cycleDocuments = @(
     'change-intake.md', 'cycle-summary.md', 'icon-design-brief.md', 'implementation-plan.md',
-    'release-handoff.md', 'release-presentation.md'
+    'release-handoff.md', 'release-presentation.md', 'requirements-decisions.md'
 )
 
 function Resolve-LocalPath([string]$Path) {
@@ -111,6 +112,7 @@ function Test-IncludedDocument([string]$RelativePath) {
     if ((Test-ExcludedPath $RelativePath) -or -not (Test-SafeRelativePath $RelativePath)) { return $false }
     if ($includePaths.Contains($RelativePath) -or $RelativePath -in $rootDocuments) { return $true }
     if ($RelativePath -match '^issues/[a-z][a-z0-9]*-\d{3}(?:-[a-z0-9_-]+)?\.md$') { return $true }
+    if ($RelativePath -match '\Arevisions/[^/]+\.md\z') { return $true }
     if ($RelativePath -match '^cycles/cycle-\d{3}-[a-z0-9_-]+/(?<document>.+)$') {
         $cycleDocument = $Matches.document
         return $cycleDocument -in $cycleDocuments -or
@@ -122,6 +124,18 @@ function Test-IncludedDocument([string]$RelativePath) {
 function Test-CredentialText([string]$Text) {
     return $Text -match '-----BEGIN [A-Z0-9 ]*PRIVATE KEY-----|\bgh[pousr]_[a-z0-9]{20,}\b|\bgithub_pat_[a-z0-9_]{20,}\b|\b(?:AKIA|ASIA)[A-Z0-9]{16}\b|https?://[^\s/@:]+:[^\s/@]+@|\bbearer\s+[a-z0-9._~-]{16,}' -or
         $Text -match '\b(?:access[-_ ]?token|api[-_ ]?key|password|client[-_ ]?secret)\s*["'']?\s*[:=]\s*["'']?[^\s"''<>]{8,}'
+}
+
+function Get-ValidatedIncludes($Paths) {
+    $validated = [HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+    foreach ($path in $Paths) {
+        if ($path -isnot [string] -or -not (Test-SafeRelativePath $path) -or (Test-ExcludedPath $path) -or
+            (Test-CredentialText $path) -or $path -notmatch '\.(?:md|txt|csv)\z') {
+            throw 'Extra includes must name safe Markdown, text, or CSV files outside the hard exclusions.'
+        }
+        [void]$validated.Add($path)
+    }
+    return ,$validated
 }
 
 function Invoke-Git {
@@ -312,6 +326,10 @@ function Read-SyncState {
             throw 'The requested destination, branch, or project identity differs from the saved binding.'
         }
         $saved.files = ConvertTo-BaseFiles $saved.files
+        if (-not $saved.ContainsKey('rememberedIncludes')) { $saved.rememberedIncludes = @() }
+        if ($saved.rememberedIncludes -isnot [array]) { throw 'Invalid remembered includes in sync state.' }
+        $remembered = Get-ValidatedIncludes $saved.rememberedIncludes
+        $saved.rememberedIncludes = @($remembered | Sort-Object -CaseSensitive)
         if (-not $saved.ContainsKey('lastPushedRevision')) { $saved.lastPushedRevision = $null }
         if ($null -ne $saved.lastPushedRevision -and $saved.lastPushedRevision -cnotmatch $objectIdPattern) {
             throw 'Invalid last pushed revision in sync state.'
@@ -337,6 +355,7 @@ function Read-SyncState {
         lastVerifiedRevision = $null
         lastPushedRevision = $null
         files = @{}
+        rememberedIncludes = @()
         pendingPush = $null
         lastResult = $null
     }
@@ -608,6 +627,10 @@ function Get-PlanDigest($ProjectTree, [string]$Anchor) {
         $snapshot.head = $Anchor
         $snapshot.projectTree = $ProjectTree
     }
+    if ($replaceRememberedIncludes -or $result.rememberedIncludes.Count -gt 0) {
+        $snapshot.rememberedIncludes = $result.rememberedIncludes
+    }
+    if ($replaceRememberedIncludes) { $snapshot.previousRememberedIncludes = $previousRememberedIncludes }
     $json = ConvertTo-Json -InputObject $snapshot -Depth 6 -Compress
     $digest = [Security.Cryptography.SHA256]::HashData($utf8.GetBytes($json))
     return [Convert]::ToHexString($digest).ToLowerInvariant()
@@ -663,6 +686,7 @@ $result = [ordered]@{
     remoteRevision = $null
     pushedRevision = $null
     approval = $null
+    rememberedIncludes = @()
     changes = @()
     pending = @()
     excluded = [List[object]]::new()
@@ -676,6 +700,7 @@ $canSaveState = $false
 $approvalBinding = $null
 $approvalAnchor = $null
 $legacyApproval = $false
+$replaceRememberedIncludes = $PSBoundParameters.ContainsKey('SetRememberedIncludes')
 try {
     if (-not $IsWindows) { throw 'The local pilot requires Windows for opened-file identity checks.' }
     $workspacePath = Resolve-LocalPath $Workspace
@@ -698,17 +723,6 @@ try {
     $stateDirectory = Join-Path $workspacePath 'documentation-sync'
     $statePath = Join-Path $stateDirectory 'state.json'
     $branchRef = "refs/heads/$Branch"
-    $includePaths = [HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
-    foreach ($path in $IncludePath) {
-        if (-not (Test-SafeRelativePath $path) -or (Test-ExcludedPath $path) -or
-            (Test-CredentialText $path) -or $path -notmatch '\.(?:md|txt|csv)\z') {
-            throw 'Extra includes must name safe Markdown, text, or CSV files outside the hard exclusions.'
-        }
-        [void]$includePaths.Add($path)
-    }
-    foreach ($path in $DeletePath) {
-        if (-not (Test-IncludedDocument $path)) { throw 'A deletion must name an included document by its relative path.' }
-    }
     if ($AdoptBindingId -and $AdoptBindingId -cnotmatch $bindingIdPattern) { throw 'Invalid adoption binding ID.' }
     if ($ApproveBulkDeletionAt -and ($ApproveBulkDeletionAt -cnotmatch $objectIdPattern -or $DeletePath.Count -eq 0)) {
         throw 'Bulk deletion approval requires the exact remote revision and named deletion paths.'
@@ -734,6 +748,16 @@ try {
     }
     $state = Read-SyncState
     $existingState = [File]::Exists($statePath)
+    $previousRememberedIncludes = $state.rememberedIncludes
+    $result.rememberedIncludes = $previousRememberedIncludes
+    if ($replaceRememberedIncludes) {
+        $remembered = Get-ValidatedIncludes $SetRememberedIncludes
+        $result.rememberedIncludes = @($remembered | Sort-Object -CaseSensitive)
+    }
+    $includePaths = Get-ValidatedIncludes ($result.rememberedIncludes + $IncludePath)
+    foreach ($path in $DeletePath) {
+        if (-not (Test-IncludedDocument $path)) { throw 'A deletion must name an included document by its relative path.' }
+    }
     if ($state.projectId -cnotmatch '\A[a-z0-9][a-z0-9_-]{0,62}\z' -or
         -not (Test-SafeRelativePath $state.projectId) -or (Test-CredentialText $state.projectId)) {
         throw 'The project ID must be a portable lowercase directory name of at most 63 characters.'
@@ -802,6 +826,7 @@ try {
         if ($legacyApproval) { $receipt = "$($state.bindingId).$digest" }
         if ($ApprovedPlan -cne $receipt) { throw 'The reviewed plan is missing or stale. Run a fresh preview before applying.' }
         $canSaveState = $true
+        if ($replaceRememberedIncludes) { $state.rememberedIncludes = $result.rememberedIncludes }
         if ($plan.changes.Count -eq 0) {
             $state.files = $plan.files
             if ($remoteProject.bound) { $state.lastVerifiedRevision = $tip }
