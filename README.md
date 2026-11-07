@@ -66,6 +66,10 @@ this workflow, and I want to plan a new change.
 
 That is enough to begin. The agent will inspect the workspace and guide you through the remaining setup decisions.
 
+## Documentation Backups
+
+You can opt in to automatic backups of eligible project documentation to your own private GitHub repository at approved checkpoints and handoffs. Save the approval and destination in your owner defaults. See [Project Documentation Backup](procedures/documentation-backup.md).
+
 ## Development Stages
 
 For a new mod, the workflow progresses through these stages:

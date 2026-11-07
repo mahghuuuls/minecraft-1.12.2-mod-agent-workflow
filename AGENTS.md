@@ -91,6 +91,7 @@ During Process Maintenance mode, the agent must not:
 - **Template workspace:** an ignored clone under `workspace/template/`; never the development target.
 - **Dependency reference workspace:** optional ignored dependency source checkouts under `workspace/dependencies/`; never the active development target unless the owner explicitly changes the project.
 - **Project documentation:** ignored artifacts under `workspace/documentation/`.
+- **Documentation backup:** an optional, separate private GitHub repository governed by `procedures/documentation-backup.md`.
 - **Mod repository:** exactly one independent Git repository under `workspace/project/<mod-name>/`.
 
 Do not copy template or dependency-reference Git metadata into the mod repository. If there is no active mod repository, Project Setup and the selected workflow determine whether one will be initialized or cloned. If more than one project repository exists, ask which one is active. Dependency reference repositories under `workspace/dependencies/` are not active project repositories.
@@ -199,3 +200,5 @@ Every bullet inside a marked block must appear verbatim in the named canonical s
 Complete or carry forward Project Setup, then resume or obtain approval for the applicable workflow. Follow one checkpoint or stage at a time, keep authoritative status in `project-status.md`, refresh `project-state.md` only for resume/handoff needs, maintain the project glossary and dependency reference registry when relevant, record workflow feedback when relevant, and stop whenever owner approval is required. A checkpoint may explicitly combine approval of the current item with authorization to begin the already-briefed next item; never advance without that authorization.
 
 Delegate required read-only independent reviews to separate review agents under `guidelines/collaboration-guidelines.md#required-read-only-review-agents`, using `procedures/independent-review-brief.md` for the handoff.
+
+Run eligible documentation backups at the boundaries in `guidelines/process-control.md#documentation-backup-checkpoints`.

@@ -120,7 +120,7 @@ This rule permits required review delegation only. It does not grant permission 
 
 Before a Git operation, identify the target repository and inspect its working tree. The process repository, runtime template, and mod repository have separate histories.
 
-During mod development, do not commit, push, or otherwise modify the outer process repository. Git changes belong only to the active mod repository unless the user is working in explicit Process Maintenance mode. The one exception is the authorized fast-forward of the Workflow Repository Update Check in `guidelines/process-control.md`.
+During mod development, Git writes belong to the active mod repository and to the separately authorized documentation backup below. The Workflow Repository Update Check in `guidelines/process-control.md` governs authorized fast-forwards of the outer process repository.
 
 During Process Maintenance mode, the outer process repository is the active repository. Do not modify, commit, or push nested mod repositories while changing process files.
 
@@ -140,6 +140,10 @@ Push eligible committed work at the recorded cadence, defaulting to release-read
 Project Setup records `routine_git_policy=automatic` and `preferred_push_cadence=release-ready-handoff` unless the owner chooses a different policy or cadence. `ask` requires specific permission for commits and pushes unless an applicable explicit standing permission covers them. When resuming a workspace without the new policy field, use the current automatic default unless the owner explicitly restricted it. Preserve explicit restrictions and the scope of earlier permissions; a cadence alone never overrides an owner restriction. A historical note that Git permission was not yet requested is not an owner restriction. The old `preferred_push_prompt_cadence` value may supply the cadence, but the old offer-standing-authorization preference does not itself grant or revoke permission.
 
 This default applies only to the active mod repository. Commits and pushes to the outer process repository in Process Maintenance mode still require explicit authorization. Do not infer that authorization from approval to edit process files.
+
+### Routine Documentation Backups
+
+An explicit saved automatic-sync approval in owner defaults authorizes routine backup commits and normal pushes of eligible documentation, including drafts, only within the active project's assigned directory in the pinned private repository. Apply current owner restrictions and use `procedures/documentation-backup.md` for the scope and tool. Treat destination changes, identity conflicts, and work outside the routine backup scope as separate decisions. This authorization is independent of source Git and publication permissions.
 
 ### Actions Requiring Separate Authorization
 
@@ -189,6 +193,7 @@ Owner-assisted runtime checks must follow `guidelines/manual-validation.md`, whi
 
 At the end of work:
 
+- Apply the documentation backup handoff trigger in `guidelines/process-control.md#documentation-backup-checkpoints`.
 - Summarize what was completed.
 - Identify changed files and relevant commits.
 - Report verification and its result.

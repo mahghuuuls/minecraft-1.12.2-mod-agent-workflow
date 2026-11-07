@@ -418,6 +418,12 @@ A generated artifact, successful check, manual publication action, or approval o
 
 For Initial Development, the release-ready baseline may be prepared as a draft after Release Presentation work and artifact validation are complete but before the final approval response. The final checkpoint may then ask separately labeled approval for both Release Presentation and the Initial Development workflow in one owner response.
 
+## Documentation Backup Checkpoints
+
+For opted-in projects, run [Project Documentation Backup](../procedures/documentation-backup.md) after recording a stage or workflow-specific checkpoint approval and before a normal task or session handoff. A handoff may include unfinished drafts. If both triggers coincide, make one attempt. On resume, retry pending or interrupted backups. Read the approval and any owner restrictions at each trigger.
+
+Keep backup results separate from project approval and implementation status. A pending backup is a handoff item and does not block mod development. These are agent actions at workflow boundaries. Abrupt termination may leave local edits pending until a later run.
+
 ## Ask Versus Decide
 
 Ask the project owner when the answer could materially change:

@@ -96,6 +96,13 @@ How the owner wants the agent's messages shaped. These are about reading and cop
 - Explicit restrictions or deferrals:
 - Other Git workflow preferences:
 
+## Shared Documentation Backup
+
+Use `Approved` in Automatic sync to authorize routine backups under `procedures/documentation-backup.md`. Enter the private destination's repository name, numeric GitHub ID, and branch in the format below.
+
+- Automatic sync: Disabled.
+- Destination: private GitHub repository `<owner>/<repo>`, repository ID `<id>`, branch `<branch>`.
+
 ## Notes For Future Mods
 
 -

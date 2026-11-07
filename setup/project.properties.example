@@ -34,6 +34,8 @@ template_repository_url=
 template_repository_ref=
 
 # Documentation and collaboration preferences:
+# Optional stable project ID for shared documentation backups. Retain across renames.
+documentation_project_id=
 public_documentation_style=split-repository-and-player-facing
 commit_message_style=repo-facing-no-workflow-issue-references
 # Routine mod-repository Git policy; see guidelines/collaboration-guidelines.md.

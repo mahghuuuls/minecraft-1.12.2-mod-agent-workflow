@@ -1,0 +1,12 @@
+#!/bin/sh
+# Check the actual advertisement before Git sends the update. The receiver
+# also checks the advertised old object when it updates the ref.
+IFS=' ' read -r local_ref local_oid remote_ref remote_oid extra || exit 1
+test -z "$extra" &&
+    test "$local_oid" = "$DOC_SYNC_PUSH_COMMIT" &&
+    test "$remote_ref" = "$DOC_SYNC_PUSH_REF" &&
+    test "$remote_oid" = "$DOC_SYNC_PUSH_PARENT" || exit 1
+if IFS= read -r extra_ref; then
+    exit 1
+fi
+exit 0
