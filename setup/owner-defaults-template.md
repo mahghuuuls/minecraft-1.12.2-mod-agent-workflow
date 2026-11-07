@@ -1,12 +1,12 @@
 # Owner Defaults
 
-This template captures setup-stage preferences and owner-specific overrides for one workflow owner. Copy it to:
+This template captures setup-stage preferences and owner-specific overrides for one workflow owner. Use the owner-designated local file when one already exists. To create workspace-specific defaults, copy this template to:
 
 ```text
 workspace/documentation/owner-defaults.md
 ```
 
-The copied file is workspace-specific and should stay ignored by Git. Keep this template generic.
+Keep the working file local and this template generic.
 
 Do not duplicate general workflow rules here. If a preference should apply to every workflow user, put it in the appropriate committed guideline, stage, workflow, or setup default instead.
 

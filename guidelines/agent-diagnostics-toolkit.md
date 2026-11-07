@@ -14,7 +14,7 @@ During Project Setup, resolve exactly one preference:
 - **Ask each project:** Present the choice during each Project Setup.
 - **Do not use:** Do not install or plan around the toolkit unless the owner overrides this preference for the active project.
 
-Read the preference from `workspace/documentation/owner-defaults.md` when present. If the owner answers during Project Setup and wants the answer reused, persist it there. A saved **Prefer** or **Do not use** answer removes the repeated setup question; it does not override a later project-specific instruction.
+Read the preference from the [local owner defaults](process-control.md#local-owner-defaults) when available. If the owner answers during Project Setup and wants the answer reused, save it there. A saved **Prefer** or **Do not use** answer removes the repeated setup question. A later project-specific instruction takes precedence.
 
 The project-specific setup artifact must record:
 

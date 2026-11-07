@@ -76,14 +76,14 @@ When the owner states one mid-project:
 
 - Apply it to the active work immediately.
 - Record it in the artifact that governs the current stage, so the decision is traceable where it was made.
-- Also write it to `workspace/documentation/owner-defaults.md`, adding the relevant template section when that file predates it. Without this the next project rediscovers the same preference by making the same mistake.
+- Also record it in the authoritative [local owner defaults](process-control.md#local-owner-defaults) at the scope the owner specified. Use the shared local file for preferences the owner wants reused across mods.
 - Correct the earlier artifact that now records a stale answer, or note the supersession there, when a setup-stage field such as punctuation restrictions was previously answered differently.
 
 Record the preference at the scope the owner stated, not the scope of the moment it came up. A preference about prose applies to every document unless the owner limits it to one.
 
 Do not promote a durable owner preference into a committed guideline, stage, or workflow file. Those apply to every user of this repository. Personal preference belongs in `owner-defaults.md`.
 
-When the owner wants a portable preference shared across mods, use [Shared Owner Defaults](../procedures/shared-owner-defaults.md) to propose a root-level edit. Publish only the exact edit the owner approves. Local settings and permissions stay in the local defaults.
+When the owner asks to refresh the private backup of their portable preferences, use [Shared Owner Defaults](../procedures/shared-owner-defaults.md) to propose a root-level edit. Publish only the exact edit the owner approves.
 
 ## Workflow Feedback
 

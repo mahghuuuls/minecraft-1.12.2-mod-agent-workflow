@@ -141,7 +141,7 @@ For mod-development work, read in this order:
 6. `workspace/documentation/dependency-references.md`, when present
 7. `workspace/documentation/workflow-feedback.md`, when present
 8. `stages/0-project-setup.md` and its artifact when setup is required
-9. `workspace/documentation/owner-defaults.md`, when present and setup is required or being revised
+9. The [local owner defaults](guidelines/process-control.md#local-owner-defaults) during Project Setup, before planning a new Change Cycle, or when the owner asks to refresh them
 10. The selected file under `workflows/`
 11. The active stage under `stages/`, when the workflow invokes one
 12. Any specialized guideline explicitly referenced by the active workflow or stage

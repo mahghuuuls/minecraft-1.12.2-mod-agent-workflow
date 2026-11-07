@@ -146,7 +146,17 @@ try {
         $workspace = New-Workspace 'shared defaults'
         $remote = New-Destination 'shared defaults'
         $candidate = Join-Path $workspace 'proposed.md'
-        $portable = "# Shared Owner Defaults`n`n## Chat Format Preferences`n`n- Message length: Short`n"
+        $portable = @'
+# Shared Owner Defaults
+
+## Chat Format Preferences
+
+- Message length: Short
+
+## Local Source
+
+- Local owner-defaults file: `C:\Example\Mods\owner-defaults.md`
+'@ + "`n"
         $options = @{ SharedOwnerDefaults = $true; OwnerDefaultsCandidate = $candidate }
         $reader = @{ SharedOwnerDefaults = $true; Action = 'read' }
         $missing = Invoke-Sync $workspace $remote $reader
@@ -182,6 +192,7 @@ try {
         Assert-Equal (Invoke-FixtureGit @("--git-dir=$remote", 'diff-tree', '--no-commit-id', '--name-only', '-r', 'main')) 'owner-defaults.md' 'Shared commit changed another path.'
         $read = Invoke-Sync $workspace $remote $reader
         Assert-Equal $read.preferences['Chat Format Preferences']['Message length'] 'Short' 'Read did not return the validated preference.'
+        Assert-True (-not $read.preferences.Contains('Local Source')) 'A remote locator became a preference.'
 
         [File]::WriteAllText($candidate, $portable.Replace('Short', 'Detailed'), $utf8)
         $next = Invoke-Sync $workspace $remote ($options + @{ Action = 'preview' })

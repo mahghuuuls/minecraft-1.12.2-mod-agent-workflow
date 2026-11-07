@@ -15,7 +15,7 @@ This stage is interactive onboarding. It does not define mod behavior, prove tec
 - The project owner's initial request
 - `guidelines/project-defaults.md`
 - `guidelines/agent-diagnostics-toolkit.md`
-- `workspace/documentation/owner-defaults.md`, when present
+- The [local owner defaults](../guidelines/process-control.md#local-owner-defaults), when available
 - Owner-provided `owner-defaults.md` content supplied in chat, when present
 - `setup/owner-defaults-template.md`
 - `setup/workflow-feedback-template.md`
@@ -104,7 +104,7 @@ Act as an onboarding coordinator.
 - Inspect before asking questions.
 - Do not direct the user back to the README.
 - Treat owner defaults supplied through chat or attachments as first-class setup input, not as a user placement error.
-- When chat-provided owner defaults should persist across sessions, offer to save them to `workspace/documentation/owner-defaults.md`.
+- When chat-provided owner defaults should persist across sessions, offer to save them in an owner-approved local defaults file.
 - When owner defaults approve shared documentation backups, establish the stable project ID under Setup in `procedures/documentation-backup.md`.
 - Explain only the immediate setup decision.
 - Use focused questions for branching setup constraints and compact decision packets for related defaults or overrides.
@@ -261,7 +261,7 @@ Do not ask for a new mod's display name, public description, mod ID, package, or
 
 Follow `guidelines/agent-diagnostics-toolkit.md` when deciding whether the optional development tool will support owner-assisted runtime testing.
 
-Use the saved owner preference when it says **Prefer** or **Do not use**. Ask during Project Setup when no preference exists or it says **Ask each project**. When the owner wants the answer reused across later mods, persist it to `workspace/documentation/owner-defaults.md`.
+Use the saved owner preference when it says **Prefer** or **Do not use**. Ask during Project Setup when no preference exists or it says **Ask each project**. When the owner wants the answer reused across later mods, save it in their designated local defaults.
 
 The reusable owner preference alone does not authorize a source clone, build-script mutation, or installation into an external modpack. During Project Setup, record the intended use and acquisition route. Approval of the complete setup may authorize read-only retrieval of the exact pinned public artifact as normal workspace preparation, but source checkout and external-environment installation keep their existing approval boundaries. Resolve and verify the artifact before the first validation card that depends on it.
 

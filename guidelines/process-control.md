@@ -2,25 +2,27 @@
 
 This file is the authoritative source for workflow and stage status, approvals, artifact locations, project state snapshots, project glossary, workflow feedback, process maintenance, and backward transitions.
 
-## Owner Setup Defaults
+## Local Owner Defaults
 
-During Project Setup, read owner-specific setup preferences, when present, from:
+Read the owner-designated local `owner-defaults.md` during Project Setup, before planning a new Change Cycle, and whenever the owner asks to refresh their defaults. If the owner shares one local file across projects, use that file directly. Record its absolute path as `owner_defaults_path` in the ignored `workspace/project.properties` so future sessions can find it.
+
+When no owner-designated local file is recorded or supplied, use:
 
 ```text
 workspace/documentation/owner-defaults.md
 ```
 
-Create it from:
+Use this template when creating a local defaults file:
 
 ```text
 setup/owner-defaults-template.md
 ```
 
-Owner defaults reduce repeated setup questions. They are workspace-specific and ignored by Git. They should contain owner-specific setup preferences and overrides, not general workflow rules. They do not override approved project-specific decisions, legal constraints, safety boundaries, or explicit owner instructions in the active conversation.
+Owner defaults reduce repeated setup questions. Keep them local. They provide owner-specific setup preferences and overrides. Explicit owner instructions, approved project-specific decisions, legal constraints, and safety boundaries take precedence.
 
-Owner defaults may be supplied either as `workspace/documentation/owner-defaults.md` or directly in chat/attachments. Chat-provided owner defaults are valid setup input. When useful, persist them to `workspace/documentation/owner-defaults.md` as an ignored runtime artifact so later agent contexts can reuse them.
+Owner defaults supplied in chat or attachments are valid setup input. When useful, save them in an owner-approved local file for later sessions. If the designated local file is unavailable, report that and ask the owner for its current location when needed. Use confirmed project decisions and current owner instructions while it is unavailable.
 
-For an owner with a pinned private documentation destination, refresh [Shared Owner Defaults](../procedures/shared-owner-defaults.md) before planning a new Change Cycle or whenever the owner asks. Keep local settings and permissions in the local defaults.
+The root `owner-defaults.md` in the private documentation repository is an optional [backup of portable preferences](../procedures/shared-owner-defaults.md). Read it for backup review or when the owner explicitly requests it. Select the local source from the owner's instructions or ignored local configuration.
 
 ## Project Setup
 

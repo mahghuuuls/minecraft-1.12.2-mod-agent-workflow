@@ -38,7 +38,7 @@ Open the cloned directory with your coding agent and choose the prompt matching 
 Read AGENTS.md and guide me through Project Setup for a new Minecraft 1.12.2 mod.
 ```
 
-An optional `owner-defaults.md` file records preferences you want to reuse across mod projects, such as loader, runtime, template, license, publication, documentation, and Git workflow choices. When starting another mod, reuse the file from your previous workspace or create one from `setup/owner-defaults-template.md`. Attach or paste it with the request:
+An optional local `owner-defaults.md` file records preferences you want to reuse across mod projects, such as loader, runtime, template, license, publication, documentation, and Git workflow choices. Give each mod the path to the same local file, or create workspace-specific defaults from `setup/owner-defaults-template.md`. You can also attach or paste it with the request:
 
 ```text
 Read AGENTS.md and guide me through Project Setup for a new Minecraft 1.12.2 mod.

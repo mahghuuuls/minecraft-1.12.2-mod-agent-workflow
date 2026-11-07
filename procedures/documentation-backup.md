@@ -6,7 +6,7 @@ The root preference file follows the separate [Shared Owner Defaults procedure](
 
 ## Setup
 
-- Read the owner-supplied defaults file or `workspace/documentation/owner-defaults.md`. Automatic backups require an explicit saved approval in its Shared Documentation Backup section and a pinned private GitHub repository name, numeric ID, and branch. Read the owner's current restrictions before invoking the tool. Keep manual operation when approval is absent or the owner has paused automatic backups.
+- Read the authoritative [local owner defaults](../guidelines/process-control.md#local-owner-defaults). Automatic backups require an explicit saved approval in its Shared Documentation Backup section and a pinned private GitHub repository name, numeric ID, and branch. Read the owner's current restrictions before invoking the tool. Keep manual operation when approval is absent or the owner has paused automatic backups.
 - Confirm the documentation repository is separate from the process and mod source repositories. Treat credentials as an environment prerequisite. Keep them in the existing authenticated GitHub and SSH mechanisms.
 - Use the documentation project ID already bound in `workspace/documentation-sync/state.json`, if present. Otherwise record `documentation_project_id` in the ignored `workspace/project.properties` as soon as backup is enabled. Use the verified mod ID for an existing mod when available. For a new project without a mod ID, use a permanent unique lowercase ID such as `mod-` followed by a GUID without punctuation. Retain it through renames and later setup writes. If the other properties are deferred, record the ID alone. A collision or unverified occupied directory requires owner resolution.
 

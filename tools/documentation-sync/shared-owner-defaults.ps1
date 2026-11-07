@@ -2,6 +2,9 @@ function ConvertFrom-SharedOwnerDefaults([string]$Text) {
     $yesNo = '\A(?:Yes|No)\z'
     $plainTone = "\A[\p{L}\p{N} ,.!?()'-]{1,400}\z"
     $rules = @{
+        'Local Source' = @{
+            'Local owner-defaults file' = '\A`[A-Za-z]:\\(?:[A-Za-z0-9][A-Za-z0-9 ._-]*\\)+owner-defaults\.md`\z'
+        }
         'Project Setup Preferences' = @{
             'Implementation language' = '\A(?:Java|Kotlin)\z'
             'Distribution platform' = '\A(?:CurseForge|Modrinth|Both|Ask)\z'
@@ -57,6 +60,8 @@ function ConvertFrom-SharedOwnerDefaults([string]$Text) {
         }
         $preferences[$section][$key] = $value
     }
+    # A locator in the backup never selects a local file or becomes a preference.
+    if ($preferences.Contains('Local Source')) { $preferences.Remove('Local Source') }
     return $preferences
 }
 
