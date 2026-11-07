@@ -100,8 +100,22 @@ Separate reproducible build resolution from player-facing runtime compatibility:
 - Never ship an exact-only mod dependency version or a dependency range with an upper bound.
 - A required mod that the target runtime itself provides declares a minimum no higher than the version that runtime reports for it, whatever version the build resolves. MixinBooter on Cleanroom is the known case; see Mixins for which version to choose.
 - Do not add an upper bound speculatively, copy one from another mod, or use one to protect against a possible future incompatibility. Another required mod may impose its own independent constraints; do not duplicate those constraints as this mod's policy.
-- If a later dependency release proves incompatible, preserve player choice instead of retroactively blocking that version in metadata. Document the known problem and release a compatibility correction. Raise the minimum version only when the corrected implementation genuinely requires a newer dependency API or behavior.
+- If a later dependency release proves incompatible, preserve player choice instead of retroactively blocking that version in metadata. Document the known problem and release a compatibility correction. Choose the parent-mod minimum under Addon Parent-Mod Minimum below. For other dependencies, raise the minimum when the corrected implementation genuinely requires a newer dependency API or behavior.
 - A minimum-only range permits players to try later versions; it does not claim those untested versions are verified compatible. Public documentation must distinguish the verified minimum and tested baseline from that permissive policy.
+
+### Addon Parent-Mod Minimum
+
+For each addon release, default its parent-mod minimum to the latest stable parent release available for Minecraft 1.12.2 and the approved runtime when Feasibility Research selects the release's dependency baseline. Verify that artifact and record the release-check date. Apply the approved minimum to the whole addon, its shipping metadata and public copy.
+
+Retain an older parent minimum only when the owner explicitly approves that compatibility promise for this addon release. Record the exact older minimum, the reason and the supporting evidence. A previous addon release's lower minimum does not supply that approval. When only an optional feature needs a newer parent API, retaining an older parent through a feature gate is the same explicit compatibility decision.
+
+### Gameplay Dependency Versions
+
+Select one current stable version of each required and optional dependency for gameplay qualification, using the latest stable releases available for Minecraft 1.12.2 and the approved runtime at the recorded Feasibility release check. Pin the exact verified artifacts for the campaign. Runtime-provided mods use the version the target runtime actually supplies, as Mixins requires. Surface unavailable stable artifacts or incompatible dependency combinations as feasibility decisions before approving a replacement baseline.
+
+Add an older-version runtime case only when the owner explicitly approves support for that version for this release and the current change puts that compatibility at risk. Record the approved version, the affected claim and the specific risk in the plan. Check below-minimum rejection or an optional integration's unsupported-version guard through processed metadata and automated checks where sufficient. A focused loader check may address an unresolved admission risk; below-minimum gameplay regression is outside the supported scope.
+
+Choose absent-dependency and disabled-integration checks for their distinct behavior on the approved current pins. A newly published dependency version alone does not expand an approved campaign; changing its pins goes through the affected dependency findings and validation plan.
 
 ## Project Identity
 

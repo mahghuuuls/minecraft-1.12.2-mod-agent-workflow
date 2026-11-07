@@ -99,6 +99,7 @@ Act as an implementation planner.
 - For an issue that modifies existing production code, describe the desired fit of the new behavior, the boundary for proportionate local design improvement under `guidelines/coding-standards.md`, and the conditions that would require an architecture revision. Preserve implementation discretion instead of prescribing a method-by-method patch.
 - Make dependencies explicit.
 - When an issue adds or changes mod dependencies, plan separate checks for exact development artifact resolution and canonical minimum-only shipping metadata, including inspection of the processed distributable metadata.
+- Apply [Gameplay Dependency Versions](../guidelines/project-defaults.md#gameplay-dependency-versions) to version coverage. Carry the approved current pins and any explicit older-version support decision into the verification plan, and justify each additional version case by the affected claim and change risk.
 - Ensure the dependency graph contains no cycles.
 - Schedule high-risk assumptions and implementation validations early.
 - Define verification before implementation begins.
@@ -485,6 +486,8 @@ Before Implementation begins, present one compact decision packet for owner-perf
 Do not repeatedly ask about a deferred or waived check unless new evidence materially changes its risk.
 
 When Project Setup selected the Agent Diagnostics Toolkit, add a toolkit plan to the Implementation Plan. Name the pinned artifact, runtime placement, baseline and login-automation choices, bundle storage, log-retention path, and checks that will use it. A toolkit-assisted check must still state what the toolkit cannot prove and which mod-specific diagnostic or owner-visible observation supplies the missing evidence.
+
+Apply [Runtime Placement](../guidelines/agent-diagnostics-toolkit.md#runtime-placement) when deciding whether a separate toolkit-free launch supplies necessary evidence. Select fresh or reused worlds from the save-state criterion independently of toolkit installation.
 
 Present a compact toolkit summary alongside the owner-facing **Test now / Defer / Waive** packet. The summary must state the pinned artifact, whether it is already installed or deferred for a named runtime, the campaigns or cards that will use it, the evidence it can collect, and its material evidentiary limits. This is a presentation of the approved toolkit plan, not a second toolkit decision.
 

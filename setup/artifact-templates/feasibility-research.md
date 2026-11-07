@@ -23,9 +23,11 @@
 ## Dependencies And Integrations
 
 - Required and optional dependencies:
+- Parent mod, release-check date and current stable versions:
 - Exact artifacts inspected:
 - Verified minimum runtime versions:
 - Intended minimum-only shipping constraints:
+- Explicit owner decision for any older-parent support, with reason and evidence:
 - Independent constraints imposed by other required mods:
 
 ## Dependency Source References

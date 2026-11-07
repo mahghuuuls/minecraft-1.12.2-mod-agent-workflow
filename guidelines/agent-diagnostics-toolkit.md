@@ -66,6 +66,8 @@ Toolkit observation and commands execute on the logical server.
 
 Start a toolkit-assisted session by confirming the live build and environment with its capability, environment, and mod-list commands. Exact commands and record shapes belong to the pinned toolkit version's `AGENTS.md`; read that file before authoring bundles. This workflow records how the toolkit is used, not a frozen duplicate of its entire command surface.
 
+Keep the selected toolkit available during gameplay validation. Its exclusion from the shipping artifact and dependency declarations is checked through build configuration and archive inspection. Plan a separate toolkit-free launch only for a concrete masking or accidental-dependence risk that those checks and existing evidence cannot resolve. Record the question and why runtime absence is necessary. Choose fresh or reused worlds from the save-state requirement independently of toolkit installation.
+
 ## Safe Baseline Environment
 
 The recommended disposable-world baseline is:
@@ -138,6 +140,8 @@ An operator join bundle must be:
 Keep destructive or feature-specific setup in the named test bundle the owner deliberately runs. Never enable login automation in an external multiplayer server, normal play world, or modpack instance without explicit authorization for that exact environment.
 
 ## Bundle And Evidence Workflow
+
+Before a Gradle launch, inspect tasks that synchronize toolkit configuration, bundles, inbox files or results into the runtime. Preserve prior evidence outside their destinations before synchronization. Supply launch inputs from the task's source or stage them after synchronization. After synchronization, read back the generated settings and verify the deployed bundle contents against the planned inputs before sending requests. Settings consumed at client startup must survive synchronization before the game process starts.
 
 Use the toolkit to reduce deterministic command transcription, not to hide the test from the owner:
 

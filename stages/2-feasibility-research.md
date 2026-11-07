@@ -144,7 +144,7 @@ For each relevant library, investigate:
 - Selected loader and runtime compatibility
 - Required dependencies
 - Exact artifact and version inspected for research or reproducible build resolution
-- Lowest version the project can responsibly require from available API and compatibility evidence
+- Proposed shipping minimum under Mod Dependency Version Constraints in `guidelines/project-defaults.md`
 - Client, server, or shared usage
 - License and redistribution restrictions
 - Source-code and documentation availability
@@ -155,6 +155,8 @@ For each relevant library, investigate:
 - Apparent suitability for the project
 
 Library research may recommend candidates, but final dependency and integration decisions belong to Architecture Definition.
+
+Record the current dependency baseline under [Addon Parent-Mod Minimum and Gameplay Dependency Versions](../guidelines/project-defaults.md#addon-parent-mod-minimum). Identify the parent mod when applicable, the release-check date, exact current artifacts and intended shipping minima. Surface any proposed older-parent support as an explicit owner decision for this release, including its cost in feature gates and validation. Carry these findings into Requirements and Architecture before planning version coverage.
 
 ## Dependency Source Checkouts
 
@@ -225,6 +227,7 @@ This stage is complete when:
 - Promising libraries and their limitations are documented.
 - Required and optional dependencies are identified.
 - Each required mod dependency has an exact inspected artifact for reproducibility and a verified minimum version for unbounded shipping metadata; no exact-only or upper-bounded runtime constraint is recommended.
+- The dependency baseline records its release-check date, current gameplay pins and any explicit owner-approved older-parent compatibility promise.
 - Necessary dependency source checkouts are recorded with URL/path, ref or commit, reason, and licensing constraints.
 - Important compatibility and client/server limitations are understood.
 - Major technical and performance risks are recorded.

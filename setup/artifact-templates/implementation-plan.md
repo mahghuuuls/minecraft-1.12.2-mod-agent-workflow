@@ -32,7 +32,8 @@
 
 ## Verification Strategy
 
--
+- Exact gameplay dependency pins and reference to the approved Feasibility baseline:
+- Any older-version runtime case, with explicit owner-approved support, affected claim and change risk:
 
 ## Release Identity Ownership
 
@@ -54,8 +55,10 @@ Apply the routing rules in `stages/7-implementation.md#evidence-pack-routing`; d
 - Runtime placement and release exclusion:
 - Safe baseline and join automation:
 - Bundle storage and naming:
+- Launch synchronization, deployed-input verification and preservation of prior results:
 - Log retention:
 - Planned toolkit-assisted checks:
+- Rationale for any separate toolkit-free launch:
 - Evidence the toolkit cannot provide:
 - Owner-facing decision-packet summary:
 

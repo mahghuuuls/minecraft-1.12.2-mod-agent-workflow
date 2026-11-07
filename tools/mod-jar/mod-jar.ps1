@@ -463,29 +463,25 @@ function ConvertFrom-ModInfoDependencies {
     param([object]$ModInfoEntry)
 
     $dependencies = New-Object 'System.Collections.Generic.List[object]'
-    $required = @{}
     foreach ($target in $ModInfoEntry.requiredMods) {
-        $parsed = ConvertFrom-DependencyTarget -Target $target -Instruction 'required-after' -Origin 'mcmod.info requiredMods'
-        $required[$parsed.modId] = $true
+        $parsed = ConvertFrom-DependencyTarget -Target $target -Instruction 'required' -Origin 'mcmod.info requiredMods'
         $dependencies.Add($parsed)
     }
     foreach ($target in $ModInfoEntry.dependencies) {
         $parsed = ConvertFrom-DependencyTarget -Target $target -Instruction 'after' -Origin 'mcmod.info dependencies'
-        if (-not $required.ContainsKey($parsed.modId)) { $dependencies.Add($parsed) }
+        $dependencies.Add($parsed)
     }
     foreach ($target in $ModInfoEntry.dependants) {
         $parsed = ConvertFrom-DependencyTarget -Target $target -Instruction 'before' -Origin 'mcmod.info dependants'
-        if (-not $required.ContainsKey($parsed.modId)) { $dependencies.Add($parsed) }
+        $dependencies.Add($parsed)
     }
     return , $dependencies.ToArray()
 }
 
 function Get-JarMods {
-    # Combines the @Mod annotations with mcmod.info the way FML 1.12.2 does: a mod exists
-    # where @Mod exists; mcmod.info supplies name and version only when the annotation asks for
-    # it (useMetadata) or leaves the field empty; dependency lists come from mcmod.info only
-    # when useMetadata is set and mcmod.info says useDependencyInformation, otherwise from the
-    # annotation's dependencies string.
+    # Resolves dependencies using FMLModContainer.bindMetadata. An omitted useMetadata
+    # element leaves overridesMetadata false, even though the annotation's default is false.
+    # Resource dependency lists apply when enabled and not explicitly overridden.
     param([object]$ModInfo, [object[]]$Annotations, [bool]$ClassesScanned)
 
     $mods = New-Object 'System.Collections.Generic.List[object]'
@@ -512,6 +508,7 @@ function Get-JarMods {
         if ($elements.Contains('modid')) { $modId = [string]$elements['modid'] }
         $useMetadata = $false
         if ($elements.Contains('useMetadata')) { $useMetadata = [bool]$elements['useMetadata'] }
+        $overridesMetadata = $elements.Contains('useMetadata') -and -not $useMetadata
         $annotationVersion = ''
         if ($elements.Contains('version')) { $annotationVersion = [string]$elements['version'] }
         $annotationName = ''
@@ -542,15 +539,15 @@ function Get-JarMods {
         }
         if ([string]::IsNullOrWhiteSpace($name)) { $name = $modId }
 
-        if ($useMetadata -and $null -ne $infoEntry -and $infoEntry.useDependencyInformation) {
+        if (-not $overridesMetadata -and $null -ne $infoEntry -and $infoEntry.useDependencyInformation) {
             $dependencies = ConvertFrom-ModInfoDependencies -ModInfoEntry $infoEntry
-            $dependencySource = 'mcmod.info (useMetadata and useDependencyInformation)'
+            $dependencySource = 'mcmod.info (useDependencyInformation)'
         }
         else {
             $dependencies = ConvertFrom-DependencyString -Value $annotationDependencies -Origin '@Mod dependencies'
             $dependencySource = '@Mod dependencies'
-            if ($null -ne $infoEntry -and $infoEntry.useDependencyInformation -and -not $useMetadata) {
-                $dependencySource = '@Mod dependencies (mcmod.info sets useDependencyInformation, but @Mod does not set useMetadata, so FML ignores it)'
+            if ($null -ne $infoEntry -and $infoEntry.useDependencyInformation -and $overridesMetadata) {
+                $dependencySource = '@Mod dependencies (useMetadata=false overrides mcmod.info)'
             }
         }
 

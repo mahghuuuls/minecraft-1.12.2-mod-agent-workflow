@@ -21,11 +21,12 @@ Jars are named after the action; `-Folder <directory>` adds every `*.jar` in a d
 
 Prints, per jar: size and SHA-256; every `mcmod.info` entry (both the plain list and the `modListVersion` 2 shape) with its `requiredMods`, `dependencies`, `dependants`, and `useDependencyInformation`; the manifest attributes that mark a coremod, tweaker, mixin, or access-transformer jar; every `@Mod` annotation with its class, id, name, version, and dependency string; the asset domains and resource counts.
 
-Name, version, and dependencies are combined the way FML 1.12.2 combines them, and each value says where it came from:
+The tool reports mod identity, version and effective dependency sources.
 
 - A mod exists where a class carries `@Mod`. An `mcmod.info` entry without such a class is listed with a note; FML does not load it.
 - The version is the annotation's `version`, or the `mcmod.info` version when the annotation leaves it empty.
-- The dependency list comes from `mcmod.info` only when the annotation sets `useMetadata` and the file sets `useDependencyInformation`; otherwise it is the annotation's `dependencies` string, which is what most mods use. `mcmod.info` alone is therefore not enough for a dependency check, which is why the tool reads the classes.
+- The dependency list comes from `mcmod.info` when it sets `useDependencyInformation` and the compiled `@Mod` annotation either omits `useMetadata` or explicitly sets it to `true`. Explicit `false`, or disabled resource dependency information, selects the annotation's `dependencies` string. This follows the raw-descriptor branch in Forge 1.12.2, where omission differs from the annotation's Java default. [FMLModContainer.bindMetadata](https://github.com/MinecraftForge/MinecraftForge/blob/1.12.x/src/main/java/net/minecraftforge/fml/common/FMLModContainer.java#L195-L218)
+- Resource `requiredMods` entries require presence without implying order. Resource `dependencies` and `dependants` supply independent after and before relations, including when the same target is also required.
 
 `-SkipClasses` skips the class scan for speed; the output then says that the `@Mod` data is unknown.
 
@@ -62,7 +63,7 @@ Across a `-Folder`, `find` reads file names and language keys only, because pars
 Reads every jar in a mods folder and reports whether the set can load:
 
 - `DUPLICATE`: one mod id provided by two jars, or by a jar and the environment (`-Provided`). FML refuses to start with a duplicate.
-- `MISSING`: a `required-after`, `required-before`, or `mcmod.info requiredMods` target that no jar, built-in id (`minecraft`, `forge`, `fml`, `mcp`), or `-Provided` id supplies.
+- `MISSING`: a required target from the annotation or `mcmod.info` that no jar, built-in id (`minecraft`, `forge`, `fml`, `mcp`), or `-Provided` id supplies.
 - `VERSION`: a present mod whose version is outside the required range. The comparison is basic (numeric segments as numbers, other segments as text, a trailing qualifier sorts before the plain version), so read the versions when a range is unusual.
 
 Notes list jars without a mod id (libraries, coremod-only jars), coremod, tweaker, or mixin jars (a development runtime that already has the same mod on its Gradle classpath refuses the copy as a duplicate), unreadable `mcmod.info` files, unknown dependency instructions, and optional-dependency version mismatches. A coremod that registers its mod id from its loading plugin rather than an `@Mod` class (MixinBooter is one) appears as `no mod id found` and still shows as `MISSING` for the mods that require it; when its jar is in the folder, name its id with `-Provided`.
@@ -83,4 +84,4 @@ A folder of a few hundred jars takes minutes because every class is scanned for 
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\mod-jar\tests\run-tests.ps1
 ```
 
-The tests build fixture jars with hand-assembled class files that carry `@Mod` annotations (including decoy annotations with enum, array, nested-annotation, class, and integer elements the parser must skip), both `mcmod.info` shapes, a coremod manifest, and an unparseable `mcmod.info`. They verify metadata combination, dependency-source selection, item listing by source with `data` values, folder and single-jar `find`, the duplicate, missing, and version checks with and without `-Provided`, `-Strict`, JSON output, and the batch launcher with PowerShell module autoload disabled.
+The tests build fixture jars with hand-assembled class files that carry `@Mod` annotations (including decoy annotations with enum, array, nested-annotation, class, and integer elements the parser must skip), both `mcmod.info` shapes, a coremod manifest, and an unparseable `mcmod.info`. They cover omitted, explicit true and explicit false `useMetadata` elements with resource dependency information enabled and disabled, presence without ordering, and independent resource ordering for required targets. They also verify metadata combination, item listing by source with `data` values, folder and single-jar `find`, the duplicate, missing, and version checks with and without `-Provided`, `-Strict`, JSON output, and the batch launcher with PowerShell module autoload disabled.

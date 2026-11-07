@@ -170,13 +170,13 @@ function New-ClassBytes {
 }
 
 function New-ModAnnotation {
-    param([string]$ModId, [string]$Version, [string]$Dependencies, [bool]$UseMetadata, [string]$Name)
+    param([string]$ModId, [string]$Version, [string]$Dependencies, [Nullable[bool]]$UseMetadata, [string]$Name)
     $pairs = New-Object 'System.Collections.Generic.List[hashtable]'
     $pairs.Add(@{ Name = 'modid'; Value = @{ Tag = 's'; Value = $ModId } })
     if ($null -ne $Name) { $pairs.Add(@{ Name = 'name'; Value = @{ Tag = 's'; Value = $Name } }) }
     if ($null -ne $Version) { $pairs.Add(@{ Name = 'version'; Value = @{ Tag = 's'; Value = $Version } }) }
     if ($null -ne $Dependencies) { $pairs.Add(@{ Name = 'dependencies'; Value = @{ Tag = 's'; Value = $Dependencies } }) }
-    if ($UseMetadata) { $pairs.Add(@{ Name = 'useMetadata'; Value = @{ Tag = 'Z'; Value = 1 } }) }
+    if ($null -ne $UseMetadata) { $pairs.Add(@{ Name = 'useMetadata'; Value = @{ Tag = 'Z'; Value = [int]$UseMetadata } }) }
     return @{ Type = 'Lnet/minecraftforge/fml/common/Mod;'; Pairs = @($pairs.ToArray()) }
 }
 
@@ -289,11 +289,61 @@ try {
     Assert-Equal $libMod.version '2.1.0' 'An empty @Mod version did not fall back to mcmod.info.'
     Assert-Equal $libMod.versionSource 'mcmod.info version' 'The version source label is wrong.'
     Assert-Equal $libMod.useMetadata $true 'The boolean useMetadata element was not read.'
-    Assert-Equal $libMod.dependencySource 'mcmod.info (useMetadata and useDependencyInformation)' 'useMetadata plus useDependencyInformation did not select the mcmod.info lists.'
+    Assert-Equal $libMod.dependencySource 'mcmod.info (useDependencyInformation)' 'useMetadata plus useDependencyInformation did not select the mcmod.info lists.'
     Assert-Equal $libMod.dependencies[0].modId 'forge' 'The mcmod.info requiredMods target is wrong.'
     Assert-Equal $libMod.dependencies[0].range '[14.23,)' 'The mcmod.info requiredMods range is wrong.'
     Assert-Equal $libMod.dependencies[0].required $true 'A requiredMods entry was not marked required.'
     Assert-Equal @($libInfo)[0].mcmodInfo.mods[0].useDependencyInformation $true 'The modListVersion 2 shape was not read.'
+
+    # FMLModContainer.bindMetadata distinguishes an omitted useMetadata element from false.
+    $metadataFolder = Join-Path $TestDirectory 'metadata-precedence'
+    [IO.Directory]::CreateDirectory($metadataFolder) | Out-Null
+    $metadataCases = @(
+        @{ Name = 'omitted-enabled'; UseMetadata = $null; UseDependencyInformation = $true; ExpectedMetadata = $true },
+        @{ Name = 'true-enabled'; UseMetadata = $true; UseDependencyInformation = $true; ExpectedMetadata = $true },
+        @{ Name = 'false-enabled'; UseMetadata = $false; UseDependencyInformation = $true; ExpectedMetadata = $false },
+        @{ Name = 'omitted-disabled'; UseMetadata = $null; UseDependencyInformation = $false; ExpectedMetadata = $false },
+        @{ Name = 'true-disabled'; UseMetadata = $true; UseDependencyInformation = $false; ExpectedMetadata = $false },
+        @{ Name = 'false-disabled'; UseMetadata = $false; UseDependencyInformation = $false; ExpectedMetadata = $false }
+    )
+    foreach ($case in $metadataCases) {
+        $modId = $case.Name.Replace('-', '')
+        $annotation = New-ModAnnotation -ModId $modId -Version '1.0' -Dependencies 'required-after:annotationlib@[9.0,)' -UseMetadata $case.UseMetadata
+        $metadata = @([ordered]@{
+            modid = $modId
+            name = $modId
+            version = '1.0'
+            useDependencyInformation = $case.UseDependencyInformation
+            requiredMods = @('presenceonly@[2.0,)', 'orderedafter', 'orderedbefore')
+            dependencies = @('orderedafter@[3.0,)')
+            dependants = @('orderedbefore@[4.0,)')
+        })
+        $caseJar = Join-Path $metadataFolder ($case.Name + '.jar')
+        New-Jar -Path $caseJar -Entries @{
+            'mcmod.info' = ConvertTo-Json -InputObject $metadata -Depth 4
+            'fixture/MetadataMod.class' = New-ClassBytes -ClassName 'fixture/MetadataMod' -Annotations @($annotation)
+        }
+        $caseInfo = (Invoke-Tool @('info', $caseJar, '-Json')) -join "`n" | ConvertFrom-Json
+        $caseMod = @($caseInfo)[0].mods[0]
+        $actualDependencies = @(foreach ($dependency in $caseMod.dependencies) {
+            $text = $dependency.instruction + ':' + $dependency.modId
+            if ($dependency.range) { $text += '@' + $dependency.range }
+            $text
+        })
+        if ($case.ExpectedMetadata) {
+            Assert-Equal ($actualDependencies -join ';') 'required:presenceonly@[2.0,);required:orderedafter;required:orderedbefore;after:orderedafter@[3.0,);before:orderedbefore@[4.0,)' "Wrong resource dependencies for $($case.Name)."
+            Assert-Equal $caseMod.dependencySource 'mcmod.info (useDependencyInformation)' "Wrong dependency source for $($case.Name)."
+            Assert-Equal @($caseMod.dependencies | Where-Object required).Count 3 'Resource presence requirements were lost.'
+        }
+        else {
+            Assert-Equal ($actualDependencies -join ';') 'required-after:annotationlib@[9.0,)' "Wrong annotation dependencies for $($case.Name)."
+        }
+    }
+    $metadataCheck = (Invoke-Tool @('check', '-Folder', $metadataFolder, '-Provided', 'presenceonly,orderedafter,orderedbefore', '-Json')) -join "`n" | ConvertFrom-Json
+    Assert-Equal @($metadataCheck.problems).Count 4 'check did not use the effective dependency source for all six cases.'
+    foreach ($problem in $metadataCheck.problems) {
+        Assert-Contains @($problem) "MISSING 'annotationlib'" 'A resource-only presence requirement was treated as missing.'
+    }
 
     $brokenInfo = Invoke-Tool @('info', (Join-Path $badFolder 'broken-info.jar'))
     Assert-Contains $brokenInfo '  mcmod.info: could not be parsed' 'An unparseable mcmod.info was not reported.'

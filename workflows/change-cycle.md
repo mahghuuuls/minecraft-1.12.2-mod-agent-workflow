@@ -80,6 +80,12 @@ Check `project-baseline.md` for a reported publication date or URL:
 
 Present this with the intake route rather than as a separate interruption. Record the resulting working branch in `change-intake.md` and in `project-status.md`, so a resumed agent commits to the right branch without rediscovering the decision.
 
+## Resuming A Parked Cycle
+
+Before presenting the next checkpoint of a parked cycle, run the [Workflow Repository Update Check](../guidelines/process-control.md#workflow-repository-update-check). Read the current ledger, release-ready baseline and parked approvals, then inspect the mod's current branch and revision against the cycle's approved working branch.
+
+When another release occurred while the cycle was parked, compare its baseline with the parked cycle's assumptions and approved scope. Carry forward approvals whose basis still holds, identify affected artifacts through change-impact analysis and obtain approval for required revisions. Resolve a changed baseline or working-branch decision before resuming implementation. Record the resumption findings in `project-status.md` and refresh `project-state.md` for the handoff.
+
 ## Reported Defect Confirmation
 
 A change request that reports a defect is a claim, not an established fact. Confirm it before proposing a route.
