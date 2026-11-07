@@ -2,9 +2,9 @@
 
 ## Purpose
 
-Write the brief that puts a fresh reviewer in front of a change or an evidence record, so that the review can disagree with its author.
+Write the brief that puts a fresh reviewer in front of a change, an evidence record, or a mod page, so that the review can disagree with its author.
 
-This is a callable procedure, not a reusable stage. `stages/7-implementation.md` owns when a review is required, what the reviewer must receive and examine, how findings are classified, and what happens to them. This file owns the shape of the message that starts the review.
+This callable procedure owns the reviewer handoff. `stages/7-implementation.md` owns implementation reviews and `stages/8-release-presentation.md` owns mod-page reviews, including readiness, finding classification, and disposition.
 
 ## When To Use
 
@@ -14,9 +14,13 @@ Use this procedure every time `stages/7-implementation.md` requires an independe
 - An evidence review of an evidence-only issue, where the deliverable is a confirmation, a verification, or an investigation rather than a diff.
 - The follow-up review of a campaign's results file and corrections, before any included issue moves to **Done**.
 
+Use [Mod Page Review](#mod-page-review) when `stages/8-release-presentation.md` calls for independent review or focused verification.
+
 Review-agent initiation is governed by `guidelines/collaboration-guidelines.md#required-read-only-review-agents`; the owning stage still determines when the review is ready and required.
 
 ## Required Inputs
+
+For implementation reviews, gather the following inputs. Mod-page inputs are listed in [Mod Page Review](#mod-page-review).
 
 - The owning issue, whole.
 - The items `stages/7-implementation.md` lists under "The review agent must receive" for a code review, or under the evidence-only paragraph for an evidence review.
@@ -30,6 +34,8 @@ Review-agent initiation is governed by `guidelines/collaboration-guidelines.md#r
 - The reviewer reads and reports. It does not edit the project, run the game with the owner, or approve anything.
 
 ## Procedure
+
+For implementation reviews, follow these steps.
 
 1. Name the review kind: code, evidence-only, or campaign follow-up. The kind decides which list in `stages/7-implementation.md` the brief follows.
 2. List the inputs by path. For a code review, every item under "The review agent must receive". For an evidence review, the criterion, each evidence item with its label, the environment tier each came from, and the raw material. For a campaign follow-up, the map, the results file, the staged evidence, and each included issue's criteria.
@@ -49,6 +55,13 @@ For an evidence review or a campaign follow-up, add:
 
 > Judge whether each label is correct, whether an inferred claim is presented as observed, whether an absence requirement was checked in an environment that could satisfy it at all, and whether the evidence reaches the criterion or merely surrounds it. Compare each card's expected result with the criterion it claims to check. Name every criterion, or part of one, that no card reached: a craft never performed, an effect never applied, an item never looked at. Open every cited log line and file; a citation you could not open is a finding. Downgrading a label is a blocking finding.
 
+## Mod Page Review
+
+1. Start each applicable persona in a separate context without the writing conversation. Send the assigned role, the review rules in `stages/8-release-presentation.md`, and the same identified page revision with its reader-visible context. Include the visible title, metadata, links, and any available preview. Ask the reviewer to record a short reader verdict and which relevant questions the page answers, leaves unclear, or directs to a link before opening supporting documentation.
+2. After that reviewer records first impressions, provide release-matched sources by path, such as approved requirements, glossary terms, shipped defaults or metadata, implementation evidence, and relevant public documentation. Identify which sources a reader can access. Ask the reviewer to check claims and links and retain any navigation finding where the page lacks a useful route to the answer. Keep the author's rationale and other reviewers' feedback out of the initial round.
+3. Ask for a concise report with the reader verdict and a stable ID for each finding. Include the passage or omission, Stage 8 category and severity, concrete reader impact, proportionate correction, and supporting source or verification limit. A report with no significant findings still states what was checked. Record the reports and dispositions in the Stage 8 presentation record.
+4. For focused verification, give a separate reviewer the revised draft, changed passages, applicable finding IDs, and relevant evidence. Use an original reviewer when available. Ask whether the changes resolved the findings and introduced any new problems. Keep the check scoped to those changes and any regressions they caused.
+
 ## Completion
 
-The brief is complete when the reviewer has every listed input by path, the instruction for the review kind, and no sentence that tells it what to conclude. The review itself is complete when its report is recorded in the owning issue with the disposition of every finding.
+The brief is complete when the reviewer receives the inputs and instructions for each applicable pass without being told what to conclude. Record implementation review results and finding dispositions in the owning issue. Record mod-page review results and finding dispositions in `release-presentation.md`. The owning stage defines the completion criteria.

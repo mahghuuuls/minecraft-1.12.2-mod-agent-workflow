@@ -26,6 +26,15 @@
 - Intended audience:
 - AI usage disclaimer status:
 
+## Independent Mod Page Review
+
+- Release and reviewed draft revision, including reader-visible context:
+- Outcome and carry-forward basis, when applicable:
+- Reviewer roles, verdicts or reports, and reasons for any skipped role:
+- Finding IDs, dispositions, and reasons:
+- Focused verification, verified revision, and limits on link or preview checks:
+- Accepted review limitation, if applicable (missing role or check, availability checks, revision and scope, substitute checks, residual risk, and owner acceptance):
+
 ## Platform Formatting Compatibility
 
 - Target editor or renderer:

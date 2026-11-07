@@ -90,7 +90,7 @@ Do not:
 - Publish a release
 - Keep the workflow open only to wait for manual publication
 
-An implementation defect returns to Implementation. An inaccurate public claim returns to the stage that owns the underlying behavior or decision. A terminology conflict returns to the glossary-owning stage that introduced or approved the term.
+Correct inaccurate wording in Release Presentation when approved evidence settles the claim. An implementation defect returns to Implementation. A conflict with an approved behavior or decision returns to the stage that owns it. A terminology conflict returns to the glossary-owning stage that introduced or approved the term.
 
 When Release Presentation returns to Implementation while release materials are drafted but not yet committed in the mod repository, copy each drafted file to `workspace/release-drafts/` and record its path. Then delete the new files and revert the edited tracked files to the last commit, before any build, launch, or commit for the returned work. Every campaign runtime, checkpoint, and evidence pack then comes from a clean tree that holds only implementation changes, and the release-preparation commit stays its own approved step. When Release Presentation resumes, compare each saved draft with the file now in the repository, merge them, update them for the new behavior, and present the changed materials again (process steps 18 to 20).
 
@@ -163,7 +163,7 @@ Draft the smallest useful mod page first and expand it only when a normal player
 
 For each player-facing bullet, identify what players will see, do, or need to know to decide, install, configure, or play. Put implementation and API contracts in technical documentation. Include details already apparent in the game only when they affect how players use the mod.
 
-Carry forward the approved mod page when its player-facing claims are still accurate and useful. Use the distribution-platform release changelog for release-specific changes players are likely to notice.
+Apply the carry-forward rule in [Independent Mod Page Review](#independent-mod-page-review). Use the distribution-platform release changelog for release-specific changes players are likely to notice.
 
 For a content mod with several integrations (content per supported mod), the default shape after the disclaimer is one section per integration, one line per item it adds, and no totals anywhere, so a later release adds a section without rewriting the page. Hyperlink every other mod named, on its first mention or in its section heading, to its page on the selected distribution platform after checking that the page exists.
 
@@ -217,6 +217,31 @@ Avoid player-facing sections that are primarily internal or redundant, including
 - Cleanroom or loader caveats that do not affect normal player decisions
 
 If the owner explicitly selects a combined documentation style, keep repository-oriented and player-facing content clearly separated.
+
+### Independent Mod Page Review
+
+Review new or materially revised agent-managed player-facing copy, including the player-facing portion of an approved combined document. A revision is material when it changes what readers can reasonably conclude or do, such as understanding the mod's purpose, defaults, setup, compatibility, integration, or route to essential documentation. Carry forward unchanged approved pages, including pages approved before this review was introduced, after confirming and recording why their claims are still accurate and useful in the current reader-visible context. For nonmaterial edits to approved copy, apply the normal copy checks and record why the edits are nonmaterial. For owner-managed or deferred copy, provide only the review help the owner explicitly assigns.
+
+Once the draft, public-claim checks, and applicable source-format checks are ready, run one independent round under `guidelines/collaboration-guidelines.md#required-read-only-review-agents`. Use the mod-page handoff in [Independent Review Brief](../procedures/independent-review-brief.md#mod-page-review). Assign each applicable role to a separate read-only reviewer and use the same draft and reader-visible context for every role.
+
+- **Player.** Check what the mod does, why a player would use it, what happens after installation under the defaults, and whether mod-specific requirements and unusual setup are clear. Account for mods that provide a framework or require configuration before players see an effect.
+- **Modpack Author.** Check fit with an existing pack, defaults, configuration options and the route to their documentation, and documented compatibility, dependency, client, server, or multiplayer requirements.
+- **Mod Developer.** Use when the mod offers a public API or developer integration surface. Check what others can integrate, the boundaries of support, and how to find documentation and available examples. Distinguish developer APIs from configuration and scripting. Record why the role is skipped when it does not apply.
+- **Editorial Critic.** Check clarity, concision, specificity, and natural phrasing. Flag padding, repetition, vague claims, or structure that gets in the reader's way. Apply the approved terminology, disclosure, and public-copy preferences, and explain the reader impact of each suggestion.
+
+Assume basic Minecraft modding literacy. Use the approved project setup and the metadata readers can actually see to judge version, loader, and runtime context. Apply Runtime Compatibility in `guidelines/project-defaults.md` when checking the distinction between a Forge artifact and the supported runtime. Ask for additions only when they answer a concrete reader question or prevent a likely misunderstanding. Keep detailed configuration and API reference material in linked documentation when relevant.
+
+Classify each finding as a factual error, missing essential information, clarity problem, or editorial suggestion. Assign severity by reader impact, independent of the category or number of reviewers who raised it.
+
+- **Blocking.** Likely to cause failed use or materially false expectations.
+- **Important.** Leaves a meaningful question about using or integrating the mod unanswered.
+- **Optional.** Improves wording or presentation with little effect on understanding.
+
+In `<artifact-root>/release-presentation.md`, identify the release and reviewed draft, record the roles and their verdicts, and link or retain their findings. Consolidate duplicates while retaining their original IDs. Resolve valid Blocking findings and correct or decline Important findings with evidence. Record a brief reason for declining other findings. Treat unverified concerns as questions, and escalate factual conflicts the available evidence cannot resolve to the owner. Substantiate, narrow, or remove unsupported material claims. Record mod-change suggestions separately and use the existing return route for confirmed implementation defects.
+
+After corrections, have a separate reviewer verify the affected passages and check for regressions, including any relevant links and formatting. Apply the review trigger again after a later material change, including owner feedback or a return from Implementation. If the page was independently reviewed for this release, recheck the affected passages and include any newly applicable role. For such a page, run a fresh round only if the intended audience or scope changes enough to invalidate the original reviews. When a valid blocker remains, record the issue and the evidence or owner decision needed to resolve it, and hold materials approval. Record when review covered only source text or when a link or preview could not be verified. Apply the existing owner-preview rules for the target platform.
+
+If an applicable reviewer is temporarily busy, use another eligible separate context or wait. If an independent review or focused verification is genuinely unavailable, complete the available reviews and targeted substitute checks. The owner may then explicitly accept a limitation for the exact low-risk copy affected. Eligible copy is reversible, supported by approved evidence, and carries little risk of misleading readers about use, installation, compatibility, or integration. Record the missing role or check, availability checks, affected revision and scope, substitute checks, residual risk, and the owner's explicit acceptance in `release-presentation.md`. Record this outcome as an accepted review limitation and reassess it if the affected scope changes materially. Without acceptance, hold materials approval until independent review is available. Valid blockers and unsupported material claims still prevent materials approval.
 
 ### CurseForge Markdown Compatibility
 
@@ -378,14 +403,14 @@ Do not use the internal record as public copy.
 15. Check every public claim against approved implementation evidence and approved glossary terminology; inspect the release artifact's processed dependency metadata for exact-only or upper-bounded relations.
 16. Update `workspace/documentation/glossary.md` when release copy approves, refines, or deprecates public-facing project terminology.
 17. Keep technical evidence and internal limitations in `release-presentation.md` rather than public README or mod-page copy.
-18. Inspect the mod repository, then present the complete public materials, release version, intended release-file scope, and proposed commit message before final artifact validation. Obtain owner approval of the materials; the routine Git policy is owned by `guidelines/collaboration-guidelines.md`.
+18. Apply [Independent Mod Page Review](#independent-mod-page-review) and record its outcome before materials approval. Inspect the mod repository, then present the complete public materials, release version, intended release-file scope, and proposed commit message before final artifact validation. Obtain owner approval of the materials. The routine Git policy is owned by `guidelines/collaboration-guidelines.md`.
 19. Check that Git policy and any owner restrictions. Materials approval remains a required content decision; do not add a separate commit permission gate unless the applicable policy requires it.
 20. Once the materials are approved and the applicable Git conditions are met, commit only the approved release/version/public-material changes and verify the repository is clean at the resulting revision.
 21. If release validation is agent-managed, run the approved clean build from that clean committed revision, identify exactly one normal distributable JAR under `<mod-repository>/build/libs/`, inspect it, read its manifest and confirm every attribute resolves to content in the jar, confirm the in-mod logo the metadata names is in the jar (or that no logo is named and the record says the icon was deferred), calculate its checksum, leave it there as the canonical upload source, and record that path and identity in the handoff. Remove no auxiliary build output merely because it is not uploadable, but reject stale normal distributable JARs from older versions. Follow `procedures/release-build-and-discovery.md` for the order of these operations and of the discovery launch in the test instance.
 22. If release packaging is owner-managed, record the approved source revision, expected command/artifact pattern, and owner-managed boundary instead of building.
 23. When the toolkit was used, review its feedback artifact and record which entries remain Candidate, Confirmed, or Reported; do not modify or report to the external toolkit project without separate authorization.
 24. Present the completed internal presentation record and release handoff for stage approval. In the same chat response, include the exact distribution-platform release changelog in a clearly labeled paste-ready block, and the platform listing packet: the summary sentence, the main category and the additional categories with their reasons, the source and issue tracker URLs, and the license. Read the platform's category list that session rather than from memory, and check that the issue tracker URL answers once the repository is pushed (an unpushed repository has no issues page yet; say so and give the URL it will have). The owner fills the project form from this packet; without it the summary, the categories, and the links are asked for one at a time after the workflow has completed.
-25. Revise until explicitly approved. If a revision changes the committed release source, commit the approved correction under the applicable Git policy and repeat artifact validation before final approval.
+25. Revise until explicitly approved. For material mod-page changes, reapply [Independent Mod Page Review](#independent-mod-page-review) before seeking approval of the revised materials. If a revision changes the committed release source, commit the approved correction under the applicable Git policy and repeat artifact validation before final approval.
 26. When the owner reports the publication, record the project URL as the owner gives it. A new CurseForge project answers 404 to everyone but its owner until the platform's review passes, so a 404 right after the report is not a missing project; recheck the URL later and record the date it answered.
 
 ## Output Artifacts
@@ -426,6 +451,7 @@ This stage is complete when:
 
 - Repository README copy is concise, repository-facing, and approved when agent-managed.
 - Mod-page or distribution-page copy is concise, player/download-facing, and approved when agent-managed.
+- The [Independent Mod Page Review](#independent-mod-page-review) outcome is recorded when applicable, including any carry-forward basis or accepted review limitation, with all valid Blocking findings resolved.
 - Mod-page or distribution-page copy has passed the platform-redundancy check: it does not needlessly repeat the displayed project name, game/version/loader metadata, absence of dependencies, test matrix, expanded install scenarios, or implementation-specific restart terminology.
 - Mod-page or distribution-page copy includes the default AI usage disclaimer near the top unless the owner approved removing or rewriting it.
 - Repository `CHANGELOG.md` is useful release history and is approved.
