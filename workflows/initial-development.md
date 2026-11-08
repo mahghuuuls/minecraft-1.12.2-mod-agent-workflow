@@ -56,6 +56,7 @@ Reusable stages 1 through 8 are **Required**. Release Presentation includes rele
 11. Present one final checkpoint that separately labels:
     - approval of Release Presentation, and
     - approval of the completed Initial Development workflow and release-ready baseline.
+12. After both approvals, give the owner the [publication packet](../stages/8-release-presentation.md#publication-packet) as the workflow's last message.
 
 The owner may approve both decisions in one response. Do not treat approval of one as approval of the other.
 

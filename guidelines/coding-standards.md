@@ -147,11 +147,11 @@ Software design continues whenever existing code changes. Optimize for the small
 - When a build started from the agent shell fails with a loopback or subprocess error (Gradle's `Unable to establish loopback connection`, or `Invalid argument: connect` from `java.nio.channels.Pipe`), start it outside the agent's process tree with `tools/host-run/host-run.cmd run` instead. Read `tools/host-run/README.md` before the first use.
 
   ```bat
-  tools\host-run\host-run.cmd run -WorkingDirectory workspace\project\<mod-name> -Command "gradlew.bat clean build --console=plain" -TailLines 40
+  tools\host-run\host-run.cmd run -WorkingDirectory workspace\project\<mod-name> -Command "gradlew.bat clean build --no-daemon --console=plain" -TailLines 40
   ```
 
   The tool waits for the command, prints its output, keeps the full output in its run folder, and exits with the command's exit code.
 - Use the launch path recorded in `project-setup.md` for every build, test run, and release build of the project. Ask the owner to build only when both paths fail, and then follow the environment-limitation rules in `guidelines/collaboration-guidelines.md`.
 - Give a build a timeout above its longest expected duration, and never start two builds of the same repository at the same time.
 - Do not build while a development client or server of this project runs, including a `runServer` you started. Both load the mod from the build output, so a build replaces classes under the running game, and the game then fails with errors such as `NoClassDefFoundError` that look like mod defects. Whenever the owner may be using the game, check first for a `java` process whose command line names `GradleStart` or `GradleStartServer` and this repository, or ask the owner to close the game; stop your own server before building, and build only between launches.
-- `clean` fails with `Unable to delete directory ... build` while a Gradle daemon from an earlier build still holds files there. Run `gradlew.bat --stop` through the same launch path first, then `clean build`; do not retry `clean` alone or delete `build` by hand.
+- `clean` fails with `Unable to delete directory ... build` while a process still holds files there: a development client or server of this project, or a Gradle daemon left by an earlier build run without `--no-daemon`. Run builds with `--no-daemon` so no daemon outlives them. Never run `gradlew.bat --stop` (Shared Machine in `guidelines/project-defaults.md`): it also ends other projects' builds, servers, and clients. When `clean` still fails, close this project's game or stop the server you started, then build again; when the holder is not this project's game, ask the owner. Do not retry `clean` alone or delete `build` by hand.

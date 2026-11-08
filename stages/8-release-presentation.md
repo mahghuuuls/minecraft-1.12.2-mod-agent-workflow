@@ -285,7 +285,7 @@ The distribution-platform release changelog is the short text pasted into the re
 - Prefer one short sentence or a compact bullet list. Do not add categories merely to mirror `CHANGELOG.md`.
 - For the first public release, use exactly `Initial release` by default. Do not summarize the entire initial feature set again unless the owner requests expanded text.
 - For later releases, derive the short copy from the approved implementation and repository changelog, then edit it independently for the player audience.
-- Record the exact approved text in `release-presentation.md` and present the same text in the final stage conversation inside a clearly labeled paste-ready block. Do not make the owner extract it from a file.
+- Record the exact approved text in `release-presentation.md`. Show it for approval with the materials, and give it again inside a clearly labeled paste-ready block in the [publication packet](#publication-packet). Do not make the owner extract it from a file.
 
 ## Optional Publication Assets
 
@@ -409,7 +409,7 @@ Do not use the internal record as public copy.
 21. If release validation is agent-managed, run the approved clean build from that clean committed revision, identify exactly one normal distributable JAR under `<mod-repository>/build/libs/`, inspect it, read its manifest and confirm every attribute resolves to content in the jar, confirm the in-mod logo the metadata names is in the jar (or that no logo is named and the record says the icon was deferred), calculate its checksum, leave it there as the canonical upload source, and record that path and identity in the handoff. Remove no auxiliary build output merely because it is not uploadable, but reject stale normal distributable JARs from older versions. Follow `procedures/release-build-and-discovery.md` for the order of these operations and of the discovery launch in the test instance.
 22. If release packaging is owner-managed, record the approved source revision, expected command/artifact pattern, and owner-managed boundary instead of building.
 23. When the toolkit was used, review its feedback artifact and record which entries remain Candidate, Confirmed, or Reported; do not modify or report to the external toolkit project without separate authorization.
-24. Present the completed internal presentation record and release handoff for stage approval. In the same chat response, include the exact distribution-platform release changelog in a clearly labeled paste-ready block, and the platform listing packet: the summary sentence, the main category and the additional categories with their reasons, the source and issue tracker URLs, and the license. Read the platform's category list that session rather than from memory, and check that the issue tracker URL answers once the repository is pushed (an unpushed repository has no issues page yet; say so and give the URL it will have). The owner fills the project form from this packet; without it the summary, the categories, and the links are asked for one at a time after the workflow has completed.
+24. Present the completed internal presentation record and release handoff for stage approval, with the platform listing packet for confirmation: the summary sentence, the main category and the additional categories with their reasons, the source and issue tracker URLs, and the license. Read the platform's category list that session rather than from memory, and check that the issue tracker URL answers once the repository is pushed (an unpushed repository has no issues page yet; say so and give the URL it will have). Say that the [publication packet](#publication-packet) follows when the workflow closes; do not give upload steps at this checkpoint.
 25. Revise until explicitly approved. For material mod-page changes, reapply [Independent Mod Page Review](#independent-mod-page-review) before seeking approval of the revised materials. If a revision changes the committed release source, commit the approved correction under the applicable Git policy and repeat artifact validation before final approval.
 26. When the owner reports the publication, record the project URL as the owner gives it. A new CurseForge project answers 404 to everyone but its owner until the platform's review passes, so a 404 right after the report is not a missing project; recheck the URL later and record the date it answered.
 
@@ -441,6 +441,12 @@ When a release artifact is built, inspected, identified, or handed off, also pro
 <artifact-root>/release-handoff.md
 ```
 
+### Publication Packet
+
+The publication packet is everything the owner needs to publish, in one message: the canonical upload-ready jar path from the handoff, the file settings the platform asks for (release type, game version, loader, relations), the exact paste-ready distribution-platform release changelog, the platform listing packet, and the owner-managed steps from the handoff in order, including any message the owner relays to another project.
+
+Give it once, as the workflow's last message, after the workflow approval and after any merge or push the published pages depend on, under the heading `Ready to publish now`. Do not give it at the Stage 8 checkpoint: upload steps shown while the cycle summary, the merge, or the workflow approval are still ahead read as an instruction to publish now, and a page published before the merge links to documentation that does not show the release yet.
+
 ### Release Handoff Record
 
 Create `release-handoff.md` from `setup/artifact-templates/release-handoff.md`. The template is the authoritative handoff structure; omit artifact-validation fields only when packaging is owner-managed and record that boundary explicitly.
@@ -455,7 +461,7 @@ This stage is complete when:
 - Mod-page or distribution-page copy has passed the platform-redundancy check: it does not needlessly repeat the displayed project name, game/version/loader metadata, absence of dependencies, test matrix, expanded install scenarios, or implementation-specific restart terminology.
 - Mod-page or distribution-page copy includes the default AI usage disclaimer near the top unless the owner approved removing or rewriting it.
 - Repository `CHANGELOG.md` is useful release history and is approved.
-- The distribution-platform release changelog contains only player-noticeable changes, is retained exactly in `release-presentation.md`, and is provided directly in chat as paste-ready text.
+- The distribution-platform release changelog contains only player-noticeable changes, is retained exactly in `release-presentation.md`, and is ready to be given in chat as paste-ready text in the publication packet.
 - A first public release uses `Initial release` as its default distribution-platform release changelog unless the owner approved different wording.
 - Feature, configuration, and multiplayer/client/server notes match implemented behavior.
 - Shipped dependency metadata uses inclusive verified minimums with no upper bounds, while public copy does not overclaim untested future compatibility.
@@ -474,7 +480,7 @@ This stage is complete when:
 - `<artifact-root>/release-presentation.md` is generated and approved.
 - `<artifact-root>/release-handoff.md` is generated and approved when a release artifact is built, identified, or handed off.
 - The approved release version is recorded; first public releases default to `1.0.0` unless the owner chose otherwise.
-- The platform listing packet (summary sentence, main and additional categories with reasons, source and issue tracker URLs, license) is recorded in `release-presentation.md` and was given in chat with the final checkpoint.
+- The platform listing packet (summary sentence, main and additional categories with reasons, source and issue tracker URLs, license) is recorded in `release-presentation.md` and was shown for confirmation at the stage checkpoint.
 - Agent-managed release artifacts are built, inspected, and checksummed from the clean committed source revision recorded in the handoff.
 - The validated upload-ready JAR remains at its canonical `<mod-repository>/build/libs/` path, exactly one normal distributable JAR is identified there, and no stale normal distributable JAR from an older version remains.
 - Any retained artifact elsewhere is treated as an evidence copy rather than the owner-upload source.

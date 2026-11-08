@@ -28,8 +28,8 @@ Use this procedure at step 21 of `stages/8-release-presentation.md`, after the r
 ## Procedure
 
 1. Confirm the mod repository is clean and HEAD is the release revision named in the release-preparation commit. Record the id.
-2. Stop the Gradle daemon before the clean build: run `gradlew.bat --stop` in the mod repository. A running daemon holds files under `build/` (the recompiled Minecraft jar among them), and `clean` then fails with "Unable to delete directory". If a `build` folder still remains after the stop, remove it and build again.
-3. Run the approved clean build through `tools/host-run/host-run.cmd run`, with a timeout that covers a full recompile, and read its exit code and the test totals from the captured output.
+2. Make sure nothing holds this repository's `build/` folder: no development client or server of this project runs. Do not run `gradlew.bat --stop`; on a shared machine it ends other projects' builds, servers, and clients (Shared Machine in `guidelines/project-defaults.md`). When `clean` fails with "Unable to delete directory", follow Running Builds And Tests in `guidelines/coding-standards.md`.
+3. Run the approved clean build with `--no-daemon` through `tools/host-run/host-run.cmd run`, with a timeout that covers a full recompile, and read its exit code and the test totals from the captured output.
 4. Confirm exactly one normal distributable jar is under `<mod-repository>/build/libs/` with the expected name and version, and no normal distributable jar from an older version. Record the path, size, and SHA-256.
 5. Inspect the jar as the Responsibilities list of `stages/8-release-presentation.md` requires: the manifest and every attribute it names, the processed mod metadata, the logo file the metadata names, the class target, the absence of toolkit and development-only classes, and the dependency relations. List the archive entries and read each inspected file; do not infer from the build script.
 6. Copy the jar to `workspace/validation/release/` as evidence. The copy under `build/libs/` stays the canonical upload source.

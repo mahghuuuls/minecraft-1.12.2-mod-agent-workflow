@@ -285,7 +285,7 @@ The copy must:
 - Exclude every template `.git` directory or `.git` file
 - Exclude template Git hooks, refs, logs, objects, and configuration
 - Avoid copying generated build output, IDE caches, or runtime directories
-- Preserve file permissions required by scripts such as the Gradle wrapper
+- Preserve file permissions required by scripts such as the Gradle wrapper. On Windows, Git does not see the executable bit of a copied file (`core.fileMode` is false), so the wrapper is staged as `100644`; restore it with `git update-index --chmod=+x gradlew` after staging (checked in Create the Initial Commit)
 
 When required template submodules were materialized, copy only their working content and exclude their Git metadata.
 
@@ -516,7 +516,7 @@ After these checks pass, apply the routine mod-repository Git policy in `guideli
 After explicit approval:
 
 1. Stage only the initialized project baseline.
-2. Review the staged diff.
+2. Review the staged diff, and confirm `git ls-files -s gradlew` shows mode `100755`, as in the template (restore it as in Copy Template Content when it shows `100644`).
 3. Create the first commit on `project_default_branch`.
 4. Use a clear message such as:
 

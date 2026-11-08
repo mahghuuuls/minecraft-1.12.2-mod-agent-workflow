@@ -173,6 +173,8 @@ Default location:
 workspace/dependencies/<dependency-name>/
 ```
 
+When the reference is a mod the new one replaces or migrates from, check the checkout against the jar the owner actually runs before relying on it. List all remote branches, then compare the jar in the owner's pack (mod id, version, classes) with the candidate ref. The default branch can be a different codebase from the released jar; record the ref that matches.
+
 These checkouts are reference inputs. They must not be copied into the active project, modified, committed, pushed, or treated as additional active mod repositories without explicit owner approval and licensing review.
 
 ## Feasibility Classifications
