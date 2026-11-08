@@ -205,6 +205,54 @@ try {
         Assert-Equal (Read-Remote $remote 'sample/requirements.md') 'Ordinary project backup.' 'The project content changed.'
     }
 
+    Invoke-Test 'full owner-defaults mirror requires exact review and preserves the authoritative file bytes' {
+        $workspace = New-Workspace 'full owner defaults'
+        $remote = New-Destination 'full owner defaults'
+        $candidate = Join-Path $workspace 'owner-defaults.md'
+        $portable = Join-Path $workspace 'portable.md'
+        [File]::WriteAllText($portable, "# Shared Owner Defaults`n`n## Chat Format Preferences`n`n- Message length: Short`n", $utf8)
+        $portableOptions = @{ SharedOwnerDefaults = $true; OwnerDefaultsCandidate = $portable }
+        $initial = Invoke-Sync $workspace $remote $portableOptions
+        $fullOptions = @{ SharedOwnerDefaults = $true; FullOwnerDefaultsBackup = $true; OwnerDefaultsCandidate = $candidate }
+        $full = "# Owner Defaults`r`n`r`n## Test Instance`r`n`r`n- Instance path: C:\Example\Development`r`n" +
+            "`r`n## Shared Documentation Backup`r`n`r`n- Automatic sync: Approved.`r`n" +
+            ("Saved notes about configuração.`r`n" * 600)
+        [File]::WriteAllText($candidate, $full, $utf8)
+        $review = Invoke-Sync $workspace $remote ($fullOptions + @{ Action = 'preview' })
+        Assert-Equal $review.backupFormat 'portable' 'The preview missed the existing portable copy.'
+        Assert-Equal $review.proposedFormat 'full' 'The preview did not identify the full mirror.'
+        Assert-Equal $review.proposedContent $full 'The full mirror preview altered the original.'
+        Assert-Equal (Get-Tip $remote) $initial.pushedRevision 'Preview changed the backup.'
+
+        $fakeCredential = 'ghp_' + ('X' * 36)
+        [File]::WriteAllText($candidate, ($full + "`r`n- Access token: $fakeCredential`r`n"), $utf8)
+        $blocked = Invoke-Sync $workspace $remote ($fullOptions + @{ Action = 'preview' }) -ExpectExit 2
+        Assert-True ($blocked.error -like '*possible_credential*') 'A credential could enter the full mirror.'
+        Assert-True (-not $blocked.Contains('proposedContent')) 'A blocked candidate was exposed in the preview.'
+        [File]::WriteAllText($candidate, ($full + "New notes.`r`n"), $utf8)
+        $stale = Invoke-Sync $workspace $remote ($fullOptions + @{ ApprovedPlan = $review.approval }) -ExpectExit 2
+        Assert-True ($stale.error -like '*stale*') 'A changed local file passed the approved receipt.'
+        Assert-Equal (Get-Tip $remote) $initial.pushedRevision 'A rejected mirror changed the backup.'
+
+        [File]::WriteAllText($candidate, $full, $utf8)
+        $applied = Invoke-Sync $workspace $remote ($fullOptions + @{ ApprovedPlan = $review.approval })
+        $expected = Invoke-FixtureGit @('hash-object', '--no-filters', '--', $candidate)
+        Assert-Equal (Invoke-FixtureGit @("--git-dir=$remote", 'rev-parse', 'main:owner-defaults.md')) $expected 'The mirror did not preserve the original bytes.'
+        Assert-Equal (Invoke-FixtureGit @("--git-dir=$remote", 'diff-tree', '--no-commit-id', '--name-only', '-r', 'main')) 'owner-defaults.md' 'The mirror modified another file.'
+        $read = Invoke-Sync $workspace $remote @{ SharedOwnerDefaults = $true; Action = 'read' }
+        Assert-Equal $read.backupFormat 'full' 'Read did not identify the full mirror.'
+        Assert-Equal $read.backupBlob $expected 'Read returned a different blob.'
+        Assert-Equal $read.preferences $null 'Backup content was exposed as active preferences.'
+        $downgrade = Invoke-Sync $workspace $remote ($portableOptions + @{ Action = 'preview' }) -ExpectExit 2
+        Assert-True ($downgrade.error -like '*full backup*') 'A portable export could replace the full mirror.'
+        Assert-Equal (Get-Tip $remote) $applied.pushedRevision 'A portable export changed the full mirror.'
+
+        [File]::WriteAllText($candidate, ($full + "Approved new notes.`r`n"), $utf8)
+        $updated = Invoke-Sync $workspace $remote $fullOptions
+        Assert-Equal $updated.status 'synced' 'A later approved local change did not mirror.'
+        Assert-Equal (Invoke-FixtureGit @("--git-dir=$remote", 'rev-parse', 'main:owner-defaults.md')) (Invoke-FixtureGit @('hash-object', '--no-filters', '--', $candidate)) 'The update did not mirror the local file.'
+    }
+
     Invoke-Test 'preview and first import before source setup, exact draft bytes, and idempotence' {
         $workspace = New-Workspace 'first import'
         $remote = New-Destination 'first import'

@@ -84,7 +84,9 @@ The wrapper reads the pinned destination directly from owner defaults and uses t
 
 ## Shared Owner Defaults
 
-[Shared Owner Defaults Backup](../../procedures/shared-owner-defaults.md) uses the separate `-SharedOwnerDefaults` mode to inspect or publish the root `owner-defaults.md`. Agents use the owner-designated local file for current preferences. The tool verifies the same pinned private destination. The GitHub CLI reader is available by default, with `-ReadGitHubMetadata` available for a trusted caller-provided reader. The shared mode takes an exact candidate and reviewed receipt for writes and cannot be combined with project backup options. Portable fields are validated on both read and write. An optional approved local path is informational.
+[Owner Defaults Backup](../../procedures/shared-owner-defaults.md) uses the separate `-SharedOwnerDefaults` mode to inspect or publish the root `owner-defaults.md`. Agents use the owner-designated local file for current preferences and permissions. The tool verifies the same pinned private destination. The GitHub CLI reader is available by default, with `-ReadGitHubMetadata` available for a trusted caller-provided reader. The shared mode takes an exact candidate and reviewed receipt for writes and cannot be combined with project backup options.
+
+Use `-FullOwnerDefaultsBackup` in both preview and sync when mirroring the original local file under the owner's approval. The tool preserves its bytes, rejects common credential patterns, and prevents a portable snapshot from replacing a full mirror. Portable fields continue to be validated on read and write.
 
 ## Tests
 

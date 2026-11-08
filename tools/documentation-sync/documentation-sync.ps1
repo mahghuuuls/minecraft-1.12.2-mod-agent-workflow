@@ -23,6 +23,7 @@ param(
     [string]$ApproveBulkDeletionAt,
     [string]$ApprovedPlan,
     [switch]$SharedOwnerDefaults,
+    [switch]$FullOwnerDefaultsBackup,
     [string]$OwnerDefaultsCandidate
 )
 
@@ -802,12 +803,12 @@ try {
             $IncludeArtwork -or $DeletePath.Count -or $ApproveBulkDeletionAt) {
             throw 'Shared owner defaults use a separate operation from project backup options.'
         }
-        if ($Action -eq 'read' -and ($OwnerDefaultsCandidate -or $ApprovedPlan)) {
-            throw 'Reading shared owner defaults takes no candidate or approval receipt.'
+        if ($Action -eq 'read' -and ($OwnerDefaultsCandidate -or $ApprovedPlan -or $FullOwnerDefaultsBackup)) {
+            throw 'Reading shared owner defaults takes no candidate, write option, or approval receipt.'
         }
         if ($Action -ne 'read' -and -not $OwnerDefaultsCandidate) { throw 'Provide the proposed shared owner-defaults file.' }
     }
-    elseif ($Action -eq 'read' -or $OwnerDefaultsCandidate) {
+    elseif ($Action -eq 'read' -or $OwnerDefaultsCandidate -or $FullOwnerDefaultsBackup) {
         throw 'Use -SharedOwnerDefaults to read or propose shared owner defaults.'
     }
     $workspacePath = Resolve-LocalPath $Workspace

@@ -22,7 +22,7 @@ Owner defaults reduce repeated setup questions. Keep them local. They provide ow
 
 Owner defaults supplied in chat or attachments are valid setup input. When useful, save them in an owner-approved local file for later sessions. If the designated local file is unavailable, report that and ask the owner for its current location when needed. Use confirmed project decisions and current owner instructions while it is unavailable.
 
-The root `owner-defaults.md` in the private documentation repository is an optional [backup of portable preferences](../procedures/shared-owner-defaults.md). Read it for backup review or when the owner explicitly requests it. Select the local source from the owner's instructions or ignored local configuration.
+The root `owner-defaults.md` in the private documentation repository is an optional [backup of the local defaults](../procedures/shared-owner-defaults.md). Read it for backup review or when the owner explicitly requests it. Select the local source from the owner's instructions or ignored local configuration.
 
 ## Project Setup
 

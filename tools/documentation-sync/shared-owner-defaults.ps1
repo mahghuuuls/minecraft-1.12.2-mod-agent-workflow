@@ -65,9 +65,18 @@ function ConvertFrom-SharedOwnerDefaults([string]$Text) {
     return $preferences
 }
 
+function Assert-FullOwnerDefaultsText([string]$Text) {
+    if ($Text -cnotmatch '\A\uFEFF?# Owner Defaults(?:\r?\n|\z)') {
+        throw 'A full backup must use the local owner-defaults.md with its Owner Defaults heading.'
+    }
+    $blocked = Get-TextBlockReason ($utf8.GetBytes($Text))
+    if ($blocked) { throw "Full owner-defaults content is blocked ($blocked)." }
+}
+
 function Invoke-SharedOwnerDefaults([string]$Tip) {
     $path = 'owner-defaults.md'
-    $limit = 16KB
+    $portableLimit = 16KB
+    $fullLimit = 128KB
     $anchor = 'unborn'
     if ($Tip) { $anchor = $Tip }
     if ($Action -eq 'sync') {
@@ -82,10 +91,16 @@ function Invoke-SharedOwnerDefaults([string]$Tip) {
     $proposedContent = $null
     $proposedPreferences = $null
     if ($Action -ne 'read') {
-        $source = Read-BackupBytes (Resolve-LocalPath $OwnerDefaultsCandidate) $limit
+        $sourcePath = Resolve-LocalPath $OwnerDefaultsCandidate
+        if ($FullOwnerDefaultsBackup -and [Path]::GetFileName($sourcePath) -ine $path) {
+            throw 'A full backup must use the local owner-defaults.md directly.'
+        }
+        $sourceLimit = if ($FullOwnerDefaultsBackup) { $fullLimit } else { $portableLimit }
+        $source = Read-BackupBytes $sourcePath $sourceLimit
         if ($source.blocked) { throw "Shared owner-defaults candidate is blocked ($($source.blocked))." }
         $proposedContent = $utf8.GetString($source.bytes)
-        $proposedPreferences = ConvertFrom-SharedOwnerDefaults $proposedContent
+        if ($FullOwnerDefaultsBackup) { Assert-FullOwnerDefaultsText $proposedContent }
+        else { $proposedPreferences = ConvertFrom-SharedOwnerDefaults $proposedContent }
         $afterBlob = Write-Blob $source.bytes
     }
 
@@ -99,35 +114,53 @@ function Invoke-SharedOwnerDefaults([string]$Tip) {
         $beforeBlob = $null
         $currentContent = $null
         $currentPreferences = $null
+        $currentFormat = $null
         if ($Tip) { $current = (Get-GitTree $Tip)[$path] }
         if ($null -ne $current) {
-            if ($current.path -cne $path -or $current.mode -cne '100644' -or
-                [long](Invoke-Git @('cat-file', '-s', $current.blob)).Output.Trim() -gt $limit) {
+            if ($current.path -cne $path -or $current.mode -cne '100644') {
                 throw 'The root owner-defaults path is not a usable ordinary file.'
             }
+            $currentSize = [long](Invoke-Git @('cat-file', '-s', $current.blob)).Output.Trim()
+            if ($currentSize -gt $fullLimit) { throw 'The root owner-defaults file exceeds the backup size limit.' }
             $beforeBlob = $current.blob
             $currentContent = (Invoke-Git @('cat-file', 'blob', $beforeBlob)).Output
-            $currentPreferences = ConvertFrom-SharedOwnerDefaults $currentContent
+            if ($currentContent -cmatch '\A\uFEFF?# Owner Defaults(?:\r?\n|\z)') {
+                Assert-FullOwnerDefaultsText $currentContent
+                $currentFormat = 'full'
+            }
+            else {
+                if ($currentSize -gt $portableLimit) { throw 'The portable owner-defaults file exceeds the backup size limit.' }
+                $currentPreferences = ConvertFrom-SharedOwnerDefaults $currentContent
+                $currentFormat = 'portable'
+            }
         }
+        $result.backupFormat = $currentFormat
+        $result.backupBlob = $beforeBlob
         if ($Action -eq 'read') {
             $result.preferences = $currentPreferences
             $result.status = if ($beforeBlob) { 'read' } else { 'missing' }
             return
         }
+        if ($currentFormat -eq 'full' -and -not $FullOwnerDefaultsBackup) {
+            throw 'This destination has a full backup. Use the local owner-defaults.md in full-backup mode.'
+        }
 
         $result.currentContent = $currentContent
         $result.proposedContent = $proposedContent
         $result.preferences = $proposedPreferences
+        $result.proposedFormat = if ($FullOwnerDefaultsBackup) { 'full' } else { 'portable' }
         $result.changes = @()
         $operation = if ($beforeBlob) { 'update' } else { 'add' }
         if ($beforeBlob -cne $afterBlob) {
             $result.changes = @([ordered]@{ path = $path; action = $operation; beforeBlob = $beforeBlob; afterBlob = $afterBlob })
         }
-        $snapshot = ConvertTo-Json -InputObject ([ordered]@{
+        $snapshot = [ordered]@{
             schemaVersion = 1; destination = $destinationKey; branch = $branchRef
             anchor = $anchor; path = $path; beforeBlob = $beforeBlob; afterBlob = $afterBlob
-        }) -Compress
-        $digest = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($utf8.GetBytes($snapshot))).ToLowerInvariant()
+        }
+        if ($FullOwnerDefaultsBackup) { $snapshot.fullBackup = $true }
+        $json = ConvertTo-Json -InputObject $snapshot -Compress
+        $digest = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($utf8.GetBytes($json))).ToLowerInvariant()
         $receipt = "shared.$anchor.$digest"
         if ($Action -eq 'preview') {
             $result.approval = $receipt
