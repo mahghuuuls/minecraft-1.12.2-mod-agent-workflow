@@ -161,7 +161,7 @@ Present the complete intake and proposed route for explicit approval before revi
 16. Produce `<artifact-root>/cycle-summary.md`.
 17. Offer the merge back into `project_default_branch` when the cycle used a separate working branch, and merge only under explicit authorization.
 18. Set the manual publication state to **Ready for Publication**, update `project-baseline.md` with the release-ready version and source revision, and update `project-state.md`.
-19. Present the completed cycle for approval.
+19. Complete the [workflow retrospective](../guidelines/process-control.md#workflow-feedback-log) and present the completed cycle for approval.
 
 If the owner later reports a manual publication result, update `project-baseline.md` with the published URL/date/file information as an optional follow-up. Do not keep the Change Cycle open merely to wait for external publication.
 

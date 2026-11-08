@@ -356,6 +356,7 @@ Before presenting a workflow for final approval:
 
 - Review the project for repeated approvals, validation confusion, unnecessary rework, stale artifacts, owner corrections, and defaults that were overridden.
 - Add concise feedback entries for material process lessons that are not already represented.
+- Review test tooling using the [Test Tooling Retrospective](#test-tooling-retrospective).
 - Do not delay workflow completion merely to invent feedback when none occurred.
 
 Entries are observations, not approved process changes. This workflow does not update itself during mod development. Do not modify versioned workflow files during mod development because a feedback entry exists.
@@ -376,6 +377,15 @@ Each entry should include:
 - Owner notes, if any
 
 The mod-development agent only maintains the log. Process-repository changes must be handled separately from the active mod-development workflow, using Process Maintenance mode when the owner chooses to apply feedback.
+
+### Test Tooling Retrospective
+
+Use the test cards, campaign results, and workarounds already recorded for this workflow. In the final approval briefing, give the owner a short summary of worthwhile suggestions for each tool. Name the test or repeated manual step, link to its evidence, and explain what the proposed change would make easier to run or verify. Distinguish observed friction from an untested suggestion.
+
+- **Agent Test Toolkit.** Identify manual setup, actions, or observations that a reusable Toolkit capability could automate. Check whether the Toolkit already supports it. Describe the smallest useful capability, the result it should expose, and any judgment the owner still needs to supply. Use the existing feedback artifact when available, following [Toolkit Feedback](agent-diagnostics-toolkit.md#toolkit-feedback).
+- **CleanroomTestBench.** Identify configuration changes or additional mods that could have helped with a concrete test. Name the setting or mod and any known Minecraft 1.12.2 and Cleanroom compatibility constraints. Say whether it would help the shared baseline or belongs in a campaign-only variant.
+
+Record the suggestions or linked feedback IDs under End Of Workflow Retrospective in `workflow-feedback.md`. If either tool has no actionable suggestion or no relevant test evidence, say so briefly. Use the existing final approval checkpoint. Implementing or reporting a suggestion to another project requires separate authorization.
 
 ## Dependency Reference Registry
 

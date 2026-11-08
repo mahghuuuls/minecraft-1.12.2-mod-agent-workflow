@@ -57,4 +57,6 @@ Move entries here when the owner decides not to apply them now. Record the reaso
 - Rework, stale artifacts, or generated-output surprises:
 - Owner corrections or defaults overridden:
 - Feedback entries added:
+- Agent Test Toolkit automation suggestions or feedback IDs:
+- CleanroomTestBench configuration or mod suggestions:
 - No material feedback found, when applicable:
