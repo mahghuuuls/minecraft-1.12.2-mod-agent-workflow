@@ -27,7 +27,7 @@ mod_runtime_role=
 
 # Agent-managed test instance (Test Instance in guidelines/project-defaults.md); empty when declined:
 test_instance_path=
-test_instance_template=barebones-template-cleanroom
+test_instance_template=cleanroomtestbench
 
 # Approved template for Initial Development:
 template_repository_url=

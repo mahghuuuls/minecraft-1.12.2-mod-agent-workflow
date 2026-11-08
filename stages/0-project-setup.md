@@ -283,7 +283,7 @@ Ask once, before the template question, whether the owner has or will create an 
 
 Explain why in a few sentences: the development client proves the code, not the package; players install the jar through a launcher into a pack of base mods on Cleanroom, and the mixin loaders, lighting engines, and fixes in that base are what break a mod that worked in `runClient`; an instance the agent may prepare and reset gives every mod that launch with no owner setup per campaign.
 
-Recommend the BareBones Template (Cleanroom) modpack from CurseForge, installed in the owner's launcher under a name that says it is for testing. Tell the owner the two steps the template's readme requires: launch it once, then remove PackCompanion. Then have the owner create a new world in it once, so its log lists the version the runtime reports for `mixinbooter` (Mixins in `guidelines/project-defaults.md`). Then record the launcher, the instance name and path, the template and version, and capture the template mod list as the reset baseline into `project-setup.md`. When the owner declines, record the waiver named in Test Instance and move on; do not ask again in later stages.
+When the owner needs a new instance, recommend the [default test pack](../guidelines/project-defaults.md#test-instance). Have the owner launch the installed pack and join a disposable world before adding any project mods. Read the reported `mixinbooter` version from the join log using [Mixins](../guidelines/project-defaults.md#mixins). Record the launcher, instance name and path, pack and installed version, and baseline mod list in `project-setup.md`. If the owner declines, record the Test Instance waiver once.
 
 ## Template Guidance
 

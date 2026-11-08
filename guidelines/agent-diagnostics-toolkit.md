@@ -28,6 +28,8 @@ The project-specific setup artifact must record:
 - Known compatibility limitations.
 - The location of the toolkit feedback log when use is selected.
 
+CleanroomTestBench includes the toolkit. Record its installed control settings in the test instance baseline. For a project that selects the toolkit, verify the installed JAR against the pinned release before reusing it. Apply the project's approved Toolkit settings during the campaign.
+
 Do not block the first design stages merely because a release artifact is not yet available. Make artifact acquisition and verification due before the first validation card that depends on the toolkit.
 
 ## Acquisition And Dependency Boundary
@@ -67,6 +69,14 @@ Toolkit observation and commands execute on the logical server.
 Start a toolkit-assisted session by confirming the live build and environment with its capability, environment, and mod-list commands. Exact commands and record shapes belong to the pinned toolkit version's `AGENTS.md`; read that file before authoring bundles. This workflow records how the toolkit is used, not a frozen duplicate of its entire command surface.
 
 Keep the selected toolkit available during gameplay validation. Its exclusion from the shipping artifact and dependency declarations is checked through build configuration and archive inspection. Plan a separate toolkit-free launch only for a concrete masking or accidental-dependence risk that those checks and existing evidence cannot resolve. Record the question and why runtime absence is necessary. Choose fresh or reused worlds from the save-state requirement independently of toolkit installation.
+
+### Temporarily Replacing an Older Packaged Toolkit
+
+If the test pack includes a Toolkit version older than the verified compatible release pinned for the campaign, the agent may stage the pinned JAR for the approved test. Tell the owner before launch which version the pack supplied, which version the test will use, and why. Record both versions and JAR hashes in the campaign evidence.
+
+With the game closed and the instance locked under [Shared Machine](project-defaults.md#shared-machine), save the original JAR in the campaign staging folder and take the usual configuration snapshot. Record both JAR paths in the lock note. Keep only the replacement Toolkit JAR in the loaded mod folders. Check its configuration against the pinned version's instructions and confirm the loaded version in the startup log before running the cards.
+
+On completion or abort, close the game, remove the staged JAR, and restore the original JAR and configuration. Confirm the original hash and the recorded instance baseline before releasing the lock.
 
 ## Safe Baseline Environment
 
@@ -173,7 +183,7 @@ Toolkit logs are evidence only when the setup is also evidenced. A missing event
 
 From `1.3.0`. The pinned version's `AGENTS.md` owns the request lines, the result-file fields, the records and the refusal reasons; read its inbox section before the first request. This section says how the workflow uses it.
 
-**Where it may be enabled.** Set the toolkit's `inbox.enabled` key, and from `1.5.0` `inbox.openOnLocalJoin`, to true only in the development runtimes and the agent-managed test instance, and record that in the project setup. Never in an external server, a normal play world, or a modpack instance outside the approved test scope. Set them back to false in the test instance at its reset.
+**Where it may be enabled.** Set the toolkit's `inbox.enabled` key, and from `1.5.0` `inbox.openOnLocalJoin`, to true only in the development runtimes and the agent-managed test instance, and record that in the project setup. Never in an external server, a normal play world, or a modpack instance outside the approved test scope. Restore the recorded baseline settings when resetting the test instance.
 
 **Who opens it.** From `1.5.0`, with `inbox.openOnLocalJoin` on, it opens by itself (`INBOX action=opened reason=localJoin`) when the owner joins from their own computer: as the single-player host with cheats on (the development client, or the test instance in single player), or as an operator on the development dedicated server whose client shares the server's `run` folder and connects through `localhost` (the server writes `config/devtool/local-join.secret` at its start and the client sends it back). Nobody types anything then. It does not open by itself for a client from another folder, such as the test instance joining the development server, for a LAN address, or for a non-operator; there, and with an older toolkit or the key off, a person opens it by typing `/devtool inbox open` in chat. A bundle cannot open it; do not try through a bundle or a join hook. It opens again by itself, or must be typed again, after anything that closes it: the owner leaving or reconnecting by hand, a server stop or restart, another world. From `1.4.0` a reconnect the agent asks for with `client reconnect` does not close it: the inbox is suspended while the client is away and resumes when it is back (Client Actions). Before each request, check that `status.json` exists in the inbox folder; no file means the inbox is closed. A dedicated server stopped by ending its process leaves `local-join.secret` behind; delete it, since only a normal stop removes it.
 

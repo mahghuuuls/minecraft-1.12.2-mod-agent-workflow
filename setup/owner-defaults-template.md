@@ -43,11 +43,12 @@ The agent-managed test instance is shared by every mod this owner develops (Test
 
 - Launcher:
 - Instance name and path:
-- Template and version (default: BareBones Template (Cleanroom) from CurseForge):
-- Baseline mod list location (captured after the template's first-launch steps):
+- Template and version (default: CleanroomTestBench from CurseForge):
+- Baseline mod list location (captured after the first world join, before adding project mods):
 - Version the runtime reports for `mixinbooter`, with the template and Cleanroom versions it was read from (from `Client attempting to join with ... mods` in a log that entered a world; read again when either changes):
 - Game-written configuration files exempt from the reset, if any:
 - Fallback instance on standard Forge, when the Cleanroom relauncher failed:
+- OptiFine JAR directory (fill in when an [OptiFine compatibility check](../guidelines/project-defaults.md#optifine-compatibility-checks) requires it):
 
 ## Agent Diagnostics Toolkit Preference
 

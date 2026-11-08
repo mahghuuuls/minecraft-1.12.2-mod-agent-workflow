@@ -467,6 +467,8 @@ Use these evidence tiers consistently:
 
 Higher numbers are not automatically better or mandatory. Select tiers from the behavior and risk. For every planned check, record the tier, the evidence it supplies, and important evidence it cannot supply.
 
+When a planned check needs OptiFine, apply [OptiFine Compatibility Checks](../guidelines/project-defaults.md#optifine-compatibility-checks).
+
 An **absence requirement** is an acceptance criterion of the form *works without X*, *works when X is missing*, or *does not require X*. It cannot be assigned to a tier whose environment contains X. Tiers 2 and 3 share one development installation, so anything present for one side is present for the other. When planning such a check:
 
 - Name the component that must be absent.
