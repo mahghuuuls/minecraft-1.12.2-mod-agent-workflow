@@ -266,7 +266,12 @@ function Read-ConstantPool {
                 $Reader.Position += $length
             }
             3 {
-                $pool[$index] = [int](Read-U4 $Reader)
+                $integer = Read-U4 $Reader
+                if ($integer -gt [int]::MaxValue) {
+                    # CONSTANT_Integer_info stores a signed two's-complement value.
+                    $integer -= 0x100000000L
+                }
+                $pool[$index] = [int]$integer
             }
             4 { $Reader.Position += 4 }
             5 { $Reader.Position += 8; $index++ }

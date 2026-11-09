@@ -66,7 +66,7 @@ Before presenting the selection of a new mod-development workflow (Initial Devel
 
 1. In the outer process repository, run `git status`, then `git fetch`, then `git log --oneline HEAD..@{upstream}`. A fetch only reads the remote; it changes no file.
 2. When the remote holds commits this checkout lacks, list them with the files they touch, and recommend updating before the workflow starts. Updating changes process files, so ask the owner first. Update only by fast-forward (`git pull --ff-only`), and only when the checkout has no uncommitted changes to versioned process files and no commits of its own that the remote lacks. Otherwise report that state instead, and leave the merge to the owner or to Process Maintenance mode.
-3. After an update, read the changed files the workflow will use (`AGENTS.md`, the core guidelines, the selected workflow, and its first stage) before continuing, as they are on disk now. In a mod project, then read the [local owner defaults](#local-owner-defaults) again and compare the test instance, the toolkit pin, and the launch paths with `project-setup.md`; a difference is a Project Setup amendment to make before the next launch, also in the middle of a cycle.
+3. After an update, read the changed files the workflow will use (`AGENTS.md`, the core guidelines, the selected workflow, and its first stage) before continuing, as they are on disk now. In a mod project, reread the [local owner defaults](#local-owner-defaults) and compare them with the test instance, Toolkit pin and launch paths in `project-setup.md`. Use the update diff to compare the previous and updated workflow defaults with the approved setup as well. Report differences before planning or staging an affected launch, even when owner defaults and Project Setup agree with the previous workflow default. Carry forward the approved project-specific choice until the owner approves a Project Setup amendment. Complete any required amendment before the affected launch, including mid-cycle.
 4. When the owner declines, continue on the current checkout. In Process Maintenance mode the owner's request to enter the mode is the authorization for the fast-forward in step 2 (`workflows/process-maintenance.md`, Sequence step 1).
 5. When the fetch fails, for example with no network or no upstream branch, say so in one line and continue. The check never blocks a workflow.
 
@@ -262,6 +262,10 @@ When presenting a completed stage and the next routed stage is already known, th
 Keep approvals separate when the next route is unresolved, a backward transition does not satisfy the bounded revision-bundle rules below, the next action changes external state, or combining them would obscure a material scope, architecture, licensing, compatibility, or ownership decision.
 
 When a workflow approval always leads immediately into the first required stage, the transition briefing may combine workflow start and first-stage start. The combined request must make both approvals explicit, so the owner understands that approving it starts the workflow and the first stage.
+
+### Preparation for Approved Tests
+
+When the validation plan, candidate and environment are already approved, perform the reversible preparation in the plan under that approval. This includes preflight checks, restorable snapshots, approved staging, readback and preparing the launch card. Present the ready card at the owner execution or launch-authorization boundary recorded in the plan. Follow the recorded launch restrictions and seek a revised decision if preparation requires a material change to the candidate, environment or coverage.
 
 ### Proportionate Approval Bundle For A Small Change Cycle
 

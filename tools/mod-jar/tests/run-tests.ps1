@@ -187,7 +187,7 @@ $DecoyAnnotation = @{
         @{ Name = 'names'; Value = @{ Tag = '['; Value = @(@{ Tag = 's'; Value = 'one' }, @{ Tag = 's'; Value = 'two' }) } },
         @{ Name = 'nested'; Value = @{ Tag = '@'; Value = @{ Type = 'Lfixture/Inner;'; Pairs = @(@{ Name = 'text'; Value = @{ Tag = 's'; Value = 'inner' } }) } } },
         @{ Name = 'type'; Value = @{ Tag = 'c'; Value = 'Ljava/lang/String;' } },
-        @{ Name = 'count'; Value = @{ Tag = 'I'; Value = 7 } }
+        @{ Name = 'count'; Value = @{ Tag = 'I'; Value = [int]::MinValue } }
     )
 }
 

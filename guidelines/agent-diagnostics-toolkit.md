@@ -74,7 +74,7 @@ Keep the selected toolkit available during gameplay validation. Its exclusion fr
 
 If the test pack includes a Toolkit version older than the verified compatible release pinned for the campaign, the agent may stage the pinned JAR for the approved test. Tell the owner before launch which version the pack supplied, which version the test will use, and why. Record both versions and JAR hashes in the campaign evidence.
 
-With the game closed and the instance locked under [Shared Machine](project-defaults.md#shared-machine), save the original JAR in the campaign staging folder and take the usual configuration snapshot. Record both JAR paths in the lock note. Keep only the replacement Toolkit JAR in the loaded mod folders. Check its configuration against the pinned version's instructions and confirm the loaded version in the startup log before running the cards.
+Follow [Shared Test Instance Preparation](project-defaults.md#shared-test-instance-preparation). Include both JAR paths in the lock note and save the original JAR in the campaign staging folder before replacing it. Keep only the replacement Toolkit JAR in the loaded mod folders. Check its configuration against the pinned version's instructions and confirm the loaded version in the startup log before running the cards.
 
 On completion or abort, close the game, remove the staged JAR, and restore the original JAR and configuration. Confirm the original hash and the recorded instance baseline before releasing the lock.
 
