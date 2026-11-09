@@ -103,6 +103,7 @@ Act as an implementation planner.
 - Ensure the dependency graph contains no cycles.
 - Schedule high-risk assumptions and implementation validations early.
 - Define verification before implementation begins.
+- When a new or materially changed public extension point feeds an existing public contract or a consequential state change, plan one focused check in the issue's Verification section. Exercise the extension point and observe the affected behavior through their normal entry points. Choose an edge case from the approved contract. Apply this even to additive API changes with no reported defect.
 - For every manual runtime check, identify the authoritative state or event being tested and whether normal behavior exposes it reliably.
 - Identify the evidence source, its accessible path or surface, retention or rotation behavior when relevant, and whether the agent or owner collects it.
 - Plan an evidence pack when a checkpoint must retain multiple volatile outputs such as XML reports, JARs, logs, generated configuration, or change-boundary archives. Name the pack specification, output, source-cleanliness requirement, and artifact groups; do not plan to copy the same changing hashes and totals into several current-state documents.
