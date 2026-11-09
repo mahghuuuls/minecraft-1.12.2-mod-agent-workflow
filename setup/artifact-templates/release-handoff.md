@@ -10,6 +10,7 @@
 - Version:
 - Commit:
 - Branch:
+- Push (by the agent under the routine Git policy in `guidelines/collaboration-guidelines.md`, with the pushed range; or owner-managed, naming the recorded restriction):
 - Repository:
 
 ## Source Revision And Repository State

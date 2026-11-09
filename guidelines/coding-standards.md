@@ -99,6 +99,7 @@ Software design continues whenever existing code changes. Optimize for the small
 - Follow the Mod Dependency Version Constraints in `guidelines/project-defaults.md`: pin the inspected artifact for reproducible development, but declare shipping runtime dependencies as an inclusive verified minimum with no upper bound.
 - Declare optional dependencies without making them mandatory at class-loading time.
 - Use the dependency mechanisms supplied by the configured template.
+- For a mod needed only in the development runtime or at compile time, try a pinned build-tool coordinate first (the author's Maven repository, then CurseMaven) and record the coordinate and the SHA-256 of the files it resolves; ask the owner to download a jar into `libs/` only when no coordinate works. RetroFuturaGradle's `rfg.deobf` fails on a jar with duplicate zip entries (the CurseForge CraftTweaker 4.1.20 files have them); use the author's Maven artifact or an already development-mapped build in that case.
 - Never bundle another mod into the release JAR unless explicitly required and legally permitted.
 - Preserve verified minimum dependency versions and loading order where compatibility depends on them; do not turn a tested artifact version into an exact-only or upper-bounded shipping constraint.
 - Review transitive dependencies and exclude unnecessary ones deliberately.

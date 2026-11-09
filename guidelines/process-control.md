@@ -62,15 +62,15 @@ A workflow may skip a reusable stage only when its routing rules allow it and th
 
 ### Workflow Repository Update Check
 
-Before presenting the selection of a new mod-development workflow (Initial Development, Existing Mod Assessment, or a new Change Cycle), check whether the workflow repository itself has updates. The same workflow repository is used from several mod projects, so another checkout may have pushed process changes since this one was last pulled, and a cycle started on old rules repeats mistakes the new rules fix.
+Before presenting the selection of a new mod-development workflow (Initial Development, Existing Mod Assessment, or a new Change Cycle), and first thing when entering Process Maintenance mode, check whether the workflow repository itself has updates. The same workflow repository is used from several mod projects, so another checkout may have pushed process changes since this one was last pulled, and a cycle started on old rules repeats mistakes the new rules fix.
 
 1. In the outer process repository, run `git status`, then `git fetch`, then `git log --oneline HEAD..@{upstream}`. A fetch only reads the remote; it changes no file.
 2. When the remote holds commits this checkout lacks, list them with the files they touch, and recommend updating before the workflow starts. Updating changes process files, so ask the owner first. Update only by fast-forward (`git pull --ff-only`), and only when the checkout has no uncommitted changes to versioned process files and no commits of its own that the remote lacks. Otherwise report that state instead, and leave the merge to the owner or to Process Maintenance mode.
 3. After an update, read the changed files the workflow will use (`AGENTS.md`, the core guidelines, the selected workflow, and its first stage) before continuing, as they are on disk now.
-4. When the owner declines, continue on the current checkout.
+4. When the owner declines, continue on the current checkout. In Process Maintenance mode the owner's request to enter the mode is the authorization for the fast-forward in step 2 (`workflows/process-maintenance.md`, Sequence step 1).
 5. When the fetch fails, for example with no network or no upstream branch, say so in one line and continue. The check never blocks a workflow.
 
-Record the result with the workflow selection in `project-status.md`: up to date, updated to `<revision>`, declined with the number of commits behind, or not checked and why.
+For a mod-development workflow, record the result with the workflow selection in `project-status.md`: up to date, updated to `<revision>`, declined with the number of commits behind, or not checked and why.
 
 A fast-forward update is not a process edit. It brings the checkout to the published workflow and is allowed during mod development with the owner's authorization; changing process files remains Process Maintenance mode.
 
@@ -89,7 +89,7 @@ Process Maintenance mode may edit versioned process files. That permission does 
 When entering Process Maintenance mode:
 
 - State the mode switch explicitly.
-- Inspect the outer process repository status before editing.
+- Bring the outer process repository up to date with the Workflow Repository Update Check before editing, and evaluate which open feedback entries the current text already covers (`workflows/process-maintenance.md`, Sequence steps 1 and 3).
 - Keep nested mod repositories, dependency references, and template checkouts out of scope unless the owner explicitly changes the task.
 - Use `workspace/documentation/workflow-feedback.md` as input when relevant, but evaluate each change against the workflow's purpose and existing ownership rules.
 - Report which feedback was applied, rejected, deferred, or left untouched when the task is feedback-driven.

@@ -21,7 +21,7 @@ Do not use this mode merely because a feedback entry exists. During mod developm
 
 - The owner has explicitly requested process-repository changes.
 - The agent has stated that the session is switching out of mod-development work and into Process Maintenance mode.
-- The outer process repository status has been inspected, including whether the remote holds commits this checkout lacks.
+- The outer process repository has been brought up to date with the remote, or its state reported when it cannot fast-forward (Sequence step 1).
 - Any active mod-development work is complete, paused, or summarized well enough to avoid losing state.
 
 ## Required Inputs
@@ -45,15 +45,16 @@ Do not use this mode merely because a feedback entry exists. During mod developm
 
 ## Sequence
 
-1. Inspect the outer process repository status: `git status`, then `git fetch` and compare the current branch with its remote (`git log --oneline HEAD..@{upstream}`). The same workflow repository is used from several mod projects on the same machine, so another checkout may have pushed process changes since this one was pulled. When the remote is ahead, report the commits and the files they touch, ask the owner before pulling (a pull is a Git action that needs authorization), and read the pulled changes to the files this task will edit before editing them, so the edits build on the current text and do not repeat or undo what another session already changed.
+1. Bring the outer process repository up to date before anything else, with the [Workflow Repository Update Check](../guidelines/process-control.md#workflow-repository-update-check). The same workflow repository is used from several mod projects on the same machine, so another checkout may have pushed process changes since this one was pulled. The owner's request to enter this mode authorizes the fast-forward; ask only when the check cannot fast-forward (local process edits or local commits the remote lacks), and then report that state instead of updating. After an update, read the pulled changes to the files this task will edit before editing them, so the edits build on the current text and do not repeat or undo what another session already changed.
 2. Read the required inputs.
-3. Identify the requested process changes and the files that own those responsibilities.
-4. Apply focused edits to versioned process files.
-5. When the task is feedback-driven, update feedback status or summarize which entries were applied, rejected, deferred, or left untouched.
-6. Run consistency checks over changed process text and cross-references.
+3. When the task is feedback-driven, evaluate which entries still matter before proposing any edit. For each **Open** entry in `workflow-feedback.md`, read the process text its affected files name, as it is after step 1, and sort the entry into one of three groups: already covered by the current text, partly covered (name the gap that is left), or not covered. Mark an already covered entry **Applied** with the commit or file that covers it in its Resolution. Present the partly covered and not covered entries to the owner with a recommendation, and edit only those the owner selects.
+4. Identify the requested process changes and the files that own those responsibilities.
+5. Apply focused edits to versioned process files.
+6. When the task is feedback-driven, update feedback status or summarize which entries were applied, rejected, deferred, or left untouched.
+7. Run consistency checks over changed process text and cross-references.
    - Run `powershell -ExecutionPolicy Bypass -File scripts/validate-process.ps1` when PowerShell is available.
    - When workspace-validation behavior changed, run `powershell -ExecutionPolicy Bypass -File scripts/test-validate-workspace.ps1` and validate the present workspace when one exists.
-7. Report changed files, verification, unresolved risks, and a suggested commit message when useful.
+8. Report changed files, verification, unresolved risks, and a suggested commit message when useful.
 
 ## Output
 

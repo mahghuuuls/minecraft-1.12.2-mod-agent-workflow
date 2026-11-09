@@ -64,7 +64,7 @@ Enter this mode only when the owner explicitly asks to:
 Before editing process files:
 
 - State that the session is switching out of mod-development work and into Process Maintenance mode.
-- Inspect the outer repository status.
+- Inspect the outer repository status and bring it up to date with the remote, as `workflows/process-maintenance.md` describes.
 - Treat `workspace/documentation/workflow-feedback.md` and prior project artifacts as input, not as automatic approval for every suggested change.
 - If active mod work is unfinished, preserve or summarize its current state before changing process files.
 
