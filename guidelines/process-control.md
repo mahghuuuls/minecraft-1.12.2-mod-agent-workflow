@@ -66,7 +66,7 @@ Before presenting the selection of a new mod-development workflow (Initial Devel
 
 1. In the outer process repository, run `git status`, then `git fetch`, then `git log --oneline HEAD..@{upstream}`. A fetch only reads the remote; it changes no file.
 2. When the remote holds commits this checkout lacks, list them with the files they touch, and recommend updating before the workflow starts. Updating changes process files, so ask the owner first. Update only by fast-forward (`git pull --ff-only`), and only when the checkout has no uncommitted changes to versioned process files and no commits of its own that the remote lacks. Otherwise report that state instead, and leave the merge to the owner or to Process Maintenance mode.
-3. After an update, read the changed files the workflow will use (`AGENTS.md`, the core guidelines, the selected workflow, and its first stage) before continuing, as they are on disk now.
+3. After an update, read the changed files the workflow will use (`AGENTS.md`, the core guidelines, the selected workflow, and its first stage) before continuing, as they are on disk now. In a mod project, then read the [local owner defaults](#local-owner-defaults) again and compare the test instance, the toolkit pin, and the launch paths with `project-setup.md`; a difference is a Project Setup amendment to make before the next launch, also in the middle of a cycle.
 4. When the owner declines, continue on the current checkout. In Process Maintenance mode the owner's request to enter the mode is the authorization for the fast-forward in step 2 (`workflows/process-maintenance.md`, Sequence step 1).
 5. When the fetch fails, for example with no network or no upstream branch, say so in one line and continue. The check never blocks a workflow.
 

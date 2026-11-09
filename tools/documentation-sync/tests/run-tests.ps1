@@ -1045,12 +1045,16 @@ exit $LASTEXITCODE
             $arguments = @{ Workspace = $workspace; OwnerDefaults = $defaults; ReadGitHubMetadata = { throw 'Offline fixture.' } }
             $disabled = & $wrapper @arguments -Trigger checkpoint | ConvertFrom-Json -AsHashtable
             Assert-Equal $disabled.status 'disabled' 'Automatic backup should require opt-in.'
+            Assert-Equal $disabled.ownerDefaults $defaults 'A disabled result did not name the owner defaults it read.'
             Assert-True (-not (Test-Path -LiteralPath (Join-Path $workspace 'documentation-sync'))) 'Disabled backup wrote local state.'
             Assert-EmptyRemote $remote
 
             $savedApproval = "approved for this owner's projects once the workflow supports automatic backups. Until then, use the manual preview and approval flow."
             [File]::WriteAllText($defaults, $configuration.Replace('Disabled.', $savedApproval), $utf8)
-            $first = & $wrapper @arguments -Trigger checkpoint | ConvertFrom-Json -AsHashtable
+            # Without -OwnerDefaults the wrapper reads the shared file recorded in project.properties.
+            [File]::WriteAllText((Join-Path $workspace 'project.properties'), "documentation_project_id=checkpoint-fixture`nowner_defaults_path=$defaults`n", $utf8)
+            $recordedArguments = @{ Workspace = $workspace; ReadGitHubMetadata = { throw 'Offline fixture.' } }
+            $first = & $wrapper @recordedArguments -Trigger checkpoint | ConvertFrom-Json -AsHashtable
             Assert-Equal $first.status 'synced' "Saved approval did not enable the checkpoint. $($first.error)"
             Assert-Equal $first.checkpointAttempts 2 'Checkpoint did not replan a stale attempt.'
             Assert-Equal (Read-Remote $remote 'checkpoint-fixture/project-status.md') 'Awaiting Approval' 'Draft status was lost.'

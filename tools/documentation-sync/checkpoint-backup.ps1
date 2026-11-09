@@ -106,8 +106,19 @@ try {
     if ([Path]::GetFileName($workspacePath) -ine 'workspace') { throw 'Point -Workspace at the workspace directory.' }
     Assert-PlainDirectory $workspacePath
     $stateDirectory = Join-Path $workspacePath 'documentation-sync'
+    if (-not $OwnerDefaults) {
+        # A shared owner-defaults file is recorded in project.properties (process-control.md#local-owner-defaults).
+        $properties = Join-Path $workspacePath 'project.properties'
+        if ([File]::Exists($properties)) {
+            $recorded = [regex]::Matches((Read-LocalText $properties), '(?m)^owner_defaults_path=(?<path>[^\r\n]+?)[ \t]*\r?$')
+            if ($recorded.Count -gt 1) { throw 'Multiple owner_defaults_path entries in project.properties.' }
+            if ($recorded.Count -eq 1) { $OwnerDefaults = $recorded[0].Groups['path'].Value }
+        }
+    }
     if (-not $OwnerDefaults) { $OwnerDefaults = Join-Path $workspacePath 'documentation/owner-defaults.md' }
     $destination = Read-BackupApproval $OwnerDefaults
+    # Name the file that was read, so a disabled result from the wrong file is visible.
+    if (-not $destination) { $result.ownerDefaults = $OwnerDefaults }
     if ($destination) {
         $approved = $true
         Save-CheckpointResult @{ status = 'pending'; trigger = $Trigger; error = 'Checkpoint backup has not finished.' }
