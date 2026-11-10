@@ -164,6 +164,7 @@ Inspect and record:
 - Existing configuration and setup artifacts
 - Existing development-runtime log locations, agent access, and observed retention or rotation behavior
 - Whether the agent can execute the build tool itself, established by attempting it rather than by observing that it is installed, and by which launch path (direct, or through `tools/host-run`)
+- Who launches the development client: the agent through `tools/host-run` (`guidelines/manual-validation.md`, Before The Session), or the owner. Offer the agent when the build already runs through `tools/host-run`; the owner decides, and the test instance stays the owner's launch through its launcher
 - Other mod projects active on the same computer: other workflow checkouts, the agents working in them, the shared test instances they use, and the dedicated-server ports they recorded; then the port this project takes (Shared Machine in `guidelines/project-defaults.md`)
 - The agent-managed test instance when `owner-defaults.md` names one: its path exists, its `mods` folder against the recorded template list, whether another project's lock note is present, and the version its runtime reports for `mixinbooter`, read from its newest log that entered a world, when one exists (Mixins in `guidelines/project-defaults.md`)
 
