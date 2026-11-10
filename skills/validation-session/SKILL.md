@@ -87,7 +87,8 @@ errors with their stack traces. Cite what you read by file and line.
 has closed, so you know to ask the owner to open it again. With toolkit 1.5.0 the same tool sends
 the menu steps to `client-inbox/` (create or open the world, connect, quit), and the inbox opens by
 itself at the owner's join: the owner only launches the game (`guidelines/agent-diagnostics-toolkit.md`,
-Client Request Channel).
+Client Request Channel). With toolkit 1.7.0 you also make the owner's small inputs yourself: a hotbar
+selection, one click, a held button, a drop, the inventory, a tooltip (same guideline, Player Actions).
 
 **Ask for one thing only: what the logs cannot hold.** Visual layout, animation, colour, sound,
 whether an input felt right, real multi-client behaviour, an environment whose files you cannot
