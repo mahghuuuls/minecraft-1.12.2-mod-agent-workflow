@@ -164,8 +164,6 @@ Present the complete intake and proposed route for explicit approval before revi
 19. Complete the [workflow retrospective](../guidelines/process-control.md#workflow-feedback-log) and present the completed cycle for approval.
 20. After the approval and any approved merge and push, give the owner the [publication packet](../stages/8-release-presentation.md#publication-packet) as the workflow's last message.
 
-If the owner later reports a manual publication result, update `project-baseline.md` with the published URL/date/file information as an optional follow-up. Do not keep the Change Cycle open merely to wait for external publication.
-
 Do not enter a later selected stage until every selected prerequisite is approved. Discovery of additional impact follows the backward-transition rules in `guidelines/process-control.md`.
 
 ## Cycle Summary
@@ -186,6 +184,10 @@ The agent-managed work is ready for manual publication when:
 - Release Presentation, including artifact validation and handoff when agent-managed, is approved.
 - The cycle summary records the final handoff.
 
-The workflow is complete when the canonical release-ready baseline is updated and the completed cycle is explicitly approved. Manual publication can be recorded later as an optional baseline update.
+Close the Change Cycle once the release is validated, the canonical baseline records **Ready for Publication**, and the owner explicitly approves the completed cycle.
 
 A later request begins a new Change Cycle with a new identifier.
+
+## Publication Follow-Up
+
+CurseForge upload, platform approval, and public file visibility are optional follow-ups after cycle closure. Update `project-baseline.md` with the owner-reported publication status, date, and project URL when available. Add the public file URL and ID when available, and distinguish owner reports from independently verified public listings.

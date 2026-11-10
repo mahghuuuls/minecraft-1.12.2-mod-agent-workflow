@@ -411,7 +411,7 @@ Do not use the internal record as public copy.
 23. When the toolkit was used, review its feedback artifact and record which entries remain Candidate, Confirmed, or Reported; do not modify or report to the external toolkit project without separate authorization.
 24. Present the completed internal presentation record and release handoff for stage approval, with the platform listing packet for confirmation: the summary sentence, the main category and the additional categories with their reasons, the source and issue tracker URLs, and the license. Read the platform's category list that session rather than from memory, and check that the issue tracker URL answers once the repository is pushed (an unpushed repository has no issues page yet; say so and give the URL it will have). Say that the [publication packet](#publication-packet) follows when the workflow closes; do not give upload steps at this checkpoint.
 25. Revise until explicitly approved. For material mod-page changes, reapply [Independent Mod Page Review](#independent-mod-page-review) before seeking approval of the revised materials. If a revision changes the committed release source, commit the approved correction under the applicable Git policy and repeat artifact validation before final approval.
-26. When the owner reports the publication, record the project URL as the owner gives it. A new CurseForge project answers 404 to everyone but its owner until the platform's review passes, so a 404 right after the report is not a missing project; recheck the URL later and record the date it answered.
+26. Handle owner-reported publication and any requested tracking through the invoking workflow's post-closeout instructions. A new CurseForge project may return 404 and a new file may be absent from the public listing during review. See the [Change Cycle publication follow-up](../workflows/change-cycle.md#publication-follow-up) or the [Initial Development sequence](../workflows/initial-development.md#sequence).
 
 ## Output Artifacts
 
@@ -488,4 +488,4 @@ This stage is complete when:
 - No uncommitted release/version/public-material change remains when an agent-managed artifact handoff is finalized.
 - Owner-managed publication remains clearly outside the agent workflow.
 
-Completion ends agent-managed release work for the stage. Manual publication remains the project owner's responsibility and does not block workflow completion unless the owner explicitly requests publication tracking.
+Completion ends agent-managed release work for the stage. The owner handles manual publication. Step 26 routes any later publication tracking.
