@@ -75,7 +75,7 @@ Every mod gets its packaged checks in one agent-managed test instance: a modpack
 
 ### Shared Test Instance Preparation
 
-Use this sequence for both campaign testing and release discovery on a borrowed instance.
+Use this sequence for both campaign testing and release discovery on a borrowed instance. Use `tools/instance-reset` for steps 1 to 3 (`snapshot`, with the recorded baseline mod list, then `lock`, and `lock -Update` when the session adds files) and for the reset at the end (`plan`, then `apply`); do these by hand only when the tool cannot run, and record why; its README names what it checks and what it leaves to the session. Its plan lists every file it would delete: read it against your lock note before `apply`, and treat a deletion the note does not explain as a foreign file under [Shared Machine](#shared-machine). The tool refuses when the lock note is not the session's own, and removes a new folder under `config` only once its listed files are gone, never as a whole.
 
 1. Complete the [Shared Machine](#shared-machine) ownership and running-game checks, and compare the mod inventory with the recorded baseline. A failed check stops preparation before the first write.
 2. Snapshot the baseline in the session's staging folder. Copy the `config` folder and `options.txt`, and record the instance root and `saves` listings. Keep the actual copies for restoration.

@@ -26,6 +26,7 @@ Implementation includes coding, testing, in-game verification, defect correction
 - `tools/devtool-inbox/README.md` when the agent starts toolkit bundles through the command inbox
 - `tools/mod-jar/README.md` when a session loads jars copied from another instance or an issue names another mod's item ids
 - `tools/modelpreview/README.md` when the issue creates or materially revises a block model JSON with its own elements
+- `tools/instance-reset/README.md` when a campaign borrows the shared test instance
 - `procedures/cross-project-agent-consultation.md` when implementation exposes an owner-authorized API-provider/API-consumer question that approved artifacts and source inspection cannot settle
 - `procedures/independent-review-brief.md` when an issue reaches **Review** or a campaign's evidence goes to its follow-up review
 - `procedures/close-campaign.md` when the last card of an owner-assisted validation campaign has a result

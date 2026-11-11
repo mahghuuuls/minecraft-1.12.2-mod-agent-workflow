@@ -40,7 +40,7 @@ Each step feeds the next, and a step done out of order is the usual source of a 
 9. Record in each included issue: the in-game verification lines, the follow-up review, the completion commit, and the pack path with its manifest hash; move the issue to **Done**.
 10. Update `project-status.md` (commit list, next action, next approval, current issue line) and `project-state.md`.
 11. Run `scripts/validate-workspace.ps1`; it checks that every Done issue's pack exists and that its manifest still matches its recorded hash, and that every card of a session map with a `Results file:` line has a line in that file. Read its last line: when it says no session map was checked, the map lacks the line (`guidelines/manual-validation.md`), and the card check did not run.
-12. Reset the test instance under [Test Instance](../guidelines/project-defaults.md#test-instance) and [Shared Machine](../guidelines/project-defaults.md#shared-machine). Write the verified reset check into the staging folder and record what stays. Keep the reset last for the reason given in step 4.
+12. Reset the test instance under [Test Instance](../guidelines/project-defaults.md#test-instance) and [Shared Machine](../guidelines/project-defaults.md#shared-machine), with `tools/instance-reset` (`plan`, read the plan against the lock note, then `apply`), which writes the reset check. Write the verified reset check into the staging folder and record what stays. Keep the reset last for the reason given in step 4.
 
 ## Completion
 
