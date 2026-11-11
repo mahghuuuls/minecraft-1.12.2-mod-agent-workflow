@@ -294,6 +294,9 @@ function Get-Texture { param([string]$Name, [string]$Origin)
 # ------------------------------------------------------------------ geometry
 
 function Get-Number { param($Value, [string]$What)
+    # Minecraft 1.12 reads these with JsonUtils.getFloat, which rejects a JSON string, so a number
+    # written as text ("-22.5") breaks the model in game although PowerShell would convert it.
+    if ($Value -is [string]) { Add-Problem 'error' "$What is text (`"$Value`"), not a JSON number; 1.12 rejects it" }
     try { return [double]$Value } catch { Add-Problem 'error' "$What is not a number: $Value"; return 0.0 }
 }
 
@@ -520,7 +523,7 @@ foreach ($element in @($elements | Where-Object { $null -ne $_ })) {
         $rotAxis = [string](Get-Prop $rotation 'axis')
         $rotAngle = Get-Number (Get-Prop $rotation 'angle') "$label rotation angle"
         $originProp = Get-Prop $rotation 'origin'
-        if ($null -ne $originProp) { $rotOrigin = @($originProp | ForEach-Object { [double]$_ }) }
+        if ($null -ne $originProp) { $rotOrigin = @($originProp | ForEach-Object { Get-Number $_ "$label rotation origin" }) }
         if ($rotAxis -notin @('x', 'y', 'z')) { Add-Problem 'error' "$label rotation axis must be x, y, or z (got '$rotAxis')" }
         if ($allowedAngles -notcontains $rotAngle) { Add-Problem 'error' "$label rotation angle $rotAngle is not one of -45, -22.5, 0, 22.5, 45" }
         $rescaleProp = Get-Prop $rotation 'rescale'

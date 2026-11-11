@@ -36,7 +36,7 @@ Faces get the vanilla per-direction shade (up 1.0, north and south 0.8, east and
 
 The report lists notes, warnings, and errors, then `Checked N element(s), M face(s): E error(s), W warning(s).` The exit code is 1 when there is an error and nothing is rendered; `-ValidateOnly` stops after the report.
 
-Errors: a parent or texture file that does not exist; a texture variable that is never defined or loops; `from` or `to` outside -16..32; a rotation angle other than -45, -22.5, 0, 22.5, or 45; a rotation axis other than x, y, z; a face name, `cullface`, or face `rotation` that 1.12 does not know; a texture that is not square (stacked square frames are accepted as animation); a model chain with no elements or deeper than 16.
+Errors: a parent or texture file that does not exist; a number written as JSON text (`"angle": "-22.5"`) in `from`, `to`, `uv`, or a rotation `angle` or `origin`, which 1.12 rejects; a texture variable that is never defined or loops; `from` or `to` outside -16..32; a rotation angle other than -45, -22.5, 0, 22.5, or 45; a rotation axis other than x, y, z; a face name, `cullface`, or face `rotation` that 1.12 does not know; a texture that is not square (stacked square frames are accepted as animation); a model chain with no elements or deeper than 16.
 
 Warnings: a texture reference without a `blocks/` or `items/` prefix (1.12.2 looks up `textures/<path>.png` exactly); a texture whose width is not a power of two; a `uv` value outside 0..16; `from` greater than `to`; no `particle` texture.
 
@@ -67,4 +67,4 @@ Warnings: a texture reference without a `blocks/` or `items/` prefix (1.12.2 loo
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\modelpreview\tests\run-tests.ps1
 ```
 
-The tests build a small assets tree with one-color textures and check: parent resolution across two files, each side view showing its own face with the vanilla shade, the sheet size, a transparent background, a blockstate `y` rotation turning the west face to the north view, the gui view showing top, north, and west with north on the left, a cross model with a half-clear texture cutting out, the validation errors for a bad angle, an out-of-range coordinate, a missing texture, and an unbound texture variable, `-ValidateOnly` rendering nothing, output protection, and an unknown view being refused.
+The tests build a small assets tree with one-color textures and check: parent resolution across two files, each side view showing its own face with the vanilla shade, the sheet size, a transparent background, a blockstate `y` rotation turning the west face to the north view, the gui view showing top, north, and west with north on the left, a cross model with a half-clear texture cutting out, the validation errors for a bad angle, a number written as text, an out-of-range coordinate, a missing texture, and an unbound texture variable, `-ValidateOnly` rendering nothing, output protection, and an unknown view being refused.

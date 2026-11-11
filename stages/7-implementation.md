@@ -657,6 +657,7 @@ Rules:
 
 - Label each claim, not each section. One section commonly mixes labels.
 - When a claim rests on several steps, use the weakest label among them. An observation that only becomes relevant through a reasoning step is *inferred*.
+- Plain arithmetic on labelled values is not a reasoning step: a sum, difference, or ratio of two observed values ("7.92 against 6.6 is 20 percent more", "a deadline of the request tick plus 216001") keeps the weaker label of the values it uses. Write both values and the operation in the claim, so a reader can redo it. A conclusion about why the values relate that way is still *inferred*.
 - An **inferred** claim never satisfies an acceptance criterion by itself. Either upgrade it to observed or inspected, or record a validation waiver and have the owner accept the limitation explicitly.
 - Never restate an inferred claim in later artifacts, summaries, or public copy as though it were observed. This is the specific failure the labels exist to prevent.
 

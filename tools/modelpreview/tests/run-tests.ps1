@@ -95,6 +95,10 @@ try {
 { "textures": { "particle": "testmod:blocks/north", "a": "testmod:blocks/north" },
   "elements": [ { "from": [0,0,0], "to": [16,16,16], "rotation": { "origin": [8,8,8], "axis": "y", "angle": 30 }, "faces": { "north": { "texture": "#a" } } } ] }
 '@
+    Write-Json 'models\block\text_number.json' @'
+{ "textures": { "particle": "testmod:blocks/north", "a": "testmod:blocks/north" },
+  "elements": [ { "from": [0,0,8], "to": [16,16,8], "rotation": { "origin": [8,8,"8"], "axis": "y", "angle": "-22.5" }, "faces": { "north": { "texture": "#a" } } } ] }
+'@
     Write-Json 'models\block\out_of_range.json' @'
 { "textures": { "particle": "testmod:blocks/north", "a": "testmod:blocks/north" },
   "elements": [ { "from": [0,0,-17], "to": [16,16,16], "faces": { "north": { "texture": "#a" } } } ] }
@@ -191,6 +195,8 @@ try {
     Write-Host 'validation'
     $r = Invoke-Tool @((Join-Path $ns 'models\block\bad_angle.json'), '-ValidateOnly')
     Assert-True ($r.ExitCode -eq 1 -and $r.Output -match 'rotation angle 30 is not one of') 'angle 30 is an error'
+    $r = Invoke-Tool @((Join-Path $ns 'models\block\text_number.json'), '-ValidateOnly')
+    Assert-True ($r.ExitCode -eq 1 -and $r.Output -match 'rotation angle is text \("-22.5"\), not a JSON number' -and $r.Output -match 'rotation origin is text \("8"\)') 'a number written as text is an error'
     $r = Invoke-Tool @((Join-Path $ns 'models\block\out_of_range.json'), '-ValidateOnly')
     Assert-True ($r.ExitCode -eq 1 -and $r.Output -match 'outside -16..32') 'coordinate -17 is an error'
     $r = Invoke-Tool @((Join-Path $ns 'models\block\missing_texture.json'), '-ValidateOnly')
