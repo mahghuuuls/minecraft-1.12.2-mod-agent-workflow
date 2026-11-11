@@ -352,6 +352,7 @@ When a card fails:
 - Correct, reverify, and independently review the affected scope before resuming the campaign.
 - Review the correction as an uncommitted diff: retain a snapshot patch of the working tree and give it to the reviewer. Commit it only after its review findings are resolved, then build and relaunch from that commit. The relaunch then runs reviewed code from a clean, recorded tree. A correction committed and launched before its review puts every later card on code that may still change.
 - The same order applies to a correction that the follow-up review asks for while the campaign still needs another launch.
+- A cause found by reading code, jars or bytecode is *inspected* at best (Evidence Labels), and the step from it to "this caused the failure" is *inferred*. Before a correction, an accepted limitation, a requirement change or public copy rests on that cause, confirm it with a run that removes or changes the suspected part (another mod moved aside, a setting changed), while the instance is still prepared.
 
 After every included issue satisfies its Definition of Done, resolve the campaign completion checkpoint for the exact scope:
 

@@ -89,6 +89,8 @@ the menu steps to `client-inbox/` (create or open the world, connect, quit), and
 itself at the owner's join: the owner only launches the game (`guidelines/agent-diagnostics-toolkit.md`,
 Client Request Channel). With toolkit 1.7.0 you also make the owner's small inputs yourself: a hotbar
 selection, one click, a held button, a drop, the inventory, a tooltip (same guideline, Player Actions).
+With toolkit 1.8.0 a screenshot can leave out the chat or the HUD (`hide=chat|hud`), and a
+pause note in the inbox folder says why a single-player request waits (same guideline).
 
 **Ask for one thing only: what the logs cannot hold.** Visual layout, animation, colour, sound,
 whether an input felt right, real multi-client behaviour, an environment whose files you cannot
