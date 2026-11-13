@@ -273,6 +273,24 @@ try {
 2. Second card.
 2b. Repeat of the second card.
 '@
+    $noTable = Invoke-Validator
+    Assert-ExitCode 'a session map without a criterion table before its campaign' 1 $noTable
+    if ($noTable.Output -notlike '*campaign-x-session-map.md: no criterion-to-card table*') {
+        throw "Validator did not name the missing criterion table. Output: $($noTable.Output)"
+    }
+    Write-Utf8 (Join-Path $campaignRoot 'campaign-x-session-map.md') @'
+# Campaign X Session Map
+
+1. First card.
+2. Second card.
+2b. Repeat of the second card.
+
+| Criterion | Card |
+| --- | --- |
+| IMP-001 criterion 1 | 1 |
+| IMP-001 criterion 2 | 2, 2b |
+'@
+    Assert-ExitCode 'a session map with a criterion table before its campaign' 0 (Invoke-Validator)
     Write-Utf8 (Join-Path $campaignRoot 'campaign-x-results.md') @'
 # Campaign X Results
 
@@ -327,6 +345,7 @@ Results file: `workspace/validation/staging/cyc2-final/running-notes.md`
 2. **G2 Quit.** The game closes.
 3. **X1 Extra.** Added after the review.
 '@
+    Assert-ExitCode 'a linked session map without a criterion table before its results file exists' 1 (Invoke-Validator)
     Write-Utf8 (Join-Path $stagingRoot 'running-notes.md') @'
 # Results
 
@@ -351,7 +370,7 @@ Results file: `workspace/validation/staging/cyc2-final/running-notes.md`
         throw "Validator did not warn about the unlinked session map. Output: $($unlinked.Output)"
     }
 
-    Write-Host 'Workspace validator tests passed: valid state, stage statuses with a date and a note, Not Applicable stages and earlier record tables accepted (the active table checked strictly), a plan without a status column (with the issue roll-up printed), and cycle-scoped identifiers accepted; evidence packs of Done issues checked; a session-map card without a results line rejected and a recorded one accepted, for a work-folder campaign and for a change-cycle map that names its results file (cards by identifier, maps counted, an unlinked map warned); change-cycle issues with a status note or the older bold form read; invalid status, missing stage artifacts, ledger or plan disagreement, and multiple active issues rejected.' -ForegroundColor Green
+    Write-Host 'Workspace validator tests passed: valid state, stage statuses with a date and a note, Not Applicable stages and earlier record tables accepted (the active table checked strictly), a plan without a status column (with the issue roll-up printed), and cycle-scoped identifiers accepted; evidence packs of Done issues checked; a session map without a criterion-to-card table rejected before its campaign and accepted with one, a session-map card without a results line rejected and a recorded one accepted, for a work-folder campaign and for a change-cycle map that names its results file (cards by identifier, maps counted, an unlinked map warned); change-cycle issues with a status note or the older bold form read; invalid status, missing stage artifacts, ledger or plan disagreement, and multiple active issues rejected.' -ForegroundColor Green
 } finally {
     $resolvedTestRoot = [System.IO.Path]::GetFullPath($testRoot)
     $resolvedTempRoot = [System.IO.Path]::GetFullPath([System.IO.Path]::GetTempPath())

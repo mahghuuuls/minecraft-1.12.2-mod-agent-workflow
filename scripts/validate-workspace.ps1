@@ -342,6 +342,16 @@ if (Test-Path -LiteralPath $statePath -PathType Leaf) {
     }
 }
 
+# Before its results file exists, a session map holds a criterion-to-card table: a Markdown table whose header names
+# a criterion, so every acceptance criterion is mapped to a card, a waiver, or an accepted limitation before the
+# first launch. Maps of finished campaigns, whose results file exists, are not checked for it.
+$criterionTablePattern = '(?mi)^\|[^\r\n]*criteri[^\r\n]*\|[ \t]*\r?\n\|[ \t:]*-{3,}'
+function Test-CriterionTable([string]$mapName, [string]$mapText) {
+    if ($mapText -notmatch $criterionTablePattern) {
+        Add-ValidationError "Session map ${mapName}: no criterion-to-card table before the campaign; map every acceptance criterion and verification bullet of the included issues to a card, a recorded waiver, or an owner-accepted limitation (guidelines/manual-validation.md, Before The Session)."
+    }
+}
+
 # Every card of a campaign session map has a line in that campaign's results file once the results file exists.
 # A card that was deferred or not run still gets a line saying so; a card with no line was silently lost.
 # A session map anywhere under the documentation names its results file on a "Results file:" line, and starts
@@ -356,7 +366,10 @@ foreach ($sessionMap in @(Get-ChildItem -LiteralPath $documentationRoot -Recurse
         continue
     }
     $resultsPath = Resolve-ProcessPath $link.Groups['path'].Value
-    if (-not (Test-Path -LiteralPath $resultsPath -PathType Leaf)) { continue }
+    if (-not (Test-Path -LiteralPath $resultsPath -PathType Leaf)) {
+        Test-CriterionTable $sessionMap.Name $mapText
+        continue
+    }
     $checkedMaps++
     $resultsText = Get-Content -Raw -LiteralPath $resultsPath
     foreach ($card in @([regex]::Matches($mapText, '(?m)^\d+[a-z]?\.\s+\*\*(?<id>[A-Z]+\d+[a-z]?)\b') | ForEach-Object { $_.Groups['id'].Value } | Sort-Object -Unique)) {
@@ -373,6 +386,10 @@ if (Test-Path -LiteralPath $campaignWorkRoot -PathType Container) {
     foreach ($campaignDirectory in Get-ChildItem -LiteralPath $campaignWorkRoot -Directory) {
         $sessionMap = Get-ChildItem -LiteralPath $campaignDirectory.FullName -File -Filter '*-session-map.md' | Select-Object -First 1
         $resultsFile = Get-ChildItem -LiteralPath $campaignDirectory.FullName -File -Filter '*-results.md' | Select-Object -First 1
+        if ($null -ne $sessionMap -and $null -eq $resultsFile) {
+            Test-CriterionTable $sessionMap.Name (Get-Content -Raw -LiteralPath $sessionMap.FullName)
+            continue
+        }
         if ($null -eq $sessionMap -or $null -eq $resultsFile) { continue }
         $checkedMaps++
         $mapCards = @([regex]::Matches((Get-Content -Raw -LiteralPath $sessionMap.FullName), '(?m)^(?<card>\d+[a-z]?)\. ') | ForEach-Object { $_.Groups['card'].Value } | Sort-Object -Unique)
