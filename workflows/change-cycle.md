@@ -50,7 +50,7 @@ Act as a change-impact coordinator before acting as an implementer.
 - Never rerun Project Initialization.
 - Never upload or publish the mod.
 
-Do not classify a change as low risk merely because the owner calls it a fix. After the Implementation Plan establishes exactly one Ready issue and resolves its material decisions, assess it against the proportionate approval-bundle criteria in `guidelines/process-control.md`. If eligible, proactively present that bounded packet and record the result in the plan and `project-status.md`. If it is not eligible, identify the material reason and retain the normal checkpoints. Final release-artifact approval is always separate from this bundle.
+After the Implementation Plan resolves its material decisions, follow [Implementation Approval For Named Issues](../guidelines/process-control.md#implementation-approval-for-named-issues).
 
 ## Cycle Identity and Artifact Root
 
@@ -155,7 +155,7 @@ Present the complete intake and proposed route for explicit approval before revi
 10. Record stage dispositions in the authoritative `project-status.md` ledger.
 11. Mark affected canonical stages **Needs Revision**.
 12. Execute each **Revisit** stage in normal stage order.
-13. Execute Implementation Plan using the cycle artifact root, including the proportionate approval-bundle assessment.
+13. Execute Implementation Plan using the cycle artifact root, including its approval and authorization packet.
 14. Execute Implementation using the cycle issues.
 15. Execute Release Presentation using the cycle artifact root, including release artifact validation and handoff when agent-managed by the ownership matrix.
 16. Produce `<artifact-root>/cycle-summary.md`.

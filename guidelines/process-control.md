@@ -267,30 +267,21 @@ When a workflow approval always leads immediately into the first required stage,
 
 When the validation plan, candidate and environment are already approved, perform the reversible preparation in the plan under that approval. This includes preflight checks, restorable snapshots, approved staging, readback and preparing the launch card. Present the ready card at the owner execution or launch-authorization boundary recorded in the plan. Follow the recorded launch restrictions and seek a revised decision if preparation requires a material change to the candidate, environment or coverage.
 
-### Proportionate Approval Bundle For A Small Change Cycle
+### Implementation Approval For Named Issues
 
-After a Change Cycle Implementation Plan is complete, assess whether its remaining predictable approvals can be offered as one bounded packet. Eligibility requires all of the following:
+When the Implementation Plan is ready for review, offer one bounded packet to approve the plan and authorize Implementation for one issue or a named group in execution order. Use this packet when the following conditions are met:
 
-- The cycle contains exactly one Ready implementation issue.
-- The issue is local, bounded, and reversible.
-- Requirements, architecture, licensing, compatibility, ownership, and manual-validation decisions are resolved.
-- The planned work has no destructive action or non-Git external-state change; routine Git operations follow `guidelines/collaboration-guidelines.md`.
-- Required verification, read-only independent-review scope, and commit conditions are fully briefed.
+- The first issue is Ready. Later issues are defined in the plan and may start only when their readiness and dependency gates are met.
+- Each issue has a bounded scope and can be verified and reviewed at its approved checkpoint. Requirements, architecture, licensing, compatibility, ownership, and validation decisions for the named scope are resolved.
+- Required verification, read-only independent-review scope, commit conditions, and owner actions are briefed. The packet excludes destructive actions and non-Git external-state changes.
 
-Do not infer eligibility from labels such as *fix*, *small*, or *pre-release*. Base the decision on actual risk, reversibility, external effects, and resolved decisions.
+Name the exact issue IDs or an unambiguous range from the approved plan. Distinguish the two decisions in the packet and record the owner's response, authorized scope, pause points, and exclusions in the Implementation Plan and `project-status.md`. Apply a still-valid approval on resume. The owner may also authorize a named group from an already approved plan using the same scope and pause rules.
 
-When eligible, proactively offer one explicitly labeled packet that lets one owner response:
+Complete verification, independent review, and the applicable commit checkpoint as each issue comes due. Continue through the authorized group without asking again at each issue. A separately approved validation campaign may use its recorded dependency and checkpoint rules. Required read-only reviews, routine Git operations, push cadence, and owner restrictions follow [Collaboration Guidelines](collaboration-guidelines.md).
 
-- Approve the Implementation Plan.
-- Authorize Implementation to begin for the named issue.
-- Identify the required read-only independent review scope; initiation follows `guidelines/collaboration-guidelines.md`.
-- Record the applicable routine Git policy from `guidelines/collaboration-guidelines.md`; no separate commit or push permission is requested under its automatic default.
+Pause at an owner action or launch-authorization boundary recorded in the plan, a new material scope or architecture decision, or a failed check that requires an owner decision about risk or a waiver. Correct and rerun recoverable failures within the approved scope. After an owner checkpoint, continue within the same authorization if the decision still fits the recorded scope and conditions.
 
-State that the packet does not authorize a tag, publication, upload, non-Git external-service change, destructive action, scope expansion, or an unbriefed or additional issue. Required read-only reviews and routine commits/pushes are governed separately by `guidelines/collaboration-guidelines.md`, including owner restrictions and the recorded push cadence. Record the exact stage authorization, review scope and exclusions in both the Implementation Plan and `project-status.md`. A resumed agent must apply still-valid recorded decisions without asking for them again.
-
-The bundle is invalidated when requirements, architecture, issue scope, review scope, verification outcome, repository condition, or external effects materially differ from the briefing. Stop and request a revised decision instead of stretching the authorization. Owner observations unavailable to the agent, failed or waived verification that changes risk, scope expansion, and final release-artifact approval remain separate checkpoints.
-
-When the eligibility conditions are not satisfied, state the material reason briefly and use the normal approval lifecycle.
+Use separate checkpoints for work outside the named scope, material changes to the approval conditions, stage transitions, final release-artifact approval, tags, and publication or upload. When the conditions for this packet cannot be met, state the material reason and use the normal approval lifecycle.
 
 For resumed work, provide a shorter briefing that states the active stage, current status, next action, expected output, and whether approval is needed before continuing.
 

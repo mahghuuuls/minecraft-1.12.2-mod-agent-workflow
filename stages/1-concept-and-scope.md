@@ -140,6 +140,12 @@ Recording "not needed, because normal behavior is directly visible" is a complet
 
 Do not choose a mechanism, output format, default state, verbosity, or limits here. Those belong to Requirements Definition.
 
+## Broad Mob Compatibility
+
+When the proposed mod promises broad mob compatibility, settle the intended coverage with the owner before approving scope. Record which categories of vanilla and modded mobs should use the feature by default, any opt-in categories, and the intended treatment of bosses and neutral mobs, including whether normal provocation should be required. Identify the representative modpack or mod set for judging any promise about modded mobs.
+
+Record category boundaries and concrete examples in the scope artifact. Send uncertain expectations to [Feasibility Research](2-feasibility-research.md#broad-mob-compatibility) for investigation.
+
 ## Process
 
 1. Read `guidelines/project-defaults.md`.
@@ -172,6 +178,7 @@ This stage is complete when:
 - Its high-level features are understood.
 - Essential and optional features are distinguished.
 - In-scope and out-of-scope boundaries are explicit.
+- When broad mob compatibility is in scope, the owner has agreed to the intended coverage and reference environment.
 - The need for a disabled-by-default diagnostic mode has been explicitly decided, in scope or out, with its reasoning recorded. An unanswered decision does not satisfy this criterion.
 - No unresolved concept-level contradictions remain.
 - Technical uncertainties are recorded for Feasibility Research.

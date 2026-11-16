@@ -142,6 +142,12 @@ During Requirements Definition:
 
 If a term is still unresolved but does not materially affect behavior, record it as an unresolved non-blocking glossary question. If it affects behavior, do not approve the requirements until it is clarified.
 
+## Broad Mob Compatibility
+
+Turn the agreed coverage and [feasibility findings](2-feasibility-research.md#broad-mob-compatibility) into an approved release roster for each applicable vanilla or modded reference. Record stable entity identifiers, the reference versions and relevant configuration, and which mobs can use the feature by default or by opt-in. State any exclusions and special eligibility conditions, such as boss phases or neutral mobs after normal provocation.
+
+Define what counts as a pass in the applicable combat states. For a claim such as “most,” record the eligible population, the minimum passing count, and how exclusions affect the count. Use the roster and pass conditions as the basis for implementation planning and validation.
+
 ## Requirement Quality
 
 Each requirement should be:
@@ -232,6 +238,7 @@ This stage is complete when:
 - Relevant configuration, multiplayer, persistence, and failure behavior is covered.
 - Required mod dependencies use inclusive verified minimums with no upper bounds, and their acceptance criteria distinguish build-artifact pinning from shipping metadata.
 - Every required behavior has objective acceptance criteria.
+- When broad mob compatibility is required, the release roster and its pass conditions are approved before Architecture Definition.
 - Requirements use approved glossary terms consistently.
 - Glossary terms that materially affect behavior are approved or revised.
 - Requirements do not prescribe internal implementation.

@@ -136,7 +136,7 @@ Act as a focused implementation agent.
 
 Required review-agent initiation follows `guidelines/collaboration-guidelines.md#required-read-only-review-agents`. This stage owns review readiness, scope, evidence and disposition; do not add a separate review-agent permission checkpoint.
 
-At the start of a Change Cycle Implementation stage, inspect the Implementation Plan and `project-status.md` for a recorded proportionate approval bundle and owner restrictions. Honor the covered implementation start without repeated prompts and apply the collaboration guideline's review/Git policies. If the records disagree, the issue changes, verification fails or materially changes, unrelated working-tree changes enter the proposed commit, or an excluded action becomes necessary, resolve that condition before proceeding. Those policies do not approve changed scope or failed checks.
+At the start of Implementation and on resume, inspect the Implementation Plan and `project-status.md` for the approved issue scope and owner restrictions. Apply [Implementation Approval For Named Issues](../guidelines/process-control.md#implementation-approval-for-named-issues) and resolve any disagreement between the records before relying on the approval.
 
 The agent may make ordinary implementation decisions that remain within the approved architecture. This includes the proportionate local design improvements authorized by `guidelines/coding-standards.md`, even when they touch multiple related methods or classes inside one approved responsibility. Decisions that alter component responsibilities, dependency directions, public behavior, or project scope require explicit approval.
 
@@ -195,6 +195,8 @@ Use the environment tiers approved in the implementation plan. Record the exact 
 - The test instance does not prove compatibility with the owner's own modpack.
 - A target modpack check does not by itself prove general compatibility with every modpack.
 - External multiplayer is required only when the approved risk or behavior needs separately operated multiplayer evidence.
+
+When preparing the last planned packaged gameplay launch in the agent-managed test instance, check whether the expected release identity and logo decision are now known. If so, include the Mods list observation and retain the evidence under [Discovery Evidence From Packaged Gameplay](../procedures/release-build-and-discovery.md#discovery-evidence-from-packaged-gameplay).
 
 ### Absence Requirements
 
@@ -451,7 +453,7 @@ The second is a defect even though it references nothing internal. It is the dif
 
 Create the reviewed commit in the active mod repository under `guidelines/collaboration-guidelines.md`; its automatic default requires no separate prompt. Honor an owner ask policy or narrower restriction. If the owner declines or defers a commit, record the decision and continue only if the owner approves moving to the next issue with uncommitted changes.
 
-After a clean committed checkpoint, confirm the repository is clean when checked and end with a simple pause-state cue such as: `Ready to continue when you want.`
+After a clean committed checkpoint, confirm the repository is clean and report the checkpoint. If the next issue is eligible under the recorded authorization, continue to it. When an owner checkpoint is due, state the action or decision needed.
 
 ## Issue Execution Process
 
@@ -480,7 +482,7 @@ After a clean committed checkpoint, confirm the repository is clean when checked
 23. Mark the issue **Done** only when the Definition of Done is satisfied. When only approved campaign cards remain, mark it **Awaiting Validation** and follow the campaign procedure instead.
 24. Prepare the issue or completed-campaign commit checkpoint: run `scripts/validate-workspace.ps1` from the workflow root and resolve its findings, then check the routine Git policy and any owner restrictions.
 25. Create the reviewed commit without a separate prompt under the automatic policy; otherwise apply the recorded permission or deferral. Push timing remains governed by the collaboration guideline.
-26. Select the next Ready issue only after the commit checkpoint is resolved, except for the next explicitly named issue in an approved validation campaign.
+26. Select the next authorized Ready issue after the commit checkpoint is resolved, or follow the approved validation campaign's recorded sequence.
 
 ### Executing A Decision Issue
 

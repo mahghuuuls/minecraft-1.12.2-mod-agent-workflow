@@ -188,6 +188,12 @@ Classify each high-level feature as:
 
 Do not classify a feature as feasible merely because a possible approach can be imagined.
 
+## Broad Mob Compatibility
+
+Investigate the coverage agreed in [Concept and Scope](1-concept-and-scope.md#broad-mob-compatibility) against Minecraft 1.12.2 and the selected reference mods or pack. Record the tested or inspected versions and relevant configuration. Examine representative mob families and their combat states, including any special targeting or encounter behavior relevant to the approved boss and neutral-mob scope.
+
+Document which categories appear viable through shared behavior, which require mob-specific work, and which remain uncertain or unsupported. Identify the evidence and limits behind each finding. If the evidence calls the promised coverage into question, bring that decision back to the owner before carrying it into Requirements.
+
 ## Process
 
 1. Read all required input documents.
@@ -232,6 +238,7 @@ This stage is complete when:
 - The dependency baseline records its release-check date, current gameplay pins and any explicit owner-approved older-parent compatibility promise.
 - Necessary dependency source checkouts are recorded with URL/path, ref or commit, reason, and licensing constraints.
 - Important compatibility and client/server limitations are understood.
+- When broad mob compatibility is in scope, representative evidence supports the proposed coverage or identifies the remaining questions and their planned validation.
 - Major technical and performance risks are recorded.
 - Questions requiring implementation validation are explicit.
 - Selected Agent Diagnostics Toolkit compatibility is inspected or its load validation is explicitly assigned to a later checkpoint with a fallback evidence plan.

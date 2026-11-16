@@ -165,7 +165,7 @@ Authorization for one action does not authorize another. Do not use destructive 
 
 Before creating the first commit in an active repository, inspect the configured Git author name and email and show them to the owner. If the owner wants a different address, offer the applicable GitHub-provided `noreply` address or another owner-selected address. Do not change local or global Git identity configuration without explicit authorization.
 
-The proportionate approval bundle in `guidelines/process-control.md` combines plan approval and implementation start. Required read-only reviews and routine Git operations follow this guideline's respective policies. The bundle does not weaken source readiness, verification, review, issue-completion or publication gates.
+The [implementation approval for named issues](process-control.md#implementation-approval-for-named-issues) can combine plan approval and implementation start. Apply this guideline's review and Git policies at each applicable checkpoint.
 
 ### Branching Before And After Publication
 

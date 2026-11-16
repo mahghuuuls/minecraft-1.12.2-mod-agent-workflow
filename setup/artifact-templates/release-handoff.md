@@ -38,6 +38,9 @@
 - Manifest attributes resolve to jar content (in particular no `MixinConfigs` naming a missing file):
 - In-mod logo named by the metadata is present in the jar, or no logo is named and the icon is recorded as deferred:
 - Development-only diagnostic toolkit exclusion, when applicable:
+- Packaged discovery log and owner Mods list observation:
+- Launch runtime and verified instance reset:
+- For reused packaged gameplay evidence, matching JAR SHA-256 and runtime basis:
 
 ## Accepted Validation Waivers
 

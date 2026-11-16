@@ -82,9 +82,10 @@ Apply the routing rules in `stages/7-implementation.md#evidence-pack-routing`; d
 
 ## Approval And Authorization Packet
 
-- **Proportionate bundle eligibility:** Eligible / Ineligible, with reason
+- **Packet eligibility:** Eligible / Ineligible, with reason
 - **Implementation Plan approval:** Requested / Approved / Not Approved
-- **Implementation start:** Named issue and authorization status
+- **Implementation authorization:** Named issue IDs in execution order or exact range from this plan, and authorization status
+- **Owner checkpoints:** Owner actions, launch authorizations, and decisions due within the named scope
 - **Read-only independent review:** Required scope; initiation under the collaboration guideline; any explicit owner restrictions
 - **Routine Git policy:** Applicable collaboration-guideline policy, push cadence and explicit owner restrictions
 - **Explicit exclusions:** Tag, publication, upload, non-Git external-service change, destructive action, scope expansion, and unbriefed or additional issues

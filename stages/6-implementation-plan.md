@@ -494,6 +494,8 @@ Apply [Runtime Placement](../guidelines/agent-diagnostics-toolkit.md#runtime-pla
 
 Present a compact toolkit summary alongside the owner-facing **Test now / Defer / Waive** packet. The summary must state the pinned artifact, whether it is already installed or deferred for a named runtime, the campaigns or cards that will use it, the evidence it can collect, and its material evidentiary limits. This is a presentation of the approved toolkit plan, not a second toolkit decision.
 
+When agent-managed release validation and a packaged gameplay launch in the test instance are planned, include the Mods list check in the last such launch if the expected release identity and logo decision are known. Plan the evidence specified in [Discovery Evidence From Packaged Gameplay](../procedures/release-build-and-discovery.md#discovery-evidence-from-packaged-gameplay).
+
 ## Owner-Assisted Validation Campaigns
 
 When several small related issues require the same expensive runtime, the plan may group their owner-assisted checks into one validation campaign. Use a campaign only when it reduces launches or configuration churn without making a failure difficult to attribute.
@@ -516,16 +518,7 @@ Do not create a campaign for unrelated issues, high-risk migrations, destructive
 
 ## Approval And Authorization Packet
 
-After the plan and manual-validation decisions are complete, assess the active Change Cycle against the proportionate approval-bundle criteria in `guidelines/process-control.md`.
-
-For an eligible single-issue, low-risk cycle, present one bounded packet that requests the following two decisions:
-
-- Approval of the completed Implementation Plan.
-- Authorization to begin Implementation of the named Ready issue.
-
-Also record the required read-only review scope and applicable routine Git policy, including any explicit owner restrictions, by reference to `guidelines/collaboration-guidelines.md`. These are execution policies, not additional permission requests.
-
-Record the eligibility basis, each covered action, explicit exclusions, invalidating conditions, and owner response in the Implementation Plan and `project-status.md`. Do not describe the packet as general permission. If the cycle is ineligible, record the material reason and use normal approval checkpoints.
+After the plan and manual-validation decisions are complete, prepare and record the packet under [Implementation Approval For Named Issues](../guidelines/process-control.md#implementation-approval-for-named-issues). Use the dependency graph to define the issue order and the verification plan to identify owner checkpoints.
 
 ## Process
 
@@ -549,7 +542,7 @@ Record the eligibility basis, each covered action, explicit exclusions, invalida
 18. Confirm that every required behavior is covered.
 19. Identify optional requirements that will be deferred.
 20. Generate the implementation-plan artifacts as complete drafts.
-21. Assess and record proportionate approval-bundle eligibility.
+21. Prepare the approval and authorization packet under [Approval And Authorization Packet](#approval-and-authorization-packet).
 22. Present the drafts and, when eligible, the bounded approval and authorization packet; revise them until explicitly approved.
 
 ## Output Artifacts
