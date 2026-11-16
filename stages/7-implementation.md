@@ -216,6 +216,8 @@ Dimension checks are risk-based. For dimension-agnostic code, inspect the releva
 
 A freshly created `runServer` environment rejects the development client's login and leaves the owner with no way to obtain test items. Prepare `run/server.properties` before requesting a dedicated-server check, or the request fails for reasons that have nothing to do with the mod.
 
+Apply [Local Test Server EULA](../guidelines/project-defaults.md#local-test-server-eula) when preparing `eula.txt`.
+
 - `online-mode=false`. The development client authenticates with a placeholder session that Mojang cannot verify, so the default setting refuses it as an invalid session.
 - `server-port` set to the port recorded for this project in `project-setup.md` (Shared Machine in `guidelines/project-defaults.md`), so a development server of another project on the same computer does not block the launch.
 - `gamemode=1` with `force-gamemode=true`. Without creative access the owner must obtain every test item by hand, which turns a short check into a scavenger hunt. The forced mode puts the player back into creative at every join, and vanilla refuses to eat food and ignores most damage in creative, so a card that eats, takes damage, or checks survival-only behavior carries its own `/gamemode survival` step after each join (in the bundle when the toolkit runs the setup), and the session map says so.

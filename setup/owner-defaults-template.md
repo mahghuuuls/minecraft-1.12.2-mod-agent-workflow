@@ -50,6 +50,12 @@ The agent-managed test instance is shared by every mod this owner develops (Test
 - Fallback instance on standard Forge, when the Cleanroom relauncher failed:
 - OptiFine JAR directory (fill in when an [OptiFine compatibility check](../guidelines/project-defaults.md#optifine-compatibility-checks) requires it):
 
+## Local Test Server EULA
+
+- Owner acceptance and date:
+- EULA link: https://www.minecraft.net/en-us/eula
+- Scope and authorization to apply across future Minecraft 1.12.2 mod projects:
+
 ## Modpack Reference
 
 - Default [read-only modpack reference](../guidelines/project-defaults.md#read-only-modpack-references) authorized by the owner for use across projects (name and absolute instance directory):

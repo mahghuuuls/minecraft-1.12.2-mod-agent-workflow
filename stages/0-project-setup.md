@@ -287,6 +287,10 @@ Explain why in a few sentences: the development client proves the code, not the 
 
 When the owner needs a new instance, recommend the [default test pack](../guidelines/project-defaults.md#test-instance). Have the owner launch the installed pack and join a disposable world before adding any project mods. Read the reported `mixinbooter` version from the join log using [Mixins](../guidelines/project-defaults.md#mixins). Record the launcher, instance name and path, pack and installed version, and baseline mod list in `project-setup.md`. If the owner declines, record the Test Instance waiver once.
 
+## Local Test Server EULA
+
+Read the [saved EULA decision](../guidelines/project-defaults.md#local-test-server-eula) from the local owner defaults. Carry an applicable acceptance into the setup record. If acceptance is missing and local dedicated-server tests are planned, give the owner the EULA link and ask once whether they accept it and authorize saving that decision for local test servers across future projects. Save an approved reusable decision in their shared local `owner-defaults.md`. When dedicated-server testing is still undecided, record the decision as pending before the first server launch.
+
 ## Modpack Reference
 
 Check Project Setup and the local owner defaults for the owner's decision about a [read-only modpack reference](../guidelines/project-defaults.md#read-only-modpack-references). Reuse an available saved reference without asking again unless the project has an explicit override. If there is no applicable decision, ask whether the owner has a Minecraft 1.12.2 modpack the project can use as a read-only reference and ask for its instance directory if available. Explain that the reference helps the project identify relevant mods and potential conflicts. Ask alongside the test-instance decision when convenient.
@@ -448,7 +452,7 @@ If a new mod's repository, directory name, mod ID, display name, public descript
 7. Collect or defer practical project defaults.
 8. Resolve the agent-managed test instance and offer the [read-only modpack reference](#modpack-reference).
 9. Apply or provisionally defer loader, runtime, template, and distribution defaults; ask only about known constraints or requested overrides.
-10. Record the release and validation ownership defaults and collect only necessary overrides.
+10. Record the release and validation ownership defaults and collect only necessary overrides, including the [local test-server EULA decision](#local-test-server-eula).
 11. Resolve the Agent Diagnostics Toolkit preference and record any deferred artifact verification.
 12. Record public-copy and Git workflow preferences.
 13. Create the workflow feedback log when it does not exist.

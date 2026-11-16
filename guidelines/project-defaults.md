@@ -32,6 +32,12 @@ This policy is an invariant. A mod project must not override it through Project 
 - `release-handoff.md` must record the canonical `build/libs` path, filename, size, and checksum. Immediately before owner upload, verify that the file still exists at that path and matches the handoff checksum.
 - A later development or release build may replace transient contents under `build/libs`. After any later build or source change, do not call an artifact upload-ready until Release Presentation or `procedures/revalidate-release.md` has validated the current `build/libs` artifact again.
 
+## Local Test Server EULA
+
+Project Setup records the owner's acceptance of the [Minecraft EULA](https://www.minecraft.net/en-us/eula) for local test servers and whether the agent may apply that acceptance across future Minecraft 1.12.2 mod projects. Reuse an explicit saved acceptance within its recorded scope. The agent may write `eula=true` when preparing a covered server, including a new disposable instance.
+
+Keep the owner's decision, date, EULA link, and scope in the local owner defaults when reuse is approved. Apply a later restriction or withdrawal immediately. Ask again only when acceptance is missing, the proposed use is outside its scope, or a known change to the terms requires a new owner decision. A new project or test directory alone does not require another acceptance.
+
 ## Modpack Compatibility
 
 Assume players will install the mod alongside other Minecraft 1.12.2 mods. Every project considers how its features interact with other mods that use or change the same game systems. Scale research and verification to the contact points, likely conflicts, and approved support claims.

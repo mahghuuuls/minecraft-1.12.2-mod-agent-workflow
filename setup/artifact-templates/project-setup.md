@@ -75,6 +75,12 @@
 - Version the runtime reports for `mixinbooter`, with the template and Cleanroom versions it was read from (from `Client attempting to join with ... mods` in a log that entered a world, or not yet read):
 - Lock check result:
 
+## Local Test Server EULA
+
+- Decision, date, and source (saved owner defaults, current approval, or pending):
+- Scope:
+- Reuse saved to shared local owner defaults, when approved:
+
 ## Modpack Reference
 
 - Decision (reused from owner defaults, owner-designated read-only, declined, or unavailable):
