@@ -488,6 +488,8 @@ Before Implementation begins, present one compact decision packet for owner-perf
 
 Do not repeatedly ask about a deferred or waived check unless new evidence materially changes its risk.
 
+Do not fix a number of owner launches or cards before the criteria are mapped to them. Derive the launches from the criteria: one per runtime or configuration state that cannot change inside a launch, each named with what it shows. When that map belongs to a later session, write `launches: set by the session map` instead of a number. A count written early becomes a commitment that the session must explain away when the criteria need fewer.
+
 When Project Setup selected the Agent Diagnostics Toolkit, add a toolkit plan to the Implementation Plan. Name the pinned artifact, runtime placement, baseline and login-automation choices, bundle storage, log-retention path, and checks that will use it. A toolkit-assisted check must still state what the toolkit cannot prove and which mod-specific diagnostic or owner-visible observation supplies the missing evidence.
 
 Apply [Runtime Placement](../guidelines/agent-diagnostics-toolkit.md#runtime-placement) when deciding whether a separate toolkit-free launch supplies necessary evidence. Select fresh or reused worlds from the save-state criterion independently of toolkit installation.

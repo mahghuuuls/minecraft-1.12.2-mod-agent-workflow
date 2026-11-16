@@ -18,6 +18,11 @@ Prefer version-specific and primary sources. These links are starting points for
 - [CraftTweaker 4.1.20 (1.12.2) integration notes](crafttweaker-1-12-notes.md)
   Verified facts for a mod that exposes a ZenScript surface: artifacts, mod-owned loaders and their events, parse-error scope, calls from scripts into the mod, overload and cast rules, item patterns, the shared development folder.
 
+## Minecraft 1.12.2 Lifecycle
+
+- [Minecraft 1.12.2 lifecycle notes](minecraft-1-12-2-lifecycle-notes.md)
+  Verified facts about session and server lifecycle races, such as ending a singleplayer session from the server side.
+
 ## Template Candidates
 
 See [Minecraft 1.12.2 Template Candidates](template-candidates.md) for selection guidance.

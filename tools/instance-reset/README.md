@@ -45,6 +45,7 @@ Takes the reviewed plan. It recomputes the plan with the reviewed plan's own `-K
 
 - Jars are not copied into the snapshot; a baseline jar that was removed or replaced is reported for the owner or the agent to restore by hand. Worlds and the files of watched folders are not copied either; an empty subfolder a session leaves inside a watched folder is not seen. `resourcepacks` and `shaderpacks` are compared by name only, because hashing large packs on every step is slow.
 - Reset exemptions in `owner-defaults.md` can keep top-level entries (`-Keep`); a `config` file cannot be exempted.
+- Outside `mods`, `config`, the worlds and the watched folders, only the top-level listing is compared: files a launch writes inside an existing top-level folder are not seen and stay after the reset. In CleanroomTestBench these are the crash assistant's caches under `local\crash_assistant\` (one keyed to each mod jar). Name them in the lock note as expected and leave them.
 - The running-game check reads Java command lines through CIM. A game that does not name its folder on the command line, or one started elevated while the tool runs unelevated, is not seen; the session still checks by hand as Shared Machine says.
 - Windows only (Windows PowerShell 5.1 or later).
 
