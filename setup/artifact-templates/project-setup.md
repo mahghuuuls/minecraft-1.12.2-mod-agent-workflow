@@ -67,6 +67,7 @@
 
 ## Test Instance
 
+- Runtime route (isolated Cleanroom profile or shared launcher instance):
 - Decision (recorded from owner defaults, created now, or declined with waiver):
 - Launcher:
 - Instance name and path:
@@ -74,6 +75,16 @@
 - Baseline mod list (file names and sizes, captured after the template's first-launch steps):
 - Version the runtime reports for `mixinbooter`, with the template and Cleanroom versions it was read from (from `Client attempting to join with ... mods` in a log that entered a world, or not yet read):
 - Lock check result:
+
+## Isolated Cleanroom Runtime
+
+- Selected profile and runtime root, if applicable:
+- Pinned Java, Cleanroom, Toolkit, support mods and input manifest:
+- Source caches and protected reference roots:
+- Agent server launch, graphical launch and Toolkit control authorization sources:
+- Concurrency, memory and session/shutdown bounds:
+- Direct or host-run launch path, smoke-test evidence and remaining limitations:
+- Runtime logs and evidence location:
 
 ## Local Test Server EULA
 

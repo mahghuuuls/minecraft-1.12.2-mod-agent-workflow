@@ -1,5 +1,7 @@
 # Implementation
 
+For agent-executable packaged Cleanroom checks selected by the approved verification plan, follow [Isolated Cleanroom Validation](../procedures/isolated-cleanroom-validation.md). Preserve this stage's issue criteria, evidence labels and review checkpoints. The dedicated-server development instructions below govern the development runtime; the isolated runner has its own console and separate game directories.
+
 ## Purpose
 
 Implement the approved plan one issue at a time while continuously verifying that each increment satisfies its requirements and follows the approved architecture.

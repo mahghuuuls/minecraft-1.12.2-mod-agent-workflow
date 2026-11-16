@@ -79,7 +79,15 @@ The owner often develops several mods at the same time on one computer, in separ
 
 ## Test Instance
 
-Every mod uses one agent-managed test instance for its routine packaged checks, unless waived. It is a modpack instance in the owner's launcher, outside every mod repository, reserved for testing.
+Every mod uses an agent-managed test runtime for its routine packaged checks, unless waived. Project Setup selects an isolated Cleanroom runtime or a shared launcher instance and records its baseline and launch ownership. Prefer the isolated route when its prerequisites and owner permissions are available. An existing approved shared-instance choice remains in effect until a setup amendment is approved.
+
+### Isolated Cleanroom Runtimes
+
+Use [Isolated Cleanroom Validation](../procedures/isolated-cleanroom-validation.md) for preparation, agent launches, bounded sessions and evidence. This route runs packaged JARs directly through Java in independent game directories under the ignored workspace; it does not require an owner launcher action. The selected profile must contain the runtime and mods needed for its acceptance criteria. Minimal profiles do not establish compatibility with untested base or target-pack mods.
+
+### Shared Launcher Test Instances
+
+When Project Setup selects a shared launcher instance, apply the following baseline, borrowing and reset rules.
 
 - The owner creates it once, in Project Setup or earlier, by installing CleanroomTestBench from the CurseForge App catalog unless the owner chooses another pack. CleanroomTestBench provides the Cleanroom relauncher, performance and compatibility mods, and test utilities. [CleanroomTestBench on CurseForge](https://www.curseforge.com/minecraft/modpacks/cleanroomtestbench)
 - Project Setup records the launcher, the instance name and path, the template and its version, and the template mod list (the `mods` folder as created, file names and sizes). That list is the reset baseline. It also records the version the instance's runtime reports for `mixinbooter` when a log that entered a world exists (Mixins below). One instance serves every mod the owner develops; `owner-defaults.md` carries it to the next project.
@@ -121,7 +129,7 @@ Use this sequence for both campaign testing and release discovery on a borrowed 
 - When an approved mechanism needs Mixins, use MixinBooter. Cleanroom, the runtime target, includes it; on standard Forge it is a separate mod. Use another Mixin loader only when the owner explicitly declines MixinBooter, and record that decision in Feasibility Research and Architecture.
 - Build against the template's MixinBooter version, but declare the shipping minimum as the version the target Cleanroom runtime reports for the `mixinbooter` mod id. FML resolves the dependency against Cleanroom's built-in MixinBooter, not against a newer MixinBooter jar in the `mods` folder, so a minimum above the reported version makes Cleanroom refuse the mod. Neither the development client nor the development dedicated server can show this; they run standard Forge with the build version.
 - Read the reported version again at the start of every workflow: Project Setup reads it for a new mod, and a Change Cycle reads it in its first step. When it is at or above the declared minimum, keep the minimum, so the mod runs on the current Cleanroom and on older ones, and record the new reading. When it is below the declared minimum, the current Cleanroom refuses the mod: lower the minimum to the reported version in a patch release. When Cleanroom no longer provides `mixinbooter`, the mod needs the MixinBooter mod, and its mod page names it as a required download. Raise the minimum only when the mod needs a MixinBooter feature the lower version lacks, and record why. Never declare more than the version the current target Cleanroom reports.
-- Read the reported version from a test-instance log that entered a world: the line `Client attempting to join with <n> mods : ...` lists `mixinbooter@<version>`. Do not read it from files inside the Cleanroom jar; on Cleanroom 0.6.13-alpha its `mixinbooter.info` says 11.8 while the runtime reports 10.7, and a mod requiring 11.8 was refused. Project Setup records the version with the test instance, together with the template and Cleanroom versions it was read from; read it again when either changes. When no such log exists yet, have the owner launch the baseline instance (without this mod) into a world once, before Initialization declares the dependency. A launch that the minimum blocks cannot supply it: the refusal names only the required range.
+- Read the reported version from a test-instance log that entered a world: the line `Client attempting to join with <n> mods : ...` lists `mixinbooter@<version>`. Do not read it from files inside the Cleanroom jar; on Cleanroom 0.6.13-alpha its `mixinbooter.info` says 11.8 while the runtime reports 10.7, and a mod requiring 11.8 was refused. Project Setup records the version with the test instance, together with the template and Cleanroom versions it was read from; read it again when either changes. When no such log exists yet, launch the selected baseline runtime (without this mod) into a world once using its recorded launch ownership, before Initialization declares the dependency. A launch that the minimum blocks cannot supply it: the refusal names only the required range.
 - Use only MixinBooter features that the declared minimum provides.
 - Meet the declared dependency string with Cleanroom early, as the Verification Environment Plan in `stages/6-implementation-plan.md` plans it. `tools/mod-jar/mod-jar.cmd check` cannot catch a minimum that is too high: an id given with `-Provided` carries no version, so no range is checked against it.
 
@@ -226,11 +234,11 @@ Release and publication defaults are:
 
 Validation ownership defaults are:
 
-- Dedicated server testing: owner-checked, agent-prepared, expected by default
-- Test instance testing (the packaged jar in the agent-managed test instance, on Cleanroom): owner-executed, agent-prepared, expected by default
+- Dedicated server testing: expected by default; the agent runs executable checks and the owner supplies remaining observations
+- Test instance testing (the packaged JAR on Cleanroom): expected by default; launch and control follow the approved isolated-runtime or shared-instance choice
 - External multiplayer testing: owner-managed
 
-A dedicated-server check is a normal part of validating a mod that loads on a server, not an exceptional request. The agent prepares the recipe and the server configuration, starts the development dedicated server when it can (Development Dedicated Server Setup in `stages/7-implementation.md`), and reads the resulting logs; the owner connects and performs the checks. Omit it only for a mod that never loads server-side, and record the reason.
+A dedicated-server check is a normal part of validating a mod that loads on a server, not an exceptional request. Use the selected development server under `stages/7-implementation.md` or the [isolated packaged runtime](../procedures/isolated-cleanroom-validation.md). The agent prepares and executes accessible checks and reads the logs; the owner performs only the remaining owner-assisted steps. Omit it only for a mod that never loads server-side, and record the reason.
 
 Default release handoff mode is `agent-managed-release-validation`. A project may use `owner-managed-packaging` when the owner wants the agent to prepare only a lightweight handoff.
 

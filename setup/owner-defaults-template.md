@@ -39,7 +39,7 @@ Use this section only for questions the owner repeatedly answers the same way du
 
 ## Test Instance
 
-The agent-managed test instance is shared by every mod this owner develops (Test Instance in `guidelines/project-defaults.md`). Record it once and Project Setup applies it.
+Record reusable packaged-runtime preferences once. [Test Instance](../guidelines/project-defaults.md#test-instance) owns the choice between an isolated runtime and a shared launcher instance. The fields below describe the shared-instance option.
 
 - Launcher:
 - Instance name and path:
@@ -55,6 +55,15 @@ The agent-managed test instance is shared by every mod this owner develops (Test
 - Owner acceptance and date:
 - EULA link: https://www.minecraft.net/en-us/eula
 - Scope and authorization to apply across future Minecraft 1.12.2 mod projects:
+
+## Isolated Cleanroom Runtime Preferences
+
+- Preferred packaged test route: Isolated Cleanroom runtime | Shared launcher instance | Ask
+- Agent launch of local test servers and scope of reuse:
+- Agent launch of graphical test clients, announcing first, and scope of reuse:
+- Toolkit menu/player control in isolated test runtimes and scope of reuse:
+- Approved runtime/cache locations and preferred version pins, if known:
+- Resource and concurrency limits, if different from the workflow default:
 
 ## Modpack Reference
 

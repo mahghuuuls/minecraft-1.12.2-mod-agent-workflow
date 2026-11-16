@@ -144,6 +144,8 @@ Software design continues whenever existing code changes. Optimize for the small
 
 ## Running Builds And Tests
 
+- For approved packaged Cleanroom scenarios, use the selected [isolated runtime procedure](../procedures/isolated-cleanroom-validation.md) when available. Its real world, networking and process checks are runtime evidence; the tool's own fake-child tests establish only transport and lifecycle behavior. Neither replaces the project's required checks in other environments.
+
 - Run the build and the tests yourself whenever the environment allows it, read the output, and report the totals. Do not ask the owner to run a build or paste its output when you can run it.
 - When a build started from the agent shell fails with a loopback or subprocess error (Gradle's `Unable to establish loopback connection`, or `Invalid argument: connect` from `java.nio.channels.Pipe`), start it outside the agent's process tree with `tools/host-run/host-run.cmd run` instead. Read `tools/host-run/README.md` before the first use.
 

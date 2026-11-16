@@ -1,0 +1,38 @@
+{
+  "runtime_server_create": {
+    "description": "Place a block in the configured spawn area and save it",
+    "result": true,
+    "commands": [
+      {"command": "setblock 4 5 0 minecraft:gold_block", "toleratedFailures": ["commands.setblock.noChange"]},
+      "testforblock 4 5 0 minecraft:gold_block",
+      "devtool save"
+    ]
+  },
+  "runtime_server_reopen": {
+    "description": "Check the saved block after a full server process restart",
+    "result": true,
+    "commands": ["testforblock 4 5 0 minecraft:gold_block"]
+  },
+  "runtime_client_create": {
+    "description": "Create a visible fixture using the current player, check it and save",
+    "result": true,
+    "commands": [
+      "gamemode creative",
+      "tp @s 0.5 5 0.5 0 0",
+      "devtool await chunks -16 -16 16 16 200 populated",
+      {"command": "setblock 0 5 3 minecraft:gold_block", "toleratedFailures": ["commands.setblock.noChange"]},
+      "testforblock 0 5 3 minecraft:gold_block",
+      "devtool save"
+    ]
+  },
+  "runtime_client_reopen": {
+    "description": "Check the client fixture after a full process restart",
+    "result": true,
+    "commands": ["testforblock 0 5 3 minecraft:gold_block"]
+  },
+  "runtime_negative": {
+    "description": "Expected failure: the gold block is not a diamond block",
+    "result": true,
+    "commands": ["testforblock 0 5 3 minecraft:diamond_block"]
+  }
+}

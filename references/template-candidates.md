@@ -49,13 +49,13 @@ Use when the mod intentionally:
 - Requires Cleanroom Loader APIs or behavior
 - Uses modern Java bytecode unavailable to standard Java 8 Forge users
 - Is explicitly allowed to be Cleanroom-only
-- Needs the template's Cleanroom-native Unimined workflow
+- Needs the template's CleanroomGradle development workflow
 - Benefits from its Mixin, Kotlin, or Scala branches
 
 Current characteristics to verify:
 
 - Cleanroom Loader configuration
-- Custom Unimined fork and its documented warning
+- CleanroomGradle plugin and run configurations, with the current pinned version verified from `settings.gradle`
 - Java 25 toolchain and bytecode target
 - Cleanroom-specific manifest metadata
 - Main, Mixin, Kotlin, and Scala branch choices

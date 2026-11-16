@@ -55,7 +55,7 @@ A bounded, revocable permission covering a defined series of future actions, so 
 Owner: `guidelines/collaboration-guidelines.md`
 
 **Test Instance**
-The one agent-managed modpack instance in the owner's launcher, created from a template pack, where every mod gets its packaged and Cleanroom checks and which the agent resets to its recorded baseline after use.
+The agent-managed runtime selected for packaged and Cleanroom checks: either an isolated runtime with a pinned profile or a shared launcher instance with a recorded reset baseline.
 Owner: `guidelines/project-defaults.md`
 
 **Validation Waiver**

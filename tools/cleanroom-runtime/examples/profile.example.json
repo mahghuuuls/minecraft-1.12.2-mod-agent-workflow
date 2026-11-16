@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "minecraft": "1.12.2",
+  "cleanroom": "0.7.14-alpha",
+  "java": {"path": "C:/installed-java/bin/java.exe", "sha256": "REPLACE_WITH_SHA256"},
+  "authorization": {
+    "source": "REPLACE_WITH_CURRENT_OWNER_DECISION",
+    "eulaAccepted": false,
+    "eulaSource": "REPLACE_WITH_SAVED_ACCEPTANCE_SOURCE",
+    "toolkitActions": false,
+    "serverLaunch": false,
+    "clientLaunch": false
+  },
+  "metadata": {
+    "net.minecraft.json": {"path": "C:/runtime-cache/0.7.14-alpha/net.minecraft.json", "sha256": "REPLACE_WITH_SHA256"},
+    "net.minecraftforge.json": {"path": "C:/runtime-cache/0.7.14-alpha/net.minecraftforge.json", "sha256": "REPLACE_WITH_SHA256"},
+    "org.lwjgl3.json": {"path": "C:/runtime-cache/0.7.14-alpha/org.lwjgl3.json", "sha256": "REPLACE_WITH_SHA256"}
+  },
+  "libraryRoots": ["C:/runtime-cache/libraries", "C:/installed-server/libraries"],
+  "clientJar": {"path": "C:/minecraft-cache/versions/1.12.2/1.12.2.jar", "sha256": "REPLACE_WITH_SHA256"},
+  "serverInstall": "C:/installed-server",
+  "serverArgsSha256": "REPLACE_WITH_SHA256",
+  "assets": "C:/minecraft-cache/assets",
+  "protectedRoots": ["C:/owner-reference-pack"],
+  "player": "RuntimeTester",
+  "heapMiB": 2048,
+  "mods": [
+    {"path": "C:/approved-artifacts/agenttesttoolkit-1.8.0.jar", "sha256": "REPLACE_WITH_SHA256", "sides": ["client", "server"]}
+  ],
+  "files": [
+    {"path": "C:/work/workflow/tools/cleanroom-runtime/examples/smoke-bundles.json", "sha256": "REPLACE_WITH_SHA256", "target": "client/config/devtool/bundles/runtime-smoke.json"},
+    {"path": "C:/work/workflow/tools/cleanroom-runtime/examples/smoke-bundles.json", "sha256": "REPLACE_WITH_SHA256", "target": "server/config/devtool/bundles/runtime-smoke.json"}
+  ]
+}
