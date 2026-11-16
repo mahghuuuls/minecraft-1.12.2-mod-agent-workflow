@@ -142,6 +142,10 @@ During Requirements Definition:
 
 If a term is still unresolved but does not materially affect behavior, record it as an unresolved non-blocking glossary question. If it affects behavior, do not approve the requirements until it is clarified.
 
+## Modpack Compatibility
+
+Turn the [compatibility findings](2-feasibility-research.md#modpack-compatibility) into observable requirements for each material interaction in scope. Define what must coexist, what other mods' entities or content must participate, and what named integrations must do. Include the relevant defaults, conditions, behavior when an optional partner is unavailable, and conflict behavior. Give each support promise acceptance criteria at its stated breadth.
+
 ## Broad Mob Compatibility
 
 Turn the agreed coverage and [feasibility findings](2-feasibility-research.md#broad-mob-compatibility) into an approved release roster for each applicable vanilla or modded reference. Record stable entity identifiers, the reference versions and relevant configuration, and which mobs can use the feature by default or by opt-in. State any exclusions and special eligibility conditions, such as boss phases or neutral mobs after normal provocation.
@@ -236,6 +240,7 @@ This stage is complete when:
 - Required behavior is precise and observable.
 - Meaningful boundaries and exceptions are defined.
 - Relevant configuration, multiplayer, persistence, and failure behavior is covered.
+- Material cross-mod behavior and its acceptance criteria are defined.
 - Required mod dependencies use inclusive verified minimums with no upper bounds, and their acceptance criteria distinguish build-artifact pinning from shipping metadata.
 - Every required behavior has objective acceptance criteria.
 - When broad mob compatibility is required, the release roster and its pass conditions are approved before Architecture Definition.

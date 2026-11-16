@@ -113,6 +113,7 @@ Act as a release documentation editor.
 - Keep the authoritative current artifact identity, checksum, source revision, repository state, and handoff evidence in `release-handoff.md`. Reference that record elsewhere instead of copying the checksum.
 - Treat mod-page copy as an iterative public-copy artifact; review it for audience fit, repetition, useful links, owner-provided wording, roadmap-risk wording, concise scope, and plain install-side statements.
 - Describe dependency compatibility using the verified minimum and tested baseline. Do not present permissive minimum-only metadata as proof that every future dependency version is compatible.
+- Match modpack and integration claims to the verification evidence. Describe whether the other mod coexists, participates in a feature, or receives dedicated integration behavior. State versions or configuration limits when they affect play. Keep internal reference paths and test inventories in the presentation record.
 - Treat the AI usage disclaimer as a default transparency note, not as internal workflow history. Keep it short, generic, and removable by owner request.
 - Follow the release ownership matrix strictly.
 - For agent-managed validation, validate the artifact from the exact clean committed revision recorded in the handoff. Do not treat a build from uncommitted release changes as final release evidence.

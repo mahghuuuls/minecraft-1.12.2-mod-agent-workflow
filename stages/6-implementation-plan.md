@@ -462,8 +462,8 @@ Use these evidence tiers consistently:
 1. **Automated or static:** compilation, unit tests, static inspection, or artifact inspection.
 2. **Development client:** `runClient`, including its integrated server when applicable.
 3. **Development dedicated server:** `runServer`. Needs the server configuration described under Development Dedicated Server Setup in `stages/7-implementation.md`. Optional mods that carry Mixins may not load here even when they load in `runClient`; plan checks that need them on a server for tier 4 or 5.
-4. **Test instance:** the built jar in the agent-managed test instance (Test Instance in `guidelines/project-defaults.md`), reset to its template baseline before the session. This is the packaged check and the only Cleanroom launch the workflow gives a mod; plan at least one card here for every mod unless the owner declined the instance. A mod that uses Mixins also gets a short discovery launch here with the first campaign that ships a Mixin, so the declared MixinBooter minimum meets Cleanroom early (Mixins in `guidelines/project-defaults.md`).
-5. **Target modpack:** the built jar in the owner's own pack, when the owner offers it.
+4. **Test instance:** the built jar in the agent-managed test instance (Test Instance in `guidelines/project-defaults.md`), reset to its template baseline before the session. Plan at least one card here for every mod unless the owner declined the instance. A mod that uses Mixins also gets a short discovery launch here with the first campaign that ships a Mixin, so the declared MixinBooter minimum meets Cleanroom early (Mixins in `guidelines/project-defaults.md`).
+5. **Target modpack:** the built jar in a disposable copy of the target pack by default. Follow [Read-Only Modpack References](../guidelines/project-defaults.md#read-only-modpack-references) for the original directory and copied inputs.
 6. **External multiplayer:** a separately operated multiplayer environment.
 
 Higher numbers are not automatically better or mandatory. Select tiers from the behavior and risk. For every planned check, record the tier, the evidence it supplies, and important evidence it cannot supply.
@@ -495,6 +495,10 @@ Apply [Runtime Placement](../guidelines/agent-diagnostics-toolkit.md#runtime-pla
 Present a compact toolkit summary alongside the owner-facing **Test now / Defer / Waive** packet. The summary must state the pinned artifact, whether it is already installed or deferred for a named runtime, the campaigns or cards that will use it, the evidence it can collect, and its material evidentiary limits. This is a presentation of the approved toolkit plan, not a second toolkit decision.
 
 When agent-managed release validation and a packaged gameplay launch in the test instance are planned, include the Mods list check in the last such launch if the expected release identity and logo decision are known. Plan the evidence specified in [Discovery Evidence From Packaged Gameplay](../procedures/release-build-and-discovery.md#discovery-evidence-from-packaged-gameplay).
+
+### Modpack Verification
+
+Map the approved cross-mod requirements to evidence. Verify that features intended to run without optional partners still work in their absence. Use focused scenarios for materially different attack, event, data, or lifecycle paths as applicable. For shared behavior affected by several mods, cover a representative combination with the stock or pack configuration relevant to the claim. When pack-wide interactions pose a material risk or the project makes a pack-level claim, plan a packaged smoke test in the target modpack. Record the mods, versions, configurations, and behaviors the planned checks cover. Label tests run with a subset of pack inputs as focused scenarios.
 
 ## Owner-Assisted Validation Campaigns
 
@@ -569,6 +573,7 @@ The implementation plan should reference these files instead of duplicating thei
 This stage is complete when:
 
 - Every MUST requirement is covered by at least one issue.
+- Planned verification covers approved cross-mod requirements and states the limits of the environments used.
 - Every approved release/version target has an implementation-time identity owner, with processed identity verification due before dependent packaged or runtime validation.
 - Every SHOULD and MAY requirement is scheduled or explicitly deferred.
 - Issues are organized primarily as vertical slices.

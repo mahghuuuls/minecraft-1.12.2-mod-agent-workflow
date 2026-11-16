@@ -191,8 +191,8 @@ Use the environment tiers approved in the implementation plan. Record the exact 
 
 - `runClient` may prove integrated-server behavior but does not prove a standalone dedicated-server launch.
 - `runServer` does not prove client rendering or a packaged modpack installation.
-- The development client and server run standard Forge. Only the test instance runs Cleanroom, so a mod without a test-instance card has never run on the workflow's runtime target.
-- The test instance does not prove compatibility with the owner's own modpack.
+- The development client and server run standard Forge. Cleanroom evidence comes from a test instance or an approved target-modpack environment that actually runs Cleanroom.
+- Use the [read-only reference rules](../guidelines/project-defaults.md#read-only-modpack-references) when preparing a target-modpack test. Report which pack configuration or subset ran.
 - A target modpack check does not by itself prove general compatibility with every modpack.
 - External multiplayer is required only when the approved risk or behavior needs separately operated multiplayer evidence.
 

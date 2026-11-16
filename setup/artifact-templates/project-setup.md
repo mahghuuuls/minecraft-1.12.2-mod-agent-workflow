@@ -75,6 +75,13 @@
 - Version the runtime reports for `mixinbooter`, with the template and Cleanroom versions it was read from (from `Client attempting to join with ... mods` in a log that entered a world, or not yet read):
 - Lock check result:
 
+## Modpack Reference
+
+- Decision (reused from owner defaults, owner-designated read-only, declined, or unavailable):
+- Pack name and absolute instance directory, if available:
+- Pack version and runtime, when known:
+- Reuse decision (saved in shared local owner defaults or current project only), when applicable:
+
 ## Loader, Runtime, Template, And Distribution
 
 - Loader:

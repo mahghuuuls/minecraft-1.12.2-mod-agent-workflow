@@ -36,6 +36,13 @@
 
 -
 
+## Modpack Compatibility
+
+- Reference pack or representative mod set:
+- Shared systems and intended behavior alongside other mods:
+- Named first-release integrations, when applicable:
+- Questions that could change scope:
+
 ## Diagnostic Mode Decision
 
 - In scope:

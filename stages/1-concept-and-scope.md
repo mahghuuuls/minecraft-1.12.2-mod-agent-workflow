@@ -140,6 +140,10 @@ Recording "not needed, because normal behavior is directly visible" is a complet
 
 Do not choose a mechanism, output format, default state, verbosity, or limits here. Those belong to Requirements Definition.
 
+## Modpack Compatibility
+
+Apply the [modded deployment default](../guidelines/project-defaults.md#modpack-compatibility). Identify the gameplay or technical systems this feature shares with other mods and the expected player experience when those mods are present. Record any named first-release integrations, the available modpack reference or a representative set to select in Feasibility Research, and the compatibility questions that could change scope. Distinguish the expectation that two mods work alongside each other from a promise that another mod's content participates in the feature or uses a dedicated integration.
+
 ## Broad Mob Compatibility
 
 When the proposed mod promises broad mob compatibility, settle the intended coverage with the owner before approving scope. Record which categories of vanilla and modded mobs should use the feature by default, any opt-in categories, and the intended treatment of bosses and neutral mobs, including whether normal provocation should be required. Identify the representative modpack or mod set for judging any promise about modded mobs.
@@ -178,6 +182,7 @@ This stage is complete when:
 - Its high-level features are understood.
 - Essential and optional features are distinguished.
 - In-scope and out-of-scope boundaries are explicit.
+- Expected behavior in modded installs and any material cross-mod questions are recorded.
 - When broad mob compatibility is in scope, the owner has agreed to the intended coverage and reference environment.
 - The need for a disabled-by-default diagnostic mode has been explicitly decided, in scope or out, with its reasoning recorded. An unanswered decision does not satisfy this criterion.
 - No unresolved concept-level contradictions remain.

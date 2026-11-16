@@ -188,6 +188,12 @@ Classify each high-level feature as:
 
 Do not classify a feature as feasible merely because a possible approach can be imagined.
 
+## Modpack Compatibility
+
+Investigate the compatibility questions from [Concept and Scope](1-concept-and-scope.md#modpack-compatibility) or approved Change Intake. Inspect the [read-only reference](../guidelines/project-defaults.md#read-only-modpack-references) or representative set for mods that supply, consume, or alter the same behavior. Prioritize different mechanisms and likely conflicts, such as another mod changing the same event, data, or method. Check the shared Minecraft, Forge, or provider behavior that could support several cases and identify where a dedicated integration or safe fallback may be needed.
+
+Record the relevant versions, configuration, and evidence in Compatibility Findings. Distinguish inspected or inferred interactions from observed runtime behavior, and name what remains to be tested. Bring findings that change the intended support back to the owner.
+
 ## Broad Mob Compatibility
 
 Investigate the coverage agreed in [Concept and Scope](1-concept-and-scope.md#broad-mob-compatibility) against Minecraft 1.12.2 and the selected reference mods or pack. Record the tested or inspected versions and relevant configuration. Examine representative mob families and their combat states, including any special targeting or encounter behavior relevant to the approved boss and neutral-mob scope.
@@ -238,6 +244,7 @@ This stage is complete when:
 - The dependency baseline records its release-check date, current gameplay pins and any explicit owner-approved older-parent compatibility promise.
 - Necessary dependency source checkouts are recorded with URL/path, ref or commit, reason, and licensing constraints.
 - Important compatibility and client/server limitations are understood.
+- Material interactions in the reference pack or representative set have findings or assigned validation questions.
 - When broad mob compatibility is in scope, representative evidence supports the proposed coverage or identifies the remaining questions and their planned validation.
 - Major technical and performance risks are recorded.
 - Questions requiring implementation validation are explicit.

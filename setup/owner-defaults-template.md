@@ -50,6 +50,10 @@ The agent-managed test instance is shared by every mod this owner develops (Test
 - Fallback instance on standard Forge, when the Cleanroom relauncher failed:
 - OptiFine JAR directory (fill in when an [OptiFine compatibility check](../guidelines/project-defaults.md#optifine-compatibility-checks) requires it):
 
+## Modpack Reference
+
+- Default [read-only modpack reference](../guidelines/project-defaults.md#read-only-modpack-references) authorized by the owner for use across projects (name and absolute instance directory):
+
 ## Agent Diagnostics Toolkit Preference
 
 - Use for owner-assisted runtime testing: Prefer | Ask each project | Do not use

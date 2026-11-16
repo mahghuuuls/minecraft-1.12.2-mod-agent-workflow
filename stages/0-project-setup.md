@@ -41,6 +41,7 @@ Establish:
 - Client/server responsibility when the concept is known, or an explicit deferral to Concept and Scope / Feasibility Research when it is premature
 - A provisional loader, compatible-runtime, and template choice for Initial Development
 - The agent-managed test instance: recorded from `owner-defaults.md`, created now by the owner from the recommended template, or declined with a waiver
+- The availability of an owner-designated read-only modpack reference for compatibility research
 - Default distribution destination or a known project-specific override, without researching publication mechanics
 - Known dependency source repositories or owner-provided dependency references, only when already relevant
 - Default release and validation ownership plus any owner-requested overrides
@@ -286,6 +287,14 @@ Explain why in a few sentences: the development client proves the code, not the 
 
 When the owner needs a new instance, recommend the [default test pack](../guidelines/project-defaults.md#test-instance). Have the owner launch the installed pack and join a disposable world before adding any project mods. Read the reported `mixinbooter` version from the join log using [Mixins](../guidelines/project-defaults.md#mixins). Record the launcher, instance name and path, pack and installed version, and baseline mod list in `project-setup.md`. If the owner declines, record the Test Instance waiver once.
 
+## Modpack Reference
+
+Check Project Setup and the local owner defaults for the owner's decision about a [read-only modpack reference](../guidelines/project-defaults.md#read-only-modpack-references). Reuse an available saved reference without asking again unless the project has an explicit override. If there is no applicable decision, ask whether the owner has a Minecraft 1.12.2 modpack the project can use as a read-only reference and ask for its instance directory if available. Explain that the reference helps the project identify relevant mods and potential conflicts. Ask alongside the test-instance decision when convenient.
+
+When the owner supplies a reference that is new to their defaults, offer in the same decision to save it for future projects or use it for the current project only. If the owner approves reuse, save the pack name and absolute directory in the Modpack Reference section of their shared local `owner-defaults.md`, following [Local Owner Defaults](../guidelines/process-control.md#local-owner-defaults). If the shared file's location is unknown, resolve it in the same decision. Reuse of the saved reference carries its read-only boundary.
+
+Record the pack name and directory and any readily available version or runtime in the setup artifact. If the owner declines or the directory is unavailable, record that result and use the representative-mod fallback when planning compatibility. Resolve this as an optional reference independently of the agent-managed test instance.
+
 ## Template Guidance
 
 For Initial Development:
@@ -437,7 +446,7 @@ If a new mod's repository, directory name, mod ID, display name, public descript
 5. Discover accessible current and rotated development logs, or record when runtime initialization must complete that discovery.
 6. Resolve known repository configuration without requiring a final new-mod repository before Concept and Scope.
 7. Collect or defer practical project defaults.
-8. Resolve the agent-managed test instance: apply the saved one, guide its creation, or record the waiver.
+8. Resolve the agent-managed test instance and offer the [read-only modpack reference](#modpack-reference).
 9. Apply or provisionally defer loader, runtime, template, and distribution defaults; ask only about known constraints or requested overrides.
 10. Record the release and validation ownership defaults and collect only necessary overrides.
 11. Resolve the Agent Diagnostics Toolkit preference and record any deferred artifact verification.
@@ -501,6 +510,7 @@ This stage is complete when:
 - Future prerequisites have explicit deadlines.
 - The loader, runtime, template, and distribution decisions are recorded or legitimately deferred/not applicable.
 - The agent-managed test instance is recorded with its path, template, and baseline mod list, or declined with the recorded waiver.
+- The decision on an owner modpack reference is recorded, and any approved reuse preference is saved.
 - Accessible development-log paths and retention or rotation behavior are recorded, or discovery is explicitly due after runtime initialization and before the first runtime validation packet.
 - Whether the agent can execute the build tool is recorded as an attempted result, or explicitly due before the first issue that depends on a build.
 - Known dependency source references are recorded or explicitly deferred when relevant.

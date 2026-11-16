@@ -123,6 +123,10 @@ Act as a software architect collaborating with the project owner.
 
 The AI must not introduce complexity merely to demonstrate architectural sophistication. Patterns and abstractions require a specific problem that they solve.
 
+## Modpack Compatibility
+
+For the [approved compatibility requirements](3-requirements-definition.md#modpack-compatibility), identify which component or mod owns shared state and who can read or change it. Prefer the broadest reliable Minecraft, Forge, or provider contract that preserves those ownership rules. Explain any shared event ordering, competing updates, or transformations the design relies on. Keep provider-specific behavior at explicit integration boundaries, and define the fallback when an optional partner is absent, the required behavior is unavailable, or an interaction cannot be resolved safely. Introduce a public extension point or operator control when it serves an approved use case.
+
 ## Architecture Quality
 
 The architecture should be:
@@ -232,6 +236,7 @@ This stage is complete when:
 - Loader lifecycle and integration points are identified.
 - Client, server, and shared-code boundaries are explicit.
 - Relevant configuration, networking, persistence, and integration approaches are defined.
+- Material cross-mod interactions have defined ownership, boundaries, and fallbacks.
 - Important runtime flows are understandable.
 - Performance-sensitive areas are identified.
 - Major decisions and trade-offs are recorded.

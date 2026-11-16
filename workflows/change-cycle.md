@@ -128,6 +128,8 @@ Produce:
 
 Start from `setup/artifact-templates/change-intake.md`. The template is the authoritative intake structure; this workflow's stage-disposition rules are authoritative for the route.
 
+Apply the [modded deployment default](../guidelines/project-defaults.md#modpack-compatibility) to the changed behavior. Identify affected interaction paths, existing support promises, and any new compatibility expectations. Carry forward the modpack-reference decision from approved setup or prior approved intake. If no decision is recorded and the change raises a material compatibility question, use the [Project Setup reference question](../stages/0-project-setup.md#modpack-reference) in intake and record the answer there.
+
 Use these stage dispositions:
 
 - **Revisit:** The stage's approved decisions or artifacts must change.

@@ -54,7 +54,8 @@ Omit this section when the request is a feature, enhancement, or refactor.
 ## Impact Analysis
 
 - Behavior:
-- Compatibility:
+- Compatibility (affected shared systems and support promises):
+- Modpack reference or representative set relevant to this change, including any approved reuse decision:
 - Configuration:
 - Persisted data:
 - Loader/runtime:
