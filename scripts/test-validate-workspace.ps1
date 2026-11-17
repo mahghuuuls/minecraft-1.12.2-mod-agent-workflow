@@ -170,6 +170,59 @@ try {
 '@
     Assert-ExitCode 'same issue identifier in a separate artifact root' 0 (Invoke-Validator)
 
+    $activeCycleStatus = @'
+# Project Status
+
+## Completed Workflow Record
+
+- Workflow: Initial Development
+- Status: **Approved**
+- Artifact root: `workspace/documentation/`
+- IMP-001 is **Ready**.
+
+### Historical Issues
+
+- IMP-999 is **Done**.
+
+## Workflow
+
+- Workflow: Change Cycle
+- Status: **In Progress**
+- Artifact root: `workspace/documentation/cycles/CYCLE-001-fixture/`
+- Active repository: `workspace/project/example/`
+
+## Active Cycle
+
+| Stage | Disposition | Status |
+| --- | --- | --- |
+| Implementation | Revisit | **In Progress** |
+
+- IMP-001 is **Done**.
+
+## CYCLE-000 Record
+
+- IMP-998 is **Done**.
+
+## Implementation
+
+- IMP-001 is **Done**.
+'@
+    Write-Utf8 (Join-Path $documentationRoot 'project-status.md') $activeCycleStatus
+    Write-Utf8 (Join-Path $documentationRoot 'project-state.md') ($state.Replace('Initial Development', 'Change Cycle').Replace('workspace/documentation/', 'workspace/documentation/cycles/CYCLE-001-fixture/'))
+    $historicalResult = Invoke-Validator
+    Assert-ExitCode 'historical issues and roots do not belong to the active cycle' 0 $historicalResult
+    if ($historicalResult.Output -like '*Resume snapshot may be stale*') {
+        throw "Historical fields affected the resume comparison. Output: $($historicalResult.Output)"
+    }
+    Write-Utf8 (Join-Path $documentationRoot 'project-status.md') ($activeCycleStatus.Replace('## Active Cycle', '## Completed Cycle').Replace('**In Progress**', '**Approved**'))
+    Assert-ExitCode 'latest completed cycle still uses its own issue scope' 0 (Invoke-Validator)
+    Write-Utf8 (Join-Path $documentationRoot 'project-status.md') ($activeCycleStatus.Replace('IMP-001 is **Done**', 'IMP-001 is **Ready**'))
+    Assert-ExitCode 'active cycle disagreement remains an error' 1 (Invoke-Validator)
+    Write-Utf8 (Join-Path $documentationRoot 'project-status.md') ($activeCycleStatus + "`n- IMP-997 is **Ready**.`n")
+    Assert-ExitCode 'current issues after historical sections remain checked' 1 (Invoke-Validator)
+    Write-Utf8 (Join-Path $documentationRoot 'project-status.md') $status
+    Write-Utf8 (Join-Path $documentationRoot 'project-state.md') $state
+
     Write-Utf8 (Join-Path $documentationRoot 'project-status.md') ($status.Replace('IMP-001 is **Ready**', 'IMP-001 is **Done**'))
     Assert-ExitCode 'ledger and issue disagreement' 1 (Invoke-Validator)
     Write-Utf8 (Join-Path $documentationRoot 'project-status.md') $status

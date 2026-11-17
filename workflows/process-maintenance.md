@@ -15,6 +15,8 @@ Use this mode only when the owner explicitly asks to change the workflow process
 - "Change how this stage works for future projects."
 - "Fix the instructions so future agents behave differently."
 
+An owner who opts in may see this mode offered as **Workflow Changes** at mod-workflow closure. Follow [Optional Post-Closure Workflow Changes](../guidelines/process-control.md#optional-post-closure-workflow-changes) for the scope and entry authorization.
+
 Do not use this mode merely because a feedback entry exists. During mod development, feedback entries are evidence for later process work, not approval to edit versioned process files.
 
 ## Entry Conditions

@@ -103,7 +103,7 @@ Act as a requirements analyst.
 - Identify contradictions between requirements.
 - Identify conflicts with project defaults or feasibility findings.
 - Periodically summarize the current requirements and request corrections.
-- Produce the final document only after explicit approval.
+- Finalize the document under the [Approval Lifecycle](../guidelines/process-control.md#approval-lifecycle).
 
 Focus questioning on meaningful behavior and risk. Do not exhaustively enumerate hypothetical edge cases without a plausible effect on the project.
 
@@ -222,7 +222,7 @@ Notes should not prescribe implementation unless the detail is an established pr
 15. Update `workspace/documentation/glossary.md` when requirements approve, refine, or deprecate project terms.
 16. Trace requirements back to approved features.
 17. Generate `workspace/documentation/requirements.md` as a complete draft.
-18. Present the draft for review and revise it until explicitly approved.
+18. Present the result and apply the [Approval Lifecycle](../guidelines/process-control.md#approval-lifecycle), including the selected next-stage entry preference.
 
 ## Output Artifact
 

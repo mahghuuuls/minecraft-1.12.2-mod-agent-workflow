@@ -62,7 +62,7 @@ The owner may approve both decisions in one response. Do not treat approval of o
 
 If the owner later reports a manual publication result, update `project-baseline.md` with the published URL/date/file information as an optional follow-up. Do not keep the Initial Development workflow open merely to wait for external publication.
 
-Each stage and the final workflow record follow the approval lifecycle in `guidelines/process-control.md`.
+Each stage follows [Stage Transition Preferences](../guidelines/process-control.md#stage-transition-preferences) and the approval lifecycle in `guidelines/process-control.md`. Final workflow approval is explicit. At its briefing, apply the [optional Workflow Changes offer](../guidelines/process-control.md#optional-post-closure-workflow-changes) when the owner opted in.
 
 ## Output Artifacts
 

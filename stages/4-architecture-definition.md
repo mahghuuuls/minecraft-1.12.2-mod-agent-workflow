@@ -119,7 +119,7 @@ Act as a software architect collaborating with the project owner.
 - Identify decisions that remain uncertain and require validation during Implementation.
 - Flag conflicts with requirements or feasibility findings.
 - Periodically summarize the proposed architecture and request corrections.
-- Produce the final architecture only after explicit approval.
+- Finalize the architecture under the [Approval Lifecycle](../guidelines/process-control.md#approval-lifecycle).
 
 The AI must not introduce complexity merely to demonstrate architectural sophistication. Patterns and abstractions require a specific problem that they solve.
 
@@ -215,7 +215,7 @@ Minor and self-evident choices do not require separate decision records or two d
 15. Trace components and decisions to requirements and glossary terms where relevant.
 16. Update `workspace/documentation/glossary.md` when architecture approves, introduces, refines, or deprecates project-specific terms.
 17. Generate `workspace/documentation/architecture.md` as a complete draft.
-18. Present the draft for review and revise it until explicitly approved.
+18. Present the result and apply the [Approval Lifecycle](../guidelines/process-control.md#approval-lifecycle), including the selected next-stage entry preference.
 
 ## Output Artifact
 

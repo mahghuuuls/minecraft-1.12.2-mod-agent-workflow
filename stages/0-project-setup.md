@@ -441,10 +441,16 @@ Shared defaults remain in `setup/template-defaults.properties`. Do not edit shar
 
 If a new mod's repository, directory name, mod ID, display name, public description, root package, or main class is deferred, do not create an invalid properties file merely to complete the stage. Record the missing values and that Project Initialization must resolve them before cloning.
 
+## Stage Transition Preferences
+
+Early in setup, apply [Stage Transition Preferences](../guidelines/process-control.md#stage-transition-preferences). Read the saved choice before asking. If no choice exists, ask which stage entries require approval, recommend all entries for first-time users, and explain the automatic-progression option in plain language. Record the chosen stage names, authorization date and source, project overrides, and whether the owner wants the preference saved for future projects.
+
+Record the optional post-closure Workflow Changes offer only when the owner opts in. It leads to Process Maintenance under the same guideline. Show the resolved preference in the setup approval packet.
+
 ## Process
 
 1. Read the shared defaults and inspect the workspace.
-2. Explain that setup can be completed interactively.
+2. Explain that setup can be completed interactively and resolve the stage-entry approval preference above.
 3. Identify the scenario.
 4. Inspect available environment tools and repositories.
 5. Discover accessible current and rotated development logs, or record when runtime initialization must complete that discovery.
@@ -454,7 +460,7 @@ If a new mod's repository, directory name, mod ID, display name, public descript
 9. Apply or provisionally defer loader, runtime, template, and distribution defaults; ask only about known constraints or requested overrides.
 10. Record the release and validation ownership defaults and collect only necessary overrides, including the [local test-server EULA decision](#local-test-server-eula).
 11. Resolve the Agent Diagnostics Toolkit preference and record any deferred artifact verification.
-12. Record public-copy and Git workflow preferences.
+12. Record public-copy, Git workflow, and stage-transition preferences, including any owner-approved reuse and optional Workflow Changes offer.
 13. Create the workflow feedback log when it does not exist.
 14. Create the Agent Diagnostics Toolkit feedback log when use is selected.
 15. Write only approved known operational values.

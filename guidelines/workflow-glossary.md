@@ -51,8 +51,8 @@ Owner: `AGENTS.md`
 Owner: `guidelines/process-control.md`
 
 **Standing Authorization**
-A bounded, revocable permission covering a defined series of future actions, so that each one does not require separate approval. Never open-ended, and does not extend past the stage that granted it.
-Owner: `guidelines/collaboration-guidelines.md`
+A bounded, revocable permission covering a defined series of future actions without separate approval for each action. Its scope can include reusable stage transitions or a named group of implementation issues.
+Owner: `guidelines/process-control.md` for stage transitions and named issue groups; `guidelines/collaboration-guidelines.md` for Git and external actions.
 
 **Test Instance**
 The agent-managed runtime selected for packaged and Cleanroom checks: either an isolated runtime with a pinned profile or a shared launcher instance with a recorded reset baseline.

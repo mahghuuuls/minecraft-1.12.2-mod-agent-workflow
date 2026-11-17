@@ -37,6 +37,15 @@ Use this section only for questions the owner repeatedly answers the same way du
 - Preferred repository naming pattern:
 - Other setup answers:
 
+## Stage Transition Preferences
+
+Use [Stage Transition Preferences](../guidelines/process-control.md#stage-transition-preferences). Recommend All for first-time users. Save a choice here only when the owner authorizes reuse.
+
+- Approval before entering stages: All | Selected | None
+- Selected stage names, when applicable:
+- Owner authorization date and scope of reuse:
+- Offer Workflow Changes after workflow or cycle closure: No | Yes
+
 ## Test Instance
 
 Record reusable packaged-runtime preferences once. [Test Instance](../guidelines/project-defaults.md#test-instance) owns the choice between an isolated runtime and a shared launcher instance. The fields below describe the shared-instance option.

@@ -65,6 +65,15 @@
 - Preferred push cadence:
 - Explicit owner Git restrictions or deferrals:
 
+## Stage Transition Preferences
+
+- Approval before entering stages (All, Selected, or None):
+- Selected stage names, when applicable:
+- Decision source, owner authorization date, and scope:
+- Project-specific overrides:
+- Reuse saved to owner defaults, when authorized:
+- Offer Workflow Changes after closure (owner opt-in):
+
 ## Test Instance
 
 - Runtime route (isolated Cleanroom profile or shared launcher instance):

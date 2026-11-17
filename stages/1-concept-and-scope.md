@@ -85,7 +85,7 @@ Act as an alignment interviewer.
 - Periodically summarize the current understanding.
 - Ask the project owner to correct or confirm each summary.
 - Continue until the concept and boundaries have shared agreement.
-- Generate a complete draft artifact when alignment is sufficient, then revise it until the project owner approves it.
+- Generate a complete draft artifact when alignment is sufficient, then follow the [Approval Lifecycle](../guidelines/process-control.md#approval-lifecycle).
 
 Focus the interview on decisions that could materially change the project's identity or scope. Do not attempt to explore every detailed behavioral edge case.
 
@@ -164,7 +164,7 @@ Record category boundaries and concrete examples in the scope artifact. Send unc
 10. Resolve concept-level contradictions and ambiguities.
 11. Create or update `workspace/documentation/glossary.md` when project-specific vocabulary appears.
 12. Generate `workspace/documentation/concept-and-scope.md` as a complete draft.
-13. Present the draft for review and revise it until explicitly approved.
+13. Present the result and apply the [Approval Lifecycle](../guidelines/process-control.md#approval-lifecycle), including the selected next-stage entry preference.
 
 ## Output Artifact
 

@@ -85,6 +85,14 @@ Every mod uses an agent-managed test runtime for its routine packaged checks, un
 
 Use [Isolated Cleanroom Validation](../procedures/isolated-cleanroom-validation.md) for preparation, agent launches, bounded sessions and evidence. This route runs packaged JARs directly through Java in independent game directories under the ignored workspace; it does not require an owner launcher action. The selected profile must contain the runtime and mods needed for its acceptance criteria. Minimal profiles do not establish compatibility with untested base or target-pack mods.
 
+### Test Input Sources And Compatibility Profiles
+
+An installed CleanroomTestBench can supply mods and configuration for isolated tests under [Read-Only Modpack References](#read-only-modpack-references). Record which files were copied, their versions and hashes, and the source pack version when known. Copy the inputs into the project-owned runtime and apply test changes there.
+
+Choose inputs from the behavior being checked. Basic packaged discovery needs the selected runtime, project JAR, required dependencies and relevant test utilities. A focused compatibility check adds the interacting mods and their configuration. A claim about CleanroomTestBench as a pack requires a profile reproducing its relevant full setup, with any differences recorded. Source-pack availability alone does not make all of its mods dependencies of every test.
+
+CleanroomTestBench may serve as an input source, a named compatibility profile, or an approved shared-launcher fallback. Its role does not require launching the source instance. During validation planning, reassess an older shared-instance choice when the isolated route becomes available, and obtain any required Project Setup amendment before changing the route.
+
 ### Shared Launcher Test Instances
 
 When Project Setup selects a shared launcher instance, apply the following baseline, borrowing and reset rules.

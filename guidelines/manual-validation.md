@@ -137,6 +137,15 @@ Keep headings and language stable across cards so the owner does not have to rel
 
 ## Fixture Patterns
 
+### Recovery And Timing Checks
+
+- Before replacing a fixture, load its recorded dimension and chunk, clear it using its recorded handle or UUID, and verify that UUID is absent in the loaded area. A `notLoaded` result leaves its removal unproven. Retain the prior UUID and resolve the old fixture before spawning a replacement.
+- After an unexpected combat result, preserve the relevant records and put the operator and fixtures in a safe state before diagnosis. Spectator mode is useful outside the measured step when it fits the scenario. Re-establish the card's required game mode, health, targets and geometry before retrying. Inspect post-hit positions when knockback could change the behavior under test.
+- When a command applies a vanilla effect that updates on a later tick, wait for that update and inspect the resulting state before using it in an assertion. Healing checks establish the health deficit first, then measure health and the affected mod state after application.
+- In a logout continuity check, establish that the relevant chunks remain loaded while the player is absent. Verify the same fixture UUIDs and rebind the session operator after reconnect when needed, using the current inbox/operator identity. For an unload check, record actual unload and reload observations and distinguish them from other reset causes, such as an elapsed timeout. Keep the return inside competing deadlines when that is the control the check requires.
+
+### Reusable Fixture Shapes
+
 These fixture shapes have held up across sessions. Use them before inventing a new one.
 
 - **A sky platform at fixed coordinates.** A bundle teleports the operator to an absolute position high above any terrain (for example `201 151 201`), waits for the chunks, fills a stone platform under that position, teleports again, and builds the fixtures on the platform with name signs. Every later bundle then uses the same absolute coordinates, in any world, with no dependence on where the owner stands or what the terrain is. Build fixtures from blocks that do not fall. The development dedicated server has its own world, a different save from the client's: a scenario that runs there builds its platform there first, because fixtures built relative to the player break on ordinary terrain.

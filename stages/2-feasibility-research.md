@@ -219,7 +219,7 @@ Document which categories appear viable through shared behavior, which require m
 15. Present findings that require project-owner decisions.
 16. Return to Concept and Scope if findings require material scope changes.
 17. Generate `workspace/documentation/feasibility-research.md` as a complete draft.
-18. Present the draft for review and revise it until explicitly approved.
+18. Present the result and apply the [Approval Lifecycle](../guidelines/process-control.md#approval-lifecycle), including the selected next-stage entry preference.
 
 ## Output Artifact
 

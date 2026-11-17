@@ -150,6 +150,8 @@ Record the disposition of each reusable stage for the active workflow. Dispositi
 
 In a stage table, the status cell starts with the exact status and may go on with its date and a short note, for example `**Approved 2026-11-03** ("approve plan"). Six issues`. A stage whose disposition is **Not Applicable** needs no status. Keep the table of the active cycle under `## Active Cycle`; the tables of finished workflows and cycles stay below as records.
 
+Keep older workflow history under `## Completed Workflow Record` and older cycle history under a heading such as `## CYCLE-001 Record`, or link to a preserved history file. These sections include their nested subheadings until the next level-two heading. The validator excludes their legacy inline issue statuses and artifact roots from current-workflow comparisons. It still validates the issue files in their own artifact roots. The latest cycle may use `## Completed Cycle` after closure and retains its current scope until a new cycle begins.
+
 Implementation issue statuses are defined by the Implementation Plan stage.
 
 `project-status.md` is the authoritative ledger for workflow, stage, cycle, baseline, and blocking-decision status. Implementation issue status is authoritative in the issue file alone; the plan table, the ledgers, and the resume snapshot point at issues by ID and never restate a status, and `scripts/validate-workspace.ps1` prints the roll-up from the issue files. When another project artifact or resume snapshot disagrees with an authority, stop and reconcile the evidence instead of silently choosing one.
@@ -242,9 +244,30 @@ Two failure modes follow from ignoring this:
 
 When a concern feels like it belongs to a later stage, carry its earliest decision forward rather than deferring the whole topic. When it feels like it belongs to an earlier one, record the decision and leave the specification where it belongs.
 
+## Stage Transition Preferences
+
+Project Setup records which development stages (1 through 8) require an explicit approval before entry. Reuse an applicable preference from the owner's local defaults. When none exists, ask which stage entries should pause, recommend **All** for a first-time user, and offer **Selected** or **None** for automatic progression. Use stage names from the stage table, not issue identifiers. Ask whether to save a new choice for future projects. Until the owner chooses, use **All**.
+
+The preference covers the whole ordinary transition checkpoint, including accepting the completed preceding stage and authorizing the next stage. It governs ordinary stage approval and completion wording throughout the stage documents and invoking workflows. It does not remove stage work or its completion criteria.
+
+- At a selected entry, finish the preceding stage, present its result and the next-stage briefing, and obtain explicit approval before continuing.
+- At an automatic entry, finish the preceding stage's artifacts, verification and required independent reviews, record acceptance under the owner's standing transition authorization, give a short briefing, and continue. Use **Approved** with an explicit note such as `via standing transition authorization, owner defaults approved <date>`. This records delegated acceptance, not personal owner review. Record the policy source and applicable project override in Project Setup and reference it in the ledger.
+- A skipped or carried-forward stage creates no entry checkpoint. Apply the preference to the actual next stage. On a return to an earlier stage, apply its entry preference after resolving the material decision that caused the return.
+- Automatic entry to Implementation uses [Implementation Approval For Named Issues](#implementation-approval-for-named-issues). Record the bounded ready issue group authorized by the completed plan and the standing transition preference. Issue readiness, verification, review, and owner-action checkpoints continue to follow that procedure.
+
+Project Setup approval, workflow selection/start, Change Intake and route approval, release-material and final artifact approval, and final workflow or cycle closure retain their explicit approval requirements. Final closure always requires owner approval, including after Release Presentation. External actions and Process Maintenance follow their own authorization rules. Ask for missing owner decisions or a material change to established scope, behavior, architecture, licensing, compatibility, ownership, or validation commitments before dependent work proceeds.
+
+The owner can change or revoke the preference at any time. A project-specific instruction overrides saved defaults. Reuse the saved choice during later projects and Change Cycles without asking again. Record a changed policy prospectively; retain the actual approval basis of historical artifacts.
+
+### Optional Post-Closure Workflow Changes
+
+An owner may opt in to being offered **Workflow Changes** after a completed mod workflow or Change Cycle. Save this personal preference in owner defaults and carry it into Project Setup. This is entry into Process Maintenance mode, not another mod-development stage. Other owners receive this offer only when they opt in or request workflow maintenance.
+
+For an opted-in owner, summarize the relevant feedback and proposed maintenance scope at the final closure briefing. Ask separately for approval to close the cycle and authorization to begin that maintenance scope; one response may explicitly grant both. Complete the mod workflow's remaining handoff, including its publication packet when applicable, then enter Process Maintenance after closure and maintenance scope are authorized, following `workflows/process-maintenance.md`. An opt-in to the offer does not itself authorize edits, commits, or pushes.
+
 ## Stage Transition Briefing
 
-Before starting Project Setup, any reusable stage, or any workflow-specific approval checkpoint, present a short transition briefing and ask the project owner whether to continue.
+Before starting Project Setup, any reusable stage, or any workflow-specific approval checkpoint, present a short transition briefing. Apply [Stage Transition Preferences](#stage-transition-preferences) to determine whether the owner must approve entry.
 
 The briefing must explain:
 
@@ -255,9 +278,9 @@ The briefing must explain:
 - **Output:** the artifact or concrete result this stage will produce.
 - **Boundaries:** any relevant owner-managed responsibilities, deferred prerequisites, or approval requirements.
 
-Ask for explicit permission to begin after the briefing. Do not mark the stage **In Progress** or perform stage work until the owner approves.
+At an explicit entry checkpoint, ask for permission to begin after the briefing and wait before marking the stage **In Progress** or performing stage work. At an automatic entry, record the applicable standing authorization and continue.
 
-When presenting a completed stage and the next routed stage is already known, the agent should normally include the next stage's transition briefing in the same checkpoint. One owner response may explicitly approve the completed stage and authorize the next stage to begin. State both requested approvals plainly; silence, vague continuation, or approval of only one item does not authorize the other.
+At an explicit entry checkpoint, when the next routed stage is already known, include its transition briefing with the completed stage's result. One owner response may explicitly approve the completed stage and authorize the next stage to begin. State both requested approvals plainly. Approval of only one item does not authorize the other. At an automatic entry, use the recorded standing authorization.
 
 Keep approvals separate when the next route is unresolved, a backward transition does not satisfy the bounded revision-bundle rules below, the next action changes external state, or combining them would obscure a material scope, architecture, licensing, compatibility, or ownership decision.
 
@@ -275,13 +298,13 @@ When the Implementation Plan is ready for review, offer one bounded packet to ap
 - Each issue has a bounded scope and can be verified and reviewed at its approved checkpoint. Requirements, architecture, licensing, compatibility, ownership, and validation decisions for the named scope are resolved.
 - Required verification, read-only independent-review scope, commit conditions, and owner actions are briefed. The packet excludes destructive actions and non-Git external-state changes.
 
-Name the exact issue IDs or an unambiguous range from the approved plan. Distinguish the two decisions in the packet and record the owner's response, authorized scope, pause points, and exclusions in the Implementation Plan and `project-status.md`. Apply a still-valid approval on resume. The owner may also authorize a named group from an already approved plan using the same scope and pause rules.
+Name the exact issue IDs or an unambiguous range from the approved plan. Distinguish the two decisions in the packet and record the owner's response, authorized scope, pause points, and exclusions in the Implementation Plan and `project-status.md`. For automatic Implementation entry, record the standing transition authorization as the approval source for that same bounded packet. Apply a still-valid approval on resume. The owner may also authorize a named group from an already approved plan using the same scope and pause rules.
 
 Complete verification, independent review, and the applicable commit checkpoint as each issue comes due. Continue through the authorized group without asking again at each issue. A separately approved validation campaign may use its recorded dependency and checkpoint rules. Required read-only reviews, routine Git operations, push cadence, and owner restrictions follow [Collaboration Guidelines](collaboration-guidelines.md).
 
 Pause at an owner action or launch-authorization boundary recorded in the plan, a new material scope or architecture decision, or a failed check that requires an owner decision about risk or a waiver. Correct and rerun recoverable failures within the approved scope. After an owner checkpoint, continue within the same authorization if the decision still fits the recorded scope and conditions.
 
-Use separate checkpoints for work outside the named scope, material changes to the approval conditions, stage transitions, final release-artifact approval, tags, and publication or upload. When the conditions for this packet cannot be met, state the material reason and use the normal approval lifecycle.
+Use separate checkpoints for work outside the named scope, material changes to the approval conditions, final release-artifact approval, tags, and publication or upload. Stage entries follow [Stage Transition Preferences](#stage-transition-preferences). When the conditions for this packet cannot be met, state the material reason and use the normal approval lifecycle.
 
 For resumed work, provide a shorter briefing that states the active stage, current status, next action, expected output, and whether approval is needed before continuing.
 
@@ -411,19 +434,19 @@ Dependency references are not active project repositories. They must not be modi
 
 ## Approval Lifecycle
 
-Apply this lifecycle to stages and workflow-specific approval checkpoints:
+Apply this lifecycle to stages and workflow-specific approval checkpoints, using [Stage Transition Preferences](#stage-transition-preferences) for ordinary stage boundaries:
 
 1. Confirm that required prerequisites are approved.
-2. Present the stage transition briefing and obtain approval to begin.
+2. Present the stage transition briefing and obtain explicit approval where required, or record the applicable standing transition authorization.
 3. Mark the active item **In Progress**.
 4. Perform only its defined work.
 5. Create or update its draft artifacts using matching templates under `setup/artifact-templates/` when present.
-6. Mark it **Awaiting Approval** and present the complete result. When the next routed item is known, include its transition briefing and offer a combined current-approval/next-start checkpoint.
+6. Present the complete result. At an explicit checkpoint, mark it **Awaiting Approval** and include the next routed item's briefing when known. At an automatic boundary, record the completed checks and acceptance under the standing transition authorization.
 7. Revise it in response to review.
-8. Mark it **Approved** only after explicit confirmation from the project owner.
-9. Stop unless the project owner has authorized the next item, either separately or through an explicit combined checkpoint.
+8. Mark it **Approved** after the required explicit confirmation or permitted acceptance under standing transition authorization, recording which basis applies.
+9. Continue only when the next item is authorized, through an explicit checkpoint or the applicable standing transition preference.
 
-A generated artifact, successful check, manual publication action, or approval of a different action does not constitute approval. Combined checkpoints are valid only when the request and the owner's response clearly cover each combined item.
+A generated artifact, successful check, manual publication action, or approval of a different action does not constitute approval. Automatic stage acceptance requires the recorded owner authorization and completed criteria above. Combined explicit checkpoints are valid only when the request and the owner's response clearly cover each combined item.
 
 For Initial Development, the release-ready baseline may be prepared as a draft after Release Presentation work and artifact validation are complete but before the final approval response. The final checkpoint may then ask separately labeled approval for both Release Presentation and the Initial Development workflow in one owner response.
 

@@ -197,7 +197,7 @@ Every bullet inside a marked block must appear verbatim in the named canonical s
 
 ## Execution
 
-Complete or carry forward Project Setup, then resume or obtain approval for the applicable workflow. Follow one checkpoint or stage at a time, keep authoritative status in `project-status.md`, refresh `project-state.md` only for resume/handoff needs, maintain the project glossary and dependency reference registry when relevant, record workflow feedback when relevant, and stop whenever owner approval is required. A checkpoint may explicitly combine approval of the current item with authorization to begin the already-briefed next item; never advance without that authorization.
+Complete or carry forward Project Setup, then resume or obtain approval for the applicable workflow. Follow one checkpoint or stage at a time, keep authoritative status in `project-status.md`, refresh `project-state.md` only for resume/handoff needs, maintain the project glossary and dependency reference registry when relevant, and record workflow feedback when relevant. Apply [Stage Transition Preferences](guidelines/process-control.md#stage-transition-preferences) to ordinary stage boundaries and the [Approval Lifecycle](guidelines/process-control.md#approval-lifecycle) to record their authorization basis. Stop at checkpoints that require explicit owner approval.
 
 Delegate required read-only independent reviews to separate review agents under `guidelines/collaboration-guidelines.md#required-read-only-review-agents`, using `procedures/independent-review-brief.md` for the handoff.
 

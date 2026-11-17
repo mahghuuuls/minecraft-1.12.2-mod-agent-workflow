@@ -549,7 +549,7 @@ After the plan and manual-validation decisions are complete, prepare and record 
 19. Identify optional requirements that will be deferred.
 20. Generate the implementation-plan artifacts as complete drafts.
 21. Prepare the approval and authorization packet under [Approval And Authorization Packet](#approval-and-authorization-packet).
-22. Present the drafts and, when eligible, the bounded approval and authorization packet; revise them until explicitly approved.
+22. Present the drafts and, when eligible, the bounded approval and authorization packet. Apply the [Approval Lifecycle](../guidelines/process-control.md#approval-lifecycle) and its preference for entry to Implementation.
 
 ## Output Artifacts
 

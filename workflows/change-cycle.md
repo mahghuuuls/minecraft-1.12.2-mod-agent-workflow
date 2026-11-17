@@ -156,14 +156,14 @@ Present the complete intake and proposed route for explicit approval before revi
 9. Create the approved working branch, when one was approved, before the first cycle commit.
 10. Record stage dispositions in the authoritative `project-status.md` ledger.
 11. Mark affected canonical stages **Needs Revision**.
-12. Execute each **Revisit** stage in normal stage order.
+12. Execute each **Revisit** stage in normal stage order, applying [Stage Transition Preferences](../guidelines/process-control.md#stage-transition-preferences).
 13. Execute Implementation Plan using the cycle artifact root, including its approval and authorization packet.
 14. Execute Implementation using the cycle issues.
 15. Execute Release Presentation using the cycle artifact root, including release artifact validation and handoff when agent-managed by the ownership matrix.
 16. Produce `<artifact-root>/cycle-summary.md`.
 17. Offer the merge back into `project_default_branch` when the cycle used a separate working branch, and merge only under explicit authorization.
 18. Set the manual publication state to **Ready for Publication**, update `project-baseline.md` with the release-ready version and source revision, and update `project-state.md`.
-19. Complete the [workflow retrospective](../guidelines/process-control.md#workflow-feedback-log) and present the completed cycle for approval.
+19. Complete the [workflow retrospective](../guidelines/process-control.md#workflow-feedback-log) and present the completed cycle for explicit approval. Apply the [optional Workflow Changes offer](../guidelines/process-control.md#optional-post-closure-workflow-changes) when the owner opted in.
 20. After the approval and any approved merge and push, give the owner the [publication packet](../stages/8-release-presentation.md#publication-packet) as the workflow's last message.
 
 Do not enter a later selected stage until every selected prerequisite is approved. Discovery of additional impact follows the backward-transition rules in `guidelines/process-control.md`.

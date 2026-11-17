@@ -73,6 +73,19 @@ if (-not (Test-Path -LiteralPath $statusPath -PathType Leaf)) {
     Add-ValidationWarning 'project-status.md does not exist; workflow-ledger checks were skipped because a mod-development workflow may not have started yet.'
 } else {
     $statusText = Get-Content -Raw -LiteralPath $statusPath
+    # Historical sections keep the scope and status recorded at the time.
+    # Their nested headings belong to that record until the next level-two heading.
+    $currentStatusLines = [System.Collections.Generic.List[string]]::new()
+    $inHistoricalRecord = $false
+    foreach ($line in ($statusText -split "`r?`n")) {
+        if ($line -match '^#{1,2}\s+(?<heading>[^#].*?)\s*$') {
+            $inHistoricalRecord = $Matches['heading'] -match '^(?:Completed Workflow(?: Record)?|CYCLE-\d+\b.*\bRecord)$'
+        }
+        if (-not $inHistoricalRecord) {
+            $currentStatusLines.Add($line)
+        }
+    }
+    $currentStatusText = $currentStatusLines -join [Environment]::NewLine
     $workflowStageStatuses = @('Not Started', 'In Progress', 'Awaiting Approval', 'Approved', 'Needs Revision')
 
     foreach ($match in [regex]::Matches($statusText, '(?m)^\s*-\s*Status:\s*\*\*(?<status>[^*]+)\*\*\s*$')) {
@@ -150,7 +163,7 @@ if (-not (Test-Path -LiteralPath $statusPath -PathType Leaf)) {
     }
 
     foreach ($label in @('Approved artifact', 'Artifact', 'Approved baseline', 'Artifact root', 'Active repository', 'Repository path')) {
-        $value = Get-BulletValue $statusText $label
+        $value = Get-BulletValue $currentStatusText $label
         if ([string]::IsNullOrWhiteSpace($value) -or $value -match '^(None|Not applicable|Pending)\b') { continue }
         try {
             $resolved = Resolve-ProcessPath $value
@@ -266,7 +279,7 @@ foreach ($plan in $planFiles) {
 }
 
 if (Test-Path -LiteralPath $statusPath -PathType Leaf) {
-    $activeArtifactValue = Get-BulletValue $statusText 'Artifact root'
+    $activeArtifactValue = Get-BulletValue $currentStatusText 'Artifact root'
     if (-not [string]::IsNullOrWhiteSpace($activeArtifactValue)) {
         try {
             $activeArtifactRoot = Resolve-ProcessPath $activeArtifactValue
@@ -274,7 +287,7 @@ if (Test-Path -LiteralPath $statusPath -PathType Leaf) {
             $activeArtifactRoot = $null
         }
         if ($null -ne $activeArtifactRoot) {
-            foreach ($match in [regex]::Matches($statusText, "(?m)^\s*-\s*(?<id>$issueIdPattern)\b[^\r\n]*?\*\*(?<status>Backlog|Ready|In Progress|Awaiting Validation|Review|Blocked|Done|Deferred)\*\*")) {
+            foreach ($match in [regex]::Matches($currentStatusText, "(?m)^\s*-\s*(?<id>$issueIdPattern)\b[^\r\n]*?\*\*(?<status>Backlog|Ready|In Progress|Awaiting Validation|Review|Blocked|Done|Deferred)\*\*")) {
                 $id = $match.Groups['id'].Value
                 $recordedStatus = $match.Groups['status'].Value
                 $matchingIssues = @($issueRecords | Where-Object { $_.Scope -eq $activeArtifactRoot -and $_.Id -eq $id })
@@ -319,10 +332,9 @@ if (Test-Path -LiteralPath $statePath -PathType Leaf) {
     }
 
     if (Test-Path -LiteralPath $statusPath -PathType Leaf) {
-        $statusText = Get-Content -Raw -LiteralPath $statusPath
         foreach ($pair in @(@('Active repository', 'Active repository'), @('Active workflow', 'Workflow'), @('Artifact root', 'Artifact root'))) {
             $stateValue = Get-BulletValue $stateText $pair[0]
-            $statusValue = Get-BulletValue $statusText $pair[1]
+            $statusValue = Get-BulletValue $currentStatusText $pair[1]
             if ([string]::IsNullOrWhiteSpace($stateValue) -or [string]::IsNullOrWhiteSpace($statusValue)) { continue }
             if ($pair[0] -in @('Active repository', 'Artifact root')) {
                 try {
