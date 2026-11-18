@@ -83,7 +83,7 @@ Do not:
 - Include build evidence, bytecode details, validation logs, QA-style usage steps, or internal test reports in public documentation
 - Include redundant platform requirements that the distribution platform already displays unless players need the information to decide whether to install
 - Research platform-submission mechanics, live project fields, page setup, or final platform field choices unless explicitly assigned by the owner
-- Perform icon work when it is owner-managed, or capture, select, crop, or caption screenshots when screenshot work is owner-managed. Proposing a shot list and staging its scenario remain in scope unless screenshots are deferred.
+- Perform icon work when it is owner-managed, or capture, select, crop, or caption screenshots when screenshot work is owner-managed. Proposing a shot list and staging its scenario remain in scope unless screenshots are deferred. When screenshots are agent-captured, capturing, selecting and captioning them is in scope.
 - Block README, changelog, or packaging approval because an owner-managed icon or screenshot is not ready
 - Include Cleanroom caveats unless they affect normal player installation, compatibility expectations, or usage decisions
 - Send assets or files to a distribution platform
@@ -331,6 +331,7 @@ When icon work is **Revise** or **Create**, create the artwork workspace and exp
 
 Screenshot paths:
 
+- **Agent Captures Screenshots:** the agent stages each shot, launches the game, captures, reads and selects the pictures itself, and delivers them with their platform captions (see [Agent-Captured Screenshots](#agent-captured-screenshots)). The default when Project Setup authorizes agent game launches (an isolated runtime or the development client) and the owner's defaults do not choose another path.
 - **Owner Provides Screenshots:** the owner captures and selects them. The agent may still propose a shot list and stage scenarios, as described below.
 - **Agent Helps Prepare Screenshots:** the agent additionally selects, orders, crops, or captions the owner's captures.
 - **Screenshots Deferred:** screenshot work is postponed. Do not propose a shot list until the owner reopens it.
@@ -339,7 +340,7 @@ Screenshots must show actual implemented behavior under every path, and must nev
 
 ### Screenshot Suggestions
 
-The agent cannot capture screenshots because it cannot run the game. The owner always takes them. That makes **Owner Provides Screenshots** the normal path, and it does not mean the agent has nothing to contribute.
+When the agent cannot launch the game, the owner takes the screenshots, and **Owner Provides Screenshots** is the path. That does not mean the agent has nothing to contribute.
 
 Propose a shot list even when capture is owner-managed. The agent knows which behavior was implemented, which of it is visible, and which is invisible without setup. The owner knows what the game actually looks like. Offer the list once as a compact packet and do not chase it if the owner declines or defers.
 
@@ -365,6 +366,18 @@ It is not licence to misrepresent the mod:
 - Never stage a scenario showing behavior the mod does not have.
 
 Record the suggested shots, any staged configuration, and its reversion in `release-presentation.md`.
+
+#### Agent-Captured Screenshots
+
+When screenshots are agent-captured, the agent follows the shot list itself:
+
+- Stage each scene in a disposable world, with the released jar or the validated release candidate. Use as many launches as the shots need; announce each graphical launch as Project Setup requires.
+- Capture with the means the runtime offers (with the Agent Test Toolkit: screenshots that leave out the chat and toasts, menu pictures, the Mods list entry). Keep a real mouse pointer and other windows out of the frame, and set the window size the platform displays well.
+- Open and read every picture before selecting it. Discard a picture with debug text, test markers, half-drawn screens, or anything that shows behaviour the mod does not have; retake it.
+- Revert staged state after capture, as for any staged scenario.
+- Deliver the selected pictures in the [publication packet](#publication-packet): for each, its file path, a platform title and description written for players (on CurseForge, at most 128 and 256 characters), and which picture to mark as the featured image. The owner may replace or drop any of them.
+
+Screenshots stay optional: a failed or skipped capture never blocks release approval.
 
 ## Internal Presentation Record
 
@@ -399,7 +412,7 @@ Do not use the internal record as public copy.
 10. Add high-level configuration and player-facing multiplayer/client/server notes when applicable.
 11. Record icon and screenshot paths as owner-provided, agent-managed, or deferred. Ask the icon question before step 18, so an icon decided now ships in the release-preparation commit (the in-mod logo and, where one exists, the creative tab icon); a deferred icon is recorded as such. When the mod already has approved pixel art that stands for it (the creative tab item, a signature item), offer that art as the first candidate, enlarged without resampling on the backgrounds the platform uses, before asking whether to defer: it is the quickest decision, and an owner who is asked only "defer or provide" tends to reopen the icon after the handoff, which costs a second release build.
 12. Follow icon or screenshot workflows only when those areas are agent-managed or explicitly assigned.
-13. Offer a screenshot shot list unless screenshots are deferred, stage any scenario the owner accepts, and revert staged state after capture.
+13. Offer a screenshot shot list unless screenshots are deferred, stage any scenario the owner accepts, and revert staged state after capture. When screenshots are agent-captured, capture and select them under [Agent-Captured Screenshots](#agent-captured-screenshots) before the publication packet.
 14. When CurseForge is selected, perform the CurseForge Markdown compatibility review and give the owner the rendered-preview checklist.
 15. Check every public claim against approved implementation evidence and approved glossary terminology; inspect the release artifact's processed dependency metadata for exact-only or upper-bounded relations.
 16. Update `workspace/documentation/glossary.md` when release copy approves, refines, or deprecates public-facing project terminology.
@@ -444,7 +457,7 @@ When a release artifact is built, inspected, identified, or handed off, also pro
 
 ### Publication Packet
 
-The publication packet is everything the owner needs to publish, in one message: the canonical upload-ready jar path from the handoff, the file settings the platform asks for (release type, game version, loader, relations), the exact paste-ready distribution-platform release changelog, the platform listing packet, and the owner-managed steps from the handoff in order, including any message the owner relays to another project.
+The publication packet is everything the owner needs to publish, in one message: the canonical upload-ready jar path from the handoff, the file settings the platform asks for (release type, game version, loader, relations), the exact paste-ready distribution-platform release changelog, the platform listing packet, any agent-captured screenshots with their titles, descriptions and the featured image, and the owner-managed steps from the handoff in order, including any message the owner relays to another project.
 
 Give it once, as the workflow's last message, after the workflow approval and after any merge or push the published pages depend on, under the heading `Ready to publish now`. Do not give it at the Stage 8 checkpoint: upload steps shown while the cycle summary, the merge, or the workflow approval are still ahead read as an instruction to publish now, and a page published before the merge links to documentation that does not show the release yet.
 

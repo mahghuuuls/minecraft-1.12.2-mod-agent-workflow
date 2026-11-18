@@ -96,6 +96,7 @@ Record reusable packaged-runtime preferences once. [Test Instance](../guidelines
 Record only overrides or additions that are specific to this owner and not already part of the general workflow defaults.
 
 - Release ownership overrides:
+- Mod page screenshots (Release Presentation, Screenshot paths): Agent captures | Owner provides | Ask each project
 - Documentation style overrides:
 - Validation ownership overrides:
 - Communication preferences not covered by `guidelines/collaboration-guidelines.md`:
