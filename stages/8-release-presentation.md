@@ -40,7 +40,7 @@ Establish:
 - A clear feature summary based only on implemented behavior
 - A high-level configuration summary when the mod has user-facing configuration
 - Player-facing multiplayer, client/server, dependency, or compatibility notes when normal players need them
-- Optional publication-asset decisions for icon and screenshots without blocking README, changelog, or packaging when owner-managed or deferred
+- The [icon decision](#icon-decision) for this release and the screenshot decision under [Optional Publication Assets](#optional-publication-assets)
 - Public wording that uses approved glossary terms consistently when the glossary applies
 - An internal presentation record that separates public copy from technical evidence and unresolved limitations
 - A release handoff record when release JAR generation or validation is agent-managed
@@ -61,7 +61,7 @@ Establish:
 - Use approved glossary terms consistently in public copy
 - Record known limitations in public materials only when normal players must know them before installing or using the mod
 - Record icon and screenshot ownership, deferral, or agent-managed work
-- Follow icon or screenshot workflows only when those areas are agent-managed or explicitly assigned
+- Apply the [icon decision](#icon-decision) and the applicable screenshot workflow
 - Propose a screenshot shot list, and stage the configuration or world state a suggested shot needs, unless screenshots are deferred
 - Produce `<artifact-root>/release-presentation.md`
 - Confirm the approved release version before packaging or handoff
@@ -83,7 +83,7 @@ Do not:
 - Include build evidence, bytecode details, validation logs, QA-style usage steps, or internal test reports in public documentation
 - Include redundant platform requirements that the distribution platform already displays unless players need the information to decide whether to install
 - Research platform-submission mechanics, live project fields, page setup, or final platform field choices unless explicitly assigned by the owner
-- Perform icon work when it is owner-managed, or capture, select, crop, or caption screenshots when screenshot work is owner-managed. Proposing a shot list and staging its scenario remain in scope unless screenshots are deferred. When screenshots are agent-captured, capturing, selecting and captioning them is in scope.
+- Replace an owner's chosen icon without their direction, or capture, select, crop, or caption screenshots when screenshot work is owner-managed. Proposing a shot list and staging its scenario remain in scope unless screenshots are deferred. When screenshots are agent-captured, capturing, selecting and captioning them is in scope.
 - Block README, changelog, or packaging approval because an owner-managed icon or screenshot is not ready
 - Include Cleanroom caveats unless they affect normal player installation, compatibility expectations, or usage decisions
 - Send assets or files to a distribution platform
@@ -117,7 +117,7 @@ Act as a release documentation editor.
 - Treat the AI usage disclaimer as a default transparency note, not as internal workflow history. Keep it short, generic, and removable by owner request.
 - Follow the release ownership matrix strictly.
 - For agent-managed validation, validate the artifact from the exact clean committed revision recorded in the handoff. Do not treat a build from uncommitted release changes as final release evidence.
-- Treat icon and screenshot work as optional publication assets, not as blockers for README, changelog, or packaging unless explicitly agent-managed and required by the owner.
+- Continue independent release work while the owner considers the artwork.
 - Use a focused question for a branching public claim or ownership decision; group related low-risk copy decisions into a compact review packet.
 - Never submit files to distribution platforms or publish releases.
 
@@ -290,46 +290,19 @@ The distribution-platform release changelog is the short text pasted into the re
 
 ## Optional Publication Assets
 
-Icon and screenshot work is optional publication-asset work. It must not block README/changelog approval, release artifact validation, or handoff approval when it is owner-managed or deferred.
+Use the approved release ownership matrix. Owner-managed or deferred artwork can be recorded while the rest of release preparation continues.
 
-The in-mod logo is the exception in timing, not in blocking: the file the mod metadata names (`logoFile` in `mcmod.info`) ships inside the jar, so the icon question is asked at the start of this stage, before the release-preparation commit. An icon decided in time goes into that commit; a deferred icon means the jar ships without an in-mod logo, and the presentation record says so. Deciding it after packaging costs another commit, another clean build, and a rewritten handoff.
+### Icon decision
 
-Where the mod registers a creative tab, the tab's icon is the same decision as the mod icon: the item that carries the mod icon, or the icon image itself. A placeholder such as "the first registered item" ships unless someone notices, so the packaged-client check of the last campaign, or the release inspection, looks at the creative tab.
+At the start of Release Presentation, check the active workflow and existing artwork.
 
-Use the release ownership matrix from Project Setup.
+- **New mod in Initial Development.** Show at least one actual icon image and a thumbnail in chat and ask the owner whether to use it. The [mod icon guide](../guidelines/mod-icon-creation.md) gives the first choice to a representative asset the mod already creates. If the owner supplied a finished icon, preview that exact file. Follow an explicit request to skip proposals, handle all artwork personally, or defer. An owner who reserves final selection still gets the preview.
+- **Existing mod or subsequent Change Cycle.** Carry forward the approved icon, or the recorded no-logo state, without a new preview or design question. Reopen artwork only when the owner requests it or the approved cycle includes it. If a referenced file is missing, flag the packaging discrepancy and recover the approved file when possible.
+- **When the owner wants a change.** Use the [review and revision loop](../guidelines/mod-icon-creation.md#show-the-image-and-revise-it). A rejected preview starts a conversation about concrete alternatives. Record a deferral only when the owner chooses it.
 
-Stage 8 supports these icon paths:
+Record the preview or carry-forward path and the owner's decision in `release-presentation.md`. Settle any change to `logoFile` in `mcmod.info` before the release-preparation commit. An approved icon ships in that build. For an approved deferral without an existing logo, leave the metadata logo path empty. When the mod registers a creative tab, check that it displays the item carrying the approved icon or the icon image itself during packaged-client inspection.
 
-1. **Owner Provides Icon:** The owner creates, selects, or provides the icon outside the agent workflow.
-2. **Agent Helps Create Icon:** The owner explicitly assigns icon creation or revision to the agent.
-3. **Icon Deferred:** Icon work is intentionally postponed and does not block the rest of the release handoff.
-
-If the owner provides the icon:
-
-- Record `Owner Provides Icon`.
-- Do not research, generate, select, or request icon references.
-- Do not block README, changelog, release artifact validation, or handoff approval on the icon.
-
-If the icon is deferred:
-
-- Record `Icon Deferred` and the owner-approved reason or follow-up condition.
-- Do not block README, changelog, release artifact validation, or handoff approval on the icon.
-
-If the agent helps create or revise the icon, record one of these decisions and follow the icon guideline:
-
-- **Carry Forward:** Existing approved icon remains suitable.
-- **Revise:** Existing visual identity remains valid but needs a focused change.
-- **Create:** No approved suitable icon exists and the agent is assigned to help create it.
-
-Use:
-
-```text
-guidelines/mod-icon-creation.md
-```
-
-When icon work is **Revise** or **Create**, create the artwork workspace and explicitly ask the owner to add reference images there or attach them in chat. Do not assume the owner has read repository documentation.
-
-Screenshot paths:
+### Screenshot paths
 
 - **Agent Captures Screenshots:** the agent stages each shot, launches the game, captures, reads and selects the pictures itself, and delivers them with their platform captions (see [Agent-Captured Screenshots](#agent-captured-screenshots)). The default when Project Setup authorizes agent game launches (an isolated runtime or the development client) and the owner's defaults do not choose another path.
 - **Owner Provides Screenshots:** the owner captures and selects them. The agent may still propose a shot list and stage scenarios, as described below.
@@ -387,7 +360,7 @@ Use it to record:
 
 - Source implementation evidence supporting public claims
 - Ownership decisions for README, mod-page copy, repository `CHANGELOG.md`, distribution-platform release changelog, icon, screenshots, platform submission, publication, and validation
-- Whether icon and screenshots are owner-provided, agent-managed, or deferred
+- The [icon decision](#icon-decision), approved artwork paths, and the screenshot disposition
 - Known limitations and whether they are public-facing or internal
 - Deferred owner-managed assets or publication actions
 - Public terminology decisions and glossary updates
@@ -401,7 +374,7 @@ Do not use the internal record as public copy.
 ## Process
 
 1. Confirm that Implementation is approved.
-2. Read the release ownership matrix and public documentation style from Project Setup.
+2. Read the release ownership matrix and public documentation style from Project Setup. Apply the [icon decision](#icon-decision) for the active workflow.
 3. Read `workspace/documentation/glossary.md`, when present.
 4. Review completed issues, approved behavior, and known limitations.
 5. Identify which public materials are agent-managed.
@@ -410,8 +383,8 @@ Do not use the internal record as public copy.
 8. Draft or update repository `CHANGELOG.md` when agent-managed, then draft the separate distribution-platform release changelog for its narrower player audience. For a first public release, default the platform text to `Initial release`.
 9. Prepare a CurseForge-style summary or description only as reusable public copy, not as platform-field research.
 10. Add high-level configuration and player-facing multiplayer/client/server notes when applicable.
-11. Record icon and screenshot paths as owner-provided, agent-managed, or deferred. Ask the icon question before step 18, so an icon decided now ships in the release-preparation commit (the in-mod logo and, where one exists, the creative tab icon); a deferred icon is recorded as such. When the mod already has approved pixel art that stands for it (the creative tab item, a signature item), offer that art as the first candidate, enlarged without resampling on the backgrounds the platform uses, before asking whether to defer: it is the quickest decision, and an owner who is asked only "defer or provide" tends to reopen the icon after the handoff, which costs a second release build.
-12. Follow icon or screenshot workflows only when those areas are agent-managed or explicitly assigned.
+11. Record the outcome of the [icon decision](#icon-decision) opened at stage entry before seeking materials approval in step 18.
+12. Record the applicable [screenshot path](#screenshot-paths) and any existing approved images.
 13. Offer a screenshot shot list unless screenshots are deferred, stage any scenario the owner accepts, and revert staged state after capture. When screenshots are agent-captured, capture and select them under [Agent-Captured Screenshots](#agent-captured-screenshots) before the publication packet.
 14. When CurseForge is selected, perform the CurseForge Markdown compatibility review and give the owner the rendered-preview checklist.
 15. Check every public claim against approved implementation evidence and approved glossary terminology; inspect the release artifact's processed dependency metadata for exact-only or upper-bounded relations.
@@ -436,7 +409,7 @@ Prepare only applicable repository/public files and agent-managed assets:
 - `README.md`
 - `MOD-PAGE.md` or an owner-approved equivalent when player/download-facing copy is agent-managed
 - `CHANGELOG.md`
-- Approved mod icon, only when agent-managed or explicitly assigned
+- Approved in-mod icon when the release metadata names one
 - Approved screenshots or description images, only when agent-managed or explicitly assigned
 
 ### Presentation Record
@@ -481,7 +454,7 @@ This stage is complete when:
 - Shipped dependency metadata uses inclusive verified minimums with no upper bounds, while public copy does not overclaim untested future compatibility.
 - Public wording uses approved glossary terms consistently when the glossary applies.
 - Public-facing glossary updates introduced by release copy are recorded.
-- Icon and screenshot paths are recorded as owner-provided, agent-managed, or deferred.
+- The presentation record documents the applicable [icon decision](#icon-decision), including the new mod's visible preview and owner response or explicit override, and the screenshot paths.
 - A screenshot shot list was offered unless screenshots are deferred, and any configuration or world state staged for a shot has been reverted and recorded.
 - Owner-managed or deferred icon and screenshot work does not block README, changelog, or packaging.
 - Agent-managed icon or screenshot work, if any, is approved or explicitly deferred by the owner.

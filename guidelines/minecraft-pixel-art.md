@@ -174,6 +174,8 @@ Dithering is optional and normally undesirable for very small icons. Use it only
 
 ## Three-Concept Selection Loop
 
+For a release icon preview, derive the starting brief from the approved mod concept and any artwork preferences already supplied. [Mod Icon Creation](mod-icon-creation.md) covers reuse of an existing asset and the owner's final selection.
+
 For each new asset or genuinely new art direction:
 
 1. Create three materially different candidates from the approved brief.

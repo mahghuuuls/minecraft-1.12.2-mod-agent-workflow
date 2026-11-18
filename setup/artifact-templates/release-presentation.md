@@ -86,7 +86,9 @@
 
 ## Icon Path
 
--
+- First-release preview shown (image and thumbnail), baseline art carried forward, or owner override:
+- Asset or design method and source record, when applicable:
+- Owner decision and approved export paths or deferral:
 
 ## Screenshot Path
 

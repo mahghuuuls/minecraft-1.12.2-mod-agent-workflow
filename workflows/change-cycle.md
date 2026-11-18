@@ -137,7 +137,7 @@ Use these stage dispositions:
 - **Not Applicable:** The stage does not apply to this workflow.
 - **Blocked:** Routing cannot be approved until missing evidence or a decision is supplied.
 
-Project Initialization is always **Not Applicable**. Implementation Plan, Implementation, and Release Presentation are normally **Revisit** for a releasable code change. Existing branding may be carried forward within Release Presentation.
+Project Initialization is always **Not Applicable**. Implementation Plan, Implementation, and Release Presentation are normally **Revisit** for a releasable code change. Follow the [Release Presentation icon decision](../stages/8-release-presentation.md#icon-decision) for existing branding.
 
 Release Presentation owns release artifact validation and handoff. A later request to reproduce or recheck the already approved artifact uses `procedures/revalidate-release.md` and does not add a stage disposition.
 

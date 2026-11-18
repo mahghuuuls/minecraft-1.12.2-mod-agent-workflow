@@ -357,7 +357,7 @@ Start from these defaults unless the owner changes them:
 | Mod page or distribution-page copy | Agent | Prepare concise player/download-facing copy such as `MOD-PAGE.md` unless owner-managed or deferred. |
 | Repository `CHANGELOG.md` | Agent | Preserve useful release history, including concise technical notes when they help players, pack authors, or maintainers. |
 | Distribution-platform release changelog | Agent | Prepare short paste-ready text containing only player-noticeable changes; first public releases default to `Initial release`. |
-| Icon | Owner | Do not research, generate, or select an icon unless the owner explicitly assigns icon work to the agent. |
+| Icon | Shared | Use the [release ownership default](../guidelines/project-defaults.md#release-ownership). Record any supplied final art, request to handle all artwork personally, or explicit deferral. An owner who wants to select the icon can select from the agent's preview. |
 | Screenshots | Owner | Do not plan, request, capture, select, or prepare screenshots unless explicitly assigned. |
 | CurseForge upload | Owner | Do not research upload mechanics, publication page setup, or final platform field choices unless explicitly assigned. |
 | Release JAR generation | Agent | Generate or identify the normal release artifact when later stages require a release handoff. |

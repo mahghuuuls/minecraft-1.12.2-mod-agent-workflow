@@ -235,7 +235,7 @@ Release and publication defaults are:
 - Mod page or distribution-page copy: agent-managed
 - Repository `CHANGELOG.md`: agent-managed
 - Distribution-platform release changelog: agent-managed and delivered as paste-ready chat text during Release Presentation
-- Icon: owner-managed
+- Icon: shared for a new mod. The agent prepares a preview and the owner selects the artwork. Apply the [Stage 8 icon decision](../stages/8-release-presentation.md#icon-decision) for an existing baseline or an owner override.
 - Screenshots: owner-managed
 - CurseForge upload: owner-managed
 - Release JAR generation: agent-managed

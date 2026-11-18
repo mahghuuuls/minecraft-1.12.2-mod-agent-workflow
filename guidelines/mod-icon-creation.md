@@ -1,226 +1,52 @@
 # Mod Icon Creation
 
-Use this specialized guideline only when Release Presentation records an icon decision of **Create** or **Revise**.
+[Release Presentation](../stages/8-release-presentation.md#icon-decision) determines when to show a first-release preview, carry an icon forward, or reopen it. This guide covers choosing the artwork, making a reviewable image, and delivering the approved file.
 
-The objective is an original, recognizable, human-directed icon that represents the mod clearly at small sizes. Image generation is an iterative design tool, not a substitute for artistic direction or project-owner approval.
+## Start with what players recognize
 
-## Artwork Workspace
+Look at the implemented mod and its actual resources. Which single item, block, entity, screen element, or action would a player associate with it? Check the creative-tab item when there is one. A representative asset created by this project is often the whole design. Open the real PNG or render the actual textured model for a block or entity. A texture atlas laid flat can look quite different from what players see.
 
-Before requesting references, create:
+**Show the existing asset on its own first** when it reads well at thumbnail size and can be used at the destination. Center it with breathing room, preserve its proportions and pixel scale, and preview it against the listing background. Keep distinctive details intact. A signature item needs no added wrench, lettering, border, or second motif to qualify as a finished icon. Reusing approved art this way needs one preview. A borrowed creative-tab item or template placeholder needs the same source checks as any other third-party image.
 
-```text
-workspace/artwork/icon/
-├── references/
-│   └── sources.md
-├── candidates/
-├── working/
-└── final/
-```
+If there is no suitable project asset, choose a montage when players need to recognize a particular game object and usable source images exist. Choose pixel art when the idea reads as an inventory sprite. Choose a geometric mark for a rule or action without a distinctive object. For example, a mod that locks one inventory slot could use a slot with a latch cut into its edge.
 
-This workspace is ignored by the process repository. Do not place unapproved candidates in the mod repository.
+Record the subject, intended meaning, and method briefly in `<artifact-root>/icon-design-brief.md` when creating or revising a design. Use known project decisions for the first preview. References and a separate brief approval are optional.
 
-Explicitly tell the project owner:
+## Three ways to make a new design
 
-> Please add reference images to `workspace/artwork/icon/references/`, or attach them in this chat so I can place them there. For each reference, tell me whether its palette, composition, linework, texture, or mood should guide the design.
+### Exact-grid pixel art
 
-Do not assume the owner has read the README or this guideline. If chat attachments are accessible, preserve approved references in the workspace so a later agent context can use them.
+Draw an original sprite directly as a token grid. Start at **16×16** for an item-like mark in the 1.12.2 visual style. Choose a larger native grid when the defining shape needs it or the project's existing art uses it. The native grid and the listing dimensions serve different purposes. Start with the silhouette, add a few connected groups of light and dark pixels, then inspect at 1×. If two features merge there, change the pixels.
 
-Proceed without reference images only after the owner explicitly chooses to do so.
+Run `tools/pixelart/pixelart.cmd candidate.pixelart -OutputBesideSpecification -Review` from the workflow root, substituting the grid's path for `candidate.pixelart`. Follow the [three-concept review](minecraft-pixel-art.md#three-concept-selection-loop) for a genuinely new pixel design. Place each pixel directly on the target grid. A diffusion image, traced sprite, or downsampled illustration misses this step. Enlarge with integer nearest-neighbor scaling. For a 400×400 listing, a 16×16 canvas fits at exactly 25×. For a grid that does not divide the export evenly, use the largest fitting integer scale and pad the canvas. [Renderer usage](../tools/pixelart/README.md), [Derek Yu's sprite tutorial](https://www.derekyu.com/makegames/pixelart.html)
 
-## Reference Safety
+### Montage from actual game or mod assets
 
-For each reference, record in `sources.md`:
+Choose one real subject and, if it adds meaning, one secondary element. For a summon-tweaking mod, that might be a crop of the actual summoned mob with the actual casting item. Locate the exact version's models and textures in the project, installed mod JAR or 1.12.2 game resources. For example, an item model under `assets/<modid>/models/item/` can identify the sprite under `assets/<modid>/textures/items/`. For a posed creature, custom renderer, or tinted item, use a clean gameplay capture or render the real model with its bound texture. Use an authorized test instance for a new capture. [Forge 1.12.x resource locations](https://docs.minecraftforge.net/en/1.12.x/conventions/locations/)
 
-- Filename
-- Source or owner
-- License or permission status
-- Aspect approved for inspiration
-- Restrictions
-- Whether it may appear in final assets
+Once the sources qualify for the intended use, keep each original as a separate layer. Crop or mask the background and arrange the layers on a plain field. Match sprite scale or camera perspective so the subjects sit together. Compare the composite to the sources side by side. Fix a cut-off staff, a halo around the mob, or an overlap that hides its face before showing it. Keep hard-edged sprites on their pixel grid. **Never generate, redraw, trace, or use generative fill to stand in for a named game or mod asset.** If a layer is missing, identify the exact image needed and offer the owner the option of attaching it. An original pixel or geometric candidate can be shown while the montage source is unavailable. [GIMP layer masks](https://docs.gimp.org/3.0/en/gimp-layer-mask-add.html)
 
-References guide decisions; they are not automatically reusable material.
+### Minimal geometric icon
 
-Do not:
+Draw one mod-specific symbol with a few editable paths or solid shapes. Keep an editable vector or shape source and rasterize it to PNG. Use consistent stroke weights or solid fills, deliberate gaps, and enough margin around the silhouette. Try it in one color at 16 and 32 pixels. If the meaning disappears, widen the opening or simplify the shape. Add color where it helps recognition. Skip ornamental gradients, bevels, particles, and generated illustrations as a starting point. [IBM's guidance on small icons](https://www.ibm.com/design/language/iconography/ui-icons/design/)
 
-- Copy protected characters, logos, or another project's icon
-- Reproduce an identifiable artist's style on request
-- Assume an internet image is licensed for reuse
-- Include Minecraft, a distribution platform, or another creator's branding as the primary artwork
-- Commit reference images to the final mod unless their license and purpose require it
+## Sources and platform use
 
-When ownership or permission is unclear, use only abstract qualities such as palette, contrast, or composition and create original forms.
+Use `workspace/artwork/icon/` for source files under `references/`, previews under `candidates/`, editable files under `working/`, and approved exports under `final/`. For each incorporated source, record the creator or supplier, version and file path or capture, permission covering the intended use, restrictions, and required credit in `workspace/artwork/icon/references/sources.md`. Mark inspiration-only references there. Keep candidate artwork outside the mod repository.
 
-## Design Brief
+Check the asset's terms for both the public avatar and any redistribution inside the JAR. A source-code license, installed JAR, owner attachment, or permission to share gameplay alone does not establish both uses. Mojang includes textures, models, and screenshots in its definition of game assets. CurseForge requests an original project graphic and restricts copyrighted imagery in avatars. Check the current destination rules. If a layer cannot be used for that destination, show a project-owned asset or original mark there and explain which layer would need clearance for a montage. Avoid copying platform logos or another project's identity. [Minecraft Usage Guidelines](https://www.minecraft.net/en-us/usage-guidelines), [CurseForge submission guide](https://support.curseforge.com/support/solutions/articles/9000199552-project-submission-guide-and-tips), [CurseForge moderation policies](https://support.curseforge.com/support/solutions/articles/9000197279)
 
-Before generating an image, create or update:
+## Show the image and revise it
 
-```text
-<artifact-root>/icon-design-brief.md
-```
+1. Export and open the actual PNG. Inspect it at the listing size and at 128, 64, 32 and 16 pixels. Check the silhouette, meaningful gaps, contrast on light and dark backgrounds, edge artifacts, and whether the defining feature survives. A large view alone can hide a failed thumbnail.
+2. Show the image directly to the owner, alongside a thumbnail at actual size, and identify the real asset or construction method in one sentence. Ask “Would you use this as the mod icon, or what would you change?” A prompt, filename, or written concept alone does not deliver a preview.
+3. If the owner declines, use their reason to offer two or three concrete alternatives tied to this mod. For a utility mod these might be its existing tool sprite alone, a montage using a named capture and item, or a one-color symbol for the tool's effect. For a montage, look for usable inputs first. Ask for a specific PNG or screenshot only when an input is missing or the owner prefers to supply it. Accept attachments or files under `references/`.
+4. Make and show the selected revision at both sizes. A focused correction needs one revised image. Record the owner's selection, supplied replacement, or explicit deferral in the presentation record. Only the owner approves the final design.
 
-Establish with the owner:
+## Export and verify
 
-1. What the mod does
-2. The single idea the icon should communicate
-3. Primary subject or symbol
-4. Preferred visual approach
-5. Intended mood
-6. Limited color palette and contrast
-7. Background and transparency
-8. Required or forbidden motifs
-9. Whether text is allowed
-10. Existing branding that must be preserved
-11. Reference images and approved influences
+Verify each destination's current requirements. For CurseForge, a square 400×400 PNG meets the published avatar dimensions. Record the final paths, dimensions, format, file size, source credits, and visual checks in `<artifact-root>/release-presentation.md`. Copy only required approved assets into the mod repository. Confirm the metadata resolves to the in-mod logo and verify it in the packaged Mods list and, where the mod registers one, the creative tab under [Release Build and Discovery](../procedures/release-build-and-discovery.md).
 
-Use a focused question for a branching art-direction decision and a compact packet for related visual details. Present the complete brief for approval before generation.
+## Why these defaults
 
-## Choose One Art Direction
-
-Use one coherent direction rather than combining every style keyword.
-
-### Flat Graphic
-
-Suitable for clean utility, technical, or UI-oriented mods.
-
-Prefer:
-
-- Flat 2D graphic
-- Simple, intentional geometry
-- Strong silhouette
-- Solid shapes
-- Limited colors
-- Crisp edges
-- Flat or minimal shading
-- Clear negative space
-
-Avoid gradients, bevels, glossy surfaces, cinematic lighting, and microdetail.
-
-### Hand-Painted Game Art
-
-Suitable for magic, adventure, creature, or RPG-oriented mods.
-
-Prefer:
-
-- Hand-painted digital illustration
-- Controlled cel shading
-- Deliberate line-weight variation
-- Limited palette
-- Matte finish
-- Simplified background
-- Selective texture
-
-Avoid plastic gloss, excessive particles, random runes, over-sharpening, and detail that disappears when reduced.
-
-### Pixel Art
-
-Follow `guidelines/minecraft-pixel-art.md` for exact-grid construction, the three-concept selection loop, mandatory agent image review, and technical pixel checks. Continue following this icon guideline for release-artwork direction, reference provenance, icon-size evaluation, export, and final owner approval.
-
-Use an exact working grid such as 32x32 or 64x64 pixels and render it with `tools/pixelart/pixelart.cmd`. Merely prompting for "pixel art" is not sufficient.
-
-## Prompt Construction
-
-Prompts should specify:
-
-1. Subject and action
-2. Silhouette and composition
-3. Chosen art direction
-4. Palette
-5. Edge and shading treatment
-6. Background
-7. Small-icon readability
-8. Explicit exclusions
-
-Keep constraints internally consistent. Do not combine hard-edged flat graphics with softened painterly edges unless the brief deliberately calls for both.
-
-Avoid provider-specific flags in the reusable prompt. Use tool-specific controls only when the active image tool supports them.
-
-### Flat Graphic Blueprint
-
-```text
-A flat 2D icon of [subject], designed as an original game-mod identity.
-One strong centered silhouette, simple solid shapes, limited [palette] colors,
-crisp intentional outlines, minimal flat shading, and clear negative space.
-Readable at 32 pixels. Square composition on [background].
-No text, gradients, bevels, glossy surfaces, cinematic lighting, particles,
-random symbols, or intricate detail.
-```
-
-### Hand-Painted Blueprint
-
-```text
-An original hand-painted game icon of [subject and action].
-Controlled cel shading, deliberate ink linework, limited [palette] colors,
-matte finish, simplified background, and a strong readable silhouette.
-Slight natural line-weight variation without messy geometry.
-No photorealism, plastic gloss, excessive glow, random runes, microdetail,
-or cinematic rendering.
-```
-
-### Pixel-Art Blueprint
-
-```text
-An original [32x32 or 64x64] pixel-art icon of [subject].
-Consistent pixel grid, intentional clusters, limited [palette] colors,
-controlled dithering, strong silhouette, and a simple background.
-No text, mixed pixel scales, smooth gradients, antialiasing, glow blur,
-or subpixel detail.
-```
-
-## Concept and Refinement Loop
-
-1. Generate two to four genuinely different concept directions. For pixel art, generate exactly three and follow `guidelines/minecraft-pixel-art.md`.
-2. Label them and explain the design difference briefly.
-3. Present concepts at full size and representative small sizes.
-4. Ask the owner to select one direction or reject all.
-5. Refine only the selected direction through focused edits.
-6. Correct malformed geometry, accidental symbols, inconsistent lighting, and edge artifacts.
-7. Repeat size checks after each material change.
-8. Stop when the owner approves a final direction.
-
-Do not present random near-duplicates as distinct concepts. Do not restart the design merely to avoid a focused correction.
-
-## Evaluation
-
-Evaluate every candidate at:
-
-- 400x400
-- 128x128
-- 64x64
-- 32x32
-- 16x16
-
-Check:
-
-- The subject is recognizable.
-- The silhouette survives reduction.
-- Contrast remains clear.
-- Important shapes do not merge.
-- No detail is required to understand the icon.
-- Geometry and perspective are coherent.
-- There is no illegible or accidental text.
-- The image does not rely on excessive glow, particles, ornamental noise, or generic fantasy-emblem conventions.
-- The result is meaningfully specific to the mod.
-
-Text should be omitted by default because it becomes unreadable and image models frequently distort it.
-
-## Technical Export
-
-Verify current destination requirements during Release Presentation.
-
-For each approved distribution platform, verify current image requirements and prepare a compliant export. For CurseForge specifically, the current safe export is an original 400x400 PNG; do not use WebP or blank/copied artwork.
-
-Also prepare the in-mod asset at the resolution and path required by the project's metadata. It may share the approved design but must be validated in the actual mod list or UI where it appears. The in-mod asset changes the jar, so settle it before the release-preparation commit of Release Presentation; where the mod registers a creative tab, that tab shows the mod icon too (the item carrying it, or the image), and the same in-game check covers both.
-
-Record dimensions, format, file size, path, and validation results.
-
-## Approval and Finalization
-
-After owner approval:
-
-1. Place delivery exports under `workspace/artwork/icon/final/`.
-2. Copy only required approved assets into the mod repository.
-3. Confirm metadata points to the correct in-mod asset, and that any creative tab the mod registers shows the same icon.
-4. Record final paths and reference provenance in `<artifact-root>/release-presentation.md`.
-5. Preserve rejected candidates only when the owner requests it.
-
-Icon approval settles the image selection. Repository changes follow the routine Git policy in `guidelines/collaboration-guidelines.md`; upload and publication retain their separate approval boundaries.
+Some modded-Minecraft players report skipping packs when they see what looks to them like a generated thumbnail. Those reports reflect individual choices. In a controlled study, people rated the same AI-made paintings differently depending on the assigned creator label. Neither source ranks these three styles for Minecraft players. These methods let the owner inspect the actual sprite, the montage layers, or the geometry at the size players see. Describe the method accurately. [Modded-Minecraft player discussion](https://www.reddit.com/r/feedthebeast/comments/1kwrpiq/ai_generated_modpack_iconsdescriptions/), [Bellaiche et al., 2023](https://doi.org/10.1186/s41235-023-00499-6)
