@@ -59,6 +59,9 @@ Do all of this first. A session that stops because a bundle has a typo has waste
   instance, run `tools/mod-jar/mod-jar.cmd check -Folder <run/mods> -Provided <mod ids the dev
   classpath already has>` and fix what it reports. A missing dependency or a duplicate costs the
   owner a launch.
+- **Smoke-launch new scene bundles.** Run each one once on every runtime that uses it, and list
+  the game facts the map relies on with the run that showed each (`guidelines/manual-validation.md`,
+  Before The Session).
 - **Preserve any log that a restart would rotate away.**
 - **Set the client defaults.** Quiet sound and no pause on lost focus, from
   `guidelines/agent-diagnostics-toolkit.md` or the owner defaults, before the first launch.
@@ -91,6 +94,12 @@ Client Request Channel). With toolkit 1.7.0 you also make the owner's small inpu
 selection, one click, a held button, a drop, the inventory, a tooltip (same guideline, Player Actions).
 With toolkit 1.8.0 a screenshot can leave out the chat or the HUD (`hide=chat|hud`), and a
 pause note in the inbox folder says why a single-player request waits (same guideline).
+With toolkit 1.9.0 you also press keys by name, turn the view, click a mod's screen buttons and
+container slots, close a screen that pauses single player (the request channel's `close`), and
+picture a menu or a mod's Mods list entry; bundles the inbox starts keep their chat quiet (same
+guideline, Player Input and Client Request Channel). Its limits are there too: the queue routes
+need the loader's input backend, RLCombat crashes a Forge development client in its own code, and
+with Gnetum `hide=chat` leaves the chat in the picture.
 
 **Ask for one thing only: what the logs cannot hold.** Visual layout, animation, colour, sound,
 whether an input felt right, real multi-client behaviour, an environment whose files you cannot

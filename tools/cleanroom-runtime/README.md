@@ -6,7 +6,7 @@ Prepare cached, hash-pinned Minecraft 1.12.2 Cleanroom files into independent cl
 
 - Windows x64, CPython 3.11 or later, and a suitable installed Java runtime. Tested with Cleanroom 0.7.14-alpha and Java 25.0.3.
 - A complete cached Cleanroom 0.7.x installation: the three MultiMC-format metadata files, matching libraries, Minecraft client, Minecraft 1.12 assets, and an installed dedicated server with its five-line `win_args.txt`.
-- Pinned Agent Test Toolkit 1.8.0 on each side that uses its control channel. Include runtime support mods required by the selected profile, such as Fugue and Scalar Legacy, and the project JAR being tested.
+- Pinned Agent Test Toolkit 1.8.0 or later on each side that uses its control channel. Include runtime support mods required by the selected profile, such as Fugue and Scalar Legacy, and the project JAR being tested.
 - Explicit authorization recorded for the selected local tests and applicable owner EULA acceptance. Graphical launches are separately represented by `clientLaunch`.
 
 This version imports existing files. It does not install Java, download Minecraft, authenticate accounts, migrate Gradle templates or launch an owner's pack. Missing or changed inputs produce errors before destination creation. It uses a local offline identity on a server bound to `127.0.0.1`; it is not an online multiplayer launcher. The client needs a logged-in graphical Windows session. A selected mod may perform its own downloads or write user-level caches; this tool is an isolation convention for game directories, not a sandbox for untrusted mod code.
@@ -29,10 +29,11 @@ Start with [profile.example.json](examples/profile.example.json). Replace its pa
 | `files` | Exact configuration, script or bundle inputs: source `path`, SHA-256 and relative `target` |
 | `protectedRoots` | Owner reference packs and other directories that must never overlap the runtime |
 | `player`, `heapMiB` | Optional local test name and heap limit; defaults `RuntimeTester`, 2048 MiB per process |
+| `clientQueryResult` | Optional answer to Forge's startup questions on the client: `cancel` (default), `confirm`, or `none` for no answer, so Forge shows its question screen. The server always cancels |
 
 The importer resolves every input before creating `<workspace>/runtime/<name>`. The workspace must already exist. It copies rather than links inputs, preserves Maven layout, records hashes and writes safe local test defaults. Existing runtime names are refused. A copy failure leaves a `preparing.json` marker and cannot be launched; retain it for diagnosis and use a new name after correcting the input.
 
-The generated defaults are a disposable flat dedicated-server world, creative mode, two-player limit, loopback binding, RCON/query disabled, FML missing-registry questions cancelled, and separate log/config/world directories. Client defaults are windowed 960 by 540, 60 FPS, six-chunk render distance, muted sound and no focus-loss pause. Test audio and subjective behavior separately when needed. The tool owns `devtool.cfg`; other inputs may target `client/config/`, `server/config/`, or their `scripts/` folders. It rejects imported channel files and local-join proofs. Mod/config selection is not inferred from filenames or copied wholesale from a reference pack.
+The generated defaults are a disposable flat dedicated-server world, creative mode, two-player limit, loopback binding, RCON/query disabled, FML missing-registry questions cancelled, and separate log/config/world directories. The server always launches with `-Dfml.queryResult=cancel`. The client does too by default, so a missing-blocks or missing-registry question is answered before any screen shows; a test of that screen or of a Toolkit `open ... onQuestion=` step needs `clientQueryResult` set to `none` in a new profile. Client defaults are windowed 960 by 540, 60 FPS, six-chunk render distance, muted sound and no focus-loss pause. Test audio and subjective behavior separately when needed. The tool owns `devtool.cfg`; other inputs may target `client/config/`, `server/config/`, or their `scripts/` folders. It rejects imported channel files and local-join proofs. Mod/config selection is not inferred from filenames or copied wholesale from a reference pack.
 
 From the workflow repository root, using absolute paths for these placeholders:
 
@@ -41,6 +42,16 @@ py -3 ./tools/cleanroom-runtime/runtime.py prepare --profile C:/work/example/wor
 ```
 
 The manifest pins input files and allows only declared `ContainedDeps` extracted from selected mod JARs into `mods/1.12.2`, with their embedded hashes. Extra or changed JARs fail before another launch. Prepare a new profile for intentional changes. `config` and `scripts` are copied into each launch's evidence; the game may legitimately rewrite them.
+
+### Loader-Provided Mod Ids
+
+Cleanroom supplies some mod ids itself, with no JAR in `mods`. Pass them with `-Provided` when you run the [mod JAR dependency check](../mod-jar/README.md#check) over each side's `mods` folder. Cleanroom 0.7.14-alpha provides `cleanroom`, `mixinbooter` and `fermiumbooter`:
+
+```powershell
+./tools/mod-jar/mod-jar.cmd check -Folder C:/work/example/workspace/runtime/campaign-a/client/mods -Provided cleanroom,mixinbooter,fermiumbooter
+```
+
+A list that leaves one out lets a separate JAR of that mod pass the check, and the game then stops at launch on the duplicate. For another Cleanroom version, read the list again from a log of that runtime that entered a world: the ids in `Client attempting to join with <n> mods : ...` that no JAR in its `mods` folder supplies.
 
 ## Run A Session
 
@@ -91,4 +102,4 @@ See the [validation record](VALIDATION.md) for the tested runtime profile, actua
 py -3 -m unittest discover -s ./tools/cleanroom-runtime/tests -v
 ```
 
-These tests use disposable source/cache fixtures and real small Python child processes. They check copying and hash boundaries, references and reparse points, declared embedded dependencies, protocol freshness and identity, ports, ownership, deadlines, early exits, graceful/forced cleanup and Windows job behavior, including abrupt supervisor termination. They cannot establish Minecraft loading, rendering, networking or a mod's behavior; use the actual smoke session and project scenarios for those boundaries.
+These tests use disposable source/cache fixtures and real small Python child processes. They check copying and hash boundaries, the client and server `fml.queryResult` arguments, references and reparse points, declared embedded dependencies, protocol freshness and identity, ports, ownership, deadlines, early exits, graceful/forced cleanup and Windows job behavior, including abrupt supervisor termination. They cannot establish Minecraft loading, rendering, networking or a mod's behavior; use the actual smoke session and project scenarios for those boundaries.

@@ -329,7 +329,9 @@ try {
             if (-not [string]::IsNullOrEmpty($Id)) { Stop-Usage ('batch generates its own ids; use -Prefix instead of -Id.') }
             if ($NoWait) { Stop-Usage ('batch waits for every answer; -NoWait applies to send only.') }
             $directory = Resolve-InboxDirectory
-            $items = Read-BatchFile $File
+            # A function that returns one item returns it bare, not as an array; @() keeps .Count
+            # under strict mode for a file with a single request.
+            $items = @(Read-BatchFile $File)
             $ran = 0
             $asExpected = 0
             $firstMismatch = $null

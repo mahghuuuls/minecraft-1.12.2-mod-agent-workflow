@@ -117,6 +117,30 @@ class PrepareTests(unittest.TestCase):
         manifest = read_json(Path(result['root']) / 'runtime.json')
         self.assertEqual(hashlib.sha256(b'embedded jar').hexdigest(), manifest['allowedGenerated']['server/mods/1.12.2/child-lib.jar'])
 
+    def test_client_query_result_defaults_to_cancel_on_both_sides(self):
+        root = Path(self.invoke()['root'])
+        self.assertIn('"-Dfml.queryResult=cancel"', (root / 'client.args').read_text())
+        self.assertIn('"-Dfml.queryResult=cancel"', (root / 'server.args').read_text())
+
+    def test_client_query_result_is_a_client_profile_choice(self):
+        for choice, expected in (('confirm', '"-Dfml.queryResult=confirm"'), ('none', None)):
+            with self.subTest(choice=choice):
+                self.cfg['clientQueryResult'] = choice
+                write_json(self.profile, self.cfg)
+                root = Path(prepare(self.profile, self.workspace, 'query-' + choice)['root'])
+                client = (root / 'client.args').read_text()
+                if expected is None:
+                    self.assertNotIn('fml.queryResult', client)
+                else:
+                    self.assertIn(expected, client)
+                self.assertIn('"-Dfml.queryResult=cancel"', (root / 'server.args').read_text())
+
+    def test_unknown_client_query_result_fails_before_destination_writes(self):
+        self.cfg['clientQueryResult'] = 'yes'
+        with self.assertRaisesRegex(RuntimeErrorDetail, 'clientQueryResult'):
+            self.invoke()
+        self.assertFalse((self.workspace / 'runtime').exists())
+
     def test_toolkit_channel_input_cannot_be_imported(self):
         self.cfg['files'] = [{**self.pin(self.source / 'client.jar'), 'target': 'client/config/devtool/client-inbox/status.json'}]
         with self.assertRaisesRegex(RuntimeErrorDetail, 'Tool-managed'):

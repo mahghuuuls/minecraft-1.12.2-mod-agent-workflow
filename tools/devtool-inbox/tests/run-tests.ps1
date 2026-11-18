@@ -214,6 +214,21 @@ try {
     finally { Stop-Job $job; Remove-Job $job }
     $tests++
 
+    # batch: a file with a single request (PowerShell does not make one item an array).
+    # Its own folder, so the results check below still reads the batch folder above.
+    $oneInbox = New-Inbox 'batch-one' -Open
+    $oneFile = Join-Path $TestDirectory 'batch-one.txt'
+    [IO.File]::WriteAllLines($oneFile, @('run ok_only'), $Utf8NoBom)
+    $job = Start-Responder $oneInbox
+    try {
+        $run = Invoke-Tool @('batch', '-Inbox', $oneInbox, '-File', $oneFile, '-Prefix', 'b3')
+        Assert-Equal $run.Code 0 'A one-request batch exits 0.'
+        Assert-Contains $run.Lines 'request="run ok_only" outcome=done' 'A one-request batch prints its answer.'
+        Assert-Contains $run.Lines 'batch: 1 of 1 sent, 1 as expected' 'A one-request batch counts its line.'
+    }
+    finally { Stop-Job $job; Remove-Job $job }
+    $tests++
+
     # results lists answers by id, optionally by prefix.
     $run = Invoke-Tool @('results', '-Inbox', $inbox, '-Prefix', 'b2')
     Assert-Equal $run.Code 0 'results exits 0.'

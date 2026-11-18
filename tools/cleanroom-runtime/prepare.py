@@ -73,6 +73,9 @@ def prepare(profile_path, workspace, name):
     require(bool(re.fullmatch('[A-Za-z0-9_]{1,16}', player)), 'Invalid local player name')
     heap = bounded(cfg.get('heapMiB', 2048), 512, 8192, 'heapMiB')
     require(type(heap) is int, 'heapMiB must be an integer')
+    # The server always cancels Forge's startup questions. The client may instead confirm them, or leave them to the screen.
+    client_query = cfg.get('clientQueryResult', 'cancel')
+    require(client_query in ('cancel', 'confirm', 'none'), 'clientQueryResult must be cancel, confirm or none')
     java = verify_file(cfg['java']['path'], cfg['java']['sha256'])
     require(java.name.lower() == 'java.exe', 'Select java.exe, not a launcher or shell')
     protected = [plain_path(p) for p in cfg.get('protectedRoots', [])]
@@ -214,10 +217,11 @@ def prepare(profile_path, workspace, name):
     (root / 'client/options.txt').write_text('pauseOnLostFocus:false\nfullscreen:false\nrenderDistance:6\nmaxFps:60\nsoundCategory_master:0.0\nmipmapLevels:0\n', encoding='utf-8')
     (root / 'server/eula.txt').write_text('# Recorded owner acceptance: see runtime.json authorization.\neula=true\n', encoding='utf-8')
     player_uuid = str(uuid.UUID(bytes=hashlib.md5(('OfflinePlayer:' + player).encode()).digest(), version=3))
-    common = ['-Xms256M', f'-Xmx{heap}M', '-Dfml.queryResult=cancel', '-Dfile.encoding=UTF-8']
+    common = ['-Xms256M', f'-Xmx{heap}M', '-Dfile.encoding=UTF-8']
+    query = {'server': 'cancel', 'client': None if client_query == 'none' else client_query}
     for side in ('client', 'server'):
         cp = server_cp if side == 'server' else list(dict.fromkeys(client_cp))
-        args = common + ['-Djava.library.path=' + str(root / 'natives'), '-cp', ';'.join(str(root / p) for p in cp), MAIN, '--tweakClass', SERVER_TWEAKER if side == 'server' else CLIENT_TWEAKER]
+        args = common + ([] if query[side] is None else ['-Dfml.queryResult=' + query[side]]) + ['-Djava.library.path=' + str(root / 'natives'), '-cp', ';'.join(str(root / p) for p in cp), MAIN, '--tweakClass', SERVER_TWEAKER if side == 'server' else CLIENT_TWEAKER]
         if side == 'server':
             args += ['nogui']
         else:
