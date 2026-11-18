@@ -260,23 +260,6 @@ try {
 
     # Evidence packs of Done issues: the named folder must exist and its manifest must match the recorded hash.
     Write-Utf8 $issuePath $issueReady
-    Write-Utf8 (Join-Path $issuesRoot 'IMP-002-second-fixture.md') @'
-# IMP-002: Second Fixture
-
-**Status:** Done
-
-## Evidence Pack
-
-- Applies: Yes (Campaign X).
-
-## Verification
-
-- Planned pack: `workspace/validation/campaigns/campaign-x-<commit>/` (a placeholder the validator must ignore).
-
-## Completion Evidence
-
-- Evidence pack: `workspace/validation/campaigns/campaign-x-abc1234/`, verified.
-'@
     Write-Utf8 $planPath @'
 # Implementation Plan
 
@@ -287,20 +270,42 @@ try {
 | IMP-001 | Fixture | Ready | None |
 | IMP-002 | Second Fixture | Done | None |
 '@
-    Assert-ExitCode 'done issue naming a missing pack' 1 (Invoke-Validator)
+    $packIssue = @'
+# IMP-002: Second Fixture
 
-    $packRoot = Join-Path $testRoot 'validation/campaigns/campaign-x-abc1234'
-    New-Item -ItemType Directory -Path $packRoot -Force | Out-Null
-    $manifestPath = Join-Path $packRoot 'manifest.json'
-    Write-Utf8 $manifestPath '{ "checkpoint": "campaign-x" }'
-    $manifestHash = (Get-FileHash -LiteralPath $manifestPath -Algorithm SHA256).Hash
-    Write-Utf8 (Join-Path $packRoot 'manifest.sha256') "$manifestHash  manifest.json"
-    Assert-ExitCode 'done issue naming a verified pack' 0 (Invoke-Validator)
+**Status:** Done
 
-    Write-Utf8 $manifestPath '{ "checkpoint": "campaign-x", "changed": true }'
-    Assert-ExitCode 'done issue naming a pack whose manifest changed' 1 (Invoke-Validator)
-    Remove-Item -LiteralPath (Join-Path $packRoot 'manifest.json')
-    Assert-ExitCode 'done issue naming a pack without a manifest' 1 (Invoke-Validator)
+## Evidence Pack
+
+- Applies: Yes.
+
+## Verification
+
+- Planned pack: `workspace/<pack-base>-<commit>/`.
+
+## Completion Evidence
+
+- [Evidence pack manifest](<link-base>/<pack-base>-abc1234/manifest.json), verified.
+'@
+    foreach ($packBase in @('validation/campaigns/campaign-x', 'validation/implementation/IMP-002/final')) {
+        $linkBase = 'workspace'
+        if ($packBase.StartsWith('validation/implementation/')) { $linkBase = '../..' }
+        Write-Utf8 (Join-Path $issuesRoot 'IMP-002-second-fixture.md') ($packIssue.Replace('<link-base>', $linkBase).Replace('<pack-base>', $packBase))
+        Assert-ExitCode "missing evidence pack at $packBase" 1 (Invoke-Validator)
+
+        $packRoot = Join-Path $testRoot "$packBase-abc1234"
+        New-Item -ItemType Directory -Path $packRoot -Force | Out-Null
+        $manifestPath = Join-Path $packRoot 'manifest.json'
+        Write-Utf8 $manifestPath '{ "checkpoint": "final" }'
+        $manifestHash = (Get-FileHash -LiteralPath $manifestPath -Algorithm SHA256).Hash
+        Write-Utf8 (Join-Path $packRoot 'manifest.sha256') "$manifestHash  manifest.json"
+        Assert-ExitCode "verified evidence pack at $packBase" 0 (Invoke-Validator)
+
+        Write-Utf8 $manifestPath '{ "checkpoint": "final", "changed": true }'
+        Assert-ExitCode "changed manifest at $packBase" 1 (Invoke-Validator)
+        Remove-Item -LiteralPath $manifestPath
+        Assert-ExitCode "missing manifest at $packBase" 1 (Invoke-Validator)
+    }
 
     Write-Utf8 (Join-Path $issuesRoot 'IMP-002-second-fixture.md') @'
 # IMP-002: Second Fixture

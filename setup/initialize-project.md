@@ -162,6 +162,8 @@ Explain that changing these values after initialization may require package move
 
 The freeze does not forbid a later rename. It makes the rework and migration boundary explicit instead of treating a late rename as ordinary wording.
 
+If documentation backup is enabled, use the approved mod ID for the first backup when available. If a provisional folder was already backed up, prepare the one-time rename preview when the ID is verified. Follow [Project Documentation Backup](../procedures/documentation-backup.md#rename-a-provisional-folder).
+
 ## Resolve Public Mod Description
 
 Use the approved public mod description from `workspace/documentation/requirements.md` when available.
@@ -438,15 +440,15 @@ Record the results.
 
 ## Verify Owner-Side Git Access
 
-Agent-side Git success is not sufficient when the owner will use the repository from another shell, account, or host context.
+Run normal Git from the final checkout under the account and host context the owner will use. On Windows, the recorded [host-run path](../tools/host-run/README.md) can supply this check when you can verify the host process runs under the owner's Windows account and can inspect the exact repository and its owner. For example, compare the host process SID with the verified owner SID and record the checkout's ownership. Record the execution route, verified account, repository path, and result.
 
-Ask the owner to run:
+When that context cannot be verified, or the owner's Git environment differs in a way that affects trust or permissions, ask the owner to run:
 
 ```text
 git status
 ```
 
-from the final repository once its files and Git metadata exist. If Git reports dubious ownership or another trust/permission failure:
+from the final repository once its files and Git metadata exist. If either check reports dubious ownership or another trust/permission failure:
 
 - Record the exact absolute repository path and error.
 - Do not add a broad home, workspace-root, wildcard, or global trust exception.

@@ -36,7 +36,7 @@ template_repository_ref=
 # Documentation and collaboration preferences:
 # Optional absolute path to the owner-designated local defaults shared across projects.
 owner_defaults_path=
-# Optional stable project ID for shared documentation backups. Retain across renames.
+# Optional documentation folder ID. Prefer the verified mod ID and migrate an already-bound provisional folder through the backup procedure.
 documentation_project_id=
 public_documentation_style=split-repository-and-player-facing
 commit_message_style=repo-facing-no-workflow-issue-references

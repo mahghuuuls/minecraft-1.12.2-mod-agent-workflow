@@ -217,10 +217,23 @@ foreach ($record in ($issueRecords | Where-Object { $_.Status -eq 'Done' })) {
     $packSection = [regex]::Match($issueText, '(?ms)^## Evidence Pack\s*$(?<body>.*?)(?=^## |\z)')
     if (-not $packSection.Success) { continue }
     if ($packSection.Groups['body'].Value -notmatch 'Applies:\s*\*{0,2}Yes') { continue }
-    # A planned name such as campaign-a-<commit> is a placeholder, not a path; the lookahead skips names that run into a '<'.
-    $packPaths = @([regex]::Matches($issueText, '(?<path>workspace[/\\]validation[/\\]campaigns[/\\][A-Za-z0-9._-]+)(?![A-Za-z0-9._-]*<)') | ForEach-Object { $_.Groups['path'].Value } | Sort-Object -Unique)
+    # Match both sealed-pack layouts, stopping before a manifest filename and rejecting placeholder names.
+    $packLayout = "(?:campaigns[/\\]|implementation[/\\]$issueIdPattern[/\\])"
+    $packPattern = "(?<base>workspace[/\\]|(?<=\()(?:\.\.[/\\])+)(?<path>validation[/\\]$packLayout[A-Za-z0-9_-][A-Za-z0-9._-]*)(?![A-Za-z0-9._-]|<)"
+    $packPaths = @(foreach ($pack in [regex]::Matches($issueText, $packPattern)) {
+        $packPath = 'workspace/' + $pack.Groups['path'].Value.Replace('\', '/')
+        if ($pack.Groups['base'].Value.StartsWith('..')) {
+            $target = [System.IO.Path]::GetFullPath((Join-Path (Split-Path -Parent $record.Path) $pack.Value))
+            if ($target -ne (Resolve-ProcessPath $packPath)) {
+                Add-ValidationError "Done issue $($record.Id) links outside its workspace evidence layout: $($pack.Value)"
+                continue
+            }
+        }
+        $packPath
+    })
+    $packPaths = @($packPaths | Sort-Object -Unique)
     if ($packPaths.Count -eq 0) {
-        Add-ValidationWarning "Done issue $($record.Id) says its evidence pack applies but names no pack folder under workspace/validation/campaigns: $($record.Path)"
+        Add-ValidationWarning "Done issue $($record.Id) says its evidence pack applies but names no pack folder under workspace/validation/campaigns or workspace/validation/implementation: $($record.Path)"
         continue
     }
     foreach ($packPath in $packPaths) {

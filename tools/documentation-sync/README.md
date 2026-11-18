@@ -1,6 +1,6 @@
 # Documentation Sync
 
-This tool backs up selected documentation and separately approved artwork into a private GitHub repository or a disposable local bare Git repository. Each project has a permanent directory with its own identity manifest. The workspace files and approval ledger remain authoritative, including when a documentation draft is backed up.
+This tool backs up selected documentation and separately approved artwork into a private GitHub repository or a disposable local bare Git repository. Each project has a bound directory with an identity manifest. The workspace files and approval ledger remain authoritative, including when a documentation draft is backed up.
 
 This pilot requires Windows, Git 2.29 or later, and PowerShell 7.4 or later. The document boundary is checked on Windows file handles. Local mode uses file transport to a bare repository. GitHub mode uses SSH to the verified repository on `github.com`.
 
@@ -20,6 +20,20 @@ Preview lists the destination, branch head, exact paths, before and after blob I
 ```
 
 The first approved sync saves its binding after verifying the destination directory is available or matches the project identity. On subsequent runs, the project ID can be read from `workspace/documentation-sync/state.json`. The saved binding pins the destination path, branch, and project ID. `-Branch` defaults to `main`. A branch must exist, or be the declared branch of an empty destination. A verified project can adopt a second workspace by supplying `-AdoptBindingId` with the binding ID from its trusted workspace state. An occupied directory without a matching identity stays pending. IDs found in destination history remain reserved after the directory is removed. For files with no common base, identical copies establish one, different copies stay pending, and a file previously removed in destination history stays pending on attempted reimport.
+
+## Rename a Provisional Project
+
+Use `-RenameToProjectId` on an existing `mod-<32 hex digits>` binding after recording the verified `mod_id` in the workspace. Take a fresh preview and show the owner the source and target folders and changed paths. Run the approved receipt with the same options. For GitHub use the destination and fresh metadata reader described in [Manual GitHub Pilot](#manual-github-pilot).
+
+```powershell
+$rename = @{ Workspace = $workspace; Destination = $fixtureDestination; RenameToProjectId = $modId }
+$review = ./tools/documentation-sync/documentation-sync.ps1 preview @rename | ConvertFrom-Json
+$review | ConvertTo-Json -Depth 10
+# After the owner approves the preview:
+./tools/documentation-sync/documentation-sync.ps1 sync @rename -ApprovedPlan $review.approval
+```
+
+The move uses the backed-up tree and rewrites only its identity marker. The old path remains reserved in history, and its file history still applies to the migrated folder. The destination's current tree and history must leave the target free. File uploads, deletions and adoption use separate plans. The journal recovers a verified rename on retry, including an ordinary backup after interruption. Update the recorded `documentation_project_id` after the tool confirms the new binding.
 
 ## File Selection
 

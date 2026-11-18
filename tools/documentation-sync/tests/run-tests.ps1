@@ -290,6 +290,84 @@ try {
         Assert-Equal (Read-Remote $remote 'sample/project-setup.md') 'The display name is now Renamed Mod.' 'Renamed mod was not backed up.'
     }
 
+    Invoke-Test 'rename preserves backup bytes, ownership and history and resumes from a pushed journal' {
+        $workspace = New-Workspace 'rename'
+        $remote = New-Destination 'rename'
+        $provisional = 'mod-0123456789abcdef0123456789abcdef'
+        $modId = 'fixturemod'
+        [File]::WriteAllText((Join-Path $workspace 'project.properties'), "mod_id=$modId", $utf8)
+        Write-Document $workspace 'project-status.md' 'Backed up.'
+        Write-Document $workspace 'requirements.md' 'Retired later.'
+        $art = 'icon/final/logo.png'
+        [void](Write-Artwork $workspace $art $png)
+        Set-ArtworkManifest $workspace @($art)
+        [void](Invoke-Sync $workspace $remote @{ ProjectId = $provisional; IncludeArtwork = $true })
+        [File]::Delete((Join-Path $workspace 'documentation/requirements.md'))
+        [void](Invoke-Sync $workspace $remote @{ IncludeArtwork = $true; DeletePath = @('requirements.md') })
+
+        $original = Get-State $workspace
+        $originTip = Get-Tip $remote
+        $artBlob = Invoke-FixtureGit @("--git-dir=$remote", 'rev-parse', "main:$provisional/.artwork/$art")
+        Write-Document $workspace 'project-status.md' 'Local edit after backup.'
+        $review = Invoke-Sync $workspace $remote @{ Action = 'preview'; RenameToProjectId = $modId }
+        Assert-Equal $review.projectId $provisional 'Preview did not identify the source folder.'
+        Assert-Equal $review.renameToProjectId $modId 'Preview did not identify the target folder.'
+        Assert-Equal $review.changes.Count 6 'Preview did not list both paths of every moved file.'
+        Assert-Equal (Get-Tip $remote) $originTip 'Preview changed the remote.'
+        Assert-Equal (Get-State $workspace).projectId $provisional 'Preview changed the local binding.'
+
+        $renamed = Invoke-Sync $workspace $remote @{ RenameToProjectId = $modId; ApprovedPlan = $review.approval }
+        Assert-Equal $renamed.status 'synced' 'Approved rename did not sync.'
+        Assert-Equal $renamed.projectId $modId 'Rename did not report the new binding.'
+        Assert-Equal (Invoke-FixtureGit @("--git-dir=$remote", 'rev-parse', 'main^')) $originTip 'Rename did not preserve the existing branch history.'
+        Assert-True (-not (Get-RemotePaths $remote | Where-Object { $_.StartsWith("$provisional/") })) 'The provisional folder was not moved.'
+        Assert-Equal (Read-Remote $remote "$modId/project-status.md") 'Backed up.' 'Rename mixed an unapproved document upload into the move.'
+        Assert-Equal (Invoke-FixtureGit @("--git-dir=$remote", 'rev-parse', "main:$modId/.artwork/$art")) $artBlob 'Rename changed the backed-up artwork.'
+        $identity = Read-Remote $remote "$modId/.documentation-project.json" | ConvertFrom-Json
+        Assert-Equal $identity.bindingId $original.bindingId 'Rename replaced the stable project identity.'
+        Assert-Equal $identity.previousProjectId $provisional 'Rename lost the previous path history.'
+
+        $original.pendingPush = @{ commit = $renamed.pushedRevision; files = $original.files; renameTo = $modId }
+        [File]::WriteAllText((Join-Path $workspace 'documentation-sync/state.json'), (ConvertTo-Json $original -Depth 12), $utf8)
+        $resumed = Invoke-Sync $workspace $remote @{ IncludeArtwork = $true }
+        Assert-Equal $resumed.projectId $modId 'A normal sync failed to recover the pushed rename.'
+        Assert-Equal (Get-State $workspace).pendingPush $null 'Recovery left a journal.'
+        Assert-Equal (Read-Remote $remote "$modId/project-status.md") 'Local edit after backup.' 'Recovery did not continue syncing the new path.'
+
+        $second = New-Workspace 'rename adoption'
+        Write-Document $second 'project-status.md' 'Local edit after backup.'
+        Write-Document $second 'requirements.md' 'Old copy.'
+        $adopted = Invoke-Sync $second $remote @{ Action = 'preview'; ProjectId = $modId; AdoptBindingId = $original.bindingId } -ExpectExit 2
+        Assert-Pending $adopted 'requirements.md' 'path_missing_from_remote_history_tip'
+    }
+
+    Invoke-Test 'rename requires the verified target, an unchanged preview and a free destination' {
+        $workspace = New-Workspace 'blocked rename'
+        $remote = New-Destination 'blocked rename'
+        $provisional = 'mod-fedcba9876543210fedcba9876543210'
+        [File]::WriteAllText((Join-Path $workspace 'project.properties'), 'mod_id=fixturemod', $utf8)
+        Write-Document $workspace 'project-status.md' 'Initial.'
+        [void](Invoke-Sync $workspace $remote @{ ProjectId = $provisional })
+        $wrong = Invoke-Sync $workspace $remote @{ Action = 'preview'; RenameToProjectId = 'wrongmod' } -ExpectExit 2
+        Assert-True ($wrong.error -like '*verified mod_id*') 'Rename accepted a different target than the recorded mod ID.'
+
+        $review = Invoke-Sync $workspace $remote @{ Action = 'preview'; RenameToProjectId = 'fixturemod' }
+        Write-Document $workspace 'project-status.md' 'Updated.'
+        [void](Invoke-Sync $workspace $remote)
+        $updated = Get-Tip $remote
+        $stale = Invoke-Sync $workspace $remote @{ RenameToProjectId = 'fixturemod'; ApprovedPlan = $review.approval } -ExpectExit 2
+        Assert-True ($stale.error -like '*reviewed plan is missing or stale*') 'A changed source reused the rename receipt.'
+        Assert-Equal (Get-Tip $remote) $updated 'Stale rename modified the branch.'
+
+        $other = New-Workspace 'occupied rename target'
+        Write-Document $other 'project-status.md' 'Other project.'
+        [void](Invoke-Sync $other $remote @{ ProjectId = 'fixturemod' })
+        $collision = Invoke-Sync $workspace $remote @{ Action = 'preview'; RenameToProjectId = 'fixturemod' } -ExpectExit 2
+        Assert-True ($collision.error -like '*target already exists*') 'Rename accepted another project as a target.'
+        Assert-Equal (Read-Remote $remote "$provisional/project-status.md") 'Updated.' 'Rejected rename removed the original backup.'
+        Assert-Equal (Read-Remote $remote 'fixturemod/project-status.md') 'Other project.' 'Rejected rename overwrote another project.'
+    }
+
     Invoke-Test 'approval binds exact bytes, paths, destination, and project directory across branch advances' {
         $workspace = New-Workspace 'approval snapshot'
         $remote = New-Destination 'approval snapshot'

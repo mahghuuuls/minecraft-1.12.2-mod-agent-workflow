@@ -144,6 +144,8 @@ Do not choose a mechanism, output format, default state, verbosity, or limits he
 
 Apply the [modded deployment default](../guidelines/project-defaults.md#modpack-compatibility). Identify the gameplay or technical systems this feature shares with other mods and the expected player experience when those mods are present. Record any named first-release integrations, the available modpack reference or a representative set to select in Feasibility Research, and the compatibility questions that could change scope. Distinguish the expectation that two mods work alongside each other from a promise that another mod's content participates in the feature or uses a dedicated integration.
 
+Define what makes content or behavior eligible before asking which named integrations are required. When the intended rule spans mod ecosystems, use named mods or the owner's pack as representative cases for Feasibility Research. Record a named integration as mandatory when the owner requires that particular integration.
+
 ## Broad Mob Compatibility
 
 When the proposed mod promises broad mob compatibility, settle the intended coverage with the owner before approving scope. Record which categories of vanilla and modded mobs should use the feature by default, any opt-in categories, and the intended treatment of bosses and neutral mobs, including whether normal provocation should be required. Identify the representative modpack or mod set for judging any promise about modded mobs.

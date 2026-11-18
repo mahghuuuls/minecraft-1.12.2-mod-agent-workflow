@@ -15,6 +15,7 @@ param(
     [Parameter(ParameterSetName = 'GitHub')] [scriptblock]$ReadGitHubMetadata,
     [string]$Branch = 'main',
     [string]$ProjectId,
+    [string]$RenameToProjectId,
     [string]$AdoptBindingId,
     [string[]]$IncludePath = @(),
     [string[]]$SetRememberedIncludes,
@@ -35,6 +36,7 @@ $pathComparison = [StringComparison]::Ordinal
 if ($IsWindows) { $pathComparison = [StringComparison]::OrdinalIgnoreCase }
 $objectIdPattern = '\A(?:[a-f0-9]{40}|[a-f0-9]{64})\z'
 $bindingIdPattern = '\A[a-f0-9]{32}\z'
+$provisionalIdPattern = '\Amod-[a-f0-9]{32}\z'
 $identityPath = '.documentation-project.json'
 $maxDocumentBytes = 2MB
 $maxArtworkBytes = 10MB
@@ -112,6 +114,11 @@ function Test-SafeRelativePath([string]$RelativePath) {
             $part -match '^(?:con|prn|aux|nul|com[0-9]|lpt[0-9])(?:\.|$)') { return $false }
     }
     return $true
+}
+
+function Test-ProjectId([string]$Id) {
+    return $Id -cmatch '\A[a-z0-9][a-z0-9_-]{0,62}\z' -and
+        (Test-SafeRelativePath $Id) -and -not (Test-CredentialText $Id)
 }
 
 function Test-ExcludedPath([string]$RelativePath) {
@@ -414,11 +421,16 @@ function Read-SyncState {
         if ($null -ne $saved.pendingPush) {
             if ($saved.pendingPush.commit -cnotmatch $objectIdPattern) { throw 'Invalid pending push in sync state.' }
             $saved.pendingPush.files = ConvertTo-BaseFiles $saved.pendingPush.files
+            if ($saved.pendingPush.Contains('renameTo') -and
+                ($saved.projectId -cnotmatch $provisionalIdPattern -or
+                 -not (Test-ProjectId $saved.pendingPush.renameTo) -or $saved.pendingPush.renameTo -cmatch $provisionalIdPattern)) {
+                throw 'Invalid project rename in the pending push.'
+            }
         }
         return $saved
     }
 
-    if (-not $ProjectId) { throw 'The first run requires a permanent -ProjectId.' }
+    if (-not $ProjectId) { throw 'The first run requires -ProjectId.' }
     $binding = [Guid]::NewGuid().ToString('N')
     if ($approvalBinding) { $binding = $approvalBinding }
     if ($AdoptBindingId) { $binding = $AdoptBindingId }
@@ -501,6 +513,21 @@ function Resolve-PendingPush([string]$Tip) {
     # The journal survives a lost push acknowledgement or a crash before baselines were saved.
     $known = Invoke-Git @('cat-file', '-e', "$($pending.commit)^{commit}") -AllowFailure
     if ($known.ExitCode -eq 0 -and (Test-GitAncestor $pending.commit $Tip)) {
+        if ($pending.Contains('renameTo')) {
+            $previousId = $state.projectId
+            $state.projectId = $pending.renameTo
+            try {
+                $renamed = Get-RemoteProject $Tip
+                if ($renamed.previousProjectId -cne $previousId) {
+                    throw 'The destination does not contain the expected project rename.'
+                }
+            }
+            catch {
+                $state.projectId = $previousId
+                throw
+            }
+            $result.projectId = $state.projectId
+        }
         $state.files = $pending.files
         $state.lastVerifiedRevision = $pending.commit
         $state.lastPushedRevision = $pending.commit
@@ -538,7 +565,7 @@ function Get-RemoteProject([string]$Tip) {
         if ($Tip -and (Invoke-Git @('rev-list', '-1', $Tip, '--', $state.projectId)).Output.Trim()) {
             throw 'The project ID is reserved by destination history. Resolve its existing identity or choose a different ID.'
         }
-        return @{ bound = $false; tree = $null; entries = @{} }
+        return @{ bound = $false; tree = $null; entries = @{}; previousProjectId = $null }
     }
     if ($rootEntry.path -cne $state.projectId -or $rootEntry.mode -ne '040000') {
         throw 'The documentation project ID collides with a destination path.'
@@ -558,7 +585,47 @@ function Get-RemoteProject([string]$Tip) {
         $identity.bindingId -cne $state.bindingId) {
         throw 'The occupied documentation directory does not match the saved or explicitly adopted project identity.'
     }
-    return @{ bound = $true; tree = $rootEntry.blob; entries = $entries }
+    $previousId = $null
+    if ($identity.Contains('previousProjectId')) {
+        $previousId = $identity.previousProjectId
+        if ($previousId -cnotmatch $provisionalIdPattern -or $state.projectId -cmatch $provisionalIdPattern) {
+            throw 'The occupied documentation directory has invalid provisional history.'
+        }
+    }
+    return @{ bound = $true; tree = $rootEntry.blob; entries = $entries; previousProjectId = $previousId }
+}
+
+function Get-RenamePlan([hashtable]$Remote, [string]$Tip) {
+    if (-not $Remote.bound -or $state.projectId -cnotmatch $provisionalIdPattern) {
+        throw 'Only an existing bound mod-GUID folder can be renamed to the verified mod ID.'
+    }
+    if ((Get-GitTree $Tip).ContainsKey($RenameToProjectId)) {
+        throw 'The rename target already exists in the destination.'
+    }
+    if ((Invoke-Git @('rev-list', '-1', $Tip, '--', $RenameToProjectId)).Output.Trim()) {
+        throw 'The rename target is reserved by destination history.'
+    }
+
+    $identity = ConvertTo-Json -Compress -InputObject ([ordered]@{
+        schemaVersion = 1; projectId = $RenameToProjectId; bindingId = $state.bindingId; previousProjectId = $state.projectId
+    })
+    $newMarker = Write-Blob $utf8.GetBytes($identity + "`n")
+    $changes = [List[object]]::new()
+    foreach ($path in ($Remote.entries.Keys | Sort-Object -CaseSensitive)) {
+        $entry = $Remote.entries[$path]
+        if ($entry.mode -ceq '040000') { continue }
+        $safePath = (Test-SafeRelativePath $path) -or $path -ceq $identityPath -or
+            ($path.StartsWith($artworkPrefix, [StringComparison]::Ordinal) -and
+             (Test-EligibleArtwork $path.Substring($artworkPrefix.Length)))
+        if ($entry.mode -cne '100644' -or -not $safePath) {
+            throw 'The existing documentation folder contains an unexpected path or file type.'
+        }
+        $blob = $entry.blob
+        if ($path -ceq $identityPath) { $blob = $newMarker }
+        $changes.Add(@{ path = "$($state.projectId)/$path"; action = 'delete'; beforeBlob = $entry.blob; blob = $null })
+        $changes.Add(@{ path = "$RenameToProjectId/$path"; action = 'add'; beforeBlob = $null; blob = $blob })
+    }
+    return @{ changes = $changes.ToArray(); pending = @(); files = $state.files }
 }
 
 function Test-ConfirmedAbsent([string]$RelativePath) {
@@ -642,8 +709,10 @@ function Get-SyncPlan([hashtable]$Local, [hashtable]$Remote, [string]$Tip) {
                 if ($localBlob -cne $baseBlob) { $reason = 'diverged' }
             }
             elseif ($localBlob) {
+                $historyPaths = @("$($state.projectId)/$path")
+                if ($Remote.previousProjectId) { $historyPaths += "$($Remote.previousProjectId)/$path" }
                 if (-not $baseKnown -and $Remote.bound -and
-                    (Invoke-Git @('rev-list', '-1', $Tip, '--', "$($state.projectId)/$path")).Output.Trim()) {
+                    (Invoke-Git (@('rev-list', '-1', $Tip, '--') + $historyPaths)).Output.Trim()) {
                     $reason = 'path_missing_from_remote_history_tip'
                 }
                 else {
@@ -710,6 +779,7 @@ function Get-PlanDigest($ProjectTree, [string]$Anchor) {
     }
     if ($replaceRememberedIncludes) { $snapshot.previousRememberedIncludes = $previousRememberedIncludes }
     if ($IncludeArtwork) { $snapshot.approvedArtwork = $result.approvedArtwork }
+    if ($RenameToProjectId) { $snapshot.renameToProjectId = $RenameToProjectId }
     $json = ConvertTo-Json -InputObject $snapshot -Depth 6 -Compress
     $digest = [Security.Cryptography.SHA256]::HashData($utf8.GetBytes($json))
     return [Convert]::ToHexString($digest).ToLowerInvariant()
@@ -799,7 +869,7 @@ $replaceRememberedIncludes = $PSBoundParameters.ContainsKey('SetRememberedInclud
 try {
     if (-not $IsWindows) { throw 'The local pilot requires Windows for opened-file identity checks.' }
     if ($SharedOwnerDefaults) {
-        if ($ProjectId -or $AdoptBindingId -or $IncludePath.Count -or $replaceRememberedIncludes -or
+        if ($ProjectId -or $RenameToProjectId -or $AdoptBindingId -or $IncludePath.Count -or $replaceRememberedIncludes -or
             $IncludeArtwork -or $DeletePath.Count -or $ApproveBulkDeletionAt) {
             throw 'Shared owner defaults use a separate operation from project backup options.'
         }
@@ -834,6 +904,16 @@ try {
     $statePath = Join-Path $stateDirectory 'state.json'
     $branchRef = "refs/heads/$Branch"
     if (-not $SharedOwnerDefaults) {
+        if ($RenameToProjectId) {
+            if (-not (Test-ProjectId $RenameToProjectId) -or $RenameToProjectId -cmatch $provisionalIdPattern) {
+                throw 'The rename target must be a portable lowercase mod ID.'
+            }
+            if (-not [File]::Exists($statePath) -or $AdoptBindingId -or $IncludePath.Count -or
+                $replaceRememberedIncludes -or $IncludeArtwork -or $DeletePath.Count -or $ApproveBulkDeletionAt) {
+                throw 'Rename an existing binding separately from adoption or file selection and deletion.'
+            }
+            $result.renameToProjectId = $RenameToProjectId
+        }
         if ($AdoptBindingId -and $AdoptBindingId -cnotmatch $bindingIdPattern) { throw 'Invalid adoption binding ID.' }
         if ($ApproveBulkDeletionAt -and ($ApproveBulkDeletionAt -cnotmatch $objectIdPattern -or $DeletePath.Count -eq 0)) {
             throw 'Bulk deletion approval requires the exact remote revision and named deletion paths.'
@@ -869,8 +949,7 @@ try {
         foreach ($path in $DeletePath) {
             if (-not (Test-IncludedDocument $path)) { throw 'A deletion must name an included document by its relative path.' }
         }
-        if ($state.projectId -cnotmatch '\A[a-z0-9][a-z0-9_-]{0,62}\z' -or
-            -not (Test-SafeRelativePath $state.projectId) -or (Test-CredentialText $state.projectId)) {
+        if (-not (Test-ProjectId $state.projectId)) {
             throw 'The project ID must be a portable lowercase directory name of at most 63 characters.'
         }
         $result.projectId = $state.projectId
@@ -912,6 +991,14 @@ try {
         Invoke-SharedOwnerDefaults $tip
     }
     else {
+        if ($RenameToProjectId) {
+            $properties = Read-BackupBytes (Join-Path $workspacePath 'project.properties') 128KB
+            if ($properties.blocked) { throw 'Could not safely read the recorded mod ID.' }
+            $ids = [regex]::Matches($utf8.GetString($properties.bytes), '(?m)^mod_id=(?<id>[a-z0-9_-]+)\r?$')
+            if ($ids.Count -ne 1 -or $ids[0].Groups['id'].Value -cne $RenameToProjectId) {
+                throw 'The rename target must match the verified mod_id recorded in project.properties.'
+            }
+        }
         for ($attempt = 1; $attempt -le 3; $attempt++) {
             $result.attempts = $attempt
             $result.remoteRevision = $tip
@@ -920,20 +1007,35 @@ try {
                 throw 'The destination branch no longer contains the approved preview revision.'
             }
             $remoteProject = Get-RemoteProject $tip
-            $result.excluded.Clear()
-            $localFiles = Get-LocalDocuments
-            $approvedArtwork = @{}
-            if ($IncludeArtwork) {
-                $approvedArtwork = Read-ArtworkApprovals
-                Add-LocalArtwork $localFiles $approvedArtwork
-                $result.approvedArtwork = @($approvedArtwork.Keys | Sort-Object -CaseSensitive | ForEach-Object {
-                    [ordered]@{ path = $_; sha256 = $approvedArtwork[$_] }
-                })
+            if ($RenameToProjectId -ceq $state.projectId -and $remoteProject.previousProjectId) {
+                $result.status = 'unchanged'
+                if ($result.pushedRevision) { $result.status = 'synced' }
+                break
             }
-            $plan = Get-SyncPlan $localFiles $remoteProject $tip
+            $result.excluded.Clear()
+            $approvedArtwork = @{}
+            $pathPrefix = "$($state.projectId)/"
+            $commitMessage = "Back up documentation for $($state.projectId)"
+            if ($RenameToProjectId) {
+                $pathPrefix = ''
+                $commitMessage = "Rename documentation folder to $RenameToProjectId"
+                $plan = Get-RenamePlan $remoteProject $tip
+            }
+            else {
+                $localFiles = Get-LocalDocuments
+                if ($IncludeArtwork) {
+                    $approvedArtwork = Read-ArtworkApprovals
+                    Add-LocalArtwork $localFiles $approvedArtwork
+                    $result.approvedArtwork = @($approvedArtwork.Keys | Sort-Object -CaseSensitive | ForEach-Object {
+                        [ordered]@{ path = $_; sha256 = $approvedArtwork[$_] }
+                    })
+                }
+                $plan = Get-SyncPlan $localFiles $remoteProject $tip
+            }
             $result.changes = @($plan.changes | ForEach-Object {
                 $previousBlob = $null
-                if ($remoteProject.entries.ContainsKey($_.path)) { $previousBlob = $remoteProject.entries[$_.path].blob }
+                if ($RenameToProjectId) { $previousBlob = $_.beforeBlob }
+                elseif ($remoteProject.entries.ContainsKey($_.path)) { $previousBlob = $remoteProject.entries[$_.path].blob }
                 [ordered]@{ path = $_.path; action = $_.action; beforeBlob = $previousBlob; afterBlob = $_.blob }
             })
             $result.pending = $plan.pending
@@ -961,10 +1063,12 @@ try {
             }
             else {
                 Initialize-PushGuard
-                $candidate = New-BackupCommit $plan $tip "$($state.projectId)/" "Back up documentation for $($state.projectId)"
-                foreach ($change in $plan.changes) {
-                    if ($change.action -eq 'delete' -and -not (Test-ConfirmedAbsent $change.path)) {
-                        throw 'A planned deletion is no longer confirmed absent. Run a fresh preview.'
+                $candidate = New-BackupCommit $plan $tip $pathPrefix $commitMessage
+                if (-not $RenameToProjectId) {
+                    foreach ($change in $plan.changes) {
+                        if ($change.action -eq 'delete' -and -not (Test-ConfirmedAbsent $change.path)) {
+                            throw 'A planned deletion is no longer confirmed absent. Run a fresh preview.'
+                        }
                     }
                 }
                 if ($githubPilot) {
@@ -977,10 +1081,14 @@ try {
                 }
                 else { Assert-PlainDirectory $destinationPath }
                 $state.pendingPush = @{ commit = $candidate; files = $plan.files }
+                if ($RenameToProjectId) { $state.pendingPush.renameTo = $RenameToProjectId }
                 Save-SyncState
                 $pushed = Invoke-GuardedPush $candidate $tip
-                if ($pushed.ExitCode -ne 0) {
+                if ($pushed.ExitCode -ne 0 -or $RenameToProjectId) {
                     $observedTip = Get-RemoteTip
+                    if ($pushed.ExitCode -eq 0 -and -not (Test-GitAncestor $candidate $observedTip)) {
+                        throw 'The rename push could not be verified. Retry with the saved journal.'
+                    }
                     Resolve-PendingPush $observedTip
                     if ($result.pushedRevision -cne $candidate) {
                         if ($observedTip -cne $tip) {

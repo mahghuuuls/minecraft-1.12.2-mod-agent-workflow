@@ -8,7 +8,7 @@ The root preference file follows the separate [Shared Owner Defaults procedure](
 
 - Read the authoritative [local owner defaults](../guidelines/process-control.md#local-owner-defaults). Automatic backups require an explicit saved approval in its Shared Documentation Backup section and a pinned private GitHub repository name, numeric ID, and branch. Read the owner's current restrictions before invoking the tool. Keep manual operation when approval is absent or the owner has paused automatic backups.
 - Confirm the documentation repository is separate from the process and mod source repositories. Treat credentials as an environment prerequisite. Keep them in the existing authenticated GitHub and SSH mechanisms.
-- Use the documentation project ID already bound in `workspace/documentation-sync/state.json`, if present. Otherwise record `documentation_project_id` in the ignored `workspace/project.properties` as soon as backup is enabled. Use the verified mod ID for an existing mod when available. For a new project without a mod ID, use a permanent unique lowercase ID such as `mod-` followed by a GUID without punctuation. Retain it through renames and later setup writes. If the other properties are deferred, record the ID alone. A collision or unverified occupied directory requires owner resolution.
+- Use the folder ID already bound in `workspace/documentation-sync/state.json` for ordinary backups. For the first backup, record `documentation_project_id` in the ignored `workspace/project.properties`. Use the verified mod ID when available. If backups need to start sooner, record a provisional `mod-` followed by a lowercase GUID without punctuation, and record the ID alone if other settings are deferred. When the mod ID is verified, follow the one-time rename procedure below. A collision or unverified occupied directory requires owner resolution.
 
 ## Run a Backup
 
@@ -23,6 +23,13 @@ For files outside the default allowlist, use the manual flow to get approval for
 Manual approval covers the project's directory and the exact proposed paths and contents. A forward branch advance affecting only other directories can be refreshed and pushed under the same receipt. Request a new preview approval if the project's directory or planned upload changes. Stop on a branch rewind or loss of previously verified history.
 
 Report the outcome separately from project approvals. The checkpoint result is recorded in ignored `workspace/documentation-sync/checkpoint-result.json` when a configured run starts. The per-file bases and confirmed remote revision live in `workspace/documentation-sync/state.json`. If the runner could not start or record an outcome, carry the pending backup in the handoff and retry at the next eligible trigger.
+
+## Rename a Provisional Folder
+
+1. Confirm the verified `mod_id` is recorded in `workspace/project.properties`. If the provisional ID was only recorded locally and no backup used it, set `documentation_project_id` to the verified mod ID for the first backup.
+2. For an existing provisional folder, [preview the rename](../tools/documentation-sync/README.md#rename-a-provisional-project) against its pinned destination. Show the old and new paths and the scope of the move. Obtain owner approval for that preview.
+3. Apply the approved receipt with the same rename options. The tool preserves the stable binding, existing backup files and Git history. It stops if the source tree changed or if the target path is occupied or reserved. Preview again if the proposed move changes.
+4. After the tool verifies the move and saves the new binding, update `documentation_project_id` to match it. Run the next ordinary backup against the recovered binding. If a rename was pushed before the local save completed, the saved journal resolves it on retry.
 
 ## Optional Artwork Backup
 
