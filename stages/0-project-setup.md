@@ -358,13 +358,15 @@ Start from these defaults unless the owner changes them:
 | Repository `CHANGELOG.md` | Agent | Preserve useful release history, including concise technical notes when they help players, pack authors, or maintainers. |
 | Distribution-platform release changelog | Agent | Prepare short paste-ready text containing only player-noticeable changes; first public releases default to `Initial release`. |
 | Icon | Shared | Use the [release ownership default](../guidelines/project-defaults.md#release-ownership). Record any supplied final art, request to handle all artwork personally, or explicit deferral. An owner who wants to select the icon can select from the agent's preview. |
-| Screenshots | Owner | Do not plan, request, capture, select, or prepare screenshots unless explicitly assigned. |
+| Screenshots | Resolve at setup | Apply the owner's choice first. With no stated preference, select agent capture when launch and capture are authorized on a suitable runtime, otherwise owner capture. Record one of the [four screenshot paths](8-release-presentation.md#screenshot-paths) and its resolved property value. |
 | CurseForge upload | Owner | Do not research upload mechanics, publication page setup, or final platform field choices unless explicitly assigned. |
 | Release JAR generation | Agent | Generate or identify the normal release artifact when later stages require a release handoff. |
 | Final publication verification | Agent | Verify approved local handoff information by default; external publication checks require owner-provided context or explicit approval. |
 | Dedicated server testing | Agent where executable; owner for remaining observations | Expected by default for any mod that loads on a server. Use the selected development server or isolated packaged server. Run accessible checks through console/Toolkit and inspect evidence; ask the owner only for observations requiring them. Omit only for a mod that never loads server-side, with the reason recorded. |
 | Test instance testing | Agent for the approved isolated route; recorded launch owner for a shared instance | Expected by default: the packaged JAR on Cleanroom. Prepare the selected profile, run accessible checks and preserve evidence under the applicable runtime procedure. Use owner-assisted cards for the remaining observations. Omit only with a recorded waiver. |
 | External multiplayer testing | Owner | Do not attempt, research, or repeatedly request external multiplayer validation unless explicitly assigned. |
+
+For `release_owner_screenshots`, record `agent` for agent capture, `owner` for owner capture, `shared` for help preparing owner captures, or `deferred`. A saved “Ask each project” or a preference that requires unavailable permissions needs a setup decision. An existing approved project value still applies until the owner changes it. Screenshot selection grants no additional launch, Toolkit, or desktop access.
 
 Apply the defaults directly and summarize them as one decision packet. Ask only what the owner wants to override or what project evidence makes ambiguous. Do not ask every row separately. Approval of the complete Project Setup artifact approves the recorded defaults and overrides; a separate matrix approval is unnecessary.
 

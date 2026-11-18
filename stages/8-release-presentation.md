@@ -10,6 +10,8 @@ This stage is about how the mod is presented to players and modpack authors and 
 
 > Do the public materials accurately explain the mod, and is the release handoff ready for owner-managed publication?
 
+For a [copy-only Change Cycle](../workflows/change-cycle.md#public-copy-corrections), follow [Copy-only corrections](#copy-only-corrections). That section defines the inputs, steps and completion criteria for that route. The full release sequence applies when producing a release.
+
 ## Required Input
 
 - `workspace/documentation/project-setup.md`, including the release ownership matrix and public documentation style
@@ -25,7 +27,7 @@ This stage is about how the mod is presented to players and modpack authors and 
 - `workspace/documentation/agent-diagnostics-toolkit-feedback.md` when the toolkit was used
 - `procedures/release-build-and-discovery.md` when release validation is agent-managed
 
-Implementation must be approved before this stage begins.
+For a release, Implementation must be approved before this stage begins. A copy-only correction uses the existing approved release implementation and handoff.
 
 ## Objectives
 
@@ -120,6 +122,15 @@ Act as a release documentation editor.
 - Continue independent release work while the owner considers the artwork.
 - Use a focused question for a branching public claim or ownership decision; group related low-risk copy decisions into a compact review packet.
 - Never submit files to distribution platforms or publish releases.
+
+## Copy-only corrections
+
+Start from the approved cycle intake, released version and handoff, current public wording and approved evidence for the claim. Scope the presentation record to the text under review.
+
+1. Check the actual diff and build inputs. A correction that explains an existing rule, such as which addons already qualify, can use this route. A broader compatibility promise, behavior change, packaged README, metadata edit or in-mod asset returns to Change Cycle impact analysis before proceeding.
+2. Edit only the affected public copy. Check its claims against the released behavior, verify affected links and apply the destination's formatting checks. Apply [Independent Mod Page Review](#independent-mod-page-review) with its existing materiality and audience criteria. Record the evidence and review result in the cycle's `release-presentation.md`.
+3. Show the exact wording or diff to the owner and obtain materials approval. Recheck the final file scope and commit the approved documentation under the recorded Git policy. Deliver the copy and its documentation revision. The owner handles any edit on the live listing.
+4. Complete this stage when the scoped copy review and materials approval are recorded and the documentation commit is identified. Link the existing release handoff. Keep its release version, source revision, JAR, checksum and publication state. This route requires no new release build, discovery launch, changelog for a new version, or upload packet. Return to the invoking cycle for closure.
 
 ## Public Documentation Guidance
 
@@ -304,7 +315,9 @@ Record the preview or carry-forward path and the owner's decision in `release-pr
 
 ### Screenshot paths
 
-- **Agent Captures Screenshots:** the agent stages each shot, launches the game, captures, reads and selects the pictures itself, and delivers them with their platform captions (see [Agent-Captured Screenshots](#agent-captured-screenshots)). The default when Project Setup authorizes agent game launches (an isolated runtime or the development client) and the owner's defaults do not choose another path.
+Use the assignment approved in [Project Setup](0-project-setup.md#release-ownership-matrix). For an older setup, use its recorded ownership even when the property is missing. If both are absent or the chosen path is no longer feasible, resolve that decision once against the current preferences and launch permissions, then record it.
+
+- **Agent Captures Screenshots:** the agent stages each shot, launches the game, captures, reads and selects the pictures itself, and delivers them with their platform captions (see [Agent-Captured Screenshots](#agent-captured-screenshots)).
 - **Owner Provides Screenshots:** the owner captures and selects them. The agent may still propose a shot list and stage scenarios, as described below.
 - **Agent Helps Prepare Screenshots:** the agent additionally selects, orders, crops, or captions the owner's captures.
 - **Screenshots Deferred:** screenshot work is postponed. Do not propose a shot list until the owner reopens it.
@@ -313,7 +326,7 @@ Screenshots must show actual implemented behavior under every path, and must nev
 
 ### Screenshot Suggestions
 
-When the agent cannot launch the game, the owner takes the screenshots, and **Owner Provides Screenshots** is the path. That does not mean the agent has nothing to contribute.
+For **Owner Provides Screenshots** and **Agent Helps Prepare Screenshots**, the owner supplies the captures. Stage a suggested scene only within the permissions for that instance.
 
 Propose a shot list even when capture is owner-managed. The agent knows which behavior was implemented, which of it is visible, and which is invisible without setup. The owner knows what the game actually looks like. Offer the list once as a compact packet and do not chase it if the owner declines or defers.
 

@@ -17,7 +17,7 @@
 
 Omit this section when the request is a feature, enhancement, or refactor.
 
-- Reporter and report source:
+- Pre-cycle intake reference and reporter (link the existing evidence):
 - Mod version, loader, runtime, or modpack:
 - Other installed mods, when relevant:
 - Reported steps, expected result, observed result:
@@ -73,7 +73,8 @@ Omit this section when the request is a feature, enhancement, or refactor.
 
 ## Release Classification
 
--
+- New release or public-copy correction:
+- For copy-only work, released behavior evidence and confirmation that all edited files are outside packaged outputs:
 
 ## Risks And Required Validation
 

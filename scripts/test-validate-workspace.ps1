@@ -151,6 +151,28 @@ try {
     }
     Write-Utf8 $planPath $planReady
 
+    $plainRow = '| IMP-001 | Fixture | Vertical Slice | None |'
+    $linkedRow = '| [IMP-001: Fixture](issues/IMP-001-fixture.md) | Fixture | Vertical Slice | None |'
+    $linkedPlan = $planNoStatus.Replace($plainRow, $linkedRow)
+    Write-Utf8 $planPath $linkedPlan
+    Assert-ExitCode 'linked issue in a status-free summary' 0 (Invoke-Validator)
+    Write-Utf8 $planPath ($linkedPlan.Replace('issues/IMP-001-fixture.md', 'issues/missing.md'))
+    Assert-ExitCode 'stale link even though the ID exists' 1 (Invoke-Validator)
+    foreach ($examplePlan in @($planNoStatus, $linkedPlan)) {
+        Write-Utf8 $planPath ($examplePlan.Replace('IMP-001', 'IMP-999'))
+        Assert-ExitCode 'missing file in a status-free summary' 1 (Invoke-Validator)
+    }
+    Write-Utf8 $planPath ($planNoStatus.Replace('| Fixture |', '| Done |'))
+    Assert-ExitCode 'title is not a legacy status column' 0 (Invoke-Validator)
+    Write-Utf8 $planPath $planReady
+
+    $duplicatePath = Join-Path $issuesRoot 'IMP-001-duplicate.md'
+    Write-Utf8 $duplicatePath $issueReady
+    Write-Utf8 $planPath $linkedPlan
+    Assert-ExitCode 'duplicate issue ID within one scope' 1 (Invoke-Validator)
+    Remove-Item -LiteralPath $duplicatePath
+    Write-Utf8 $planPath $planReady
+
     $cycleRoot = Join-Path $documentationRoot 'cycles/CYCLE-001-fixture'
     $cycleIssuesRoot = Join-Path $cycleRoot 'issues'
     New-Item -ItemType Directory -Path $cycleIssuesRoot -Force | Out-Null
@@ -169,6 +191,15 @@ try {
 | IMP-001 | Cycle Fixture | Done | None |
 '@
     Assert-ExitCode 'same issue identifier in a separate artifact root' 0 (Invoke-Validator)
+
+    $cycleOnlyPath = Join-Path $cycleIssuesRoot 'IMP-998-other-cycle.md'
+    Write-Utf8 $cycleOnlyPath $issueReady
+    Write-Utf8 $planPath ($planNoStatus.Replace('IMP-001', 'IMP-998'))
+    Assert-ExitCode 'plain ID exists only in another cycle' 1 (Invoke-Validator)
+    Remove-Item -LiteralPath $cycleOnlyPath
+    Write-Utf8 $planPath ($linkedPlan.Replace('issues/IMP-001-fixture.md', 'cycles/CYCLE-001-fixture/issues/IMP-001-cycle-fixture.md'))
+    Assert-ExitCode 'link to the same ID in another cycle' 1 (Invoke-Validator)
+    Write-Utf8 $planPath $planReady
 
     $activeCycleStatus = @'
 # Project Status
@@ -428,7 +459,7 @@ Results file: `workspace/validation/staging/cyc2-final/running-notes.md`
         throw "Validator did not warn about the unlinked session map. Output: $($unlinked.Output)"
     }
 
-    Write-Host 'Workspace validator tests passed: valid state, stage statuses with a date and a note, Not Applicable stages and earlier record tables accepted (the active table checked strictly), a plan without a status column (with the issue roll-up printed), and cycle-scoped identifiers accepted; evidence packs of Done issues checked; a session map without a criterion-to-card table rejected before its campaign and accepted with one, a session-map card without a results line rejected and a recorded one accepted, for a work-folder campaign and for a change-cycle map that names its results file (cards by identifier, maps counted, an unlinked map warned); change-cycle issues with a status note or the older bold form read; invalid status, missing stage artifacts, ledger or plan disagreement, and multiple active issues rejected.' -ForegroundColor Green
+    Write-Host 'Workspace validator tests passed: valid state, stage statuses with a date and a note, Not Applicable stages and earlier record tables accepted (the active table checked strictly), plain and linked issue summaries with or without a status column (missing, duplicate, stale and cross-cycle targets rejected), and cycle-scoped identifiers accepted; evidence packs of Done issues checked; a session map without a criterion-to-card table rejected before its campaign and accepted with one, a session-map card without a results line rejected and a recorded one accepted, for a work-folder campaign and for a change-cycle map that names its results file (cards by identifier, maps counted, an unlinked map warned); change-cycle issues with a status note or the older bold form read; invalid status, missing stage artifacts, ledger or plan disagreement, and multiple active issues rejected.' -ForegroundColor Green
 } finally {
     $resolvedTestRoot = [System.IO.Path]::GetFullPath($testRoot)
     $resolvedTempRoot = [System.IO.Path]::GetFullPath([System.IO.Path]::GetTempPath())

@@ -267,26 +267,60 @@ foreach ($group in ($issueRecords | Group-Object Scope | Sort-Object Name)) {
 $planFiles = @(Get-ChildItem -LiteralPath $documentationRoot -Recurse -File -Filter 'implementation-plan.md' -ErrorAction SilentlyContinue)
 foreach ($plan in $planFiles) {
     $lineNumber = 0
-    foreach ($line in Get-Content -LiteralPath $plan.FullName) {
+    $inSummary = $false
+    $inIssueTable = $false
+    $statusColumn = -1
+    foreach ($line in Get-Content -Encoding UTF8 -LiteralPath $plan.FullName) {
         $lineNumber++
-        if ($line -notmatch "^\s*\|\s*(?<id>$issueIdPattern)\s*\|") { continue }
-        $id = $Matches['id']
-        $cells = @($line.Trim().Trim('|').Split('|') | ForEach-Object { Normalize-MarkdownValue $_ })
-        $planStatus = $null
-        foreach ($cell in $cells) {
-            if ($issueStatuses -contains $cell) {
-                $planStatus = $cell
-                break
-            }
+        if ($line -match '^#{1,2}\s+') {
+            $inSummary = $line -match '^##\s+Issue Summary\s*$'
         }
-        if ($null -eq $planStatus) { continue }
-        $matchingIssues = @($issueRecords | Where-Object { $_.Scope -eq $plan.Directory.FullName -and $_.Id -eq $id })
-        if ($matchingIssues.Count -eq 0) {
-            Add-ValidationError "Implementation plan references $id with status $planStatus, but no issue file exists ($($plan.FullName):$lineNumber)."
+        if ($line -notmatch '^\s*\|') {
+            $inIssueTable = $false
             continue
         }
-        if ($matchingIssues[0].Status -ne $planStatus) {
-            Add-ValidationError "Status disagreement for ${id}: plan says '$planStatus', issue file says '$($matchingIssues[0].Status)' ($($plan.FullName):$lineNumber)."
+        $cells = @($line.Trim().Trim('|').Split('|') | ForEach-Object { Normalize-MarkdownValue $_ })
+        if (-not $inIssueTable) {
+            $headers = @($cells | ForEach-Object { ([string]$_).ToLowerInvariant() })
+            $statusColumn = [array]::IndexOf($headers, 'status')
+            $issueHeader = $headers[0] -match '^(?:issue(?: id| and title)?|id)$'
+            $inIssueTable = $inSummary -or ($issueHeader -and $statusColumn -ge 0)
+            continue
+        }
+        $cell = $cells[0]
+        if ($cell -match '^:?-+:?$') { continue }
+        $target = $null
+        if ($cell -match "^\[(?<id>$issueIdPattern)\b[^\]]*\]\((?<path>.+)\)$") {
+            $id = $Matches['id']
+            $target = $Matches['path']
+        } elseif ($cell -match "^(?<id>$issueIdPattern)$") {
+            $id = $Matches['id']
+        } else {
+            Add-ValidationError "Expected an issue ID or linked issue in the first cell ($($plan.FullName):$lineNumber): $cell"
+            continue
+        }
+
+        $matchingIssues = @($issueRecords | Where-Object { $_.Scope -eq $plan.Directory.FullName -and $_.Id -eq $id })
+        if ($matchingIssues.Count -ne 1) {
+            Add-ValidationError "Implementation plan references $id but found $($matchingIssues.Count) matching issue files in this artifact root ($($plan.FullName):$lineNumber)."
+            continue
+        }
+        $issue = $matchingIssues[0]
+        if ($null -ne $target) {
+            try {
+                $relativePath = [Uri]::UnescapeDataString(($target -split '#', 2)[0].Trim('<', '>'))
+                $linkedPath = [IO.Path]::GetFullPath((Join-Path $plan.Directory.FullName $relativePath))
+                if ($linkedPath -ne $issue.Path -or -not (Test-Path -LiteralPath $linkedPath -PathType Leaf)) {
+                    Add-ValidationError "Link for $id should resolve to $($issue.Path) ($($plan.FullName):$lineNumber): $target"
+                }
+            } catch {
+                Add-ValidationError "Invalid issue link for $id ($($plan.FullName):$lineNumber): $target"
+            }
+        }
+        if ($statusColumn -lt 0) { continue }
+        $legacyStatus = [regex]::Match([string]$cells[$statusColumn], $leadingIssueStatusPattern)
+        if ($legacyStatus.Success -and $legacyStatus.Groups['status'].Value -ne $issue.Status) {
+            Add-ValidationError "Status disagreement for ${id}: plan says '$($cells[$statusColumn])', issue file says '$($issue.Status)' ($($plan.FullName):$lineNumber)."
         }
     }
 }

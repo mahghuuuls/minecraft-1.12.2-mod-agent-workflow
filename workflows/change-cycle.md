@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Deliver one approved feature, bug fix, compatibility update, or refactor against an existing approved project baseline.
+Deliver one approved change against an existing project baseline, including a correction to public documentation for an existing release.
 
 ## When to Use
 
@@ -36,7 +36,7 @@ If the repository has no approved baseline, use Existing Mod Assessment first.
 Act as a change-impact coordinator before acting as an implementer.
 
 - Reread the authoritative [local owner defaults](../guidelines/process-control.md#local-owner-defaults) before planning this cycle.
-- Verify the baseline version and source revision before planning the change.
+- Verify the baseline version and release source revision before planning the change. When a later approved copy-only commit is present, check its documented scope against the diff and retain the release revision for artifact identity.
 - Treat a reported defect as a claim to confirm, not as an established fact, before proposing any route.
 - Determine whether the baseline records a reported publication, and apply the branching recommendation in `guidelines/collaboration-guidelines.md` before the cycle's first commit.
 - Use focused questions for branching impact decisions and compact decision packets for related low-risk route recommendations.
@@ -89,7 +89,7 @@ When another release occurred while the cycle was parked, compare its baseline w
 
 ## Reported Defect Confirmation
 
-A change request that reports a defect is a claim, not an established fact. Confirm it before proposing a route.
+For a new report against an approved baseline, investigate before opening a Change Cycle. Record the report under a **Defect intake** heading in `workspace/documentation/project-status.md` with a stable report reference (an issue URL or a local date and short name), affected version, evidence and outcome. Keep the active workflow, branch and release baseline intact during triage. If a cycle is already active, use its intake or issue for a report in scope. An unrelated report can wait at intake until the active cycle closes.
 
 This applies to any report of incorrect behavior, whoever reported it. It does not apply to a feature request, enhancement, or refactor, where there is nothing to reproduce.
 
@@ -101,7 +101,7 @@ Gather what the report needs to be actionable:
 - Logs covering the affected launch or action
 - The exact steps taken, the expected result, and the observed result
 
-Investigate before asking the reporter or the owner for more. A log, a configuration file, or the relevant code path frequently settles the question without launching anything; follow Investigate Before Asking in `guidelines/process-control.md`. When confirmation needs a running game, the owner performs the launch and the agent inspects the resulting evidence, as with any other manual check.
+Investigate before asking the reporter or the owner for more. A log, a configuration file, or the relevant code path frequently settles the question without launching anything; follow Investigate Before Asking in `guidelines/process-control.md`. When confirmation needs a running game, use the launch and control permissions recorded for the specific runtime in Project Setup. Announce an authorized graphical launch and run the repeatable check. Ask the owner only for an owner-managed launch, an unavailable interaction, or an observation the available evidence cannot establish. An approved isolated runtime can establish a pack-specific failure only if it contains the relevant inputs.
 
 Record exactly one outcome:
 
@@ -110,11 +110,11 @@ Record exactly one outcome:
 - **Not This Mod:** the cause is another mod, a configuration or installation error, or the reporter's environment. No cycle is required.
 - **Works As Designed:** the behavior matches an approved requirement. No fix is required.
 
-Record the outcome and its evidence label in `change-intake.md`.
+Record the outcome and evidence label with the report. For **Needs Info**, name the missing evidence and resume the same entry when it arrives. Close **Not This Mod** and **Works As Designed** at intake. For **Reproduced**, propose starting a cycle and obtain the ordinary workflow-start approval. Once opened, link the intake entry and retained evidence from `change-intake.md` and record the cycle ID back on the report. Reuse this investigation when the route is prepared.
 
 For a **Reproduced** outcome, preserve the smallest reliable reproduction available and identify the boundary where a future regression could be detected. This is intake evidence, not a premature test-design decision. When no stable reproduction can be retained, record why and identify the evidence that established the cause.
 
-Do not propose a stage route until the outcome is **Reproduced**, unless the owner explicitly accepts proceeding on an unconfirmed report. Record that acceptance and its consequence: the plan may target the wrong cause, and its verification cannot demonstrate that the reported problem is fixed.
+Do not propose a stage route until the outcome is **Reproduced**, unless the owner explicitly accepts proceeding on an unconfirmed report. Record that acceptance and its consequence in the report. The plan may target the wrong cause, and verification cannot establish that the reported problem was fixed. Then use the ordinary cycle-start approval.
 
 **Not This Mod** and **Works As Designed** may still deserve a change when the mod made the mistake easy to make, such as an unclear error message, a confusing config path, or missing documentation. Route that as its own request judged on its own merits, not as a defect fix.
 
@@ -143,40 +143,48 @@ Release Presentation owns release artifact validation and handoff. A later reque
 
 Present the complete intake and proposed route for explicit approval before revising canonical documents or code.
 
+### Public-copy corrections
+
+For an existing release, use the [copy-only Release Presentation route](../stages/8-release-presentation.md#copy-only-corrections) when the requested wording follows from approved behavior and the changed files are outside all packaged outputs. Establish both from the proposed diff, release evidence and build inputs. A README included in the JAR is a packaged resource. A new compatibility promise needs requirements review even if only one sentence changes.
+
+Record the evidence and file scope in the intake. Carry forward the approved implementation and other unaffected stages, record Implementation Plan as Not Applicable to this correction, and revisit Release Presentation for the copy. If the correction changes scope or the agent cannot establish these conditions, route to the earliest affected stage under the ordinary impact analysis.
+
 ## Sequence
 
-1. Run the Workflow Repository Update Check in `guidelines/process-control.md`. Then confirm the entry conditions and baseline. When the mod declares MixinBooter, read the version the test instance's Cleanroom reports again and apply Mixins in `guidelines/project-defaults.md`.
+1. Run the Workflow Repository Update Check in `guidelines/process-control.md` before proposing the workflow. For a defect, finish pre-cycle intake above first. Confirm the baseline and obtain workflow-start approval for a change that warrants a cycle. For runtime-affecting work when the mod declares MixinBooter, read the version the test instance's Cleanroom reports again and apply Mixins in `guidelines/project-defaults.md`.
 2. Create the cycle ID and artifact root.
 3. Mark the workflow **In Progress**.
 4. Determine the working branch from the baseline's publication record.
-5. Confirm a reported defect and record its outcome before analyzing impact.
+5. For a defect, link the prior confirmation or the owner's acceptance to proceed unconfirmed.
 6. Conduct Change Intake and Impact Analysis.
 7. Mark the intake checkpoint **Awaiting Approval** and present the route, including the recommended working branch.
 8. Revise it until the owner approves it.
 9. Create the approved working branch, when one was approved, before the first cycle commit.
 10. Record stage dispositions in the authoritative `project-status.md` ledger.
 11. Mark affected canonical stages **Needs Revision**.
-12. Execute each **Revisit** stage in normal stage order, applying [Stage Transition Preferences](../guidelines/process-control.md#stage-transition-preferences).
-13. Execute Implementation Plan using the cycle artifact root, including its approval and authorization packet.
-14. Execute Implementation using the cycle issues.
-15. Execute Release Presentation using the cycle artifact root, including release artifact validation and handoff when agent-managed by the ownership matrix.
+12. Execute only the **Revisit** stages, in normal order, applying [Stage Transition Preferences](../guidelines/process-control.md#stage-transition-preferences).
+13. When the route revisits Implementation Plan, use the cycle artifact root and its approval and authorization packet.
+14. When the route revisits Implementation, execute its approved cycle issues.
+15. For a release, execute Release Presentation with the applicable artifact validation and handoff. For a [public-copy correction](#public-copy-corrections), use the scoped copy review and its completion criteria.
 16. Produce `<artifact-root>/cycle-summary.md`.
 17. Offer the merge back into `project_default_branch` when the cycle used a separate working branch, and merge only under explicit authorization.
-18. Set the manual publication state to **Ready for Publication**, update `project-baseline.md` with the release-ready version and source revision, and update `project-state.md`.
+18. For a new release, set the manual publication state to **Ready for Publication** and update the baseline with its version and release revision. For copy-only work, record the documentation commit separately in the cycle summary, link the existing release handoff, and preserve the baseline version, release revision, checksum and publication state. Refresh `project-state.md` for either route.
 19. Complete the [workflow retrospective](../guidelines/process-control.md#workflow-feedback-log) and present the completed cycle for explicit approval. Apply the [optional Workflow Changes offer](../guidelines/process-control.md#optional-post-closure-workflow-changes) when the owner opted in.
-20. After the approval and any approved merge and push, give the owner the [publication packet](../stages/8-release-presentation.md#publication-packet) as the workflow's last message.
+20. After approval and any approved merge and push, deliver the [publication packet](../stages/8-release-presentation.md#publication-packet) for a new release. For a copy-only change, deliver the approved wording or file and its commit for any owner-managed listing edit.
 
 Do not enter a later selected stage until every selected prerequisite is approved. Discovery of additional impact follows the backward-transition rules in `guidelines/process-control.md`.
 
 ## Cycle Summary
 
-Create `<artifact-root>/cycle-summary.md` from `setup/artifact-templates/cycle-summary.md`. The template is the authoritative summary structure. Record the baseline and final source revisions, canonical identifiers changed, implemented issues, verification, limitations, artifact/checksum, resulting release-ready baseline, manual publication state, and any later owner-reported publication result in the matching sections.
+Create `<artifact-root>/cycle-summary.md` from `setup/artifact-templates/cycle-summary.md`. The template is the authoritative summary structure. For a release, record the baseline and final source revisions, canonical identifiers changed, implemented issues, verification, limitations, release handoff, publication state, and any later owner-reported publication result. For copy-only work, record the documentation revision, review result and prior release handoff.
 
 It records the delta and traceability; it must not duplicate complete canonical documents.
 
 ## Completion Criteria
 
-The agent-managed work is ready for manual publication when:
+For a copy-only cycle, close with the owner's explicit approval after the intake route, applicable copy review, approved documentation commit and cycle summary are complete. The summary distinguishes that commit from the prior release handoff and records any owner-managed listing edit.
+
+For a cycle producing a new release, the agent-managed work is ready for manual publication when:
 
 - A reported defect has a recorded confirmation outcome, or an owner-accepted decision to proceed without one.
 - A reproduced defect retains a minimal reproduction and candidate detection boundary, or records why a stable reproduction is unavailable.
@@ -186,7 +194,7 @@ The agent-managed work is ready for manual publication when:
 - Release Presentation, including artifact validation and handoff when agent-managed, is approved.
 - The cycle summary records the final handoff.
 
-Close the Change Cycle once the release is validated, the canonical baseline records **Ready for Publication**, and the owner explicitly approves the completed cycle.
+Close a release-producing Change Cycle once the release is validated, the canonical baseline records **Ready for Publication**, and the owner explicitly approves the completed cycle.
 
 A later request begins a new Change Cycle with a new identifier.
 

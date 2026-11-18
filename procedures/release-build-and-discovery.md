@@ -56,6 +56,6 @@ The build and discovery are complete when:
 
 - The jar was built from the clean release revision and is the only normal distributable jar under `build/libs/`.
 - Every inspection the stage requires has a recorded result read from the jar itself.
-- The instance log confirms the expected mod ID and version, and the owner confirms the displayed name, version, and expected logo or approved no-logo state.
+- The instance log confirms the expected mod ID and version. The retained Mods list picture inspected by the agent, or the owner's observation under step 8, confirms the displayed name, version and expected logo or approved no-logo state. One usable observation satisfies this check.
 - The isolated runtime stopped cleanly and released its ownership lock, or the shared instance matches its reset baseline and holds no lock note from this project.
 - The handoff records all of the above and nothing was uploaded.

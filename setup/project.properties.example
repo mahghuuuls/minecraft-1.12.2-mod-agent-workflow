@@ -65,7 +65,8 @@ release_owner_mod_page=agent
 release_owner_changelog=agent
 release_owner_platform_changelog=agent
 release_owner_icon=shared
-release_owner_screenshots=owner
+# Resolve at Project Setup from owner preference and permitted capture options.
+release_owner_screenshots=
 release_owner_curseforge_upload=owner
 release_owner_release_jar_generation=agent
 release_owner_final_publication_verification=agent

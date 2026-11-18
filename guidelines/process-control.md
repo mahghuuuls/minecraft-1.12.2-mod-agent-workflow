@@ -40,7 +40,7 @@ A new mod may defer its final repository URL and directory name until Project In
 
 ## Workflow Control
 
-Every mod-development session belongs to one mod-development workflow:
+[Pre-cycle defect intake](../workflows/change-cycle.md#reported-defect-confirmation) may investigate a report against an approved baseline before workflow selection. Once work enters a mod-development workflow, select one:
 
 | Workflow | Definition | Use |
 | --- | --- | --- |

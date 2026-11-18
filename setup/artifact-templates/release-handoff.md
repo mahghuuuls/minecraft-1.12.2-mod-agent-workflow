@@ -42,6 +42,10 @@
 - Launch runtime and verified isolated shutdown or shared-instance reset:
 - For reused packaged gameplay evidence, matching JAR SHA-256 and runtime basis:
 
+## Revalidation History
+
+When revalidating, append a dated entry. Record the expected release identity, canonical file state, verified recovery copy or missing original, isolated build result and hash, assigned checks, and final canonical file state. Keep the original approved artifact fields above as the comparison target.
+
 ## Accepted Validation Waivers
 
 -

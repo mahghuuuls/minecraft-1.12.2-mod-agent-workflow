@@ -4,8 +4,8 @@
 
 - Cycle ID:
 - Baseline version:
-- New version:
-- Source revision:
+- New release version and release source revision, when applicable:
+- For copy-only corrections, documentation commit and link to the existing release handoff:
 
 ## Requested Outcome
 

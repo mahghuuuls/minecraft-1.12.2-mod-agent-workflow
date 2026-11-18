@@ -28,7 +28,7 @@ This policy is an invariant. A mod project must not override it through Project 
 - An agent-managed release build or release revalidation must begin from the approved clean source revision and use the approved clean build command. After validation, the exact upload-ready JAR must remain in `build/libs`; do not move the only copy into a workspace evidence directory.
 - `build/libs` may contain auxiliary outputs such as sources or Javadoc JARs when the approved build produces them, but exactly one normal distributable JAR must be identified as upload-ready. A clean release build must remove stale normal distributable JARs from older versions.
 - "Latest" means the artifact built and validated from the currently approved release version and source revision. Never select a JAR by modification time or filename alone.
-- Evidence packs, release validation directories, and other retained locations may contain byte-identical copies. They are evidence copies, not the canonical upload source.
+- Evidence packs, release validation directories, and other retained locations may contain byte-identical copies. They are evidence copies, not the canonical upload source. Before rebuilding an approved release, follow [Revalidate Release](../procedures/revalidate-release.md) to preserve the approved bytes and isolate the rebuild.
 - `release-handoff.md` must record the canonical `build/libs` path, filename, size, and checksum. Immediately before owner upload, verify that the file still exists at that path and matches the handoff checksum.
 - A later development or release build may replace transient contents under `build/libs`. After any later build or source change, do not call an artifact upload-ready until Release Presentation or `procedures/revalidate-release.md` has validated the current `build/libs` artifact again.
 
@@ -236,7 +236,7 @@ Release and publication defaults are:
 - Repository `CHANGELOG.md`: agent-managed
 - Distribution-platform release changelog: agent-managed and delivered as paste-ready chat text during Release Presentation
 - Icon: shared for a new mod. The agent prepares a preview and the owner selects the artwork. Apply the [Stage 8 icon decision](../stages/8-release-presentation.md#icon-decision) for an existing baseline or an owner override.
-- Screenshots: owner-managed
+- Screenshots: resolve the capture assignment during [Project Setup](../stages/0-project-setup.md#release-ownership-matrix) and carry its approved value into release.
 - CurseForge upload: owner-managed
 - Release JAR generation: agent-managed
 - Final publication verification: agent-managed for local handoff information only

@@ -114,6 +114,8 @@ An approved setup may be carried forward. Revisit Project Setup when the active 
 
 After Project Setup, inspect `project-status.md`, repository state, approved setup, and approved baseline artifacts.
 
+For a defect reported against an approved baseline with no active cycle, use [Reported Defect Confirmation](workflows/change-cycle.md#reported-defect-confirmation) before selecting a new workflow. A pending or closed report does not occupy the active workflow slot.
+
 Select exactly one workflow:
 
 | Condition | Workflow |

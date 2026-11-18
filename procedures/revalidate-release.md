@@ -22,7 +22,7 @@ If source code, resources, version metadata, dependencies, configuration default
 - Approved `release-handoff.md`
 - Approved `project-baseline.md` when one exists
 - Active mod repository
-- Exact approved source revision
+- Exact approved release source revision, canonical JAR path and SHA-256 from the handoff. Reconcile any disagreement with the approved baseline before starting.
 - Approved build command and expected normal artifact pattern
 - Accepted validation waivers and owner-managed validation boundaries
 
@@ -37,18 +37,15 @@ If source code, resources, version metadata, dependencies, configuration default
 
 ## Procedure
 
-1. Inspect the active mod repository, current branch, HEAD revision, and working tree.
-2. Compare HEAD with the approved handoff and baseline revision.
-3. If the revisions differ or tracked changes are present, stop and classify the drift before building. Revalidation requires the exact approved clean revision.
-4. Confirm the approved build environment, build command, expected artifact pattern, and normal release artifact.
-5. Stop stale development processes when they would lock or contaminate build outputs.
-6. Run the clean approved build and all automated checks included by that command.
-7. Confirm that the clean build left exactly one normal distributable JAR under `<mod-repository>/build/libs/`, with no stale normal distributable JAR from an older version. Select that file and record its path, filename, size, and SHA-256 checksum.
-8. Inspect archive integrity, processed mod metadata, version, Minecraft/loader compatibility fields, author/source fields, Java class target, bundled libraries, and prohibited development-only contents as relevant.
-9. Run only the runtime, compatibility, or multiplayer checks explicitly assigned for this revalidation. Carry forward accepted waivers without repeatedly asking for waived owner-managed checks unless new evidence makes one release-blocking.
-10. Compare the new artifact identity and inspection results with the approved handoff.
-11. Update `release-handoff.md` with a dated revalidation record containing the source revision, command, environment, result, artifact identity, checksum, differences, and remaining waivers.
-12. Report whether the release is reproduced, differs without an explained source change, or is blocked by a failed check.
+1. Read the release identity from the approved handoff. Record the repository state, canonical JAR path, expected filename, size and SHA-256. Compare HEAD and tracked changes with the release revision. A documented copy-only commit may explain the difference. Resolve any other drift before writing to the active checkout's build directory. Use the exact release revision for the build.
+2. Inspect the canonical path before running a build. If the file matches the approved hash, copy it to a new run-specific evidence directory outside all build outputs and verify the copy against that hash. If the file is missing, record that fact and check any retained evidence copy against the handoff. If the canonical file exists with a different hash, preserve it in place, report the discrepancy, and establish its identity before replacing anything.
+3. Record the recovery path or the absence of approved bytes in the dated revalidation record before starting the build. On resumption, verify any recorded recovery copy and recheck the canonical path. Keep a verified recovery copy through completion.
+4. Make a separate clean checkout or worktree of the approved release revision in the run's staging directory outside the active mod repository. Verify its HEAD and tracked cleanliness. Stage the approved build inputs and use the recorded environment. Resolve the build output directory and check that it is independent of the active checkout's `build/` and the recovery copy. If the build uses a shared absolute output path, isolate that path before running it.
+5. Run the approved clean build and its automated checks there. Confirm there is exactly one normal distributable JAR in that checkout's `build/libs/`. Record its filename, size and SHA-256 and compare them with the handoff.
+6. If the build fails or the identity differs, retain the build result and any differing candidate as evidence. Recheck the original canonical and recovery files against the preflight record. Report the failure or difference with both identities when available. Leave the approved handoff identity and baseline intact.
+7. For a matching candidate, inspect archive integrity, processed metadata, version, loader, class target, bundled libraries and development-only exclusions. Run the runtime checks assigned for this revalidation and carry forward applicable waivers. A failed inspection or runtime check follows the failure path in step 6.
+8. On success, recheck the canonical path. Keep a matching file in place. If it is missing, copy the verified candidate to a fresh temporary file in the canonical `build/libs/`, verify the temporary file's SHA-256, and rename it to the expected filename without overwrite. If another writer supplied the destination, verify its identity before continuing. If an unexpected file occupies the destination or another normal distributable JAR is present, report the conflict before calling the directory upload-ready.
+9. Read back the canonical SHA-256. Append the result, original and rebuilt identities, canonical path, recovery location, checks and any limitations to the dated handoff record. Only a matching canonical file with passing assigned checks completes revalidation successfully.
 
 ## Completion
 
@@ -56,8 +53,8 @@ Revalidation is complete when:
 
 - The exact approved clean source revision was used.
 - The clean build and assigned checks passed, or failures are reported plainly.
-- The normal release artifact was identified and inspected.
-- The validated upload-ready JAR remains under `<mod-repository>/build/libs/`, and any retained copy elsewhere is identified as evidence rather than the upload source.
+- A successful revalidation identifies and inspects the matching release artifact. A failed attempt records whether the previously approved bytes are recoverable.
+- On success, the validated upload-ready JAR is present under `<mod-repository>/build/libs/`. On failure, the dated finding preserves the approved identity and records the actual canonical-file state.
 - The checksum and comparison result are recorded.
 - No source or public release material was changed.
 - No upload or publication occurred.
