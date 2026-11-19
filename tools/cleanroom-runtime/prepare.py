@@ -53,6 +53,28 @@ def java_args(path, args):
     path.write_text('\n'.join('"' + str(a).replace('\\', '/').replace('"', '\\"') + '"' for a in args) + '\n', encoding='utf-8')
 
 
+# Properties the tool sets itself, and namespaces that could move files, load unpinned native code, open listeners,
+# change the console encoding the session reads, or route network traffic. jvmArgs is for diagnostic switches only.
+TOOL_PROPERTIES = {'file.encoding', 'java.library.path', 'fml.queryResult', 'fml.coreMods.load', 'line.separator', 'path.separator'}
+REFUSED_PREFIXES = ('java.', 'javax.', 'jdk.', 'sun.', 'com.sun.', 'user.', 'file.', 'native.', 'os.', 'stdout.', 'stderr.',
+                    'org.lwjgl.', 'jna.', 'jnidispatch.', 'net.java.games.', 'log4j', 'minecraft.', 'http.', 'https.', 'ftp.', 'socksProxy',
+                    'socksNonProxy', 'networkaddress.')
+
+
+def jvm_properties(values):
+    """Extra JVM options from the profile: diagnostic Java system properties only, never ones the tool or the isolation depends on."""
+    require(isinstance(values, list) and len(values) <= 16, 'jvmArgs must be a list of at most 16 entries')
+    seen = set()
+    for value in values:
+        match = re.fullmatch(r'-D([A-Za-z0-9_.-]{1,128})=([!#-~]{0,512})', value) if isinstance(value, str) else None
+        require(match is not None, 'jvmArgs entries must be -Dname=value system properties without spaces or quotes')
+        require(match.group(1) not in TOOL_PROPERTIES, f'jvmArgs cannot set the tool-owned property {match.group(1)}')
+        require(not match.group(1).startswith(REFUSED_PREFIXES), f'jvmArgs cannot set {match.group(1)}: its namespace can affect isolation, native code, logging or networking')
+        require(match.group(1) not in seen, f'jvmArgs sets {match.group(1)} twice')
+        seen.add(match.group(1))
+    return list(values)
+
+
 def prepare(profile_path, workspace, name):
     require(platform.system() == 'Windows', 'This runtime importer currently supports Windows x64 only')
     require(platform.machine().lower() in ('amd64', 'x86_64'), 'Windows x64 is required')
@@ -76,6 +98,7 @@ def prepare(profile_path, workspace, name):
     # The server always cancels Forge's startup questions. The client may instead confirm them, or leave them to the screen.
     client_query = cfg.get('clientQueryResult', 'cancel')
     require(client_query in ('cancel', 'confirm', 'none'), 'clientQueryResult must be cancel, confirm or none')
+    extra_jvm = jvm_properties(cfg.get('jvmArgs', []))
     java = verify_file(cfg['java']['path'], cfg['java']['sha256'])
     require(java.name.lower() == 'java.exe', 'Select java.exe, not a launcher or shell')
     protected = [plain_path(p) for p in cfg.get('protectedRoots', [])]
@@ -213,11 +236,11 @@ def prepare(profile_path, workspace, name):
     for side in ('client', 'server'):
         game = root / side
         (game / 'config/devtool').mkdir(parents=True, exist_ok=True)
-        (game / 'config/devtool/devtool.cfg').write_text('client {\n B:allowActions=true\n B:requestChannel=true\n B:applyOnJoin=false\n}\ninbox {\n B:enabled=true\n B:openOnLocalJoin=true\n B:localJoinOperator=false\n}\njoin {\n B:enabled=false\n}\n', encoding='utf-8')
+        (game / 'config/devtool/devtool.cfg').write_text('client {\n B:allowActions=true\n B:requestChannel=true\n B:applyOnJoin=false\n B:dismissTutorial=true\n}\ninbox {\n B:enabled=true\n B:openOnLocalJoin=true\n B:localJoinOperator=false\n}\njoin {\n B:enabled=false\n}\n', encoding='utf-8')
     (root / 'client/options.txt').write_text('pauseOnLostFocus:false\nfullscreen:false\nrenderDistance:6\nmaxFps:60\nsoundCategory_master:0.0\nmipmapLevels:0\n', encoding='utf-8')
     (root / 'server/eula.txt').write_text('# Recorded owner acceptance: see runtime.json authorization.\neula=true\n', encoding='utf-8')
     player_uuid = str(uuid.UUID(bytes=hashlib.md5(('OfflinePlayer:' + player).encode()).digest(), version=3))
-    common = ['-Xms256M', f'-Xmx{heap}M', '-Dfile.encoding=UTF-8']
+    common = ['-Xms256M', f'-Xmx{heap}M', '-Dfile.encoding=UTF-8', *extra_jvm]
     query = {'server': 'cancel', 'client': None if client_query == 'none' else client_query}
     for side in ('client', 'server'):
         cp = server_cp if side == 'server' else list(dict.fromkeys(client_cp))

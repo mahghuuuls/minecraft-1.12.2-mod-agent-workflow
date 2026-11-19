@@ -172,6 +172,78 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual('failed', result['status'])
         self.assertIn('deadline', str(result['errors']))
 
+    MARK = '[DevToolkit][MARK] side=SERVER worldTick=1 label='
+
+    def owner_wait_session(self, steps, release, timeout_seconds=15):
+        """Run a session; when it records owner-wait, send the server console lines from another thread."""
+        plan = {'schema': 1, 'timeoutSeconds': timeout_seconds, 'stopSeconds': 1, 'steps': steps}
+        with contextlib.redirect_stdout(self.sink), patch.object(Game, 'command', lambda _: [sys.executable, str(FAKE), 'server']):
+            session = Session(self.root, plan)
+
+            def releaser():
+                end = time.monotonic() + 10
+                while time.monotonic() < end:
+                    if any(e['event'] == 'owner-wait' for e in session.events) and 'server' in session.games:
+                        time.sleep(.5)
+                        for line in release:
+                            session.record('test-sent', line=line)
+                            session.games['server'].send_console(line)
+                            time.sleep(.3)
+                        return
+                    time.sleep(.05)
+            thread = threading.Thread(target=releaser)
+            thread.start()
+            result = session.run()
+            thread.join()
+        names = [e['event'] for e in session.events]
+        return result, session, names
+
+    def test_owner_wait_ends_only_on_a_fresh_toolkit_mark(self):
+        result, session, names = self.owner_wait_session(
+            [{'action': 'start', 'side': 'server', 'timeout': 3},
+             {'action': 'ownerWait', 'side': 'server', 'contains': 'OWNER_DONE'}],
+            ['OWNER_DONE said in chat', self.MARK + 'OWNER_DONE_LATER', self.MARK + 'OWNER_DONE'])
+        self.assertEqual('passed', result['status'], result)
+        self.assertEqual(1, names.count('owner-wait-released'))
+        sent = [e['line'] for e in session.events if e['event'] == 'test-sent']
+        self.assertEqual(3, len(sent))
+        last_sent = max(i for i, n in enumerate(names) if n == 'test-sent')
+        self.assertGreater(names.index('owner-wait-released'), last_sent)
+
+    def test_owner_wait_ignores_a_mark_written_before_it(self):
+        result, session, names = self.owner_wait_session(
+            [{'action': 'start', 'side': 'server', 'timeout': 3},
+             {'action': 'console', 'side': 'server', 'text': self.MARK + 'OWNER_DONE', 'contains': 'label=OWNER_DONE', 'timeout': 3},
+             {'action': 'ownerWait', 'side': 'server', 'contains': 'OWNER_DONE'}], [], timeout_seconds=5)
+        self.assertEqual('failed', result['status'])
+        self.assertIn('owner-wait', names)
+        self.assertIn('deadline', str(result['errors']))
+        self.assertGreater(names.index('failure'), names.index('owner-wait'))
+        self.assertNotIn('owner-wait-released', names)
+
+    def test_owner_wait_needs_a_running_process(self):
+        result = self.session([{'action': 'start', 'side': 'server', 'timeout': 3},
+                               {'action': 'interrupt', 'side': 'server'},
+                               {'action': 'ownerWait', 'side': 'server', 'contains': 'OWNER_DONE'}], allowInterruptionTest=True)
+        self.assertEqual('failed', result['status'])
+        self.assertIn('not running', str(result['errors']))
+
+    def test_owner_wait_has_no_timer_of_its_own(self):
+        for step in ({'action': 'ownerWait', 'side': 'server', 'contains': 'OWNER_DONE', 'timeout': 600},
+                     {'action': 'ownerWait', 'side': 'server', 'contains': 'X'},
+                     {'action': 'ownerWait', 'side': 'server', 'contains': 'two words'},
+                     {'action': 'ownerWait', 'side': 'server', 'contains': '{run}_DONE'},
+                     {'action': 'ownerWait', 'contains': 'OWNER_DONE'}):
+            with self.subTest(step=step), self.assertRaises(RuntimeErrorDetail):
+                validate_plan({'schema': 1, 'steps': [step]})
+        validate_plan({'schema': 1, 'steps': [{'action': 'ownerWait', 'side': 'client', 'contains': 'OWNER_DONE'}]})
+
+    def test_evidence_keeps_the_launch_arguments(self):
+        (self.root / 'server.args').write_text('"-Dexample.flag=true"\n')
+        result = self.session([{'action': 'start', 'side': 'server', 'timeout': 3}])
+        self.assertEqual('passed', result['status'])
+        self.assertIn('example.flag', (Path(result['evidence']) / 'server.args').read_text())
+
     def test_unsafe_relative_paths(self):
         for value in ('../x', '/absolute', 'a/../b', 'a\\b', 'C:/x', 'x:stream', 'NUL.txt', 'a./b'):
             with self.subTest(value=value), self.assertRaises(RuntimeErrorDetail):

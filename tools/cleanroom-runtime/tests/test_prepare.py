@@ -141,6 +141,36 @@ class PrepareTests(unittest.TestCase):
             self.invoke()
         self.assertFalse((self.workspace / 'runtime').exists())
 
+    def test_jvm_system_properties_reach_both_sides(self):
+        self.cfg['jvmArgs'] = ['-Dmixin.debug.export=true', '-Dexample.path=C:/work/out']
+        root = Path(self.invoke()['root'])
+        for side in ('client', 'server'):
+            text = (root / (side + '.args')).read_text()
+            self.assertIn('"-Dmixin.debug.export=true"', text)
+            self.assertIn('"-Dexample.path=C:/work/out"', text)
+            self.assertLess(text.index('mixin.debug.export'), text.index('"-cp"'))
+
+    def test_jvm_args_accept_only_new_system_properties(self):
+        for value, message in ((['-Xmx8G'], 'system properties'), (['-Dname=two words'], 'system properties'),
+                               (['-Dname="quoted"'], 'system properties'), (['-Dfml.queryResult=confirm'], 'tool-owned'),
+                               (['-Djava.library.path=C:/x'], 'tool-owned'), (['-Da=1', '-Da=2'], 'twice'),
+                               (['-Dcom.sun.management.jmxremote.port=9010'], 'namespace'), (['-Dorg.lwjgl.librarypath=C:/x'], 'namespace'),
+                               (['-Duser.dir=C:/x'], 'namespace'), (['-Dlog4j.configurationFile=C:/x.xml'], 'namespace'),
+                               (['-Dfml.coreMods.load=a.B'], 'tool-owned'), (['-Dhttps.proxyHost=x'], 'namespace'), (['-Djnidispatch.path=C:/x.dll'], 'namespace'),
+                               ('-Da=1', 'list'), (['-Da=1'] * 17, 'list')):
+            with self.subTest(value=value):
+                self.cfg['jvmArgs'] = value
+                with self.assertRaisesRegex(RuntimeErrorDetail, message):
+                    self.invoke()
+                self.assertFalse((self.workspace / 'runtime').exists())
+
+    def test_generated_toolkit_settings_dismiss_the_tutorial(self):
+        root = Path(self.invoke()['root'])
+        for side in ('client', 'server'):
+            text = (root / side / 'config/devtool/devtool.cfg').read_text()
+            client_section = text[text.index('client {'):text.index('}', text.index('client {'))]
+            self.assertIn('B:dismissTutorial=true', client_section)
+
     def test_toolkit_channel_input_cannot_be_imported(self):
         self.cfg['files'] = [{**self.pin(self.source / 'client.jar'), 'target': 'client/config/devtool/client-inbox/status.json'}]
         with self.assertRaisesRegex(RuntimeErrorDetail, 'Tool-managed'):

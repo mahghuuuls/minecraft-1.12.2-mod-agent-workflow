@@ -33,7 +33,7 @@ Use the Toolkit for supported deterministic actions. The tool can pair its own i
 
 Read the final result, console captures, Toolkit answers and bundle results. Inspect saved screenshots yourself. Verify gameplay claims against their specific expected state or behavior. A zero exit, a ready marker or a request acknowledgment alone does not establish a mod's criterion. Report expected failures separately from unexpected errors, and preserve failed attempts.
 
-Use [Manual Validation](../guidelines/manual-validation.md) for remaining owner-assisted observations, such as motion, sound, feel or unsupported interaction. Do not add owner launch steps to an already authorized automatic session. Do not use desktop-control APIs merely because Toolkit actions are approved.
+Use [Manual Validation](../guidelines/manual-validation.md) for remaining owner-assisted observations, such as motion, sound, feel or unsupported interaction. Do not add owner launch steps to an already authorized automatic session. When owner cards run inside an isolated session, hold the session with the runtime's `ownerWait` step between cards and release each wait with a fresh marker only when the owner reports the card done; never release a wait on a timer, because a timer cannot tell an owner pause from the end of the work. Do not use desktop-control APIs merely because Toolkit actions are approved.
 
 ## Shutdown And Handoff
 

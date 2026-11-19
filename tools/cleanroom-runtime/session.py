@@ -7,6 +7,7 @@ import re
 import shutil
 import socket
 import subprocess
+import threading
 import time
 import uuid
 
@@ -54,11 +55,17 @@ def validate_plan(plan):
     bounded(plan.get('stopSeconds', 30), 1, 60, 'stopSeconds')
     steps = plan.get('steps')
     require(isinstance(steps, list) and 0 < len(steps) <= 500, 'Use 1..500 session steps')
-    actions = {'start', 'stop', 'console', 'bundle', 'request', 'screenshot', 'pair', 'interrupt', 'waitLog', 'expectExit'}
+    actions = {'start', 'stop', 'console', 'bundle', 'request', 'screenshot', 'pair', 'interrupt', 'waitLog', 'ownerWait', 'expectExit'}
     for step in steps:
         require(step.get('action') in actions, 'Unknown session action')
         if step['action'] != 'pair':
             require(step.get('side') in ('server', 'client'), 'Each action needs a runtime side')
+        if step['action'] == 'ownerWait':
+            # Only the agent's fresh marker or the session deadline ends it; a timer cannot release an owner pause.
+            require('timeout' not in step, 'ownerWait has no timeout; the session deadline bounds it')
+            marker = step.get('contains', '')
+            require(isinstance(marker, str) and bool(re.fullmatch('[A-Za-z0-9_.-]{4,128}', marker)), 'ownerWait needs a Toolkit mark label of 4..128 letters, digits, _ . or -')
+            continue
         bounded(step.get('timeout', 120), .1, 600, 'step timeout')
         if step['action'] in ('console', 'request'):
             value = step.get('text', '')
@@ -107,6 +114,24 @@ class Game:
 
     def wait(self, test, timeout):
         return wait_until(test, timeout, [g.p for g in self.session.games.values() if g.p and not g.expected_exit], self.session.deadline)
+
+    def fresh_mark(self, label):
+        """A test for a Toolkit mark line with exactly this label, written to this console log after now.
+
+        Reads only the new bytes on each poll and checks complete lines, so an ordinary log or chat line cannot release it."""
+        pattern = re.compile(rb'\[DevToolkit\]\[MARK\].* label=' + re.escape(label.encode('ascii')) + rb'(?:\s|$)')
+        with self.log_path.open('rb') as stream:
+            state = {'position': stream.seek(0, 2), 'partial': b''}
+
+        def test():
+            with self.log_path.open('rb') as stream:
+                stream.seek(state['position'])
+                chunk = stream.read()
+            state['position'] += len(chunk)
+            lines = (state['partial'] + chunk).split(b'\n')
+            state['partial'] = lines.pop()
+            return any(pattern.search(line.rstrip(b'\r')) for line in lines)
+        return test
 
     def ready(self, timeout):
         if self.side == 'server':
@@ -209,13 +234,16 @@ class Session:
         self.evidence = self.root / 'evidence' / (datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + '-' + uuid.uuid4().hex[:8])
         self.games, self.events, self.port = {}, [], None
         self.job_factory = job_factory
+        self.record_lock = threading.Lock()
         self.deadline = time.monotonic() + plan.get('timeoutSeconds', 600)
 
     def record(self, event, **values):
-        row = {'time': datetime.datetime.now().isoformat(), 'event': event, **values}
-        self.events.append(row)
-        print(json.dumps(row), flush=True)
-        write_json(self.evidence / 'events.json', self.events)
+        # One writer at a time: events.json is replaced through a fixed temporary name.
+        with self.record_lock:
+            row = {'time': datetime.datetime.now().isoformat(), 'event': event, **values}
+            self.events.append(row)
+            print(json.dumps(row), flush=True)
+            write_json(self.evidence / 'events.json', self.events)
 
     def verify(self):
         check_tree(self.root)
@@ -318,6 +346,12 @@ class Session:
             self.record('expected-exit', side=side, exitCode=game.p.returncode)
         elif action == 'waitLog':
             game.wait(lambda: step['contains'] in game.log(), timeout)
+        elif action == 'ownerWait':
+            require(game.p is not None and game.p.poll() is None, f'{side} process is not running; nothing can release ownerWait')
+            test = game.fresh_mark(step['contains'])
+            self.record('owner-wait', side=side, contains=step['contains'])
+            game.wait(test, max(.1, self.deadline - time.monotonic()))
+            self.record('owner-wait-released', side=side, contains=step['contains'])
 
     def run(self):
         check_tree(self.root)
@@ -328,6 +362,10 @@ class Session:
             self.evidence.mkdir(parents=True)
             write_json(self.evidence / 'plan.json', self.plan)
             shutil.copyfile(self.root / 'runtime.json', self.evidence / 'runtime.json')
+            # The launch arguments, including any profile jvmArgs, belong to this run's evidence.
+            for name in ('profile.json', 'client.args', 'server.args'):
+                if (self.root / name).exists():
+                    shutil.copyfile(self.root / name, self.evidence / name)
             for source in Path(__file__).parent.glob('*.py'):
                 shutil.copyfile(source, self.evidence / source.name)
             self.verify()
