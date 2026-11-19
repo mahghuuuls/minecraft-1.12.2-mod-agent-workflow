@@ -1,11 +1,12 @@
 # Isolated Cleanroom Runtime
 
-Prepare cached, hash-pinned Minecraft 1.12.2 Cleanroom files into independent client/server directories, then run a finite JSON test session directly through Java. No modpack launcher is needed for these launches. [The workflow procedure](../../procedures/isolated-cleanroom-validation.md) owns when to select this route and the permission record.
+Prepare cached, hash-pinned Minecraft 1.12.2 Cleanroom or standard Forge files into independent client/server directories, then run a finite JSON test session directly through Java. No modpack launcher is needed for these launches. [The workflow procedure](../../procedures/isolated-cleanroom-validation.md) owns when to select this route and the permission record.
 
 ## Requirements And Limits
 
-- Windows x64, CPython 3.11 or later, and a suitable installed Java runtime. Tested with Cleanroom 0.7.14-alpha and Java 25.0.3.
-- A complete cached Cleanroom 0.7.x installation: the three MultiMC-format metadata files, matching libraries, Minecraft client, Minecraft 1.12 assets, and an installed dedicated server with its five-line `win_args.txt`.
+- Windows x64, CPython 3.11 or later, and a suitable installed Java runtime. Tested with Cleanroom 0.7.14-alpha and Java 25.0.3, and with standard Forge 14.23.5.2864 and Java 8 (1.8.0_462). The tool reads the Java version from the installation's `release` file (the JDK root, or above `jre/` in a JDK 8) and refuses a Java it cannot identify; a Forge profile needs Java 8, and a Cleanroom profile a Java its pinned metadata lists in `compatibleJavaMajors` (25 for Cleanroom 0.7.14-alpha), and at least Java 9. Java 8 cannot read an `@` argument file, so for it the tool passes the same verified arguments on the command line, refusing one longer than the Windows limit.
+- For standard Forge (`"loader": "forge"`): a launcher installation of Forge for 1.12.2 (its `versions/forge-<version>/forge-<version>.json`, the vanilla `versions/1.12.2/1.12.2.json`, the matching `libraries` tree and the client JAR) and the vanilla 1.12.2 server JAR. Both JARs are checked against the vanilla version file's SHA-1.
+- For Cleanroom profiles: a complete cached Cleanroom 0.7.x installation: the three MultiMC-format metadata files, matching libraries, Minecraft client, Minecraft 1.12 assets, and an installed dedicated server with its five-line `win_args.txt`.
 - Pinned Agent Test Toolkit 1.8.0 or later on each side that uses its control channel. Include runtime support mods required by the selected profile, such as Fugue and Scalar Legacy, and the project JAR being tested.
 - Explicit authorization recorded for the selected local tests and applicable owner EULA acceptance. Graphical launches are separately represented by `clientLaunch`.
 
@@ -13,17 +14,21 @@ This version imports existing files. It does not install Java, download Minecraf
 
 ## Prepare A Profile
 
-Start with [profile.example.json](examples/profile.example.json). Replace its paths and hashes with verified local inputs. Keep the completed profile under the project's ignored workspace. The example deliberately does not grant consent.
+Start with [profile.example.json](examples/profile.example.json), or [profile.forge.example.json](examples/profile.forge.example.json) for standard Forge. Replace its paths and hashes with verified local inputs. Keep the completed profile under the project's ignored workspace. The example deliberately does not grant consent.
 
 | Field | Meaning |
 | --- | --- |
-| `schema`, `minecraft`, `cleanroom` | Schema 1, fixed Minecraft 1.12.2, exact selected Cleanroom version |
+| `schema`, `minecraft` | Schema 1, fixed Minecraft 1.12.2 |
+| `loader` | Optional `cleanroom` (default) or `forge` for standard Forge |
+| `cleanroom` | Cleanroom profiles: exact selected Cleanroom version |
+| `forge` | Forge profiles: exact Forge version for 1.12.2, such as `14.23.5.2864`; the Forge version file must name that Forge library |
 | `java` | Absolute `java.exe` path and SHA-256 |
 | `authorization` | Current approval source, `eulaAccepted`/`eulaSource`, `toolkitActions`, `serverLaunch` and `clientLaunch` decisions |
-| `metadata` | Absolute path and SHA-256 for each selected cached metadata file |
+| `metadata` | Absolute path and SHA-256 for each selected cached metadata file: Cleanroom's `net.minecraft.json`, `net.minecraftforge.json` and `org.lwjgl3.json`; for Forge, `net.minecraft.json` is the vanilla launcher's `1.12.2.json` and `net.minecraftforge.json` the Forge version file |
 | `libraryRoots` | Maven-layout cache roots to search; only exact artifact hashes from the pinned metadata match |
 | `clientJar` | Minecraft 1.12.2 client path and SHA-256; also checked against the metadata's SHA-1 |
-| `serverInstall`, `serverArgsSha256` | Existing installed server root and the hash of its Cleanroom `win_args.txt` |
+| `serverInstall`, `serverArgsSha256` | Cleanroom profiles: existing installed server root and the hash of its Cleanroom `win_args.txt` |
+| `serverJar` | Forge profiles: the vanilla 1.12.2 server JAR path and SHA-256. The Forge server runs from Forge's library list plus this JAR, which carries its own libraries |
 | `assets` | Existing assets root containing `indexes/1.12.json` and `objects/` |
 | `mods` | Exact JAR path, SHA-256 and `sides` (`client`, `server`, or both) |
 | `files` | Exact configuration, script or bundle inputs: source `path`, SHA-256 and relative `target` |
@@ -52,7 +57,7 @@ Cleanroom supplies some mod ids itself, with no JAR in `mods`. Pass them with `-
 ./tools/mod-jar/mod-jar.cmd check -Folder C:/work/example/workspace/runtime/campaign-a/client/mods -Provided cleanroom,mixinbooter,fermiumbooter
 ```
 
-A list that leaves one out lets a separate JAR of that mod pass the check, and the game then stops at launch on the duplicate. For another Cleanroom version, read the list again from a log of that runtime that entered a world: the ids in `Client attempting to join with <n> mods : ...` that no JAR in its `mods` folder supplies.
+A list that leaves one out lets a separate JAR of that mod pass the check, and the game then stops at launch on the duplicate. Standard Forge provides only `minecraft`, `mcp`, `FML` and `forge`; MixinBooter is a separate JAR there. For another Cleanroom version, read the list again from a log of that runtime that entered a world: the ids in `Client attempting to join with <n> mods : ...` that no JAR in its `mods` folder supplies.
 
 ## Run A Session
 
@@ -104,4 +109,4 @@ See the [validation record](VALIDATION.md) for the tested runtime profile, actua
 py -3 -m unittest discover -s ./tools/cleanroom-runtime/tests -v
 ```
 
-These tests use disposable source/cache fixtures and real small Python child processes. They check copying and hash boundaries, the client and server `fml.queryResult` arguments, `jvmArgs` limits, the generated Toolkit settings, `ownerWait` release only on a fresh marker, references and reparse points, declared embedded dependencies, protocol freshness and identity, ports, ownership, deadlines, early exits, graceful/forced cleanup and Windows job behavior, including abrupt supervisor termination. They cannot establish Minecraft loading, rendering, networking or a mod's behavior; use the actual smoke session and project scenarios for those boundaries.
+These tests use disposable source/cache fixtures and real small Python child processes. They check copying and hash boundaries, standard Forge profiles (launch entry points, the native placeholder skip, server and client JAR identity, refused Cleanroom fields, a library that resolves to no pinned JAR), the Java version checks, and the Java 8 command line with its length limit, the client and server `fml.queryResult` arguments, `jvmArgs` limits, the generated Toolkit settings, `ownerWait` release only on a fresh marker, references and reparse points, declared embedded dependencies, protocol freshness and identity, ports, ownership, deadlines, early exits, graceful/forced cleanup and Windows job behavior, including abrupt supervisor termination. They cannot establish Minecraft loading, rendering, networking or a mod's behavior; use the actual smoke session and project scenarios for those boundaries.

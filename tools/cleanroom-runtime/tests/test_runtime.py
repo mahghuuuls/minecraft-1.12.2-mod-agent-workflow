@@ -18,7 +18,7 @@ TOOL = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(TOOL))
 from common import RuntimeErrorDetail, check_tree, plain_path, relative, separate, sha256, verify_file, write_json
 from prepare import allowed, java_args
-from session import Game, Ownership, Session, maybe_json, validate_plan, wait_until
+from session import Game, Ownership, Session, maybe_json, read_java_args, validate_plan, wait_until
 from windows_job import Job
 
 FAKE = Path(__file__).with_name('fake_game.py')
@@ -243,6 +243,48 @@ class RuntimeTests(unittest.TestCase):
         result = self.session([{'action': 'start', 'side': 'server', 'timeout': 3}])
         self.assertEqual('passed', result['status'])
         self.assertIn('example.flag', (Path(result['evidence']) / 'server.args').read_text())
+
+    def test_java_8_command_passes_the_verified_arguments_directly(self):
+        args = ['-Dfile.encoding=UTF-8', '-cp', 'C:/runtime/a b.jar;C:/runtime/c.jar', 'main.Class', 'say "hi"']
+        java_args(self.root / 'server.args', args)
+        self.assertEqual(args, read_java_args(self.root / 'server.args'))
+        self.manifest['argFile'] = False
+        write_json(self.root / 'runtime.json', self.manifest)
+        session_command = None
+        with contextlib.redirect_stdout(self.sink):
+            session = Session(self.root, {'schema': 1, 'steps': [{'action': 'start', 'side': 'server'}]})
+            session.evidence.mkdir(parents=True)
+            probe = Game(session, 'server', 'probe')
+            session_command = probe.command()
+            probe.log_handle.close()
+        self.assertEqual([sys.executable, *args], session_command)
+        (self.root / 'server.args').write_text('not quoted\n')
+        with contextlib.redirect_stdout(self.sink):
+            probe = Game(session, 'server', 'probe2')
+        with self.assertRaisesRegex(RuntimeErrorDetail, 'argument file format'):
+            probe.command()
+        probe.log_handle.close()
+
+    def test_java_8_command_refuses_an_overlong_command_line(self):
+        java_args(self.root / 'server.args', ['-cp', ';'.join('C:/runtime/library-' + str(n) + '.jar' for n in range(1500)), 'main.Class'])
+        self.manifest['argFile'] = False
+        write_json(self.root / 'runtime.json', self.manifest)
+        with contextlib.redirect_stdout(self.sink):
+            session = Session(self.root, {'schema': 1, 'steps': [{'action': 'start', 'side': 'server'}]})
+            session.evidence.mkdir(parents=True)
+            probe = Game(session, 'server', 'probe')
+        with self.assertRaisesRegex(RuntimeErrorDetail, 'command-line limit'):
+            probe.command()
+        probe.log_handle.close()
+
+    def test_older_manifest_without_arg_file_uses_the_argument_file(self):
+        self.assertNotIn('argFile', self.manifest)
+        with contextlib.redirect_stdout(self.sink):
+            session = Session(self.root, {'schema': 1, 'steps': [{'action': 'start', 'side': 'server'}]})
+            session.evidence.mkdir(parents=True)
+            probe = Game(session, 'server', 'probe')
+        self.assertEqual([sys.executable, '@' + str(self.root / 'server.args')], probe.command())
+        probe.log_handle.close()
 
     def test_unsafe_relative_paths(self):
         for value in ('../x', '/absolute', 'a/../b', 'a\\b', 'C:/x', 'x:stream', 'NUL.txt', 'a./b'):

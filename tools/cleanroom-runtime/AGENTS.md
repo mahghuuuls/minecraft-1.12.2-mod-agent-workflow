@@ -1,6 +1,6 @@
 # Cleanroom Runtime Tool Instructions
 
-This tool stages and supervises local Minecraft 1.12.2 Cleanroom tests. [Isolated Cleanroom Validation](../../procedures/isolated-cleanroom-validation.md) owns workflow routing and owner authorization. Read it and this directory's README before use.
+This tool stages and supervises local Minecraft 1.12.2 Cleanroom and standard Forge tests. [Isolated Cleanroom Validation](../../procedures/isolated-cleanroom-validation.md) owns workflow routing and owner authorization. Read it and this directory's README before use.
 
 - Use only the current project's approved binaries, profiles and test steps. Profile flags record an owner decision; setting a flag is not obtaining that decision.
 - Keep profiles, copied binaries, configurations, worlds and evidence in ignored workspace paths. Do not commit machine-specific paths or Minecraft/dependency binaries here.

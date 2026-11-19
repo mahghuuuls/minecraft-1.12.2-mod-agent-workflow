@@ -14,6 +14,8 @@ Record in Project Setup:
 - Maximum concurrency and resources. Default to one server and one client within a session, 2 GiB each, and finite session/shutdown deadlines. Coordinate other active projects before increasing the machine's total load.
 - The reference-pack roots protected from writes, the runtime root, launch route, evidence location, and remaining owner-only observations.
 
+The same tool prepares an isolated standard Forge profile (`"loader": "forge"`, Java 8) from a launcher installation of Forge for 1.12.2 and the vanilla server JAR. Use it for criteria that name standard Forge, such as a packaged check with and without MixinBooter, instead of an owner instance or a project-local script; everything in this procedure applies to it.
+
 An existing owner's launcher is not required for these launches. The current tool imports complete cached runtime files; it does not install Java or download a new runtime. If prerequisites are missing, identify the exact missing input and arrange authorized installation/provisioning or use the approved shared-instance fallback. Do not claim the route works from a version/help command; run a bounded world-level smoke test when establishing it.
 
 ## Preparation

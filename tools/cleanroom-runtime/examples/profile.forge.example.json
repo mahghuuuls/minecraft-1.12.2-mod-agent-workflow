@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "minecraft": "1.12.2",
+  "loader": "forge",
+  "forge": "14.23.5.2864",
+  "java": {"path": "C:/installed-java-8/bin/java.exe", "sha256": "REPLACE_WITH_SHA256"},
+  "authorization": {
+    "source": "REPLACE_WITH_CURRENT_OWNER_DECISION",
+    "eulaAccepted": false,
+    "eulaSource": "REPLACE_WITH_SAVED_ACCEPTANCE_SOURCE",
+    "toolkitActions": false,
+    "serverLaunch": false,
+    "clientLaunch": false
+  },
+  "metadata": {
+    "net.minecraft.json": {"path": "C:/launcher-install/versions/1.12.2/1.12.2.json", "sha256": "REPLACE_WITH_SHA256"},
+    "net.minecraftforge.json": {"path": "C:/launcher-install/versions/forge-14.23.5.2864/forge-14.23.5.2864.json", "sha256": "REPLACE_WITH_SHA256"}
+  },
+  "libraryRoots": ["C:/launcher-install/libraries"],
+  "clientJar": {"path": "C:/launcher-install/versions/1.12.2/1.12.2.jar", "sha256": "REPLACE_WITH_SHA256"},
+  "serverJar": {"path": "C:/minecraft-cache/server-1.12.2.jar", "sha256": "REPLACE_WITH_SHA256"},
+  "assets": "C:/launcher-install/assets",
+  "protectedRoots": ["C:/owner-reference-pack"],
+  "player": "RuntimeTester",
+  "heapMiB": 2048,
+  "mods": [
+    {"path": "C:/approved-artifacts/agenttesttoolkit-1.9.0.jar", "sha256": "REPLACE_WITH_SHA256", "sides": ["client", "server"]}
+  ],
+  "files": []
+}

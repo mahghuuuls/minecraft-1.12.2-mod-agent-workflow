@@ -16,6 +16,15 @@ from common import (bounded, check_tree, plain_path, read_json, relative, requir
 from windows_job import Job
 
 
+def read_java_args(path):
+    """Arguments from a file written by prepare.java_args: one double-quoted argument per line."""
+    result = []
+    for line in path.read_text(encoding='utf-8').rstrip('\n').split('\n'):
+        require(len(line) >= 2 and line[0] == '"' and line[-1] == '"', 'Unexpected launch argument file format')
+        result.append(line[1:-1].replace('\\"', '"'))
+    return result
+
+
 def maybe_json(path):
     try:
         return read_json(path)
@@ -107,7 +116,13 @@ class Game:
         self.session.record('launched', side=self.side, label=self.label, pid=self.p.pid)
 
     def command(self):
-        return [self.session.manifest['java']['path'], '@' + str(self.session.root / (self.side + '.args'))]
+        java, args = self.session.manifest['java']['path'], self.session.root / (self.side + '.args')
+        if self.session.manifest.get('argFile', True):
+            return [java, '@' + str(args)]
+        # Java 8 has no @argument files: pass the same verified arguments directly.
+        command = [java, *read_java_args(args)]
+        require(len(subprocess.list2cmdline(command)) < 32000, 'Launch command exceeds the Windows command-line limit')
+        return command
 
     def log(self):
         return self.log_path.read_text(encoding='utf-8', errors='replace')
