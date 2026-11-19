@@ -112,7 +112,7 @@ Do not edit versioned process files during mod development because a feedback en
 
 ## Required Read-Only Review Agents
 
-Start required read-only independent reviews automatically once their owning stage's readiness conditions are met, without asking the owner for review-agent approval. This includes initial, pre-campaign, campaign follow-up and correction re-reviews within approved work. Announce the review in a progress update and record its findings and disposition through the owning stage.
+Start required read-only independent reviews automatically once their owning stage's readiness conditions are met, without asking the owner for review-agent approval. This includes initial, pre-campaign, campaign follow-up and correction re-reviews within approved work. Announce the review in a progress update and record its findings and disposition through the owning stage. A review that a specialized guideline requires, such as the screen review of `guidelines/custom-screens.md`, is a required read-only review under this rule; that guideline owns its readiness condition. As an exception to the paragraph below, the custom screen reviewer receives only the pictures that `procedures/independent-review-brief.md#custom-screen-review` names, not the approved scope, the requirement or the code.
 
 Use a separate reviewer context and brief it through `procedures/independent-review-brief.md`. The reviewer reads the approved scope and evidence and returns findings; it does not edit project files, start owner-assisted game sessions, approve artifacts or extend the task. Review findings that challenge scope, architecture or another owner decision follow the normal revision/approval route.
 

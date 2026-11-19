@@ -458,8 +458,68 @@ Results file: `workspace/validation/staging/cyc2-final/running-notes.md`
     if ($unlinked.Output -notlike "*1 session map(s) under the documentation name no 'Results file:'*") {
         throw "Validator did not warn about the unlinked session map. Output: $($unlinked.Output)"
     }
+    if ($unlinked.Output -like '*change-boundary patch*') {
+        throw "Validator warned about a patch although no issue names one. Output: $($unlinked.Output)"
+    }
 
-    Write-Host 'Workspace validator tests passed: valid state, stage statuses with a date and a note, Not Applicable stages and earlier record tables accepted (the active table checked strictly), plain and linked issue summaries with or without a status column (missing, duplicate, stale and cross-cycle targets rejected), and cycle-scoped identifiers accepted; evidence packs of Done issues checked; a session map without a criterion-to-card table rejected before its campaign and accepted with one, a session-map card without a results line rejected and a recorded one accepted, for a work-folder campaign and for a change-cycle map that names its results file (cards by identifier, maps counted, an unlinked map warned); change-cycle issues with a status note or the older bold form read; invalid status, missing stage artifacts, ledger or plan disagreement, and multiple active issues rejected.' -ForegroundColor Green
+    # A change-boundary patch named by an Awaiting Validation or Done issue: a missing file warns, a present one does not.
+    $patchIssuePath = Join-Path $cycleTwoRoot 'issues/CYC2-001-fixture.md'
+    $patchIssue = @'
+# CYC2-001: Fixture
+
+**Status:** <status>
+
+Change boundary: `workspace/validation/implementation/CYC2-001/final.patch`, SHA-256 `00` (read-only).
+Template form, not a file: `workspace/validation/implementation/<issue>/<name>.patch`.
+'@
+    foreach ($patchStatus in @('Awaiting Validation', 'Done')) {
+        Write-Utf8 $patchIssuePath ($patchIssue.Replace('<status>', $patchStatus))
+        $missingPatch = Invoke-Validator
+        Assert-ExitCode "a missing change-boundary patch of a $patchStatus issue is a warning" 0 $missingPatch
+        if ($missingPatch.Output -notlike "*$patchStatus issue CYC2-001 names a change-boundary patch that does not exist: workspace/validation/implementation/CYC2-001/final.patch*") {
+            throw "Validator did not warn about the missing patch. Output: $($missingPatch.Output)"
+        }
+    }
+    $patchRoot = Join-Path $testRoot 'validation/implementation/CYC2-001'
+    New-Item -ItemType Directory -Path $patchRoot -Force | Out-Null
+    Write-Utf8 (Join-Path $patchRoot 'final.patch') 'diff --git a/a.txt b/a.txt'
+    $presentPatch = Invoke-Validator
+    Assert-ExitCode 'a present change-boundary patch' 0 $presentPatch
+    if ($presentPatch.Output -like '*change-boundary patch*') {
+        throw "Validator warned about a patch that exists. Output: $($presentPatch.Output)"
+    }
+    # A rooted path that only contains workspace/validation/ belongs to another workspace and is not checked;
+    # a path written with backslashes is this workspace's path.
+    $otherPatchIssue = @'
+# CYC2-001: Fixture
+
+**Status:** Done
+
+Change boundary: `<path>`, SHA-256 `00` (read-only).
+'@
+    foreach ($rootedPath in @('D:\other\workspace\validation\implementation\CYC2-001\rooted.patch', '/srv/other/workspace/validation/implementation/CYC2-001/rooted.patch')) {
+        Write-Utf8 $patchIssuePath ($otherPatchIssue.Replace('<path>', $rootedPath))
+        $rootedPatch = Invoke-Validator
+        Assert-ExitCode 'a rooted patch path of another workspace' 0 $rootedPatch
+        if ($rootedPatch.Output -like '*change-boundary patch*') {
+            throw "Validator read a rooted patch path as this workspace's path. Output: $($rootedPatch.Output)"
+        }
+    }
+    Write-Utf8 $patchIssuePath ($otherPatchIssue.Replace('<path>', 'workspace\validation\implementation\CYC2-001\backslash.patch'))
+    $backslashPatch = Invoke-Validator
+    Assert-ExitCode 'a missing patch named with backslashes' 0 $backslashPatch
+    if ($backslashPatch.Output -notlike '*Done issue CYC2-001 names a change-boundary patch that does not exist: workspace/validation/implementation/CYC2-001/backslash.patch*') {
+        throw "Validator did not warn about the missing patch named with backslashes. Output: $($backslashPatch.Output)"
+    }
+    Write-Utf8 $patchIssuePath ($patchIssue.Replace('<status>', 'In Progress'))
+    Remove-Item -LiteralPath (Join-Path $patchRoot 'final.patch')
+    $earlyPatch = Invoke-Validator
+    Assert-ExitCode 'a patch named by an issue that is still In Progress' 0 $earlyPatch
+    if ($earlyPatch.Output -like '*change-boundary patch*') {
+        throw "Validator warned about the patch of an In Progress issue. Output: $($earlyPatch.Output)"
+    }
+
+    Write-Host 'Workspace validator tests passed: valid state, stage statuses with a date and a note, Not Applicable stages and earlier record tables accepted (the active table checked strictly), plain and linked issue summaries with or without a status column (missing, duplicate, stale and cross-cycle targets rejected), and cycle-scoped identifiers accepted; evidence packs of Done issues checked; a session map without a criterion-to-card table rejected before its campaign and accepted with one, a session-map card without a results line rejected and a recorded one accepted, for a work-folder campaign and for a change-cycle map that names its results file (cards by identifier, maps counted, an unlinked map warned); change-cycle issues with a status note or the older bold form read; a missing change-boundary patch of an Awaiting Validation or Done issue warned (also when named with backslashes) and a present or unnamed one, or a rooted path of another workspace, not; invalid status, missing stage artifacts, ledger or plan disagreement, and multiple active issues rejected.' -ForegroundColor Green
 } finally {
     $resolvedTestRoot = [System.IO.Path]::GetFullPath($testRoot)
     $resolvedTempRoot = [System.IO.Path]::GetFullPath([System.IO.Path]::GetTempPath())

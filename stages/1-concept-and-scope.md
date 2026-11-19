@@ -76,6 +76,7 @@ Act as an alignment interviewer.
 - Distinguish essential features from optional ideas.
 - Explore what is explicitly outside the project scope.
 - For silent, event-driven, or hard-to-observe mods, decide explicitly whether a disabled-by-default diagnostic mode belongs in scope, and record the decision with its reasoning. Weigh both development validation and the ability of a server owner or player to confirm the mod is working after release. A mod whose correct behavior is indistinguishable from the mod being absent or broken is the clearest case for including one.
+- When the concept includes custom player animation, effects, or sound, ask who authors those assets (the agent in text, the owner, or an outside source) and how the owner will judge them, and record both answers. [Animation And Effects](../guidelines/animation-and-effects.md#when-to-use) describes what an agent can author and check.
 - Capture candidate glossary terms when the owner uses project-specific vocabulary.
 - Ask whether similar terms are synonyms or distinct concepts when the distinction could affect scope.
 - Ask whether one term has multiple meanings when that ambiguity could affect scope.

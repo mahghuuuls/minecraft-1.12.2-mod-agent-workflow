@@ -19,6 +19,8 @@ Convert the approved requirements and architecture into small, ordered, and veri
 - `guidelines/manual-validation.md` when owner-assisted runtime checks are planned
 - `guidelines/agent-diagnostics-toolkit.md` when Project Setup selected the toolkit
 - `guidelines/minecraft-pixel-art.md` when an issue creates or materially revises pixel-art assets
+- `guidelines/animation-and-effects.md` when an issue creates or materially revises custom player animation, effects, or their sounds
+- `guidelines/custom-screens.md` when an issue adds or materially changes a screen the mod draws itself
 - `tools/evidence-pack/README.md` when an issue or campaign will retain a multi-artifact evidence checkpoint
 
 ## Objectives
@@ -96,6 +98,7 @@ Act as an implementation planner.
 - Classify whether each non-decision issue changes a complexity-bearing boundary. For a routine issue, one sentence is sufficient; do not force a design exercise.
 - For a complexity-bearing issue, reference the approved alternative analysis and state the knowledge owner, common path, expected change locality, and red flags the implementation and reviewer must inspect.
 - Return to Architecture Definition when a complexity-bearing implementation has no approved boundary or meaningful alternative analysis. Do not let the implementation issue make an architectural decision implicitly.
+- When one feature carries most of an issue's or the plan's complexity (a custom renderer, a persistence scheme, a cross-mod hook, a delayed or special-case rule), name it in the plan with its cost: the code and hooks it needs, the checks and owner cards it adds, and what the issue would be without it. Ask the owner once whether to keep it, before issues are written around it, and record the answer. A feature removed after implementation costs its implementation, its reviews, and a backward revision of every document that names it.
 - For an issue that modifies existing production code, describe the desired fit of the new behavior, the boundary for proportionate local design improvement under `guidelines/coding-standards.md`, and the conditions that would require an architecture revision. Preserve implementation discretion instead of prescribing a method-by-method patch.
 - Make dependencies explicit.
 - When an issue adds or changes mod dependencies, plan separate checks for exact development artifact resolution and canonical minimum-only shipping metadata, including inspection of the processed distributable metadata.
@@ -126,6 +129,7 @@ Act as an implementation planner.
 - Plan a dedicated-server check by default for any mod that loads on a server. Side-safety failures, such as a client-only class reaching server code, are invisible in `runClient` and fatal on a server, so this is not a risk-selected extra. Omit it only for a mod that never loads server-side, and record the reason.
 - Ensure each issue is understandable to an agent starting with a fresh context.
 - For each issue that creates or materially revises pixel art, tell the owner that the bundled exact-grid renderer will be used, obtain the compact art-direction packet required by `guidelines/minecraft-pixel-art.md`, request optional references, and complete the issue's Pixel-Art Asset section before marking it Ready.
+- For each issue with custom player animation or effects, obtain the [motion brief](../guidelines/animation-and-effects.md#motion-brief) and record it in the issue before marking it Ready.
 - Plan three materially different candidates for a new asset direction and focused revisions after selection. Do not require three variants for each file in one inseparable visual set or for every correction to an approved direction.
 - Avoid repeating entire project documents inside every issue.
 - Reference requirements and architectural decisions by stable identifiers.
@@ -467,6 +471,8 @@ Use these evidence tiers consistently:
 6. **External multiplayer:** a separately operated multiplayer environment.
 
 Higher numbers are not automatically better or mandatory. Select tiers from the behavior and risk. For every planned check, record the tier, the evidence it supplies, and important evidence it cannot supply.
+
+For every development-runtime dependency the plan names (a mod loaded only in tiers 2 and 3 so a check can run), list that mod's own required mods, followed transitively, and where each jar comes from (a pinned coordinate, the reference pack, an owner download). Do this before an issue's Verification promises the dependency: a mod that needs a further large mod may not be practical as a development-runtime dependency, and the first launch is the wrong place to find that out. At session time the jar set is confirmed by the `tools/mod-jar` check under [Before The Session](../guidelines/manual-validation.md#before-the-session); a jar taken from a pack also gets the coremod and bundled-Mixin check under Dependencies in `guidelines/coding-standards.md`.
 
 When a planned check needs OptiFine, apply [OptiFine Compatibility Checks](../guidelines/project-defaults.md#optifine-compatibility-checks).
 

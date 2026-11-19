@@ -523,6 +523,7 @@ The packet is eligible only when all of the following are true:
 - The correction is one coherent, bounded decision rather than a collection of unrelated revisions.
 - Every affected canonical artifact and dependent plan section is identified.
 - The exact proposed changes are shown before approval, as a patch, replacement text, or equally precise revision summary.
+- When the correction removes a feature or a term, the packet lists the search it ran for the removed term and for the plain words that describe it (not only setting or identifier names) over every approved document, the project glossary, the plan, the issues, and public copy, with each hit and its disposition: changed, kept with the reason, or historical record. Run the search again after applying the revisions, before the reapproval.
 - No material scope, licensing, compatibility, ownership, public-promise, or unresolved preference decision remains hidden inside the correction.
 - Existing implementation can remain intact while affected implementation remains stopped and outside the bundle.
 - Applying the described artifact changes is reversible and does not change external state.

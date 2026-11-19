@@ -60,7 +60,7 @@ Exit codes of the tool itself: `124` timeout, `125` the launched process ended w
   exit.txt      the exit code
 ```
 
-The folder stays after the run so that the output can be read again or copied into an evidence pack. Set `MINECRAFT_MOD_AGENT_HOST_RUN_ROOT` to keep run folders somewhere else.
+The folder stays after the run so that the output can be read again or copied into an evidence pack. Set `MINECRAFT_MOD_AGENT_HOST_RUN_ROOT` to keep run folders somewhere else. Find a run by its label, or by the folder its own output named, never by "newest folder": the root is shared, and another project's run can be newer.
 
 ## Quoting
 
@@ -71,6 +71,8 @@ powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File tools\host-run\host-
 ```
 
 Or write the steps into a small batch file in the mod repository's ignored area and run that file.
+
+Call the tool from PowerShell directly, not through a Bash wrapper: the wrapper loses the quoting of `-Command`, and the tool then prints a usage error while the surrounding shell can still report exit 0.
 
 ## Recording the result
 

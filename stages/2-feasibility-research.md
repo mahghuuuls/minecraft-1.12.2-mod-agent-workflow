@@ -94,6 +94,7 @@ Act as a technical researcher.
 - Provide evidence for important conclusions.
 - Avoid assuming that information for newer Minecraft versions applies to 1.12.2.
 - Check whether the approved behavior already exists before researching how to build it, following the Existing Capability Check. Inspect the extended dependency's own configuration and data files, not only its API.
+- When the concept needs player animation or held-item poses, use the [Feasibility Findings](../guidelines/animation-and-effects.md#feasibility-findings) as the starting list and verify each one for this project.
 - Search for existing libraries before assuming functionality must be developed from scratch.
 - Check each candidate library against the project defaults.
 - Evaluate whether candidate libraries are maintained, accessible, legally usable, and suitable for the approved distribution platforms.

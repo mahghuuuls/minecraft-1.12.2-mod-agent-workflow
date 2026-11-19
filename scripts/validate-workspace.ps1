@@ -258,6 +258,22 @@ foreach ($record in ($issueRecords | Where-Object { $_.Status -eq 'Done' })) {
     }
 }
 
+# An issue that is Awaiting Validation or Done and names a change-boundary patch by its full path under
+# workspace/validation/ is warned about when that file is gone. An issue that names no patch is not checked:
+# older projects have none. A placeholder such as <issue> in the path does not match, and neither does a rooted
+# path that only contains workspace/validation/ (another workspace's file).
+$patchPattern = '(?<![A-Za-z0-9_.:/\\-])workspace[/\\](?<path>validation[/\\][A-Za-z0-9._/\\-]+?\.patch)(?![A-Za-z0-9_-])'
+foreach ($record in ($issueRecords | Where-Object { $_.Status -in @('Awaiting Validation', 'Done') })) {
+    $issueText = Get-Content -Raw -LiteralPath $record.Path
+    $patchPaths = @([regex]::Matches($issueText, $patchPattern) | ForEach-Object { 'workspace/' + $_.Groups['path'].Value.Replace('\', '/') } | Sort-Object -Unique)
+    foreach ($patchPath in $patchPaths) {
+        if ($patchPath -match '\.\.') { continue }
+        if (-not (Test-Path -LiteralPath (Resolve-ProcessPath $patchPath) -PathType Leaf)) {
+            Add-ValidationWarning "$($record.Status) issue $($record.Id) names a change-boundary patch that does not exist: $patchPath"
+        }
+    }
+}
+
 $rollupLines = [System.Collections.Generic.List[string]]::new()
 foreach ($group in ($issueRecords | Group-Object Scope | Sort-Object Name)) {
     $summary = (@($group.Group | Sort-Object Id | ForEach-Object { "$($_.Id) $($_.Status)" })) -join ', '

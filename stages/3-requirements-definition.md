@@ -164,6 +164,7 @@ Each requirement should be:
 - **Observable:** Produces an outcome that can be evaluated.
 - **Testable:** Has objective completion conditions.
 - **Measurable by a named method:** A numeric performance or timing criterion names the measurement it will be judged by and that measurement's resolution, and its threshold is coarser than the resolution. `/forge tps` gives a running mean over 100 ticks with a within-session drift of about half a millisecond, so a criterion of 0.05 ms per tick cannot be met or failed by it; write the criterion as the comparison the method can resolve (idle against loaded, within the method's noise), or require a finer instrument in the Implementation Plan.
+- **Stated in the game's own value:** A criterion that names a quantity the game itself owns (a vanilla count such as durability or hunger, a slot number, a tick value) states it as the value the game stores and names where that value was read (the 1.12.2 class and field or method, or the command output), so a later check compares the same number. A number shown to the player can be derived from the stored one and differ from it: a tooltip count is not the stored item damage, a slot's position on a screen is not its index, and seconds are not ticks. When the player-facing number is what matters, state both and how one follows from the other.
 - **Implementation-independent:** Does not prescribe internal code structure.
 - **Traceable:** Has an identifiable origin.
 
@@ -176,6 +177,12 @@ Use requirement priorities consistently:
 ### Numeric Design Data
 
 When requirements carry a table of tuning numbers (per-item values, dials, scores, weights), keep those numbers in one machine-readable file under `workspace/documentation/` (CSV or JSON), name that file in the requirements as the authority, and let every other view be rendered from it or point at it: requirement text, a scoring or balance document, a public balance page, and tests that assert defaults. Never hand-copy the table into a second document. A changed number changes the source file, and each derived view is regenerated or re-checked from it in the same change. State in the requirements which file is the source and how each derived view is produced.
+
+### Custom Screens
+
+For a screen the mod draws itself, a requirement says what the player can do there and what the player must be able to learn from it: which actions exist, what the player must be able to tell before and after each one, and which states must be told apart. It does not name boxes, buttons, text fields, or positions. The layout is a design decision made later under `guidelines/custom-screens.md`, so a layout change does not need a requirement revision.
+
+Write "the player can tell which upgrade is installed in the machine before removing it", not "the screen has an upgrade display box and a Remove button".
 
 ## Requirement Format
 

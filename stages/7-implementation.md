@@ -23,6 +23,8 @@ Implementation includes coding, testing, in-game verification, defect correction
 - `guidelines/manual-validation.md` when the issue includes owner-assisted runtime checks
 - `guidelines/agent-diagnostics-toolkit.md` when Project Setup selected the toolkit
 - `guidelines/minecraft-pixel-art.md` when the issue creates or materially revises pixel-art assets
+- `guidelines/animation-and-effects.md` when the issue creates or materially revises custom player animation, effects, or their sounds
+- `guidelines/custom-screens.md` when the issue adds or materially changes a screen the mod draws itself
 - `tools/evidence-pack/README.md` when the issue or campaign plans a retained evidence pack
 - `tools/session-log/README.md` when a validation session or campaign leaves runtime logs the agent must read
 - `tools/devtool-inbox/README.md` when the agent starts toolkit bundles through the command inbox
@@ -164,8 +166,9 @@ When an issue creates or materially revises a block model JSON with its own elem
 
 1. Render every model and every blockstate variant that turns it with `tools/modelpreview/modelpreview.cmd`, and open the sheet. The tool checks the 1.12 format rules (coordinate range, rotation angles and axes, texture variables and files, face names) and draws the vanilla side, top, bottom, and inventory views with the vanilla face shade.
 2. Inspect the views for what the game would show: a face pointing the wrong way, a texture on the wrong face or mirrored, a misplaced uv, an element that leaves the block, a rotation about the wrong origin, a wall model that does not touch its wall.
-3. Fix and re-render before the owner sees anything. The tool report at zero errors and the inspected sheet are the agent's evidence; they do not replace the owner's look in Blockbench or in the game, which stays on the validation cards.
-4. Record the final render path, the report line, and what was inspected as completion evidence.
+3. Render the nearest vanilla block the model will stand beside (the same material or the same kind of block) with the same `-Scale` and `-Views`; `tools/modelpreview/README.md` shows the call for a `minecraft:block/...` model. Open the two sheets side by side and compare size, proportion, and surface; `guidelines/minecraft-pixel-art.md` owns what to look for on the surface. Do this for every candidate before the owner sees it.
+4. Fix and re-render before the owner sees anything. The tool report at zero errors and the inspected sheet are the agent's evidence; they do not replace the owner's look in Blockbench or in the game, which stays on the validation cards.
+5. Record the final render path, the vanilla block compared and its render path, the report line, and what was inspected as completion evidence.
 
 ## Feedback Strategy
 
@@ -251,6 +254,37 @@ Manual verification must also have a reliable observation path. Before requestin
 
 Presentation, session grouping, reset state, evidence handoff, binary `Done` reporting, failure handling, and cleanup for owner-assisted checks are owned by `guidelines/manual-validation.md`. Use the plan's Test now, Defer, or Waive decisions as their standing disposition. If the owner skips a check or accepts that it cannot be run, record the waiver under `guidelines/process-control.md`; do not keep asking unless new evidence makes it release-blocking.
 
+### Second Development Client
+
+A second development client on the same machine acts as an observer: it shows what another player sees and receives. Use it for a check that needs two players before giving that check to the owner. This recipe is for the development runtime; the isolated Cleanroom runtime runs one client per session (`tools/cleanroom-runtime/README.md`).
+
+- **Its own game folder.** Every development client starts from the same `run/` folder, so two of them would share options, logs, saves, screenshots, and the toolkit's client request folder. Give the second client its own folder outside the mod repository. Passing `--gameDir` through `--args` fails, because the run task already passes one. Set the `runClient` working directory instead, with a Gradle init script kept outside the mod repository and passed with `--init-script`, so no build file changes:
+
+  ```groovy
+  def secondClientDir = System.getenv('SECOND_CLIENT_DIR')
+  if (secondClientDir) {
+      allprojects {
+          afterEvaluate {
+              tasks.matching { it.name == 'runClient' }.configureEach { task ->
+                  def dir = new File(secondClientDir)
+                  task.workingDir = dir
+                  task.doFirst { dir.mkdirs() }
+              }
+          }
+      }
+  }
+  ```
+
+  When `SECOND_CLIENT_DIR` is unset, the script does nothing. Check against the project's template that its client run task honours the working directory and that its Gradle version has the calls the script uses. Start the second client only when no build of the repository is running ([Shared Machine](../guidelines/project-defaults.md#shared-machine)).
+
+- **Its own offline player name.** Start it with `-Pminecraft_username=<other name>`. With `online-mode=false` on the development dedicated server (above), both names join.
+- **The same mod build.** Both clients run the same source tree and build output. Copy the mod's configuration, and the toolkit's when it is selected, into the second folder before the first start; the first client and the server keep `run/`.
+- **The same launch path.** Start it the way the first client starts, under the client launch decision recorded in `project-setup.md`: through `tools/host-run` with `-Set "SECOND_CLIENT_DIR=<folder>"` and its own `-Label` when the agent launches, so each client's console capture stays apart; otherwise the owner starts it. Start the server first, then the first client, then the second, and run no other Gradle command in this repository while they run.
+- **A second evidence source.** Read the second client's own `logs/latest.log` and console capture beside the first client's and the server's, and name which client each cited line came from. With the toolkit, the second client has its own client request folder and `screenshots/` folder, and a screenshot can name the player whose view it takes (`guidelines/agent-diagnostics-toolkit.md`). The command inbox does not open for a client from another game folder: the first client, which shares the server's folder, stays the operator that runs the bundles.
+- **Different client and server files.** For a check where the client's files must differ from the server's, the second client is the one that differs, because the first client reads the same configuration file as the server.
+
+What it can show, agent-read: that another player's client receives the state, poses, effect cues, and synchronization (near, at the tracking range, and on a late arrival), from that client's log lines and stills. What stays with the owner: how motion looks to a watcher, sound, and feel. A second client on one machine is not external multiplayer (tier 6) and does not prove behavior over a real network.
+
 ### Agent Diagnostics Toolkit-Assisted Validation
 
 When Project Setup selected the toolkit, follow `guidelines/agent-diagnostics-toolkit.md` before the first dependent card.
@@ -328,7 +362,15 @@ Before moving an issue to **Awaiting Validation**:
 - Complete its implementation and every non-campaign verification check.
 - Verify its diagnostics and evidence-retention path.
 - Complete a pre-campaign independent implementation review of the code and available evidence and resolve all findings, or record an eligible accepted review limitation.
-- Retain a read-only per-issue patch or equivalent change-boundary snapshot and its checksum so later cumulative work does not erase source attribution.
+- Retain a read-only per-issue patch or equivalent change-boundary snapshot and its checksum so later cumulative work does not erase source attribution. From the workflow root, in PowerShell, after creating the issue's folder:
+
+  ```powershell
+  git -C workspace\project\<mod-name> diff --binary <base-commit> <issue-commit> --output=..\..\validation\implementation\<issue>\<name>.patch
+  (Get-FileHash -Algorithm SHA256 workspace\validation\implementation\<issue>\<name>.patch).Hash
+  Set-ItemProperty workspace\validation\implementation\<issue>\<name>.patch -Name IsReadOnly -Value $true
+  ```
+
+  For uncommitted work, leave out `<issue-commit>`: the diff is then the working tree against `<base-commit>`. Run `git -C workspace\project\<mod-name> add -N .` first (intent-to-add), so that new files appear in the diff without their content being staged; an untracked file is not in the diff. When earlier campaign issues are uncommitted in the same tree, the patch is cumulative; take it at the end of each issue, so the difference between two patches is one issue. Use `--output`, not `>`, which can change the patch's encoding. The issue file records the patch path, written in full from `workspace/`, and the SHA-256 before it moves to **Awaiting Validation**; `scripts/validate-workspace.ps1` warns when a patch named that way is missing.
 - Capture and verify the planned per-issue or campaign evidence pack when the available checkpoint already contains multiple volatile artifacts; later owner evidence must produce a new final campaign pack rather than overwrite it.
 - Record the exact files and behavior attributable to the issue.
 - Confirm that no failed or missing result makes later campaign implementation unsafe.

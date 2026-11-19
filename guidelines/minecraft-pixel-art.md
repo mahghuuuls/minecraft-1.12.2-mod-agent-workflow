@@ -31,6 +31,7 @@ An implementation issue that creates or materially revises pixel art must includ
 - Materials, palette direction, mood, and lighting exceptions.
 - Required and forbidden motifs.
 - Transparency, animation, tiling, model, or neighboring-GUI constraints.
+- Whether any part must stay bright in the dark: a glowing part such as runes, embers, lava, or a lit display. A glowing part changes the model and render approach, so the issue names the 1.12.2 technique and its cost, and a candidate is shown at night as well as by day.
 - Existing project assets that the new asset must match.
 - Optional reference images and which characteristics may guide the result.
 - When generated exploration or a composition reference establishes the direction, two or three defining invariants that reconstruction must preserve, such as perspective, band thickness, setting scale, silhouette, negative space, or major highlight planes.
@@ -54,6 +55,7 @@ Use this optional issue section:
 - Defining composition invariants from generated exploration or a composition reference, when applicable:
 - Required and forbidden motifs:
 - Transparency, animation, tiling, model, or neighboring-asset constraints:
+- Parts that must stay bright in the dark, with the 1.12.2 technique and its cost, or none:
 - Project and external references, approved influences, and restrictions:
 - Candidate workspace:
 - Three-variation plan for a new direction:
@@ -156,6 +158,8 @@ Shading must explain form and material:
 - Leather uses moderate contrast and softer highlights than polished metal.
 - Magical or glowing material may place the brightest value internally, but the glow must remain a deliberate cluster.
 
+A block face must not hold a large area of one shade. Beside vanilla blocks, whose surfaces change shade in small steps, a flat face reads as artificial. Break each material surface with deliberate clusters of two or three close shades from that material's ramp, placed where the vanilla texture of the same material places its variation: along grain, wear, edges, or plates. This is clustered variation, not noise: every cluster is a chosen shape of connected pixels, and scattered single pixels remain a defect. As a check, count the shades on each face; a face that is mostly one shade, or that holds more than 16 connected pixels of one shade on a 16x16 face, needs variation or a recorded reason, such as an approved deliberately smooth material. Compare the candidate beside the nearest vanilla block of the same material at game size (`-Compose` puts both on one sheet) before presenting it.
+
 Avoid pillow shading, where progressively brighter colors simply follow a closed silhouette toward its center. Avoid repeated parallel color boundaries that create banding. Internal outlines should separate meaningful forms; outlining every detail wastes pixels and fragments the subject.
 
 ### 5. Curves, Diagonals, And Clusters
@@ -206,6 +210,7 @@ Also inspect the use-specific context:
 - Items at inventory scale and, when practical, in held, dropped, or GUI contexts relevant to the requirement.
 - Blocks as at least a 3x3 tile and in-game on the model faces that use them.
 - GUI icons beside the actual neighboring HUD or GUI assets.
+- GUI art such as button symbols, slot outlines, and icons for mirror symmetry and centering, measured in pixels and not judged by eye. `guidelines/custom-screens.md#measured-checks` owns the measure for screens; apply the same measure to GUI art used elsewhere.
 - Entity and model textures on the mapped model, not merely as a flat sheet.
 - Animation as a sequence at its intended timing, not only as stacked frames.
 
@@ -219,6 +224,7 @@ Remake a candidate before presenting it when any automatic rejection condition a
 - Excessive colors with no visible distinction.
 - Inconsistent lighting or material treatment.
 - A block creates an obvious unintended seam or repeated landmark when tiled.
+- A block face holds a large single-shade area with no deliberate clustered shade variation and no recorded reason.
 - A GUI icon has mismatched visual weight beside its neighbors.
 - An entity or model texture has inconsistent texel density or fails on its mapped surfaces.
 - A 1.12.2 legacy-style asset relies primarily on modern Minecraft texture conventions without an approved reason.
