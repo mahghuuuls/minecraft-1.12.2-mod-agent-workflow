@@ -58,6 +58,8 @@ Reusable stages 1 through 8 are **Required**. Release Presentation includes rele
     - approval of the completed Initial Development workflow and release-ready baseline.
 12. After both approvals, give the owner the [publication packet](../stages/8-release-presentation.md#publication-packet) as the workflow's last message.
 
+Use [Clean Up Validation Files at Closure](../procedures/cleanup-validation-workspace.md) at the step 11 briefing. Report any approved cleanup completed by handoff before the publication packet.
+
 The owner may approve both decisions in one response. Do not treat approval of one as approval of the other.
 
 If the owner later reports a manual publication result, update `project-baseline.md` with the published URL/date/file information as an optional follow-up. Do not keep the Initial Development workflow open merely to wait for external publication.

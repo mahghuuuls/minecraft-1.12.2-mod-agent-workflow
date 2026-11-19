@@ -172,6 +172,8 @@ Record the evidence and file scope in the intake. Carry forward the approved imp
 19. Complete the [workflow retrospective](../guidelines/process-control.md#workflow-feedback-log) and present the completed cycle for explicit approval. Apply the [optional Workflow Changes offer](../guidelines/process-control.md#optional-post-closure-workflow-changes) when the owner opted in.
 20. After approval and any approved merge and push, deliver the [publication packet](../stages/8-release-presentation.md#publication-packet) for a new release. For a copy-only change, deliver the approved wording or file and its commit for any owner-managed listing edit.
 
+Use [Clean Up Validation Files at Closure](../procedures/cleanup-validation-workspace.md) at the step 19 briefing. Report any approved cleanup completed by handoff before the publication packet.
+
 Do not enter a later selected stage until every selected prerequisite is approved. Discovery of additional impact follows the backward-transition rules in `guidelines/process-control.md`.
 
 ## Cycle Summary
