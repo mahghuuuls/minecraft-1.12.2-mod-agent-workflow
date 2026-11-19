@@ -262,9 +262,10 @@ When CurseForge is a selected distribution platform and the mod-page source is a
 - Prefer basic Markdown paragraphs, headings, bold text, lists, links, inline code, fenced code, and horizontal rules.
 - Do not put Markdown emphasis or link notation inside block-level HTML. For the default colored disclaimer, use the single inline `<span>` form from `guidelines/project-defaults.md` around the complete disclaimer, including its label, prose, and workflow link.
 - Prefer bold bullet definitions over pipe tables unless the owner confirms the actual CurseForge preview renders the table correctly.
+- Keep every list tight: no blank line between items, and no paragraph after a nested list inside an item. One blank line inside a list makes the whole list loose, and CurseForge then draws every bullet of that list alone on a line above its text. Write extra text as sentences inside the item.
 - Do not rely on blockquotes as the only visual separation for an important notice. A bold label and horizontal rule are safer when the distinction matters.
 - Check whether the platform already displays the project title and other metadata before repeating them at the top of the description.
-- Give the owner a short preview checklist: bold labels render without literal `**`, links are clickable rather than displayed as `[label](URL)`, colored inline spans retain their color, code blocks remain readable, and no table or notice syntax is printed literally.
+- Give the owner a short preview checklist: bold labels render without literal `**`, links are clickable rather than displayed as `[label](URL)`, colored inline spans retain their color, code blocks remain readable, each bullet sits on the same line as its text, and no table or notice syntax is printed literally.
 
 The owner performs the external preview and publication. A rendered-page discrepancy is evidence to revise the source, but owner-managed publication must not be turned into an agent publication action or an indefinite workflow blocker.
 

@@ -350,7 +350,7 @@ Do not enable optional product or build capabilities unless the approved archite
 
 For every approved mod dependency applied during initialization, keep the exact inspected artifact or coordinate in development/build resolution and independently encode the shipping metadata constraint according to `guidelines/project-defaults.md`. Inspect the template's actual metadata syntax rather than copying the build version into the runtime relation.
 
-When Mixins are approved, the template's `mixin_booter_version` (ForgeDevEnv) is the build version only. Declare `required-after:mixinbooter@[<version>,)` with the version Mixins in `guidelines/project-defaults.md` selects (the reported version recorded in owner defaults, unless the mod needs a newer feature), and record that version and its source in `project-initialization.md`.
+When Mixins are approved, the template's `mixin_booter_version` (ForgeDevEnv) is the build version only. When the approved architecture makes MixinBooter required, declare `required-after:mixinbooter@[<version>,)` with the version Mixins in `guidelines/project-defaults.md` selects (the reported version recorded in owner defaults, unless the mod needs a newer feature), and record that version and its source in `project-initialization.md`. When the architecture keeps MixinBooter optional (Mixins in `guidelines/project-defaults.md`), declare no required relation and record that decision and its architecture reference instead.
 
 Do not add gameplay implementation.
 

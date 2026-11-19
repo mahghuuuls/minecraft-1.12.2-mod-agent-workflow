@@ -103,7 +103,7 @@ Act as a software architect collaborating with the project owner.
 - Evaluate candidate libraries identified during Feasibility Research.
 - Use approved dependency source checkouts as read-only evidence for integration decisions.
 - Select dependencies only when they provide meaningful value.
-- When the architecture uses Mixins, name MixinBooter as the loader and record its declared minimum as Mixins in `guidelines/project-defaults.md` sets it. Another Mixin loader needs the owner's explicit decision.
+- When the architecture uses Mixins, name MixinBooter as the loader, record whether it is required or optional, and record any declared minimum, as Mixins in `guidelines/project-defaults.md` sets them. Another Mixin loader needs the owner's explicit decision.
 - Record the exact artifact used by the build separately from the verified minimum encoded in shipping metadata; the compatibility policy itself is owned by `guidelines/project-defaults.md` and must not be replaced by a project-specific upper bound.
 - Explain important alternatives and their trade-offs.
 - For each complexity-bearing boundary, sketch at least two meaningfully different designs before selecting one. Compare common usage, interface knowledge, likely changes, special cases, dependency leakage, and Minecraft lifecycle constraints.
