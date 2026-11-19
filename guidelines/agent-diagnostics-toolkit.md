@@ -184,7 +184,7 @@ Toolkit logs are evidence only when the setup is also evidenced. A missing event
 
 ### Tolerated Failures
 
-A command whose success is the evidence never carries `toleratedFailures`: a tolerated check that fails still ends the bundle with `failed=0`. Tolerate only scene preparation and cleanup commands that may find nothing to do (a fill over the same block, a kill with no match, a clear of an empty inventory). A proof names the checked command's own result line, not the bundle's `failed=0`.
+A command whose success is the evidence never carries `toleratedFailures`: a tolerated check that fails still ends the bundle with `failed=0`. Tolerate only scene preparation and cleanup commands that may find nothing to do (a fill over the same block, a kill with no match, a clear of an empty inventory). A proof names the checked command's own result line, not the bundle's `failed=0`. The Toolkit itself tolerates a command that only matched nothing (`commands.generic.selector.notFound`, also for an entity or a player not found), whatever the command declares, as observed with 1.9.0: a `testfor` that finds nothing therefore gets a `TOLERATED` record and the bundle still ends with `failed=0`. Do not use `testfor` as a check; use `scoreboard players test` on an objective, or read the state with an inspection.
 
 ## Command Inbox
 
