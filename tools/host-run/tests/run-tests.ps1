@@ -95,6 +95,11 @@ try {
     Assert-Contains $set.Lines 'abc' 'The -Set variable did not reach the command.'
     Assert-Equal ([string]::IsNullOrEmpty($env:HOST_RUN_TEST_VAR)) $true 'The -Set variable leaked into the test process.'
 
+    # 4b. Several assignments follow one -Set (the form host-run.cmd can pass).
+    $twoSet = Invoke-Tool @('run', '-Command', 'cmd.exe /d /c echo %HOST_RUN_TEST_A%-%HOST_RUN_TEST_B%', '-Set', 'HOST_RUN_TEST_A=one', 'HOST_RUN_TEST_B=two words', '-WorkingDirectory', $TestDirectory)
+    Assert-Equal $twoSet.ExitCode 0 'The two-value -Set run did not exit 0.'
+    Assert-Contains $twoSet.Lines 'one-two words' 'The second -Set value did not reach the command.'
+
     # 5. -TailLines limits the printed output; the file keeps everything.
     $counting = Join-Path $TestDirectory 'count.cmd'
     [IO.File]::WriteAllText($counting, "@echo off`r`necho one`r`necho two`r`necho three`r`n", (New-Object Text.ASCIIEncoding))

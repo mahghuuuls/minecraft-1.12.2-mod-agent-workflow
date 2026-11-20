@@ -358,6 +358,17 @@ try {
         Write-Utf8 (Join-Path $packRoot 'manifest.sha256') "$manifestHash  manifest.json"
         Assert-ExitCode "verified evidence pack at $packBase" 0 (Invoke-Validator)
 
+        # A change-boundary patch and a non-pack folder beside the pack are not read as broken packs.
+        $workRoot = Join-Path $testRoot 'validation/implementation/IMP-002'
+        New-Item -ItemType Directory -Path (Join-Path $workRoot 'save-after-a') -Force | Out-Null
+        Write-Utf8 (Join-Path $workRoot 'imp-002.patch') 'diff'
+        $withWork = ($packIssue.Replace('<link-base>', $linkBase).Replace('<pack-base>', $packBase)) + "`n- Review patch: ``workspace/validation/implementation/IMP-002/imp-002.patch``; saved world ``workspace/validation/implementation/IMP-002/save-after-a``.`n"
+        Write-Utf8 (Join-Path $issuesRoot 'IMP-002-second-fixture.md') $withWork
+        Assert-ExitCode "pack beside a patch file and a non-pack folder at $packBase" 0 (Invoke-Validator)
+        Write-Utf8 (Join-Path $issuesRoot 'IMP-002-second-fixture.md') ($packIssue.Replace('<link-base>', $linkBase).Replace('<pack-base>', $packBase))
+        Remove-Item -LiteralPath (Join-Path $workRoot 'save-after-a') -Recurse -Force
+        Remove-Item -LiteralPath (Join-Path $workRoot 'imp-002.patch') -Force
+
         Write-Utf8 $manifestPath '{ "checkpoint": "final", "changed": true }'
         Assert-ExitCode "changed manifest at $packBase" 1 (Invoke-Validator)
         Remove-Item -LiteralPath $manifestPath
@@ -545,7 +556,7 @@ Change boundary: `<path>`, SHA-256 `00` (read-only).
         throw "Validator warned about the patch of an In Progress issue. Output: $($earlyPatch.Output)"
     }
 
-    Write-Host 'Workspace validator tests passed: valid state, stage statuses with a date and a note, Not Applicable stages and earlier record tables accepted (the active table checked strictly), plain and linked issue summaries with or without a status column (missing, duplicate, stale and cross-cycle targets rejected), and cycle-scoped identifiers accepted; evidence packs of Done issues checked; a session map without a criterion-to-card table rejected before its campaign and accepted with one, a session-map card without a results line rejected and a recorded one accepted, for a work-folder campaign and for a change-cycle map that names its results file (cards by identifier, maps counted, an unlinked map warned); change-cycle issues with a status note or the older bold form read; a missing change-boundary patch of an Awaiting Validation or Done issue warned (also when named with backslashes) and a present or unnamed one, or a rooted path of another workspace, not; invalid status, missing stage artifacts, ledger or plan disagreement, and multiple active issues rejected.' -ForegroundColor Green
+    Write-Host 'Workspace validator tests passed: valid state, stage statuses with a date and a note, Not Applicable stages and earlier record tables accepted (the active table checked strictly), plain and linked issue summaries with or without a status column (missing, duplicate, stale and cross-cycle targets rejected), and cycle-scoped identifiers accepted; evidence packs of Done issues checked (a change-boundary patch and a non-pack folder beside a pack not read as packs); a session map without a criterion-to-card table rejected before its campaign and accepted with one, a session-map card without a results line rejected and a recorded one accepted, for a work-folder campaign and for a change-cycle map that names its results file (cards by identifier, maps counted, an unlinked map warned); change-cycle issues with a status note or the older bold form read; a missing change-boundary patch of an Awaiting Validation or Done issue warned (also when named with backslashes) and a present or unnamed one, or a rooted path of another workspace, not; invalid status, missing stage artifacts, ledger or plan disagreement, and multiple active issues rejected.' -ForegroundColor Green
 } finally {
     $resolvedTestRoot = [System.IO.Path]::GetFullPath($testRoot)
     $resolvedTempRoot = [System.IO.Path]::GetFullPath([System.IO.Path]::GetTempPath())

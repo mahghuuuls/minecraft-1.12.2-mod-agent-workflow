@@ -437,7 +437,7 @@ Relevant values may include:
 - `use_modern_java_syntax`
 - `license`
 
-Preserve `minecraft_username` exactly as approved, including letter casing. When an existing integrated-server test world or player record will be reused, compare the configured name with the established runtime identity before planning reconnect or persistence checks; do not silently normalize the value.
+Preserve `minecraft_username` exactly as approved, including letter casing. When the name is a real account's name, ask for it in that account's own casing, for example as a launcher profile or an earlier game log shows it: with another casing the development client can log in under either one from launch to launch, so the integrated server reads a different player record each time. When an existing integrated-server test world or player record will be reused, compare the configured name with the established runtime identity before planning reconnect or persistence checks; do not silently normalize the value.
 
 Shared defaults remain in `setup/template-defaults.properties`. Do not edit shared defaults during mod development.
 

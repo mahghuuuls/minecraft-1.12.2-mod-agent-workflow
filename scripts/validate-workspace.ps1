@@ -271,9 +271,21 @@ foreach ($record in ($issueRecords | Where-Object { $_.Status -eq 'Done' })) {
                 continue
             }
         }
+        # A change-boundary patch and other working files live beside pack folders under validation/implementation/<issue>/;
+        # a path to a file is not a pack folder.
+        if ($packPath -match '\.(?:patch|diff)$' -or (Test-Path -LiteralPath (Resolve-ProcessPath $packPath) -PathType Leaf)) { continue }
         $packPath
     })
     $packPaths = @($packPaths | Sort-Object -Unique)
+    # A cited folder without manifest.json (a saved world, a staging copy) is not reported as a broken pack when the
+    # issue names at least one folder that is a pack.
+    $sealedPaths = @($packPaths | Where-Object { Test-Path -LiteralPath (Join-Path (Resolve-ProcessPath $_) 'manifest.json') -PathType Leaf })
+    if ($sealedPaths.Count -gt 0) {
+        $packPaths = @($packPaths | Where-Object {
+            $directory = Resolve-ProcessPath $_
+            -not (Test-Path -LiteralPath $directory -PathType Container) -or (Test-Path -LiteralPath (Join-Path $directory 'manifest.json') -PathType Leaf)
+        })
+    }
     if ($packPaths.Count -eq 0) {
         Add-ValidationWarning "Done issue $($record.Id) says its evidence pack applies but names no pack folder under workspace/validation/campaigns or workspace/validation/implementation: $($record.Path)"
         continue

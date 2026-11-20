@@ -14,7 +14,12 @@ param(
     [string]$Label = 'run',
     [ValidateRange(0, 100000)]
     [int]$TailLines = 0,
-    [switch]$Quiet
+    [switch]$Quiet,
+    # Further NAME=value words after -Set, as in `-Set "A=1" "B=2"`. Through host-run.cmd (powershell.exe -File) a
+    # repeated -Set is refused by the parameter binder (ParameterAlreadyBound) and an array literal arrives as one
+    # string, so several assignments follow a single -Set. Each word is checked like a -Set value.
+    [Parameter(ValueFromRemainingArguments = $true)]
+    [string[]]$MoreSet = @()
 )
 
 # host-run starts one command outside the agent's own process tree and waits for it.
@@ -31,6 +36,7 @@ param(
 
 Set-StrictMode -Version 2.0
 $ErrorActionPreference = 'Stop'
+$Set = @($Set) + @($MoreSet)
 
 Import-Module Microsoft.PowerShell.Utility -ErrorAction Stop
 Import-Module Microsoft.PowerShell.Management -ErrorAction Stop

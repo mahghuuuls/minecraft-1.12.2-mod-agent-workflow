@@ -42,7 +42,7 @@ Starts `cmd.exe /d /c echo host-run probe ok` through the selected launcher and 
 | `-WorkingDirectory <path>` | Where the command runs. Default: the current directory. |
 | `-TimeoutSeconds <n>` | Stop the command tree after this many seconds and exit 124. Default 1800. |
 | `-Launcher wmi\|task` | `wmi` (default) uses `Win32_Process.Create`; `task` creates, runs, and removes a one-time scheduled task. Try `task` when `wmi` is refused. |
-| `-Set NAME=value` | Environment variables for the command only. Repeat the option or give several values. |
+| `-Set NAME=value [NAME=value ...]` | Environment variables for the command only. Give several assignments after one `-Set`, each as its own word: `-Set "A=1" "B=2"`. A repeated `-Set` is refused through `host-run.cmd` (`ParameterAlreadyBound`), and a comma list arrives there as one value. |
 | `-Label <text>` | A word for the run folder name, for example `release-build`. |
 | `-TailLines <n>` | Print only the last `n` output lines. The output file keeps everything. |
 | `-Quiet` | Print only the final exit line. |
