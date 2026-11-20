@@ -5,7 +5,7 @@ This tool stages and supervises local Minecraft 1.12.2 Cleanroom and standard Fo
 - Use only the current project's approved binaries, profiles and test steps. Profile flags record an owner decision; setting a flag is not obtaining that decision.
 - Keep profiles, copied binaries, configurations, worlds and evidence in ignored workspace paths. Do not commit machine-specific paths or Minecraft/dependency binaries here.
 - Include every owner reference pack in `protectedRoots`. Treat source caches and source instances as read-only. Never point the runtime at a normal game instance.
-- Prepare a new named runtime for a different binary/configuration profile. Do not bypass an inventory or hash failure by refreshing the runtime manifest from its current contents.
+- Select reuse, project-JAR refresh or fresh preparation under [Preparation](../../procedures/isolated-cleanroom-validation.md#preparation). Never derive new expected hashes from unexplained changes in the runtime.
 - Inspect the dependency set before launch with `tools/mod-jar`. Read generated configurations back and compare them with the selected Toolkit version's game-written layout.
 - Tell the owner before an authorized graphical launch. Toolkit file requests do not authorize desktop-control APIs.
 - Use bounded session plans and keep the outer `host-run` timeout above the session plus shutdown allowance. Never stop arbitrary Java processes or identify an owned process by PID alone.

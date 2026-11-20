@@ -1,14 +1,19 @@
 import hashlib
 import json
 from pathlib import Path
+import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from common import read_json, sha256, write_json, RuntimeErrorDetail
 from prepare import prepare, MAIN, CLIENT_TWEAKER, SERVER_TWEAKER
+from refresh import refresh
+from session import Ownership, Session, read_manifest
 
 
 class PrepareTests(unittest.TestCase):
@@ -73,6 +78,98 @@ class PrepareTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeErrorDetail, 'already exists'):
             self.invoke()
         self.assertEqual(original, (Path(result['root']) / 'runtime.json').read_bytes())
+
+    def prepare_builds(self, sides=('client', 'server')):
+        old = self.source / 'example.jar'
+        candidate = self.base / old.name
+        for path, data in ((old, 'previous'), (candidate, 'candidate')):
+            with zipfile.ZipFile(path, 'w') as jar:
+                jar.writestr('version.txt', data)
+        self.cfg['mods'] = [{**self.pin(old), 'sides': list(sides)}]
+        self.cfg['authorization']['serverLaunch'] = True
+        return Path(self.invoke()['root']), candidate, sha256(old), sha256(candidate)
+
+    def test_refresh_cli_updates_both_sides_and_preserves_history(self):
+        root, candidate, previous, current = self.prepare_builds()
+        args = (root / 'server.args').read_bytes()
+        plan = {'schema': 1, 'steps': [{'action': 'start', 'side': 'server'}]}
+        waiting = Session(root, plan)
+        cmd = [sys.executable, str(Path(__file__).resolve().parents[1] / 'runtime.py'), 'refresh',
+               '--root', str(root), '--jar', str(candidate), '--from-sha256', previous, '--sha256', current]
+        run = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+        self.assertEqual(run.returncode, 0, run.stderr)
+        evidence = Path(json.loads(run.stdout)['evidence'])
+        self.assertEqual(previous, sha256(evidence / 'previous.jar'))
+        self.assertEqual(previous, read_json(evidence / 'previous-profile.json')['mods'][0]['sha256'])
+        self.assertEqual(current, read_json(root / 'profile.json')['mods'][0]['sha256'])
+        self.assertEqual(args, (root / 'server.args').read_bytes())
+        for path in read_json(evidence / 'change.json')['targets']:
+            self.assertEqual(current, sha256(root / path))
+            self.assertEqual(previous, read_json(evidence / 'previous-runtime.json')['immutable'][path])
+        self.assertIn('changed before session', str(waiting.run()['errors']))
+        fake = Path(__file__).with_name('fake_game.py')
+        with patch('session.Game.command', return_value=[sys.executable, str(fake), 'server']):
+            result = Session(root, plan).run()
+        self.assertEqual('passed', result['status'], result)
+        self.assertEqual(current, read_json(Path(result['evidence']) / 'runtime.json')['immutable']['server/mods/example.jar'])
+
+    def test_refresh_checks_previous_inventory_and_active_owner(self):
+        root, candidate, previous, current = self.prepare_builds()
+        lock = Ownership(root, root / 'other-evidence')
+        try:
+            with self.assertRaises(FileExistsError):
+                refresh(root, candidate, previous, current)
+        finally:
+            lock.close()
+        (root / self.lib).write_bytes(b'drift')
+        with self.assertRaisesRegex(RuntimeErrorDetail, 'SHA-256 changed'):
+            refresh(root, candidate, previous, current)
+        self.assertEqual(previous, sha256(root / 'server/mods/example.jar'))
+
+    def test_refresh_refuses_live_java_and_incorrect_pins_before_staging(self):
+        root, candidate, previous, current = self.prepare_builds()
+        java = subprocess.CompletedProcess([], 0, stdout=f'java.exe "@{root}/server.args"')
+        with patch('refresh.subprocess.run', return_value=java), self.assertRaisesRegex(RuntimeErrorDetail, 'running Java'):
+            refresh(root, candidate, previous, current)
+        with patch('refresh.require_stopped'):
+            with self.assertRaisesRegex(RuntimeErrorDetail, 'SHA-256 changed'):
+                refresh(root, candidate, previous, '0' * 64)
+            with self.assertRaisesRegex(RuntimeErrorDetail, 'Previous project JAR'):
+                refresh(root, candidate, '0' * 64, current)
+        self.assertFalse((root / 'evidence').exists())
+        self.assertEqual(previous, sha256(root / 'client/mods/example.jar'))
+
+    @patch('refresh.require_stopped')
+    def test_refresh_honors_single_side_and_rejects_new_embedded_dependency(self, stopped):
+        root, candidate, previous, current = self.prepare_builds(('client',))
+        refresh(root, candidate, previous, current)
+        self.assertFalse((root / 'server/mods/example.jar').exists())
+        with zipfile.ZipFile(candidate, 'a') as jar:
+            jar.writestr('META-INF/MANIFEST.MF', 'ContainedDeps: child.jar\n')
+            jar.writestr('child.jar', b'child')
+        with self.assertRaisesRegex(RuntimeErrorDetail, 'Embedded dependency'):
+            refresh(root, candidate, current, sha256(candidate))
+        self.assertEqual(current, sha256(root / 'client/mods/example.jar'))
+        self.assertFalse((root / 'preparing.json').exists())
+
+    @patch('refresh.require_stopped')
+    def test_partial_refresh_blocks_launch_and_keeps_prior_inputs(self, stopped):
+        root, candidate, previous, current = self.prepare_builds()
+        copy = shutil.copyfile
+
+        def interrupt(source, dest):
+            if dest == root / 'server/mods/example.jar':
+                raise OSError('simulated copy failure')
+            return copy(source, dest)
+
+        with patch('refresh.shutil.copyfile', side_effect=interrupt), self.assertRaisesRegex(OSError, 'copy failure'):
+            refresh(root, candidate, previous, current)
+        evidence = Path(read_json(root / 'preparing.json')['evidence'])
+        self.assertEqual(previous, sha256(evidence / 'previous.jar'))
+        with self.assertRaisesRegex(RuntimeErrorDetail, 'incomplete'):
+            read_manifest(root)
+        with self.assertRaisesRegex(RuntimeErrorDetail, 'incomplete'):
+            refresh(root, candidate, previous, current)
 
     def test_missing_library_fails_before_destination_writes(self):
         (self.source / self.lib).unlink()

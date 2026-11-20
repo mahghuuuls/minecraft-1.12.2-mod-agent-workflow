@@ -15,6 +15,11 @@ def main():
     prep.add_argument('--profile', required=True)
     prep.add_argument('--workspace', required=True)
     prep.add_argument('--name', required=True)
+    swap = sub.add_parser('refresh', help='replace the pinned project JAR on its prepared sides')
+    swap.add_argument('--root', required=True)
+    swap.add_argument('--jar', required=True)
+    swap.add_argument('--from-sha256', required=True)
+    swap.add_argument('--sha256', required=True)
     run = sub.add_parser('run')
     run.add_argument('--root', required=True)
     run.add_argument('--plan', required=True)
@@ -25,6 +30,9 @@ def main():
         if args.action == 'prepare':
             from prepare import prepare
             result = prepare(args.profile, args.workspace, args.name)
+        elif args.action == 'refresh':
+            from refresh import refresh
+            result = refresh(args.root, args.jar, args.from_sha256, args.sha256)
         else:
             from session import Session
             result = Session(args.root, read_json(args.plan)).run()

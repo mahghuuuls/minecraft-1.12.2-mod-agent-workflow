@@ -52,4 +52,6 @@ On Cleanroom 0.7.14-alpha with LLibrary 1.7.20 and Toolkit 1.8.0, the existing d
 
 ## Limits
 
+The project-JAR refresh has automated Windows coverage through preparation, the refresh CLI, and the next bounded session with a test child. Tests exercise single- and two-side placement, prior-build retention, session ownership, running-Java detection, pin and inventory drift, embedded-dependency changes, a session holding an obsolete manifest, and an interrupted installation. Real Minecraft startup after refresh and campaign disk and timing measurements remain unverified.
+
 The tested importer requires complete existing caches and an installed dedicated server. Fresh provisioning, authentication, headless clients, other operating systems and CleanroomGradle development runs are not qualified here. Graphical tests require an interactive Windows session. Game directories are isolated; third-party mod code is not sandboxed. Add project-specific bundles and compatibility profiles before claiming a mod criterion passed.

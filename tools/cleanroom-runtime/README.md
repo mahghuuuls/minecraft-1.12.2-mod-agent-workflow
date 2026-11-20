@@ -47,7 +47,19 @@ From the workflow repository root, using absolute paths for these placeholders:
 py -3 ./tools/cleanroom-runtime/runtime.py prepare --profile C:/work/example/workspace/runtime-profile.json --workspace C:/work/example/workspace --name campaign-a
 ```
 
-The manifest pins input files and allows only declared `ContainedDeps` extracted from selected mod JARs into `mods/1.12.2`, with their embedded hashes. Cleanroom may also write the declared LLibrary core 1.0.11-1.12.2 at its exact Maven path under `mods/memory_repo`. The same embedded hash is required there. Extra or changed JARs fail before another launch. Prepare a new profile for intentional changes. `config` and `scripts` are copied into each launch's evidence; the game may legitimately rewrite them.
+The manifest pins input files and allows only declared `ContainedDeps` extracted from selected mod JARs into `mods/1.12.2`, with their embedded hashes. Cleanroom may also write the declared LLibrary core 1.0.11-1.12.2 at its exact Maven path under `mods/memory_repo`. The same embedded hash is required there. Extra or changed JARs fail before another launch. `config` and `scripts` are copied into each launch's evidence; the game may legitimately rewrite them.
+
+## Refresh the project JAR
+
+Use the same prepared root for successive builds of a project JAR with the same filename, sides and embedded dependencies. Give the tool the previous pin from the approved inventory and the new pin from the independently identified build. Select only a project-owned runtime that has finished its sessions and is exclusively managed by this runner.
+
+```powershell
+py -3 ./tools/cleanroom-runtime/runtime.py refresh --root C:/work/example/workspace/runtime/campaign-a --jar C:/work/example/build/libs/example.jar --from-sha256 <previous-sha256> --sha256 <candidate-sha256>
+```
+
+Refresh takes the session lock, verifies the previous inventory, checks for running Java processes referencing the directory, and copies the candidate onto exactly its prepared sides. Its unique `evidence/refresh-*/` directory retains the old JAR, previous metadata and the change record. After successful verification it publishes updated runtime and profile pins. Settings, worlds and prior session outputs stay in place. Restore the planned starting state and run the next bounded session with fresh evidence.
+
+A failed preflight leaves the installed inputs intact. An interrupted installation retains `preparing.json` and refuses launches and further refreshes. Preserve its evidence, including the previous JAR, and prepare a fresh root from the intended pinned inputs. Apply the usual ownership checks to any stale lock. Keep the incomplete directory for the cleanup review.
 
 ### Loader-Provided Mod Ids
 

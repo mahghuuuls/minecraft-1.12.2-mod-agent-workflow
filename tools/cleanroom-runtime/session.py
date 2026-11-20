@@ -231,16 +231,46 @@ class Game:
             raise failed
 
 
+def read_manifest(root):
+    require(not (root / 'preparing.json').exists(), 'Runtime preparation is incomplete')
+    manifest = read_json(root / 'runtime.json')
+    require(manifest.get('schema') == 1 and manifest.get('minecraft') == '1.12.2' and manifest['root'] == str(root), 'Runtime identity mismatch or moved directory')
+    for path in manifest['protectedRoots']:
+        separate(root, plain_path(path))
+    return manifest
+
+
+def verify_inventory(root, manifest):
+    check_tree(root)
+    verify_file(manifest['java']['path'], manifest['java']['sha256'])
+    for path, digest in manifest['immutable'].items():
+        verify_file(root / relative(path), digest)
+    verify_mod_inventory(root, manifest)
+
+
+def verify_mod_inventory(root, manifest):
+    # No unlisted JARs may enter the runtime unnoticed.
+    for side in ('client', 'server'):
+        actual = {p.relative_to(root).as_posix() for p in (root / side / 'mods').rglob('*.jar')}
+        expected = {p for p in manifest['immutable'] if p.startswith(side + '/mods/')}
+        generated = manifest.get('allowedGenerated', {}).copy()
+        # Cleanroom also extracts this declared LLibrary child at its Maven coordinate.
+        # Use the preparation-time hash of the embedded bytes, including for older manifests.
+        core = 'llibrary-core-1.0.11-1.12.2.jar'
+        embedded = f'{side}/mods/1.12.2/{core}'
+        if manifest.get('cleanroom') and embedded in generated:
+            generated[f'{side}/mods/memory_repo/net/ilexiconn/llibrary-core/1.0.11-1.12.2/{core}'] = generated[embedded]
+        require(expected <= actual and actual <= expected | set(generated), f'Mod inventory changed for {side}')
+        for path in actual - expected:
+            verify_file(root / relative(path), generated[path])
+
+
 class Session:
     def __init__(self, root, plan, job_factory=Job):
         self.root = plain_path(root)
         self.plan = plan
         validate_plan(plan)
-        require(not (self.root / 'preparing.json').exists(), 'Runtime preparation is incomplete')
-        self.manifest = read_json(self.root / 'runtime.json')
-        require(self.manifest.get('schema') == 1 and self.manifest.get('minecraft') == '1.12.2' and self.manifest['root'] == str(self.root), 'Runtime identity mismatch or moved directory')
-        for path in self.manifest['protectedRoots']:
-            separate(self.root, plain_path(path))
+        self.manifest = read_manifest(self.root)
         require(self.manifest['authorization'].get('toolkitActions') is True and self.manifest['authorization'].get('eulaAccepted') is True, 'Recorded runtime authorization missing')
         if any(s['action'] == 'start' and s['side'] == 'client' for s in plan['steps']):
             require(self.manifest['authorization'].get('clientLaunch') is True, 'Graphical client launch has not been authorized')
@@ -261,24 +291,7 @@ class Session:
             write_json(self.evidence / 'events.json', self.events)
 
     def verify(self):
-        check_tree(self.root)
-        verify_file(self.manifest['java']['path'], self.manifest['java']['sha256'])
-        for path, digest in self.manifest['immutable'].items():
-            verify_file(self.root / relative(path), digest)
-        # No unlisted JARs may enter the runtime unnoticed.
-        for side in ('client', 'server'):
-            actual = {p.relative_to(self.root).as_posix() for p in (self.root / side / 'mods').rglob('*.jar')}
-            expected = {p for p in self.manifest['immutable'] if p.startswith(side + '/mods/')}
-            generated = self.manifest.get('allowedGenerated', {}).copy()
-            # Cleanroom also extracts this declared LLibrary child at its Maven coordinate.
-            # Use the preparation-time hash of the embedded bytes, including for older manifests.
-            core = 'llibrary-core-1.0.11-1.12.2.jar'
-            embedded = f'{side}/mods/1.12.2/{core}'
-            if self.manifest.get('cleanroom') and embedded in generated:
-                generated[f'{side}/mods/memory_repo/net/ilexiconn/llibrary-core/1.0.11-1.12.2/{core}'] = generated[embedded]
-            require(expected <= actual and actual <= expected | set(generated), f'Mod inventory changed for {side}')
-            for path in actual - expected:
-                verify_file(self.root / relative(path), generated[path])
+        verify_inventory(self.root, self.manifest)
 
     def configure_server(self):
         with socket.socket() as sock:
@@ -395,6 +408,7 @@ class Session:
         self.job = None
         try:
             self.evidence.mkdir(parents=True)
+            require(read_manifest(self.root) == self.manifest, 'Runtime changed before session acquired ownership; retry with the intended build')
             write_json(self.evidence / 'plan.json', self.plan)
             shutil.copyfile(self.root / 'runtime.json', self.evidence / 'runtime.json')
             # The launch arguments, including any profile jvmArgs, belong to this run's evidence.
