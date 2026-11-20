@@ -169,10 +169,8 @@ Record the evidence and file scope in the intake. Carry forward the approved imp
 16. Produce `<artifact-root>/cycle-summary.md`.
 17. Offer the merge back into `project_default_branch` when the cycle used a separate working branch, and merge only under explicit authorization.
 18. For a new release, set the manual publication state to **Ready for Publication** and update the baseline with its version and release revision. For copy-only work, record the documentation commit separately in the cycle summary, link the existing release handoff, and preserve the baseline version, release revision, checksum and publication state. Refresh `project-state.md` for either route.
-19. Complete the [workflow retrospective](../guidelines/process-control.md#workflow-feedback-log) and present the completed cycle for explicit approval. Apply the [optional Workflow Changes offer](../guidelines/process-control.md#optional-post-closure-workflow-changes) when the owner opted in.
-20. After approval and any approved merge and push, deliver the [publication packet](../stages/8-release-presentation.md#publication-packet) for a new release. For a copy-only change, deliver the approved wording or file and its commit for any owner-managed listing edit.
-
-Use [Clean Up Validation Files at Closure](../procedures/cleanup-validation-workspace.md) at the step 19 briefing. Report any approved cleanup completed by handoff before the publication packet.
+19. Run the [validation cleanup review](../procedures/cleanup-validation-workspace.md) and complete the [workflow retrospective](../guidelines/process-control.md#workflow-feedback-log). Record the cleanup disposition and include any proposed file list when presenting the cycle for explicit approval. Apply the [optional Workflow Changes offer](../guidelines/process-control.md#optional-post-closure-workflow-changes) when the owner opted in.
+20. Apply any approved cleanup and deliver its size report. After approval and any approved merge and push, deliver the [publication packet](../stages/8-release-presentation.md#publication-packet) for a new release. For a copy-only change, deliver the approved wording or file and its commit for any owner-managed listing edit.
 
 Do not enter a later selected stage until every selected prerequisite is approved. Discovery of additional impact follows the backward-transition rules in `guidelines/process-control.md`.
 
@@ -195,6 +193,7 @@ For a cycle producing a new release, the agent-managed work is ready for manual 
 - Every required cycle issue is Done.
 - Release Presentation, including artifact validation and handoff when agent-managed, is approved.
 - The cycle summary records the final handoff.
+- The ledger records the [closure cleanup review](../procedures/cleanup-validation-workspace.md) and its disposition.
 
 Close a release-producing Change Cycle once the release is validated, the canonical baseline records **Ready for Publication**, and the owner explicitly approves the completed cycle.
 

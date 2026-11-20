@@ -1,6 +1,6 @@
 # Clean Up Validation Files at Closure
 
-At Initial Development or Change Cycle closure, review the project-owned validation staging and isolated runtime directories used by the closing work. If the work created none, finish the review there. For an older closed cycle, use the same procedure when cleanup is requested.
+Initiate this review at every Initial Development or Change Cycle closure without waiting for an owner reminder. Review the project-owned validation staging and isolated runtime directories used by the closing work. Record the outcome in the ledger, including when there are no candidates, cleanup was declined or deferred, or a list awaits approval. For an older closed cycle, use the same procedure when cleanup is requested.
 
 ## Prepare the closure briefing
 
@@ -10,8 +10,26 @@ At Initial Development or Change Cycle closure, review the project-owned validat
 4. Propose generated scratch output or redundant copies from disposable runs. For each candidate, establish why its **path** can disappear and how to reproduce its contents if needed. For a duplicate, verify a retained copy outside the entire removal list by size and SHA-256. For evidence already captured in a pack, run the [evidence pack verification](../tools/evidence-pack/README.md) and establish that the pack covers the specific evidence. Keep uncertain items. Preserve independent files in reusable runtimes because hard links can couple writes across tests or cause a runtime integrity check to refuse a launch.
 5. At the ordinary closure briefing, show the exact proposed paths (a file list grouped by run is sufficient), their purpose, estimated reclaimable space, and significant items kept for reuse. Request cleanup approval only when there are candidates. The owner may approve the list in the same reply as closure, decline it, or defer it. Closure approval alone leaves the files in place. A deferred cleanup can be handled after handoff.
 
+### Retiring completed runtimes
+
+Default to proposing retirement of each completed disposable installation together with its staging directories in the first closure briefing. The next cycle prepares a fresh runtime from pinned inputs when its tests need one. Record a specific dependency for each installation or directory that must remain available. Measure the remaining footprint by purpose so that collections of small assets and both client and server copies are included.
+
+Build the retirement inventory around three dispositions:
+
+- **Keep at the current path.** Keep the active repository, approved baseline, release JAR, release materials and sealed evidence directly accessible. Preserve any input or directory another profile, project or pending reproduction needs at that location.
+- **Recover on demand.** Map each historical file worth retaining to its original relative path, size, SHA-256 and recovery source. Use a verified existing copy or the exact member of a retained parent JAR. Archive unique fixtures, profiles, saves and evidence still needed for replay. When archiving, store identical payloads once and include the path map and working restore instructions.
+- **Regenerate or discard.** Identify known generated files such as rebuildable caches and document how they are recreated. Keep uncertain items pending investigation. Account for substantial remaining directories before presenting the proposal.
+
+Inventory loader-extracted dependencies and files produced during play as well as the inputs named in preparation manifests. For a clean linked Git checkout, verify its commit and preserve needed local outputs before removing it with Git's worktree command.
+
+Before deleting original files, read back every archived payload, verify its digest and the path map, and test a representative restoration from each recovery method into a separate directory. Check each restored file's size and SHA-256. Record the recovery instructions in the handoff. Include archive overhead in the net savings. Where retained files benefit from transparent compression, preserve their paths and verify their contents. Report allocated-byte savings separately from logical-byte reductions.
+
 ## Apply the approved list
+
+Take the starting measurement before creating recovery archives, compressing files or removing anything. Measure the whole project directory containing the workflow checkout and its workspace. Include hidden files, repositories, runtime and staging data. Record the absolute root and the measurement method. Count logical file bytes without following directory links into other projects or shared caches. Report any inaccessible paths or concurrent writes that affect the comparison.
 
 After closure approval, recheck ownership, current cycle references, locks and running processes before removal. Confirm that retained copies and inputs still exist and match their recorded identities. Resolve each target inside the identified project-owned directory, skip links or junctions that redirect the path, and apply only the approved files that still match the preview. Remove a whole directory only when its complete contents were inventoried and approved and still match. Leave changed, busy or newly referenced items in place. On retry, recheck the remaining files against the approved list.
 
-Verify the retained copies and affected evidence packs, release checksums and runtime input paths against their records. Record the result in the closing workflow's existing ledger entry, including what was removed or skipped and measured space recovered. Distinguish logical file sizes from disk allocation when hard links or compression affect the result. If physical savings cannot be measured reliably, label the estimate. A deferred or partial cleanup does not delay publication or the next cycle.
+Verify the retained copies and affected evidence packs, release checksums and runtime input paths against their records. If a live ledger or session map points at a retired staging copy, direct it to the verified retained copy and run the workspace validator. Record the result in the closing workflow's existing ledger entry, including what was removed or skipped and measured space recovered. Distinguish logical file sizes from disk allocation when hard links or compression affect the result. If physical savings cannot be measured reliably, label the estimate. A deferred or partial cleanup does not delay publication or the next cycle.
+
+Finish the cleanup report with the project size before and after, the net size reduction, and the percentage saved. Remeasure the same root using the same method. Calculate the percentage as `100 × (before − after) / before` from unrounded byte totals. Give the removed file count and bytes separately if other changes affected the net result. For an empty starting directory, report the percentage as inapplicable. If no deletion was authorized, report that outcome without claiming any savings.

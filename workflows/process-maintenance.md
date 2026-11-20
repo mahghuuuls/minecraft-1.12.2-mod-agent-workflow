@@ -56,7 +56,8 @@ Do not use this mode merely because a feedback entry exists. During mod developm
 7. Run consistency checks over changed process text and cross-references.
    - Run `powershell -ExecutionPolicy Bypass -File scripts/validate-process.ps1` when PowerShell is available.
    - When workspace-validation behavior changed, run `powershell -ExecutionPolicy Bypass -File scripts/test-validate-workspace.ps1` and validate the present workspace when one exists.
-8. Report changed files, verification, unresolved risks, and a suggested commit message when useful.
+8. When maintenance follows a mod workflow, check its ledger for the [validation cleanup review](../procedures/cleanup-validation-workspace.md). If the closure briefing missed the review, run it before the maintenance handoff. Include any disposable runtime files created while validating tool changes. If cleanup was already completed or the owner declined or deferred it, honor that decision unless the owner reopens it. Record the outcome or pending file list in the closing ledger.
+9. Report changed files, verification, unresolved risks, and a suggested commit message when useful.
 
 ## Output
 
