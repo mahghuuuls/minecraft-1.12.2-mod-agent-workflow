@@ -23,13 +23,13 @@ The first approved sync saves its binding after verifying the destination direct
 
 ## Rename a Provisional Project
 
-Use `-RenameToProjectId` on an existing `mod-<32 hex digits>` binding after recording the verified `mod_id` in the workspace. Take a fresh preview and show the owner the source and target folders and changed paths. Run the approved receipt with the same options. For GitHub use the destination and fresh metadata reader described in [Manual GitHub Pilot](#manual-github-pilot).
+Use `-RenameToProjectId` on an existing `mod-<32 hex digits>` binding after recording the verified `mod_id` in the workspace. Take a fresh preview and check its source, target and changed paths under [Rename a Provisional Folder](../../procedures/documentation-backup.md#rename-a-provisional-folder). Run the approved receipt with the same options. For GitHub use the destination and fresh metadata reader described in [Manual GitHub Pilot](#manual-github-pilot).
 
 ```powershell
 $rename = @{ Workspace = $workspace; Destination = $fixtureDestination; RenameToProjectId = $modId }
 $review = ./tools/documentation-sync/documentation-sync.ps1 preview @rename | ConvertFrom-Json
 $review | ConvertTo-Json -Depth 10
-# After the owner approves the preview:
+# After verifying the preview and its authorization under the rename procedure:
 ./tools/documentation-sync/documentation-sync.ps1 sync @rename -ApprovedPlan $review.approval
 ```
 

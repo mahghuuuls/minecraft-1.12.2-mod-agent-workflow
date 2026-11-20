@@ -27,7 +27,7 @@ Report the outcome separately from project approvals. The checkpoint result is r
 ## Rename a Provisional Folder
 
 1. Confirm the verified `mod_id` is recorded in `workspace/project.properties`. If the provisional ID was only recorded locally and no backup used it, set `documentation_project_id` to the verified mod ID for the first backup.
-2. For an existing provisional folder, [preview the rename](../tools/documentation-sync/README.md#rename-a-provisional-project) against its pinned destination. Show the old and new paths and the scope of the move. Obtain owner approval for that preview.
+2. For an existing provisional folder, [preview the rename](../tools/documentation-sync/README.md#rename-a-provisional-project) against its pinned destination. Verify that the preview moves only this project's bound provisional folder to the approved mod ID within the same pinned private destination. Existing backup authorization and the owner's identity approval together authorize that exact move. Record both as the basis for applying the receipt. Ask for a decision if the identity or destination differs, the target conflicts, or the proposed scope exceeds that move.
 3. Apply the approved receipt with the same rename options. The tool preserves the stable binding, existing backup files and Git history. It stops if the source tree changed or if the target path is occupied or reserved. Preview again if the proposed move changes.
 4. After the tool verifies the move and saves the new binding, update `documentation_project_id` to match it. Run the next ordinary backup against the recovered binding. If a rename was pushed before the local save completed, the saved journal resolves it on retry.
 

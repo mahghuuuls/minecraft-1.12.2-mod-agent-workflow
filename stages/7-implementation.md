@@ -140,7 +140,7 @@ Act as a focused implementation agent.
 
 Required review-agent initiation follows `guidelines/collaboration-guidelines.md#required-read-only-review-agents`. This stage owns review readiness, scope, evidence and disposition; do not add a separate review-agent permission checkpoint.
 
-At the start of Implementation and on resume, inspect the Implementation Plan and `project-status.md` for the approved issue scope and owner restrictions. Apply [Implementation Approval For Named Issues](../guidelines/process-control.md#implementation-approval-for-named-issues) and resolve any disagreement between the records before relying on the approval.
+At the start of Implementation and on resume, inspect the Implementation Plan and `project-status.md` for the approved issue scope and owner restrictions. Apply [Implementation Approval For Named Issues](../guidelines/process-control.md#implementation-approval-for-named-issues) and read the [AFK override](../guidelines/process-control.md#implementation-review-cadence-and-afk-mode) in the ledger when selecting work. Resolve any other disagreement between the records before relying on the approval.
 
 The agent may make ordinary implementation decisions that remain within the approved architecture. This includes the proportionate local design improvements authorized by `guidelines/coding-standards.md`, even when they touch multiple related methods or classes inside one approved responsibility. Decisions that alter component responsibilities, dependency directions, public behavior, or project scope require explicit approval.
 

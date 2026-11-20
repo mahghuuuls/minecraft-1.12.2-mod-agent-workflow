@@ -108,7 +108,7 @@ Act as a release documentation editor.
 - Record new or changed public-facing terms in the glossary when they affect how players, modpack authors, config users, or later documents should refer to a feature.
 - Keep repository README and mod-page copy separate by default unless the owner explicitly chooses a combined document.
 - Describe only implemented and approved behavior.
-- In player/download-facing copy, state what the mod does in plain declarative sentences before listing details. Do not sell it: no evocative fragments, no counts of content, no superlatives, unless the owner asks for that voice.
+- In the platform summary and full mod page, lead with what the mod adds or changes. Describe each feature through its observable behavior. For example, use `Adds floating health bars and damage numbers` for a summary and `The amber trail shows how much health the mob just lost` for a feature. Use direct instructions for player actions such as opening settings. Do not sell it: no evocative fragments, no counts of content, no superlatives, unless the owner asks for that voice.
 - Keep configuration and multiplayer notes high-level unless a player must follow a specific rule.
 - Keep internal engineering evidence out of public files.
 - Keep technical evidence, unresolved validation gaps, and ownership decisions in `release-presentation.md`.
@@ -163,7 +163,9 @@ Avoid obvious or generic README content, including:
 
 Player/download-facing copy should live in a separate file by default, such as `MOD-PAGE.md` or another owner-approved distribution-page document.
 
-Draft the smallest useful mod page first and expand it only when a normal player needs more information to decide, install, or configure the mod. Omit template-shaped sections that add no useful information. As a drafting guardrail for a narrow mod, keep the first draft to roughly 200 prose words or fewer, excluding configuration examples and required legal text. This is not a publication limit. For a narrow mod, the default shape is:
+Start with the shipped features. Read the approved release scope and implementation evidence and group related behavior by what it does in play. For each group that would affect a player's or pack author's decision to install, enable or configure the mod, explain the behavior on the page. Include a representative choice, default or optional integration when it changes that behavior. For example, "customizable health bars" alone leaves out what happens when a mob takes a hit and which bars appear when the player aims at one. A link can carry the full settings reference once the page explains the feature.
+
+Let the breadth of the release determine the length. A single-purpose mod may need only a paragraph. A mod with several distinct systems may need a short section for each. Cut repeated wording after checking feature coverage. For a narrow mod, a useful shape is:
 
 1. One short opening paragraph stating what the mod does. Plain declarative sentences; no evocative fragments, content counts, or superlatives unless the owner asks for them.
 2. The approved AI usage disclaimer.
@@ -230,6 +232,12 @@ Avoid player-facing sections that are primarily internal or redundant, including
 
 If the owner explicitly selects a combined documentation style, keep repository-oriented and player-facing content clearly separated.
 
+### Inline feature illustrations
+
+When a visual explains a feature more clearly than prose alone, place an authentic gameplay capture or shipped icon beside the relevant passage. Give it descriptive alt text and a short caption or legend explaining what to notice. Center standalone pictures where the platform supports it and keep small symbols beside their definitions. Follow the project's screenshot ownership. Use stable public image URLs so the description can be pasted in one pass. Check the links after the assets are published and include image placement and legibility in the platform preview.
+
+Choose gallery images that show something else. Compare the gallery selection with the inline illustrations, including crops of the same scene, and omit duplicates. A different view of the same feature belongs in the gallery when it demonstrates something the inline illustration does not.
+
 ### Independent Mod Page Review
 
 Review new or materially revised agent-managed player-facing copy, including the player-facing portion of an approved combined document. A revision is material when it changes what readers can reasonably conclude or do, such as understanding the mod's purpose, defaults, setup, compatibility, integration, or route to essential documentation. Carry forward unchanged approved pages, including pages approved before this review was introduced, after confirming and recording why their claims are still accurate and useful in the current reader-visible context. For nonmaterial edits to approved copy, apply the normal copy checks and record why the edits are nonmaterial. For owner-managed or deferred copy, provide only the review help the owner explicitly assigns.
@@ -241,7 +249,11 @@ Once the draft, public-claim checks, and applicable source-format checks are rea
 - **Mod Developer.** Use when the mod offers a public API or developer integration surface. Check what others can integrate, the boundaries of support, and how to find documentation and available examples. Distinguish developer APIs from configuration and scripting. Record why the role is skipped when it does not apply.
 - **Editorial Critic.** Check clarity, concision, specificity, and natural phrasing. Flag padding, repetition, vague claims, or structure that gets in the reader's way. Apply the approved terminology, disclosure, and public-copy preferences, and explain the reader impact of each suggestion.
 
+Review the summary alongside the page. The Editorial Critic checks both for narrative openings and promises about the reader's experience. Each applicable reviewer asks whether a picture would make a specific passage easier for their audience to understand. Identify the passage, the proposed image and the detail it would explain, or report that the text suffices. For existing images, check whether the label or caption makes that detail recognizable and flag duplication across page and gallery.
+
 Assume basic Minecraft modding literacy. Use the approved project setup and the metadata readers can actually see to judge version, loader, and runtime context. Apply Runtime Compatibility in `guidelines/project-defaults.md` when checking the distinction between a Forge artifact and the supported runtime. Ask for additions only when they answer a concrete reader question or prevent a likely misunderstanding. Keep detailed configuration and API reference material in linked documentation when relevant.
+
+After the first reading, the Player and Modpack Author reviewers independently compare the release evidence with the page from their audience's perspective. For each major shipped feature relevant to that audience, identify the passage that explains what it does, or flag what is missing or merely named. Record this comparison briefly in the review report. A list of feature names, a general customization claim, or a settings link can leave a material gap even when every sentence is accurate. Raise an Important finding when the omission hides a meaningful reason to install the mod or a choice that changes ordinary play. Give the reader's unanswered question and the smallest addition that answers it. For a focused re-review, apply this check to the affected feature groups.
 
 Classify each finding as a factual error, missing essential information, clarity problem, or editorial suggestion. Assign severity by reader impact, independent of the category or number of reviewers who raised it.
 
@@ -362,7 +374,7 @@ When screenshots are agent-captured, the agent follows the shot list itself:
 - Capture with the means the runtime offers (with the Agent Test Toolkit: screenshots that leave out the chat and toasts, menu pictures, the Mods list entry). Keep a real mouse pointer and other windows out of the frame, and set the window size the platform displays well.
 - Open and read every picture before selecting it. Discard a picture with debug text, test markers, half-drawn screens, or anything that shows behaviour the mod does not have; retake it.
 - Revert staged state after capture, as for any staged scenario.
-- Deliver the selected pictures in the [publication packet](#publication-packet): for each, its file path, a platform title and description written for players (on CurseForge, at most 128 and 256 characters), and which picture to mark as the featured image. The owner may replace or drop any of them.
+- Deliver the selected gallery pictures in the [publication packet](#publication-packet): for each, its file path, a platform title and description written for players (on CurseForge, at most 128 and 256 characters), and which picture to mark as the featured image. The owner may replace or drop any of them.
 
 Screenshots stay optional: a failed or skipped capture never blocks release approval.
 
@@ -444,7 +456,7 @@ When a release artifact is built, inspected, identified, or handed off, also pro
 
 ### Publication Packet
 
-The publication packet is everything the owner needs to publish, in one message: the canonical upload-ready jar path from the handoff, the file settings the platform asks for (release type, game version, loader, relations), the exact paste-ready distribution-platform release changelog, the platform listing packet, any agent-captured screenshots with their titles, descriptions and the featured image, and the owner-managed steps from the handoff in order, including any message the owner relays to another project.
+The publication packet is everything the owner needs to publish, in one message: the canonical upload-ready jar path from the handoff, the file settings the platform asks for (release type, game version, loader, relations), the exact paste-ready distribution-platform release changelog, the platform listing packet, the selected gallery screenshots with their titles, descriptions and featured choice when applicable, and the owner-managed steps from the handoff in order, including any message the owner relays to another project.
 
 Give it once, as the workflow's last message, after the workflow approval and after any merge or push the published pages depend on, under the heading `Ready to publish now`. Do not give it at the Stage 8 checkpoint: upload steps shown while the cycle summary, the merge, or the workflow approval are still ahead read as an instruction to publish now, and a page published before the merge links to documentation that does not show the release yet.
 
