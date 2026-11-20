@@ -22,6 +22,15 @@ function Assert-ExitCode([string]$name, [int]$expected, [object]$result) {
     }
 }
 
+function Assert-CleanupWarning([string]$name, [string]$ledger, [bool]$expected) {
+    Write-Utf8 (Join-Path $documentationRoot 'project-status.md') $ledger
+    $result = Invoke-Validator
+    Assert-ExitCode $name 0 $result
+    if (($result.Output -like '*Closed workflow has no recognized validation cleanup disposition*') -ne $expected) {
+        throw "$name expected cleanup warning=$expected. Output: $($result.Output)"
+    }
+}
+
 try {
     New-Item -ItemType Directory -Path $issuesRoot -Force | Out-Null
     New-Item -ItemType Directory -Path $projectRoot -Force | Out-Null
@@ -82,6 +91,19 @@ try {
 
     Assert-ExitCode 'valid workspace' 0 (Invoke-Validator)
 
+    $closedInitial = $status.Replace('- Status: **In Progress**', '- Status: **Approved**')
+    Assert-CleanupWarning 'closed initial workflow missing cleanup' $closedInitial $true
+    Assert-CleanupWarning 'active workflow with an approved stage' ($status.Replace('| **In Progress** |', '| **Approved** |')) $false
+    Assert-CleanupWarning 'nested checkpoint approval is not workflow approval' ($status.Replace('- Status: **In Progress**', "### Setup`n`n- Status: **Approved**")) $false
+    Assert-CleanupWarning 'assessment outside closure procedure' ($closedInitial.Replace('Initial Development', 'Existing Mod Assessment')) $false
+    $olderFields = $closedInitial.Replace('- Workflow:', '- Active workflow:').Replace('- Status:', '- Workflow status:')
+    Assert-CleanupWarning 'legacy header with missing cleanup' $olderFields $true
+    Assert-CleanupWarning 'legacy explicit disposition' ($olderFields + "`nClosure cleanup completed with explicit owner approval.") $false
+    foreach ($outcome in @('No candidates', 'Awaiting decision', 'Declined', 'Deferred', 'Approved pending application', 'Partially applied', 'Applied')) {
+        Assert-CleanupWarning "closed workflow disposition $outcome" ($closedInitial.Replace('## Stage Routing', "- Validation cleanup: $outcome`n`n## Stage Routing")) $false
+    }
+    Assert-CleanupWarning 'unfinished placeholder' ($closedInitial.Replace('## Stage Routing', "- Validation cleanup: TBD`n`n## Stage Routing")) $true
+
     # Stage-status cells: an exact status may lead a date and a note; Not Applicable needs none;
     # only the active stage table fails on another word, earlier record tables warn.
     $statusWithCycle = @'
@@ -123,6 +145,9 @@ try {
     Write-Utf8 (Join-Path $documentationRoot 'project-status.md') $statusWithCycle
     $cycleStatusResult = Invoke-Validator
     Assert-ExitCode 'stage statuses with notes, Not Applicable, and earlier record tables' 0 $cycleStatusResult
+    if ($cycleStatusResult.Output -like '*Closed workflow has no recognized validation cleanup disposition*') {
+        throw 'Earlier Initial Development approval was mistaken for closure of the active cycle.'
+    }
     if ($cycleStatusResult.Output -notlike "*Stage record 'Implementation' in an earlier stage table*") {
         throw "Validator did not warn about the earlier record table. Output: $($cycleStatusResult.Output)"
     }
@@ -245,8 +270,9 @@ try {
     if ($historicalResult.Output -like '*Resume snapshot may be stale*') {
         throw "Historical fields affected the resume comparison. Output: $($historicalResult.Output)"
     }
-    Write-Utf8 (Join-Path $documentationRoot 'project-status.md') ($activeCycleStatus.Replace('## Active Cycle', '## Completed Cycle').Replace('**In Progress**', '**Approved**'))
-    Assert-ExitCode 'latest completed cycle still uses its own issue scope' 0 (Invoke-Validator)
+    $closedCycle = $activeCycleStatus.Replace('## Active Cycle', '## Completed Cycle').Replace('**In Progress**', '**Approved**')
+    Assert-CleanupWarning 'previous cleanup cannot satisfy current cycle' ($closedCycle.Replace('### Historical Issues', "- Validation cleanup: Applied`n`n### Historical Issues")) $true
+    Assert-CleanupWarning 'latest completed cycle with its own disposition' ($closedCycle.Replace('## Completed Cycle', "## Completed Cycle`n`n- Validation cleanup: Deferred")) $false
     Write-Utf8 (Join-Path $documentationRoot 'project-status.md') ($activeCycleStatus.Replace('IMP-001 is **Done**', 'IMP-001 is **Ready**'))
     Assert-ExitCode 'active cycle disagreement remains an error' 1 (Invoke-Validator)
     Write-Utf8 (Join-Path $documentationRoot 'project-status.md') ($activeCycleStatus + "`n- IMP-997 is **Ready**.`n")

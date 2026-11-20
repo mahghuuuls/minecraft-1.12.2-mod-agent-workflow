@@ -84,6 +84,8 @@ For a new mod, the workflow progresses through these stages:
 8. **Implementation:** write, test, validate, and independently review each issue.
 9. **Release Presentation:** prepare public documentation, validate the release artifact, and hand it off for publication.
 
+**Workflow Closure** follows the last applicable stage of Initial Development and each Change Cycle. You review the release baseline or cycle summary, the retrospective, and the outcome of the validation cleanup review. You can close the work and defer cleanup. A release ends with the publication packet. A copy-only cycle ends with the approved wording and commit. [Workflow Closure](procedures/workflow-closure.md)
+
 The stages are ordered, but they are not one-way. You are not locked into the current stage. If your feedback changes the scope, requirements, architecture, or plan, the agent will return to the appropriate stage, update the affected decisions, and then continue from the corrected baseline.
 
 Existing-mod assessments and later change cycles reuse only the stages required by their current state and requested work.

@@ -64,6 +64,47 @@ function Get-IssueStatus([string]$path) {
     return Normalize-MarkdownValue $match.Groups['status'].Value
 }
 
+function Test-ClosureCleanup([string]$currentText) {
+    # A previous approved Initial Development header can coexist with a newer Active Cycle.
+    # Read the workflow and its status from the same entry, never from a stage or archived record.
+    $sections = @($currentText -split '(?m)(?=^#{1,2}[ \t]+)')
+    $cycle = $sections | Where-Object { $_ -match '^##\s+Active Cycle\b' } | Select-Object -First 1
+    if (-not $cycle) {
+        $cycle = $sections | Where-Object { $_ -match '^##\s+Completed Cycle\b' } | Select-Object -First 1
+    }
+    $entry = $null
+    foreach ($section in $sections) {
+        $name = Get-BulletValue $section 'Workflow'
+        if (-not $name) { $name = Get-BulletValue $section 'Active workflow' }
+        if ($cycle -and $name -notmatch '^Change Cycle\b') { continue }
+        if ($name -match '^(Initial Development|Change Cycle)\b') {
+            $entry = $section
+            break
+        }
+    }
+    $header = ([string]$entry -split '(?m)^#{3,6}[ \t]+', 2)[0]
+    $status = Get-BulletValue $header 'Workflow status'
+    if (-not $status) { $status = Get-BulletValue $header 'Status' }
+    if (-not $status -and $cycle) {
+        $cycleHeader = ($cycle -split '(?m)^#{3,6}[ \t]+', 2)[0]
+        $status = Get-BulletValue $cycleHeader 'Status'
+    }
+    if (-not ($status -match '^Approved\b' -or $cycle -match '^##\s+Completed Cycle\b')) { return }
+
+    $scope = @($cycle, $entry) -join [Environment]::NewLine
+    $outcome = Get-BulletValue $scope 'Validation cleanup'
+    if ($outcome -in @('No candidates', 'Awaiting decision', 'Declined', 'Deferred',
+                       'Approved pending application', 'Partially applied', 'Applied')) { return }
+
+    # Older single-workflow ledgers can record an explicit disposition in narrative form.
+    # For a cycle, only its own sections can supply this evidence.
+    if (-not $cycle -and $entry -match '(?im)^- (?:Active workflow|Workflow):\s*\**Initial Development\b') {
+        $scope = $currentText
+    }
+    if (-not $outcome -and $scope -match '(?im)^(?:- )?(?:Closure |Validation )?cleanup (?:completed with explicit owner approval|deferred|declined|found no candidates)\b') { return }
+    Add-ValidationWarning 'Closed workflow has no recognized validation cleanup disposition in its current ledger entry. Check the closure review and record its outcome under Validation cleanup.'
+}
+
 if (-not (Test-Path -LiteralPath $documentationRoot -PathType Container)) {
     Add-ValidationError "Missing runtime documentation directory: $documentationRoot"
 }
@@ -86,6 +127,7 @@ if (-not (Test-Path -LiteralPath $statusPath -PathType Leaf)) {
         }
     }
     $currentStatusText = $currentStatusLines -join [Environment]::NewLine
+    Test-ClosureCleanup $currentStatusText
     $workflowStageStatuses = @('Not Started', 'In Progress', 'Awaiting Approval', 'Approved', 'Needs Revision')
 
     foreach ($match in [regex]::Matches($statusText, '(?m)^\s*-\s*Status:\s*\*\*(?<status>[^*]+)\*\*\s*$')) {

@@ -166,11 +166,7 @@ Record the evidence and file scope in the intake. Carry forward the approved imp
 13. When the route revisits Implementation Plan, use the cycle artifact root and its approval and authorization packet.
 14. When the route revisits Implementation, execute its approved cycle issues.
 15. For a release, execute Release Presentation with the applicable artifact validation and handoff. For a [public-copy correction](#public-copy-corrections), use the scoped copy review and its completion criteria.
-16. Produce `<artifact-root>/cycle-summary.md`.
-17. Offer the merge back into `project_default_branch` when the cycle used a separate working branch, and merge only under explicit authorization.
-18. For a new release, set the manual publication state to **Ready for Publication** and update the baseline with its version and release revision. For copy-only work, record the documentation commit separately in the cycle summary, link the existing release handoff, and preserve the baseline version, release revision, checksum and publication state. Refresh `project-state.md` for either route.
-19. Run the [validation cleanup review](../procedures/cleanup-validation-workspace.md) and complete the [workflow retrospective](../guidelines/process-control.md#workflow-feedback-log). Record the cleanup disposition and include any proposed file list when presenting the cycle for explicit approval. Apply the [optional Workflow Changes offer](../guidelines/process-control.md#optional-post-closure-workflow-changes) when the owner opted in.
-20. Apply any approved cleanup and deliver its size report. After approval and any approved merge and push, deliver the [publication packet](../stages/8-release-presentation.md#publication-packet) for a new release. For a copy-only change, deliver the approved wording or file and its commit for any owner-managed listing edit.
+16. Run [Workflow Closure](../procedures/workflow-closure.md) for the approved release or copy-only route.
 
 Do not enter a later selected stage until every selected prerequisite is approved. Discovery of additional impact follows the backward-transition rules in `guidelines/process-control.md`.
 

@@ -52,17 +52,11 @@ Reusable stages 1 through 8 are **Required**. Release Presentation includes rele
 7. Execute Implementation Plan.
 8. Execute Implementation.
 9. Execute Release Presentation through its final review state, including release artifact validation and manual publication handoff when agent-managed by the ownership matrix.
-10. Prepare `project-baseline.md` as a release-ready baseline draft, set the manual publication state to **Ready for Publication**, and update `project-state.md`.
-11. Run the [validation cleanup review](../procedures/cleanup-validation-workspace.md) and record its outcome before presenting the final checkpoint. Include any proposed cleanup list alongside the separately labeled decisions on:
-    - approval of Release Presentation, and
-    - approval of the completed Initial Development workflow and release-ready baseline.
-12. Apply any approved cleanup and deliver its size report before giving the owner the [publication packet](../stages/8-release-presentation.md#publication-packet) as the workflow's last message.
-
-The owner may approve both decisions in one response. Do not treat approval of one as approval of the other.
+10. Run [Workflow Closure](../procedures/workflow-closure.md) for the initial release.
 
 If the owner later reports a manual publication result, update `project-baseline.md` with the published URL/date/file information as an optional follow-up. Do not keep the Initial Development workflow open merely to wait for external publication.
 
-Each stage follows [Stage Transition Preferences](../guidelines/process-control.md#stage-transition-preferences) and the approval lifecycle in `guidelines/process-control.md`. Final workflow approval is explicit. At its briefing, apply the [optional Workflow Changes offer](../guidelines/process-control.md#optional-post-closure-workflow-changes) when the owner opted in.
+Each stage follows [Stage Transition Preferences](../guidelines/process-control.md#stage-transition-preferences) and the approval lifecycle in `guidelines/process-control.md`.
 
 ## Output Artifacts
 

@@ -4,6 +4,8 @@ Initiate this review at every Initial Development or Change Cycle closure withou
 
 ## Prepare the closure briefing
 
+In the current workflow or cycle ledger entry, use a bullet such as `- Validation cleanup: No candidates`. The disposition is one of `No candidates`, `Awaiting decision`, `Declined`, `Deferred`, `Approved pending application`, `Partially applied`, or `Applied`. Put the supporting list, decision, skips or size report on the following lines. Update the field when a pending decision is resolved or an approved list is applied.
+
 1. Identify the directories from the cycle's issue and campaign records. Measure the largest consumers first. Limit candidates to files attributable to completed runs. A staging path, an old timestamp, or a closed issue alone does not establish that a file is disposable.
 2. Check the setup, ledger, baselines, release handoffs, evidence manifests, runtime profiles and regression instructions for dependencies on the candidates. Include parked and newer cycles, outstanding defect reproductions, pending reviews and backups. A server installed for an old pilot may now supply the only pinned library cache for future tests. Keep it at the recorded path.
 3. Keep the mod repository, canonical and retained release JARs, documentation, artwork, evidence packs, and anything still needed to interpret or repeat a test. This includes unique logs, results, configurations, fixtures, worlds, scripts and pinned offline inputs. Shared instances, reference packs, other projects and machine-wide caches are outside the cleanup scope.
