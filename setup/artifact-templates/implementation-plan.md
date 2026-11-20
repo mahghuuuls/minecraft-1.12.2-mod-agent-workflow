@@ -86,6 +86,7 @@ Apply the routing rules in `stages/7-implementation.md#evidence-pack-routing`; d
 - **Implementation Plan approval:** Requested / Approved / Not Approved
 - **Implementation authorization:** Named issue IDs in execution order or exact range from this plan, and authorization status
 - **Owner checkpoints:** Owner actions, launch authorizations, and decisions due within the named scope
+- **Implementation review cadence:** Effective choice and routine owner check-ins, including named milestones when selected
 - **Read-only independent review:** Required scope; initiation under the collaboration guideline; any explicit owner restrictions
 - **Routine Git policy:** Applicable collaboration-guideline policy, push cadence and explicit owner restrictions
 - **Explicit exclusions:** Tag, publication, upload, non-Git external-service change, destructive action, scope expansion, and unbriefed or additional issues

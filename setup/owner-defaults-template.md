@@ -46,6 +46,12 @@ Use [Stage Transition Preferences](../guidelines/process-control.md#stage-transi
 - Owner authorization date and scope of reuse:
 - Offer Workflow Changes after workflow or cycle closure: No | Yes
 
+## Implementation Review Cadence
+
+- Reusable owner choice under [Implementation Review Cadence and AFK Mode](../guidelines/process-control.md#implementation-review-cadence-and-afk-mode):
+- Preferred milestones when applicable:
+- Owner authorization date and scope of reuse:
+
 ## Test Instance
 
 Record reusable packaged-runtime preferences once. [Test Instance](../guidelines/project-defaults.md#test-instance) owns the choice between an isolated runtime and a shared launcher instance. The fields below describe the shared-instance option.

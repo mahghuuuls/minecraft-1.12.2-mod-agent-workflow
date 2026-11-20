@@ -449,6 +449,8 @@ Early in setup, apply [Stage Transition Preferences](../guidelines/process-contr
 
 Record the optional post-closure Workflow Changes offer only when the owner opts in. It leads to Process Maintenance under the same guideline. Show the resolved preference in the setup approval packet.
 
+Include the [implementation review cadence](../guidelines/process-control.md#implementation-review-cadence-and-afk-mode) in the same setup briefing.
+
 ## Process
 
 1. Read the shared defaults and inspect the workspace.

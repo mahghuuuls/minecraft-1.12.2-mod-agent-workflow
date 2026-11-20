@@ -300,11 +300,29 @@ When the Implementation Plan is ready for review, offer one bounded packet to ap
 
 Name the exact issue IDs or an unambiguous range from the approved plan. Distinguish the two decisions in the packet and record the owner's response, authorized scope, pause points, and exclusions in the Implementation Plan and `project-status.md`. For automatic Implementation entry, record the standing transition authorization as the approval source for that same bounded packet. Apply a still-valid approval on resume. The owner may also authorize a named group from an already approved plan using the same scope and pause rules.
 
-Complete verification, independent review, and the applicable commit checkpoint as each issue comes due. Continue through the authorized group without asking again at each issue. A separately approved validation campaign may use its recorded dependency and checkpoint rules. Required read-only reviews, routine Git operations, push cadence, and owner restrictions follow [Collaboration Guidelines](collaboration-guidelines.md).
+Complete verification, independent review, and the applicable commit checkpoint as each issue comes due. Use the recorded owner review cadence within the authorized group. A separately approved validation campaign may use its recorded dependency and checkpoint rules. Required read-only reviews, routine Git operations, push cadence, and owner restrictions follow [Collaboration Guidelines](collaboration-guidelines.md).
 
-Pause at an owner action or launch-authorization boundary recorded in the plan, a new material scope or architecture decision, or a failed check that requires an owner decision about risk or a waiver. Correct and rerun recoverable failures within the approved scope. After an owner checkpoint, continue within the same authorization if the decision still fits the recorded scope and conditions.
+Pause affected work at an owner action or launch-authorization boundary recorded in the plan, a new material scope or architecture decision, or a failed check that requires an owner decision about risk or a waiver. Correct and rerun recoverable failures within the approved scope. Apply [Implementation Review Cadence and AFK Mode](#implementation-review-cadence-and-afk-mode) when selecting other work. After an owner checkpoint, continue within the same authorization if the decision still fits the recorded scope and conditions.
 
 Use separate checkpoints for work outside the named scope, material changes to the approval conditions, final release-artifact approval, tags, and publication or upload. Stage entries follow [Stage Transition Preferences](#stage-transition-preferences). When the conditions for this packet cannot be met, state the material reason and use the normal approval lifecycle.
+
+### Implementation Review Cadence and AFK Mode
+
+In Project Setup, reuse the owner's saved implementation review cadence or ask for a choice alongside the stage transition preferences. Save it in local owner defaults when the owner authorizes reuse. The Implementation Plan packet records the effective choice, named issues and any project-specific override. For an older project, honor its approved packet and existing pauses. Resolve a missing preference when preparing the next packet.
+
+| Owner review cadence | How to plan and run the authorized issues |
+| --- | --- |
+| **Each issue** | Pause after each issue's verification, independent review and applicable commit checkpoint, before starting the next. Agree on any campaign that would defer those checkpoints when planning it. |
+| **Selected checkpoints** | Name the owner's chosen milestones in the packet. Continue between them and pause at each one. |
+| **Blockers only** | Continue through eligible work in the named group. Ask when progress requires the owner or the group ends and more work needs authorization. |
+
+During Implementation, the owner can type **AFK mode** to defer routine owner check-ins for this implementation session. Acknowledge it once, record the active override and its issue group in `project-status.md`, and continue immediately. The named authorization, mandatory owner actions, verification, independent review and Git restrictions still apply. In particular, a specifically reserved approval stays in force. Record an ordinary progress review as deferred if one comes due.
+
+In AFK mode or under **Blockers only**, investigate and retry recoverable failures. When an owner decision or observation is needed, record it against the affected issue and hold its dependent work. Continue with another Ready issue in the authorized group if its prerequisites, any required ordering, and its worktree and evidence can be respected independently. A preferred issue order alone need not stall unrelated work. When no eligible work remains, send the owner the outstanding decisions and the minimum action needed, then wait. Never record silence as approval or an unobserved check as passed.
+
+Keep a short AFK handoff in the existing ledger. Include consequential decisions made within delegated scope when a different choice would materially change a tradeoff or cause rework. Give the choice, reason and consequence. For unresolved decisions, give the affected work and a recommendation where possible. Leave routine implementation details in the issue record.
+
+**I'm back** or **exit AFK mode** ends the override. Give a brief recap of completed work, the consequential choices the owner may want to revisit, and the decisions still needed. Ask only for outstanding owner actions. Restore the usual review cadence for subsequent work. Also clear the override when Implementation ends or the cycle is parked or closed, and retain any outstanding recap for the owner's return. A resume of the same active session reads the ledger; a new cycle or unrelated chat starts with the ordinary preference.
 
 For resumed work, provide a shorter briefing that states the active stage, current status, next action, expected output, and whether approval is needed before continuing.
 

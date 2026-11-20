@@ -73,6 +73,7 @@
 - Project-specific overrides:
 - Reuse saved to owner defaults, when authorized:
 - Offer Workflow Changes after closure (owner opt-in):
+- Implementation review cadence, source and any project override:
 
 ## Test Instance
 

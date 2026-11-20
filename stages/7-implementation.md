@@ -503,7 +503,7 @@ The second is a defect even though it references nothing internal. It is the dif
 
 Create the reviewed commit in the active mod repository under `guidelines/collaboration-guidelines.md`; its automatic default requires no separate prompt. Honor an owner ask policy or narrower restriction. If the owner declines or defers a commit, record the decision and continue only if the owner approves moving to the next issue with uncommitted changes.
 
-After a clean committed checkpoint, confirm the repository is clean and report the checkpoint. If the next issue is eligible under the recorded authorization, continue to it. When an owner checkpoint is due, state the action or decision needed.
+After a clean committed checkpoint, confirm the repository is clean and report the checkpoint. Select the next eligible issue or pause under [Implementation Review Cadence and AFK Mode](../guidelines/process-control.md#implementation-review-cadence-and-afk-mode). On resume, check the ledger for the current session's override and outstanding decisions.
 
 ## Issue Execution Process
 
