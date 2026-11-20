@@ -46,6 +46,10 @@ A last review round tied the Cleanroom Java check to the metadata's `compatibleJ
 
 Not covered: Forge single player through the client request channel, and other Forge 1.12.2 builds (an older version file without `downloads` entries is refused by name rather than launched).
 
+## Embedded core and save-name regression
+
+On Cleanroom 0.7.14-alpha with LLibrary 1.7.20 and Toolkit 1.8.0, the existing disposable profile passed inventory verification with the first-launch Maven copy present. The server started and stopped cleanly. The client created a flat save with a 32-character expanded name and exited zero. A second plan with a 33-character name failed before either process started. The runtime tests also cover changed bytes, an unexpected extraction path, a missing embedded pin, and the save-name boundary for both create and open.
+
 ## Limits
 
 The tested importer requires complete existing caches and an installed dedicated server. Fresh provisioning, authentication, headless clients, other operating systems and CleanroomGradle development runs are not qualified here. Graphical tests require an interactive Windows session. Game directories are isolated; third-party mod code is not sandboxed. Add project-specific bundles and compatibility profiles before claiming a mod criterion passed.

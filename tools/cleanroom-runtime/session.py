@@ -269,7 +269,13 @@ class Session:
         for side in ('client', 'server'):
             actual = {p.relative_to(self.root).as_posix() for p in (self.root / side / 'mods').rglob('*.jar')}
             expected = {p for p in self.manifest['immutable'] if p.startswith(side + '/mods/')}
-            generated = self.manifest.get('allowedGenerated', {})
+            generated = self.manifest.get('allowedGenerated', {}).copy()
+            # Cleanroom also extracts this declared LLibrary child at its Maven coordinate.
+            # Use the preparation-time hash of the embedded bytes, including for older manifests.
+            core = 'llibrary-core-1.0.11-1.12.2.jar'
+            embedded = f'{side}/mods/1.12.2/{core}'
+            if self.manifest.get('cleanroom') and embedded in generated:
+                generated[f'{side}/mods/memory_repo/net/ilexiconn/llibrary-core/1.0.11-1.12.2/{core}'] = generated[embedded]
             require(expected <= actual and actual <= expected | set(generated), f'Mod inventory changed for {side}')
             for path in actual - expected:
                 verify_file(self.root / relative(path), generated[path])
@@ -288,11 +294,25 @@ class Session:
         require('eula=true' in (self.root / 'server/eula.txt').read_text(), 'Runtime EULA file no longer records acceptance')
         self.record('server-configured', port=self.port, bind='127.0.0.1')
 
-    def expand(self, text):
+    def expand(self, text, port=None):
         if '{port}' in text:
-            require(self.port is not None, 'No server port is active')
-            text = text.replace('{port}', str(self.port))
+            if port is None:
+                port = self.port
+            require(port is not None, 'No server port is active')
+            text = text.replace('{port}', str(port))
         return text.replace('{player}', self.manifest['player']).replace('{run}', self.evidence.name)
+
+    def check_save_names(self):
+        for index, step in enumerate(self.plan['steps'], 1):
+            if (step['action'] != 'request' or step.get('channel') != 'client-inbox'
+                    or step.get('expect', 'done') != 'done'):
+                continue
+            # A dynamically assigned port may use five digits.
+            words = self.expand(step['text'], self.plan.get('port') or 65535).split()
+            if words and words[0].lower() in ('create', 'open'):
+                require(len(words) >= 2, f'Step {index}: missing Toolkit save name')
+                require(len(words[1]) <= 32,
+                        f'Step {index}: Toolkit save name "{words[1]}" exceeds 32 characters after expansion')
 
     def step(self, step, number):
         action, side, timeout = step['action'], step.get('side'), step.get('timeout', 120)
@@ -383,6 +403,7 @@ class Session:
                     shutil.copyfile(self.root / name, self.evidence / name)
             for source in Path(__file__).parent.glob('*.py'):
                 shutil.copyfile(source, self.evidence / source.name)
+            self.check_save_names()
             self.verify()
             self.job = self.job_factory()
             self.record('session-start')

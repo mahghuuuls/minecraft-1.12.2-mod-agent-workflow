@@ -102,6 +102,44 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual('failed', result['status'])
         self.assertIn('inventory changed', str(result['errors']))
 
+    def test_llibrary_memory_repo_requires_exact_location_and_embedded_pin(self):
+        core = 'llibrary-core-1.0.11-1.12.2.jar'
+        path = self.root / 'server/mods/memory_repo/net/ilexiconn/llibrary-core/1.0.11-1.12.2' / core
+        path.parent.mkdir(parents=True)
+        path.write_bytes(b'embedded core')
+        plan = {'schema': 1, 'steps': [{'action': 'start', 'side': 'server'}]}
+        with self.assertRaisesRegex(RuntimeErrorDetail, 'inventory changed'):
+            Session(self.root, plan).verify()
+        self.manifest['allowedGenerated'] = {f'server/mods/1.12.2/{core}': sha256(path)}
+        write_json(self.root / 'runtime.json', self.manifest)
+        with self.assertRaisesRegex(RuntimeErrorDetail, 'inventory changed'):
+            Session(self.root, plan).verify()
+        self.manifest['cleanroom'] = '0.7.14-alpha'
+        write_json(self.root / 'runtime.json', self.manifest)
+        session = Session(self.root, plan)
+        session.verify()
+        path.write_bytes(b'changed core')
+        with self.assertRaisesRegex(RuntimeErrorDetail, 'SHA-256 changed'):
+            session.verify()
+        path.write_bytes(b'embedded core')
+        path.rename(path.parent.parent / core)
+        with self.assertRaisesRegex(RuntimeErrorDetail, 'inventory changed'):
+            session.verify()
+
+    def test_expanded_save_name_boundary(self):
+        for verb in ('create', 'open'):
+            for prefix, valid in [('runtime-', True), ('overlong-', False)]:
+                with self.subTest(verb=verb, prefix=prefix):
+                    steps = [{'action': 'start', 'side': 'client', 'timeout': 3},
+                             {'action': 'request', 'side': 'client', 'channel': 'client-inbox',
+                              'text': f'{verb} {prefix}{{run}}'}]
+                    result = self.session(steps, mode='client')
+                    if valid:
+                        self.assertEqual('passed', result['status'], result['errors'])
+                    else:
+                        self.assertIn('exceeds 32 characters', str(result['errors']))
+                        self.assertFalse((Path(result['evidence']) / '000-client').exists())
+
     def test_declared_extracted_jar_is_allowed_but_changed_bytes_fail(self):
         path = self.root / 'server/mods/1.12.2/child.jar'
         path.parent.mkdir()

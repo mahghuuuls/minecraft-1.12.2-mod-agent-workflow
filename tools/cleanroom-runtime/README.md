@@ -47,7 +47,7 @@ From the workflow repository root, using absolute paths for these placeholders:
 py -3 ./tools/cleanroom-runtime/runtime.py prepare --profile C:/work/example/workspace/runtime-profile.json --workspace C:/work/example/workspace --name campaign-a
 ```
 
-The manifest pins input files and allows only declared `ContainedDeps` extracted from selected mod JARs into `mods/1.12.2`, with their embedded hashes. Extra or changed JARs fail before another launch. Prepare a new profile for intentional changes. `config` and `scripts` are copied into each launch's evidence; the game may legitimately rewrite them.
+The manifest pins input files and allows only declared `ContainedDeps` extracted from selected mod JARs into `mods/1.12.2`, with their embedded hashes. Cleanroom may also write the declared LLibrary core 1.0.11-1.12.2 at its exact Maven path under `mods/memory_repo`. The same embedded hash is required there. Extra or changed JARs fail before another launch. Prepare a new profile for intentional changes. `config` and `scripts` are copied into each launch's evidence; the game may legitimately rewrite them.
 
 ### Loader-Provided Mod Ids
 
@@ -87,7 +87,7 @@ When the recorded Java launch path needs `host-run`, use its finite-command wrap
 | `expectExit` | `side`, optional `code` (default zero); waits for the exact child to exit |
 | `interrupt` | `side`; deliberately terminates this session's child when interruption testing is enabled; follow with `stop` to archive it |
 
-Each step except `ownerWait` accepts `timeout` (default 120 seconds, maximum 600), bounded by the session deadline. Request `expect` defaults to `done`; `failed` or `refused` also requires the specific `reason`. Request and console text support `{player}`, `{port}` and `{run}` substitutions. `{run}` is unique and is useful for disposable world names.
+Each step except `ownerWait` accepts `timeout` (default 120 seconds, maximum 600), bounded by the session deadline. Request `expect` defaults to `done`; `failed` or `refused` also requires the specific `reason`. Request and console text support `{player}`, `{port}` and `{run}` substitutions. `{run}` is unique and expands to 24 characters. Before launch, the runner checks that successful client-inbox `create` and `open` requests fit the Toolkit limit of 32 characters after substitution. A dynamic port reserves five digits. Requests explicitly testing a refusal still go to the Toolkit.
 
 The paired server has an explicit operator entry for the generated offline test identity, scoped to this isolated server. `pair` is required because these two game folders are separate; the client otherwise cannot prove a local join. No proof content is logged or included in snapshots, and proofs are removed on cleanup. Never copy a real server's credentials or use this route to access another server.
 
